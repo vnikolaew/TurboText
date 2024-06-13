@@ -1,7 +1,12 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import Link from "next/link";
-import Image, { StaticImageData } from "next/image";
 import { Github, Mail } from "lucide-react";
+import { Lexend_Deca } from "next/font/google";
+
+const lexend = Lexend_Deca({
+   weight: ["400"],
+   subsets: ["latin"],
+});
 
 export interface LinkInfo {
    title: string;
@@ -9,7 +14,7 @@ export interface LinkInfo {
 }
 
 export interface FooterTwoProps {
-   appLogo: StaticImageData;
+   appLogo: ReactNode;
    links: {
       title: string;
       links: LinkInfo[]
@@ -63,11 +68,10 @@ export const FooterTwo = ({
          <div className="my-8 grid grid-cols-4 mx-24 gap-8">
             <div
                className="!mb-16 flex flex-col space-y-1 text-base text-muted-foreground items-start text-left h-full justify-center">
-               <span className={`inline-flex items-center gap-2`}>
-                  <Image className={`rounded-full shadow-sm w-8 h-8`} src={appLogo} alt={appName} />
-                  <span className={`text-lg font-semibold text-neutral-300`}>
-                     {appName}
-                  </span>
+               <span className={`inline-flex items-center gap-4`}>
+                  {appLogo}
+                  <span
+                     className={`font-semibold text-base !test-gradient drop-shadow-lg !font-semibold ${lexend.className} uppercase`}>{appName}</span>
                </span>
                <span className={`!mt-2 text-sm font-normal`}>
                   {appDescription}

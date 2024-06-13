@@ -7,7 +7,7 @@ import Credentials from "next-auth/providers/credentials";
 import { session } from "@lib/session";
 import { getGravatarImageUrl } from "@lib/utils";
 import { WelcomeEmail } from "@repo/emails/src";
-import { APP_NAME } from "@config/site";
+import { APP_DESCRIPTION, APP_NAME } from "@config/site";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { Adapter } from "next-auth/adapters";
 import { EmailService } from "@repo/emails/src/emailService";
@@ -44,9 +44,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       // @ts-ignore
       createUser: async (user: { user: User }) => {
          const features = [
-            `Powerful AI - ${APP_NAME.replaceAll(` `, ``)} is powered by advanced AI technology, ensuring that your notes are always up-to-date and accurate.`,
-            `Easy Note-Taking - Effortlessly jot down and organize your thoughts, documents, and more with ${APP_NAME.replaceAll(` `, ``)}.`,
-            `Secure Storage - Keep your notes and documents safe with ${APP_NAME.replaceAll(` `, ``)}'s secure storage system.`,
+            `${APP_DESCRIPTION} - ${APP_NAME.replaceAll(` `, ``)}`,
+            ``,
+            ``,
          ];
 
          // Send a welcome e-mail:
@@ -79,6 +79,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
          return true;
       },
       async signIn({ user, profile, account, email }) {
+         console.log({ profile, user });
          return true;
       },
       async jwt({ token, user, session, profile, account }) {

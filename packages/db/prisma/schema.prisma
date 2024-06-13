@@ -20,8 +20,9 @@ model User {
   accounts      Account[]
   sessions      Session[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  typingRuns TypingRun[]
 }
 
 model Account {
@@ -62,4 +63,17 @@ model VerificationToken {
   expires    DateTime
 
   @@id([identifier, token])
+}
+
+model TypingRun {
+  id     String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: NoAction)
+  time   Int
+
+  metadata     Json? @default("null") @db.JsonB
+  typedLetters Json  @db.JsonB
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

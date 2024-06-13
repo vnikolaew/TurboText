@@ -45,7 +45,7 @@ const nextConfig = {
             },
         ],
     },
-    transpilePackages: ["@repo/ui", "@repo/db", "@repo/emails", "@repo/ai"],
+    transpilePackages: ["@repo/ui", "@repo/db", "@repo/emails", "@repo/ai", "jotai-devtools"],
     typescript: {
         ignoreBuildErrors: true,
     },

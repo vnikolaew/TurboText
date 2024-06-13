@@ -2,6 +2,7 @@ import React from "react";
 import appLogo from "@/public/logo.jpg";
 import { APP_DESCRIPTION, APP_NAME, LINKS } from "@/config/site";
 import { FooterTwo } from "@components/common/FooterTwo";
+import RocketLogo from "@components/icons/RocketLogo";
 
 export interface AppFooterProps {
 }
@@ -48,7 +49,7 @@ const AppFooter = async ({ }: AppFooterProps) => {
    return (
       <FooterTwo
          appDescription={APP_DESCRIPTION}
-         appLogo={appLogo}
+         appLogo={<RocketLogo className={`w-10 h-10 fill-amber-500`} />}
          appName={APP_NAME}
          links={LINKS}
          legal={FOOTER_LEGAL}

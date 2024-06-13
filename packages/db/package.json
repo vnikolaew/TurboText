@@ -17,7 +17,8 @@
     "@prisma/adapter-pg": "latest",
     "@prisma/client": "^5.15.0",
     "bcrypt": "^5.1.1",
-    "bcryptjs": "^2.4.3"
+    "bcryptjs": "^2.4.3",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",

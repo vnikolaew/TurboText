@@ -1,23 +1,20 @@
 "use client";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef } from "react";
+import { useAtom } from "jotai";
+import { TimerState, currentTimestampAtom, timerStateAtom } from "@components/editor/atoms";
 
-export enum TimerState {
-   STOPPED = `STOPPED`,
-   RUNNING = `RUNNING`,
-   PAUSED = `PAUSED`,
-   FINISHED = `FINISHED`
-}
 
-export function useTimer(seconds: number) {
-   const [currentTimestamp, setCurrentTimestamp] = useState(seconds);
+export function useTimer(seconds: number ,onFinish?: () => void) {
+   const [currentTimestamp, setCurrentTimestamp] = useAtom(currentTimestampAtom)
+   const [timerState, setTimerState] =useAtom(timerStateAtom);
 
-   const [timerState, setTimerState] = useState<TimerState>(TimerState.STOPPED);
    const intervalId = useRef<NodeJS.Timeout>(null!);
 
    useEffect(() => {
       if(currentTimestamp <= 0){
          setTimerState(TimerState.FINISHED)
          clearInterval(intervalId?.current)
+         onFinish?.()
       }
    }, [currentTimestamp]);
 
@@ -26,7 +23,6 @@ export function useTimer(seconds: number) {
 
       if (intervalId.current) clearInterval(intervalId.current);
       intervalId.current = setInterval(() => {
-         console.log(currentTimestamp);
          setCurrentTimestamp(prev => prev - 1);
       }, 1_000);
       setTimerState(TimerState.RUNNING);

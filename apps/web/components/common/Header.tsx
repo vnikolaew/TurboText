@@ -1,9 +1,9 @@
 "use client";
 import Link from "next/link";
 import React, { ReactNode } from "react";
-import { signOut } from "next-auth/react";
-import { SignedIn } from "./Auth";
-import { LogOut } from "lucide-react";
+import { signIn, signOut } from "next-auth/react";
+import { SignedIn, SignedOut } from "./Auth";
+import { LogIn, LogOut } from "lucide-react";
 import { APP_NAME } from "@config/site";
 import { useBoolean } from "@hooks/useBoolean";
 import { usePathname } from "next/navigation";
@@ -73,12 +73,22 @@ const Header = ({}: NavbarProps) => {
                      </div>
                      <Button
                         className={`px-4 gap-2 rounded-lg !py-2 !h-fit`}
-                        onClick={_ => signOut({ redirect: true, callbackUrl: `/` })} variant={"ghost"}>
+                        onClick={_ => signOut({ redirect: true, callbackUrl: `/` })} variant={"ghost"}
+                     >
                         <LogOut size={14} />
                         {`Sign out`}
                      </Button>
                   </div>
                </SignedIn>
+               <SignedOut>
+                  <Button
+                     className={`px-4 gap-2 rounded-lg !py-2 !h-fit`}
+                     onClick={_ => signIn(`google`)} variant={"secondary"}
+                  >
+                     <LogIn size={14} />
+                     {`Sign in`}
+                  </Button>
+               </SignedOut>
             </div>
          </div>
       </header>

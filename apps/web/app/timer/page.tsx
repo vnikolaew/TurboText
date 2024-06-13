@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { TimerState, useTimer } from "@app/_hooks/useTimer";
+import { TimerState, useTimer } from "@components/editor/hooks/useTimer";
 import { Button } from "@repo/ui";
 
 export interface PageProps {
