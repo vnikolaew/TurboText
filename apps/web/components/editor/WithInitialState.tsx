@@ -4,8 +4,8 @@ import React, { Fragment, useRef } from "react";
 import {
    currentTimestampAtom,
    lettersCorrectnessAtom,
-   TimerState,
-   timerStateAtom,
+   TypingRunState,
+   typingRunStateAtom,
    TIMES,
    typingFlagsAtom,
    TypingMode,
@@ -16,7 +16,7 @@ import {
 } from "@atoms/editor";
 import { generate } from "random-words";
 import { Session } from "next-auth";
-import { userAtom } from "@atoms/user";
+import { userAtom, userDataLoadingAtom } from "@atoms/user";
 
 export interface WithInitialStateProps {
    user?: Session["user"];
@@ -29,13 +29,14 @@ const WithInitialState = ({ user }: WithInitialStateProps) => {
    // @ts-ignore
    useHydrateAtoms([
       [wordsAtom, WORDS.current],
+      [userDataLoadingAtom, false],
       [lettersCorrectnessAtom, Array
          .from({ length: WORDS.current.reduce((a, b) => a + b.length, 0) })
          .fill(null) as null[]],
       [userAtom, user],
       [currentTimestampAtom, TIMES["10"]],
       [userAtom, user],
-      [timerStateAtom, TimerState.STOPPED],
+      [typingRunStateAtom, TypingRunState.STOPPED],
       [typingModeAtom, TypingMode.TIME],
       [wordsCountsAtom, WORDS_COUNTS['10']],
       [typingFlagsAtom, 0],

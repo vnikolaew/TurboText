@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { useAction } from "next-safe-action/hooks";
 import { saveTypingRun } from "@components/editor/actions";
 import { z } from "zod";
-import { TYPED_LETTER_LS_KEY } from "@components/editor/TypingEditor";
+import { TYPED_LETTER_LS_KEY } from "@components/editor/TypingPage";
 import { toast } from "@repo/ui";
 import { TOASTS } from "@config/toasts";
 

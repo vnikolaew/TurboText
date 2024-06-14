@@ -21,7 +21,7 @@ const EditorToolbar = ({}: EditorToolbarProps) => {
    const [timeModalOpen, setTimeModalOpen] = useBoolean();
 
    return (
-      <div className={`rounded-full bg-neutral-800 !px-4 !py-1 flex items-center gap-2`}>
+      <div className={`rounded-full bg-neutral-800 !px-4 !py-1 flex items-center gap-2 shadow-md`}>
          <ToggleGroup
             onValueChange={values => setTypingFlags(values.map(Number).reduce((a, b) => a + b, 0))} type="multiple">
             <ToggleItem Icon={AtSign} value={TypingFlags.PUNCTUATION.toString()}

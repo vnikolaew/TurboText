@@ -4,7 +4,7 @@ import { Button, Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle,
 import { useAtom } from "jotai/index";
 import { currentTimestampAtom } from "@atoms/editor";
 
-function parseTimeframe(timeframe) {
+function parseTimeframe(timeframe: string) {
    // Regular expression to match the components
    const regex = /(\d+h)?(\d+m)?(\d+s)?/;
    const match = regex.exec(timeframe);
@@ -95,7 +95,7 @@ const CustomTimeConfigModal = ({ setOpen, open }: CustomTimeConfigModalProps) =>
                   if (Number.isNaN(Number(value))) console.log(`Input is not a number`);
                   setTime(Number(value));
                   setOpen(false);
-               }} variant={`default`} className={`w-full`}>ok</Button>
+               }} variant={`ghost`} className={`w-full`}>ok</Button>
             </DialogFooter>
          </DialogContent>
       </Dialog>);

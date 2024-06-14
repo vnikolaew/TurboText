@@ -12,6 +12,7 @@ export const WordsSelect = () => {
          onValueChange={value => setWords(Number(value))} type="single">
          {Object.entries(WORDS_COUNTS).map(([key, value]) => (
             <ToggleItem
+               key={key}
                Icon={null!}
                value={value.toString()}
                active={words === value}

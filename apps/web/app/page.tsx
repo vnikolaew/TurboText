@@ -1,4 +1,4 @@
-import TypingEditor from "@components/editor/TypingEditor";
+import TypingPage from "@components/editor/TypingPage";
 import WithUserLoading from "@app/_components/WithUserLoading";
 import WithInitialState from "@components/editor/WithInitialState";
 import WithTransition from "@components/common/WithTransition";
@@ -21,7 +21,7 @@ export default async function Home() {
          <span>Start typing!</span>
          <EditorToolbar />
          <WithInitialState user={session?.user!} />
-         <TypingEditor />
+         <TypingPage />
 
          <ServerSignedOut>
             <SignInButton />

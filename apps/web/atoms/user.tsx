@@ -2,7 +2,7 @@
 import { atom } from "jotai";
 import { Session } from "next-auth";
 
-export const userDataLoadingAtom = atom(true)
+export const userDataLoadingAtom = atom(false)
 
 userDataLoadingAtom.debugLabel = `userDataLoadingAtom`;
 

@@ -14,6 +14,7 @@ import {
 } from "@repo/ui";
 import { useBoolean } from "@/hooks/useBoolean";
 import { Image } from "lucide-react";
+import Link from "next/link";
 
 export interface UserAvatarDropdownProps {
 }
@@ -25,6 +26,17 @@ const UserAvatarDropdown = ({}: UserAvatarDropdownProps) => {
    const [, setChangeAvatarModalOpen] = useBoolean(false);
 
    return (
+      <Link className={`inline-flex items-center gap-2 group hover:!text-neutral-300  `} href={`/account`} >
+         <UserAvatar
+            title={session?.data?.user?.name!} className={`cursor-pointer h-6 w-6`}
+            imageSrc={session?.data?.user?.image!} />
+         <span className={`text-sm text-neutral-500 group-hover:!text-neutral-300 transition-colors duration-200`}>
+            {session?.data?.user?.name}
+         </span>
+      </Link>
+
+   )
+   return (
       <Fragment>
          <DropdownMenu onOpenChange={setDropdownOpen} open={dropdownOpen}>
             <DropdownMenuTrigger>
@@ -33,8 +45,9 @@ const UserAvatarDropdown = ({}: UserAvatarDropdownProps) => {
                      <Tooltip onOpenChange={setTooltipOpen} open={tooltipOpen}>
                         <TooltipTrigger>
                            <UserAvatar
-                              title={session?.data?.user?.name!} className={`cursor-pointer`}
+                              title={session?.data?.user?.name!} className={`cursor-pointer h-6 w-6`}
                               imageSrc={session?.data?.user?.image!} />
+                           {session?.data?.user?.name}
                         </TooltipTrigger>
                         <TooltipContent side={`bottom`} className={`bg-black text-white rounded-md text-xs border-neutral-700`}>
                            Signed in as {session?.data?.user?.name}

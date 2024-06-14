@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 
 import "./globals.css";
 import { cn } from "@lib/utils";
+import { sfMono } from "@assets/fonts";
 import Providers from "@providers";
 import Header from "@components/common/Header";
 import { APP_DESCRIPTION, APP_NAME, AUTHOR, AUTHOR_WEBSITE } from "@config/site";
@@ -40,7 +41,7 @@ export default function RootLayout({
    return (
       <html style={{ colorScheme: `dark` }} suppressHydrationWarning lang="en">
       <Providers>
-         <body className={cn(`min-h-screen bg-background font-sans antialiased`, inter.variable)}>
+         <body className={cn(`min-h-screen bg-background font-mono antialiased`, sfMono.variable)}>
          <LoadingBar />
          <Header />
          <main className={cn(`flex-1 min-h-[70vh]`)}>

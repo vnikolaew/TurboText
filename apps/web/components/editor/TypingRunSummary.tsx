@@ -8,8 +8,8 @@ import { useAtomValue } from "jotai";
 import {
    completedWordsAtom,
    lettersCorrectnessPercentageAtom,
-   TimerState,
-   timerStateAtom,
+   TypingRunState,
+   typingRunStateAtom,
    typedLettersAtom,
 } from "@atoms/editor";
 import { SignedOut } from "@components/common/Auth";
@@ -26,7 +26,7 @@ const TypingRunSummary = ({
                              time,
                           }: TypingEditorStatisticsProps) => {
    const typedLetters = useAtomValue(typedLettersAtom);
-   const timerState = useAtomValue(timerStateAtom);
+   const timerState = useAtomValue(typingRunStateAtom);
 
    const getWordCompletionTime = useCallback(({ range: [start, end] }: WordRange) => {
       return typedLetters.reverse().find(l => l.charIndex === end)?.timestamp!
@@ -82,9 +82,11 @@ const TypingRunSummary = ({
                </TooltipContent>
             </Tooltip>
          </TooltipProvider>
-         {timerState === TimerState.FINISHED && (
-            <RestartButton />
-         )}
+        <div className={`flex items-center justify-center w-full`}>
+           {timerState === TypingRunState.FINISHED && (
+              <RestartButton />
+           )}
+        </div>
          <SignedOut>
             <Button onClick={_ => signIn(`google`, { callbackUrl: `/?save=true` })} variant={`link`}>Sign in to save
                your

@@ -12,6 +12,7 @@ export const TimeSelect = () => {
          onValueChange={value => setTime(Number(value))} type="single">
          {Object.entries(TIMES).map(([key, value]) => (
             <ToggleItem
+               key={key}
                Icon={null!}
                value={value.toString()}
                active={time === value}

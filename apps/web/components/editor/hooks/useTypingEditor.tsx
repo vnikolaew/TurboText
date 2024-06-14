@@ -118,7 +118,7 @@ export function useTypingEditor(onStart?: () => void) {
                   flags: TypedLetterFlags.INSERTED,
                }]);
       }
-   }, []), );
+   }, [onStart]), );
 
 return {
    top,
