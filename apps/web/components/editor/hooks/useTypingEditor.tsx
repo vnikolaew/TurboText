@@ -1,6 +1,6 @@
 "use client";
 import { useAtom, useAtomValue } from "jotai";
-import { KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { KeyboardEvent, useCallback, useEffect, useRef, useState } from "react";
 import {
    charsByIndexAtom,
    currentCharIndexAtom,
@@ -8,7 +8,7 @@ import {
    startTimeAtom,
    typedLettersAtom,
    wordRangesAtom,
-} from "@components/editor/atoms";
+} from "@atoms/editor";
 import { useAtomCallback } from "jotai/utils";
 
 export enum TypedLetterFlags {
@@ -96,8 +96,6 @@ export function useTypingEditor(onStart?: () => void) {
          }
 
          const correct = charCode === charsByIndex[currentCharIndex + 1]?.charCodeAt(0);
-         console.log({ correct, charCode, cc: charsByIndex[currentCharIndex + 1] });
-
          set(lettersCorrectnessAtom, wc => {
             let wc2 = [...wc];
             wc2[currentCharIndex + 1] = correct;

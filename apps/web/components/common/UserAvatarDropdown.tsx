@@ -22,7 +22,7 @@ const UserAvatarDropdown = ({}: UserAvatarDropdownProps) => {
    const session = useSession();
    const [dropdownOpen, setDropdownOpen] = useBoolean();
    const [tooltipOpen, setTooltipOpen] = useBoolean();
-   const [changeAvatarModalOpen, setChangeAvatarModalOpen] = useBoolean(false);
+   const [, setChangeAvatarModalOpen] = useBoolean(false);
 
    return (
       <Fragment>

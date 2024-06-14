@@ -1,7 +1,7 @@
 "use client";
 import { useCallback, useEffect, useRef } from "react";
 import { useAtom } from "jotai";
-import { TimerState, currentTimestampAtom, timerStateAtom } from "@components/editor/atoms";
+import { currentTimestampAtom, TimerState, timerStateAtom } from "@atoms/editor";
 
 
 export function useTimer(seconds: number ,onFinish?: () => void) {

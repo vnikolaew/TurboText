@@ -2,19 +2,19 @@
 import React, { useCallback } from "react";
 import { WordRange } from "@components/editor/hooks/useTypingEditor";
 import { Button, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@repo/ui";
-import { Image, RotateCw } from "lucide-react";
+import { Image } from "lucide-react";
 import html2canvas from "html2canvas";
-import { useAtomValue, useSetAtom } from "jotai";
+import { useAtomValue } from "jotai";
 import {
    completedWordsAtom,
    lettersCorrectnessPercentageAtom,
-   restartAtom,
    TimerState,
    timerStateAtom,
    typedLettersAtom,
-} from "@components/editor/atoms";
+} from "@atoms/editor";
 import { SignedOut } from "@components/common/Auth";
 import { signIn } from "next-auth/react";
+import RestartButton from "@components/editor/RestartButton";
 
 export interface TypingEditorStatisticsProps {
    time: number;
@@ -50,11 +50,6 @@ const TypingRunSummary = ({
             }, `image/png`);
          });
    };
-   const restart = useSetAtom(restartAtom);
-
-   function handleRestart(): void {
-      restart(undefined);
-   }
 
    return (
       <div className={`flex items-center gap-8`}>
@@ -88,23 +83,11 @@ const TypingRunSummary = ({
             </Tooltip>
          </TooltipProvider>
          {timerState === TimerState.FINISHED && (
-            <TooltipProvider>
-               <Tooltip>
-                  <TooltipTrigger asChild>
-                     <Button onClick={handleRestart} variant={`ghost`} size={`icon`}>
-                        <RotateCw size={18} />
-                     </Button>
-                  </TooltipTrigger>
-                  <TooltipContent
-                     side={`bottom`}
-                     className={`bg-black text-white rounded-xl text-sm border-neutral-700 !px-4 !py-2`}>
-                     Restart
-                  </TooltipContent>
-               </Tooltip>
-            </TooltipProvider>
+            <RestartButton />
          )}
          <SignedOut>
-            <Button onClick={_ => signIn(`google`, { callbackUrl: `/?save=true` })} variant={`link`}>Sign in to save your
+            <Button onClick={_ => signIn(`google`, { callbackUrl: `/?save=true` })} variant={`link`}>Sign in to save
+               your
                current run</Button>
          </SignedOut>
       </div>

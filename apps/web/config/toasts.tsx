@@ -1,7 +1,7 @@
 "use client";
 
 import React, { ReactNode } from "react";
-import { Check } from "lucide-react";
+import { Check, Cookie } from "lucide-react";
 
 export const TOASTS: Record<string, Record<string, any> & { message: ReactNode }> = {
    FORGOT_PASSWORD: {
@@ -33,7 +33,7 @@ export const TOASTS: Record<string, Record<string, any> & { message: ReactNode }
       className: ``,
       classNames: {
          title: `text-lg`, description: `text-md`,
-      },
+      },icon: <Cookie className={`text-orange-800`} size={16} />,
       duration: 10_000,
    },
    ACCEPT_COOKIE_CONSENT_SUCCESS: {
@@ -43,6 +43,7 @@ export const TOASTS: Record<string, Record<string, any> & { message: ReactNode }
       classNames: {
          title: `text-lg`, description: `text-md`,
       },
+      icon: <Cookie className={`text-orange-800`} size={16} />,
       duration: 10_000,
    },
    USER_REPORT_SUCCESS: {

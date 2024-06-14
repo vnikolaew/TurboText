@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { Lexend_Deca } from "next/font/google";
 
 import "./globals.css";
 import { cn } from "@lib/utils";
@@ -19,7 +18,7 @@ import WithTransition from "@components/common/WithTransition";
 const inter = Inter({ weight: ["400"], subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
-   title: APP_NAME,
+   title: `${APP_NAME} | ${APP_DESCRIPTION}`,
    description: APP_DESCRIPTION,
    authors: [{
       url: AUTHOR_WEBSITE,

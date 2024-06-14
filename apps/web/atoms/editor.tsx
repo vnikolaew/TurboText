@@ -13,6 +13,21 @@ export enum TimerState {
 
 const WORDS = generate(40) as string[];
 
+export const WORDS_COUNTS = {
+   10: 10,
+   25: 25,
+   50: 50,
+   100: 100
+} as const;
+
+export const TIMES = {
+   10: 10,
+   15: 15,
+   30: 30,
+   60: 60,
+   120: 120,
+} as const;
+
 export const TIME = 10;
 
 export const wordsAtom = atom<string[]>(WORDS);
@@ -43,12 +58,12 @@ export const wordRangesAtom = atom<WordRange[]>((get) => {
 });
 wordRangesAtom.debugLabel = `wordRangesAtom`;
 
-export const completedWordsAtom  = atom((get) => {
-   const wordRanges = get(wordRangesAtom)
-   const typedLetters = get(typedLettersAtom)
+export const completedWordsAtom = atom((get) => {
+   const wordRanges = get(wordRangesAtom);
+   const typedLetters = get(typedLettersAtom);
 
    return wordRanges
-      .filter(({ range: [start, end] }) => {
+      .filter(({ range: [, end] }) => {
          return end <= (typedLetters.at(-1)?.charIndex ?? 0);
       });
 });
@@ -74,18 +89,34 @@ export const lettersCorrectnessPercentageAtom = atom<number>((get) => {
 
 lettersCorrectnessPercentageAtom.debugLabel = `lettersCorrectnessPercentageAtom`;
 
-
 export const typedLettersAtom = atom<TypedLetterInfo[]>([]);
 typedLettersAtom.debugLabel = `typedLettersAtom`;
 
+export enum TypingMode {
+   TIME = `TIME`,
+   QUOTE = `QUOTE`,
+   WORDS = `WORDS`,
+}
+
+export const typingModeAtom = atom<TypingMode>(TypingMode.TIME);
+typingModeAtom.debugLabel = `typingModeAtom`;
+
+export enum TypingFlags {
+   PUNCTUATION = 1,
+   NUMBERS = 1 << 1,
+}
+
+export const typingFlagsAtom = atom<number>(0);
+typingFlagsAtom.debugLabel = `typingFlagsAtom`;
+
 export const restartAtom = atom(
    null, // it's a convention to pass `null` for the first argument
-   (get, set, update) => {
+   (_, set) => {
       const words = generate(40) as string[];
 
       set(wordsAtom, words);
       set(timerStateAtom, TimerState.STOPPED);
-      set(currentCharIndexAtom, -1)
+      set(currentCharIndexAtom, -1);
       set(startTimeAtom, 0);
       set(currentTimestampAtom, TIME!);
       set(lettersCorrectnessAtom, Array
@@ -96,8 +127,17 @@ export const restartAtom = atom(
 );
 restartAtom.debugLabel = `restartAtom`;
 
+
+// @ts-ignore
+export const wordsCountsAtom = atom<number>(WORDS_COUNTS["10"]!, (get, set, wordCounts: number) => {
+   set(wordsCountsAtom, wordCounts)
+   set(wordsAtom, generate(wordCounts) as string[])
+});
+
+wordsCountsAtom.debugLabel = `wordsCountsAtom`;
+
 // TIMER
-export const currentTimestampAtom = atom<number>(TIME!);
+export const currentTimestampAtom = atom<number>(TIMES["10"]!);
 currentTimestampAtom.debugLabel = `currentTimestampAtom`;
 
 export const timerStateAtom = atom<TimerState>(TimerState.STOPPED);

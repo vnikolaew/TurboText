@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Cookie, ExternalLink } from "lucide-react";
+import { ArrowLeft, ExternalLink } from "lucide-react";
 import { updateCookiePreferences } from "../actions";
 import { useAction } from "next-safe-action/hooks";
 import { LoadingSpinner } from "../LoadingSpinner";
@@ -46,8 +46,7 @@ export const CustomizePreferencesModal = ({
             onBack?.();
             hideBanner?.();
 
-            const { message, ...rest } = TOASTS.CHANGE_COOKIE_PREFERENCES_SUCCESS;
-            toast({ ...rest, message, icon: <Cookie className={`text-orange-800`} size={16} /> });
+            toast(TOASTS.CHANGE_COOKIE_PREFERENCES_SUCCESS!);
          }
       },
    });
@@ -55,9 +54,9 @@ export const CustomizePreferencesModal = ({
    return (
       <motion.div
          className={
-            cn(`!bg-red-500 fixed hidden !z-20 gap-2 items-center justify-between !w-2/5 !mx-auto !bottom-8 !left-[30%] rounded-xl shadow-md`,
+            cn(`fixed hidden !z-20 gap-2 items-center justify-between !w-2/5 !mx-auto !bottom-8 !left-[30%] rounded-xl shadow-md`,
                open && `!flex !flex-col`)} {...props}>
-         <Card className={`w-full p-4 !bg-white !text-black`}>
+         <Card className={`w-full p-4 !bg-neutral-900 !text-white`}>
             <CardHeader className={`p-0 flex !flex-row items-center gap-2`}>
                <Button onClick={_ => {
                   onBack?.();
@@ -98,9 +97,7 @@ export const CustomizePreferencesModal = ({
                </Button>
                <Button
                   disabled={isExecuting(status)}
-                  onClick={_ => {
-                     handleSavePreferencesAction(preferences);
-                  }}
+                  onClick={_ => handleSavePreferencesAction(preferences)}
                   size={`sm`}
                   className={` rounded-md !px-8 shadow-md`} variant={`default`}>
                   {isExecuting(status) ? (<LoadingSpinner text={`Saving ...`} />) : (

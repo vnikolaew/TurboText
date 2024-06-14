@@ -5,14 +5,15 @@ import { signIn, signOut } from "next-auth/react";
 import { SignedIn, SignedOut } from "./Auth";
 import { LogIn, LogOut } from "lucide-react";
 import { APP_NAME } from "@config/site";
-import { useBoolean } from "@hooks/useBoolean";
 import { usePathname } from "next/navigation";
 import { cn } from "lib/utils";
 import UserAvatarDropdown from "@/components/common/UserAvatarDropdown";
-import { Button } from "@repo/ui";
+import { Button, Skeleton } from "@repo/ui";
 import { InteractiveLink } from "@components/common/InteractiveLink";
 import RocketLogo from "@components/icons/RocketLogo";
 import { Lexend_Deca } from "next/font/google";
+import { useAtomValue } from "jotai";
+import { userDataLoadingAtom } from "@atoms/user";
 
 const lexend = Lexend_Deca({
    weight: ["400"],
@@ -49,8 +50,7 @@ const InteractiveHeaderLink = ({ icon, title, href }: InteractiveHeaderLinkProps
  * @constructor
  */
 const Header = ({}: NavbarProps) => {
-   const pathname = usePathname();
-   const [signInModalOpen, setSignInModalOpen] = useBoolean();
+   const userDataLoading = useAtomValue(userDataLoadingAtom)
 
    return (
       <header
@@ -58,7 +58,7 @@ const Header = ({}: NavbarProps) => {
          <div className={`container flex h-14 max-w-screen-2xl items-center !w-3/4 justify-between`}>
             <nav className={`flex flex-1 items-center space-x-4 lg:space-x-6`}>
                <Link href={`/`} className={`flex items-center gap-3`}>
-                  <RocketLogo className={`fill-neutral-300 w-8 h-8 fill-amber-500 shadow-md`} />
+                  <RocketLogo className={`fill-amber-600 w-8 h-8 fill-amber-500 shadow-md`} />
                   <span
                      className={`font-semibold text-lg !test-gradient drop-shadow-lg !font-semibold ${lexend.className} uppercase`}>{APP_NAME}</span>
                </Link>
@@ -69,15 +69,21 @@ const Header = ({}: NavbarProps) => {
                <SignedIn>
                   <div className={`flex items-center gap-4`}>
                      <div>
-                        <UserAvatarDropdown />
+                        {userDataLoading ? (
+                           <Skeleton className={`h-12 w-12 rounded-full bg-neutral-700`} />
+                        )  : <UserAvatarDropdown />}
                      </div>
-                     <Button
-                        className={`px-4 gap-2 rounded-lg !py-2 !h-fit`}
-                        onClick={_ => signOut({ redirect: true, callbackUrl: `/` })} variant={"ghost"}
-                     >
-                        <LogOut size={14} />
-                        {`Sign out`}
-                     </Button>
+                     {userDataLoading ? (
+                        <Skeleton className={`h-8 w-32 rounded-lg bg-neutral-700`} />
+                     )  : (
+                        <Button
+                           className={`px-4 gap-2 rounded-lg !py-2 !h-fit`}
+                           onClick={_ => signOut({ redirect: true, callbackUrl: `/` })} variant={"ghost"}
+                        >
+                           <LogOut size={14} />
+                           {`Sign out`}
+                        </Button>
+                     )}
                   </div>
                </SignedIn>
                <SignedOut>

@@ -68,11 +68,11 @@ export const FooterTwo = ({
          <div className="my-8 grid grid-cols-4 mx-24 gap-8">
             <div
                className="!mb-16 flex flex-col space-y-1 text-base text-muted-foreground items-start text-left h-full justify-center">
-               <span className={`inline-flex items-center gap-4`}>
+               <Link href={`/`} className={`inline-flex items-center gap-4`}>
                   {appLogo}
                   <span
                      className={`font-semibold text-base !test-gradient drop-shadow-lg !font-semibold ${lexend.className} uppercase`}>{appName}</span>
-               </span>
+               </Link>
                <span className={`!mt-2 text-sm font-normal`}>
                   {appDescription}
                </span>
