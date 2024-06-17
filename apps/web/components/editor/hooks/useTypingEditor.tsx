@@ -72,6 +72,7 @@ export function useTypingEditor(onStart?: () => void) {
       const wordRangesByEnds = get(wordRangesByEndsAtom)
       const typedLetters = get(typedLettersAtom);
 
+      if (e.key === `Shift` || (e.ctrlKey && e.key === `Control`)) return;
       if (e.key === `Shift`) return;
 
       if (e.key === `Backspace`) {

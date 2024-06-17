@@ -11,10 +11,11 @@ const schema = z.object({
       charIndex: z.number().min(0),
       timestamp: z.number().min(0),
       letter: z.string().max(1),
-      correct: z.boolean(),
+      correct: z.boolean().nullable(),
       flags: z.number().nullable(),
    })),
    time: z.number().nullable(),
+   totalRunTime: z.number(),
    wordCounts: z.number().nullable(),
    mode: z.union([z.literal(TypingRunMode.TIME), z.literal(TypingRunMode.WORDS)]),
    flags: z.number().min(0).nullable(),
@@ -28,6 +29,7 @@ const schema = z.object({
 export const saveTypingRun = authorizedAction(schema, async ({
                                                                 typedLetters,
                                                                 time,
+                                                                totalRunTime,
                                                                 wordCounts,
                                                                 mode,
                                                                 flags,
@@ -44,9 +46,10 @@ export const saveTypingRun = authorizedAction(schema, async ({
          mode,
          wordCount: wordCounts,
          flags: flags ?? 0,
+         totalTimeMilliseconds: totalRunTime,
       },
    });
-   const {hasFlag, ...rest } = run;
+   const { hasFlag, ...rest } = run;
 
    console.log({ run });
    return { success: true, run: rest };

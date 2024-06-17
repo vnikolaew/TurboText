@@ -1,14 +1,14 @@
 "use client";
 import React, { useCallback } from "react";
 import { WordRange } from "@components/editor/hooks/useTypingEditor";
-import { Button, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@repo/ui";
+import { Button, Separator, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@repo/ui";
 import { Image } from "lucide-react";
 import html2canvas from "html2canvas";
 import { useAtomValue } from "jotai";
 import {
    completedWordsAtom,
    lettersCorrectnessPercentageAtom,
-   timeAtom,
+   totalRunTimeAtom,
    typedLettersAtom,
    typingModeAtom,
    TypingRunState,
@@ -18,22 +18,23 @@ import {
 import { SignedOut } from "@components/common/Auth";
 import { signIn } from "next-auth/react";
 import RestartButton from "@components/editor/RestartButton";
+import { timeAtom } from "@atoms/timer";
 
 export interface TypingEditorStatisticsProps {
 }
 
 // TODO:
 // Stats: WPM, Accuracy, Raw, Characters, Consistency, Time, TestType
-const TypingRunSummary = ({
-                          }: TypingEditorStatisticsProps) => {
+const TypingRunSummary = ({}: TypingEditorStatisticsProps) => {
    const typedLetters = useAtomValue(typedLettersAtom);
    const timerState = useAtomValue(typingRunStateAtom);
    const correctnessPercentage = useAtomValue(lettersCorrectnessPercentageAtom);
    const completedWords = useAtomValue(completedWordsAtom);
-   const mode = useAtomValue(typingModeAtom)
-   const time = useAtomValue(timeAtom)
+   const mode = useAtomValue(typingModeAtom);
+   const time = useAtomValue(timeAtom);
+   const totalRunTime = useAtomValue(totalRunTimeAtom);
 
-   const wordCompletionTimes = useAtomValue(wordsCompletionTimesAtom )
+   const wordCompletionTimes = useAtomValue(wordsCompletionTimesAtom);
 
    const getWordCompletionTime = useCallback(({ range: [start, end] }: WordRange) => {
       return typedLetters.reverse().find(l => l.charIndex === end)?.timestamp!
@@ -57,8 +58,8 @@ const TypingRunSummary = ({
    };
 
    return (
-      <div className={`flex items-center gap-8`}>
-         <div className={`flex flex-col gap-2`}>
+      <div className={`flex flex-col items-center justify-center gap-8`}>
+         <div className={`flex items-center gap-2 w-full justify-center flex-wrap`}>
             {completedWords.map(({ word, range: [start, end] }, i) => (
                <span
                   key={word + i}>
@@ -68,12 +69,20 @@ const TypingRunSummary = ({
                }) / 1000)}s
                </span>
             ))}
+            <span>Total: {totalRunTime}ms</span>
          </div>
-         <div>Completed words: {completedWords.length}</div>
-         <div>WPM: {(completedWords.length / time * 60).toFixed(0)}</div>
-         <div>Accuracy: {correctnessPercentage.toFixed(0)}%</div>
-         <div>Time: {time}s</div>
-         <div>Mode: {mode}</div>
+         <div className={`w-full items-center flex justify-center gap-4`}>
+            <div>Completed words: {completedWords.length}</div>
+            <Separator className={`h-4 w[2px]`} orientation={`vertical`} />
+            <div>WPM: {(completedWords.length / time * 60).toFixed(0)}</div>
+            <Separator className={`h-4 w[2px]`} orientation={`vertical`} />
+            <div>Accuracy: {correctnessPercentage.toFixed(0)}%</div>
+            <Separator className={`h-4 w[2px]`} orientation={`vertical`} />
+            <div>Time: {time}s</div>
+            <div>Run time: {totalRunTime}ms</div>
+            <Separator className={`h-4 w[2px]`} orientation={`vertical`} />
+            <div>Mode: {mode}</div>
+         </div>
          <TooltipProvider>
             <Tooltip>
                <TooltipTrigger asChild>

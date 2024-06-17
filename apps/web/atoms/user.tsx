@@ -34,6 +34,9 @@ userLanguageAtom.debugLabel = `userLanguageAtom`;
 export const freedomModeAtom = focusAtom<UserConfiguration["input_freedom_mode"]>(userConfigAtom, optic => optic.prop(`input_freedom_mode`));
 freedomModeAtom.debugLabel = `freedomModeAtom`;
 
+// @ts-ignore
+export const autoSaveModeAtom = focusAtom<UserConfiguration["auto_save_mode "]>(userConfigAtom, optic => optic.prop(`auto_save_mode`));
+autoSaveModeAtom.debugLabel = `autoSaveModeAtom`;
 
 // @ts-ignore
 export const confidenceModeAtom = focusAtom<UserConfiguration["input_confidence_mode"]>(userConfigAtom, optic => optic.prop(`input_confidence_mode`));

@@ -30,6 +30,7 @@ import { Tag, User, UserConfiguration } from "@repo/db";
 import { useHydrateAtoms } from "jotai/utils";
 import { cookiePreferencesAtom, userConfigAtom } from "@atoms/user";
 import ImportExportSettings from "@app/settings/_components/danger/ImportExportSettings";
+import AutoSaveModeSection from "@app/settings/_components/behaviour/AutoSaveModeSection";
 
 export interface SettingsAccordionProps {
    user: User & { tags: Tag[], configuration: UserConfiguration };
@@ -50,6 +51,7 @@ const SettingsAccordion = ({ user }: SettingsAccordionProps) => {
          </SettingsAccordionItem>
          <SettingsAccordionItem className={`!mt-4`} name={`Behaviour`} value={`behaviour`}>
             <TestDifficultySection />
+            <AutoSaveModeSection />
             <BlindModeSection />
             <LanguageSection />
          </SettingsAccordionItem>

@@ -13,12 +13,12 @@ export interface PageProps {
 const Page = async ({ }: PageProps) => {
    const session = await auth();
    const user = await xprisma.user.findUnique({
-      where: { id: session?.user?.id },
+      where: { id: session?.user?.id ?? `` },
       include: { tags: true, configuration: true },
    });
-   const { updatePassword, verifyPassword, ...rest } = user;
 
    if (!user) notFound();
+   const { updatePassword, verifyPassword, ...rest } = user;
    console.log({ user });
 
    return (

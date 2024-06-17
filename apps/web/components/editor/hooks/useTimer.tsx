@@ -3,13 +3,14 @@ import { useCallback, useEffect, useRef } from "react";
 import { useAtom, useAtomValue } from "jotai";
 import {
    completedWordsAtom,
-   currentTimestampAtom,
    TypingMode,
    typingModeAtom,
    TypingRunState,
    typingRunStateAtom,
    wordsCountsAtom,
 } from "@atoms/editor";
+import { currentTimestampAtom, pauseAtom, resumeAtom, startAtom, timerIntervalAtom } from "@atoms/timer";
+import { useSetAtom } from "jotai/index";
 
 export function useTimer(onFinish?: () => void) {
    const [currentTimestamp, setCurrentTimestamp] = useAtom(currentTimestampAtom);
@@ -20,6 +21,11 @@ export function useTimer(onFinish?: () => void) {
    const [timerState, setTimerState] = useAtom(typingRunStateAtom);
 
    const intervalId = useRef<NodeJS.Timeout>(null!);
+   const timerIntervalId = useAtom(timerIntervalAtom)
+
+   const startAction = useSetAtom(startAtom)
+   const pauseAction = useSetAtom(pauseAtom)
+   const resumeAction = useSetAtom(resumeAtom)
 
    const handleFinish = useCallback(() => {
       clearInterval(intervalId?.current);
@@ -52,10 +58,11 @@ export function useTimer(onFinish?: () => void) {
       if (timerState === TypingRunState.RUNNING || currentTimestamp === 0) return;
 
       if (typingMode === TypingMode.TIME) {
-         if (intervalId.current) clearInterval(intervalId.current);
-         intervalId.current = setInterval(() => {
-            setCurrentTimestamp(prev => prev - 1);
-         }, 1_000);
+         // if (intervalId.current) clearInterval(intervalId.current);
+         // intervalId.current = setInterval(() => {
+         //    setCurrentTimestamp(prev => prev - 1);
+         // }, 1_000);
+         startAction()
       }
 
       setTimerState(TypingRunState.RUNNING);
@@ -65,7 +72,8 @@ export function useTimer(onFinish?: () => void) {
       if (timerState !== TypingRunState.RUNNING) return;
 
       if (typingMode === TypingMode.TIME) {
-         if (intervalId.current) clearInterval(intervalId.current);
+         // if (intervalId.current) clearInterval(intervalId.current);
+         pauseAction()
          setTimerState(TypingRunState.PAUSED);
       }
 
@@ -75,11 +83,12 @@ export function useTimer(onFinish?: () => void) {
       if (timerState !== TypingRunState.PAUSED) return;
 
       if (typingMode === TypingMode.TIME) {
-         if (intervalId.current) clearInterval(intervalId.current);
-
-         intervalId.current = setInterval(() => {
-            setCurrentTimestamp(prev => prev - 1);
-         }, 1_000);
+         // if (intervalId.current) clearInterval(intervalId.current);
+         //
+         // intervalId.current = setInterval(() => {
+         //    setCurrentTimestamp(prev => prev - 1);
+         // }, 1_000);
+         resumeAction()
       }
 
       setTimerState(TypingRunState.RUNNING);

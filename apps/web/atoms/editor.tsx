@@ -4,6 +4,8 @@ import { TypedLetterInfo, WordRange } from "@components/editor/hooks/useTypingEd
 import { injectPunctuation, strings } from "@lib/strings";
 import { userLanguageAtom, userTestDifficultyAtom } from "@atoms/user";
 import { maxBy } from "lodash";
+import { kogasa, mean, roundTo2, stdDev } from "@lib/numbers";
+import { currentTimestampAtom, timeAtom } from "@atoms/timer";
 
 export enum TypingRunState {
    STOPPED = `STOPPED`,
@@ -23,13 +25,6 @@ export const WORDS_COUNTS = {
    100: 100,
 } as const;
 
-export const TIMES = {
-   10: 10,
-   15: 15,
-   30: 30,
-   60: 60,
-   120: 120,
-} as const;
 
 export const LANGUAGES_MAP = {
    en: `English`,
@@ -159,7 +154,6 @@ export const wordsCompletionTimesAtom = atom((get) => {
    if (!typedLetters.length) return [];
    const lettersReversed = typedLetters.reverse();
 
-   console.log({ completedWords, typedLetters });
    return completedWords
       .filter(({ range: [, end] }) =>
          end <= (maxBy(typedLetters, l => l.charIndex)!.charIndex))
@@ -240,21 +234,27 @@ export const typingFlagsAtom = atom<number>(0, (get, set, flags: number) => {
 });
 typingFlagsAtom.debugLabel = `typingFlagsAtom`;
 
-export const currentTimestampAtom = atom<number>(TIMES["10"]!);
-currentTimestampAtom.debugLabel = `currentTimestampAtom`;
 
 export const typingRunStateAtom = atom<TypingRunState>(TypingRunState.STOPPED);
 typingRunStateAtom.debugLabel = `typingRunStateAtom`;
+
+export const totalRunTimeAtom = atom<number>(get => {
+   const state = get(typingRunStateAtom);
+   if(state === TypingRunState.FINISHED) return performance.now() - get(startTimeAtom);
+   return get(wordsCompletionTimesAtom)?.reduce((a, b) => a + b.time, 0)
+});
+totalRunTimeAtom.debugLabel = `totalRunTimeAtom`;
 
 export const newTestAtom = atom(
    null, // it's a convention to pass `null` for the first argument
    (get, set) => {
       const count = get(wordsCountsAtom);
       const words = generate(count) as string[];
+      const time = get(timeAtom)
 
       set(wordsAtom, words);
       set(typedLettersAtom, []);
-      set(currentTimestampAtom, TIMES["10"]!);
+      set(currentTimestampAtom, time!);
       set(typingRunStateAtom, TypingRunState.STOPPED);
       set(currentCharIndexAtom, -1);
       set(startTimeAtom, 0);
@@ -270,9 +270,10 @@ export const restartAtom = atom(
    null, // it's a convention to pass `null` for the first argument
    (get, set) => {
       const words = get(wordsAtom);
+      const time = get(timeAtom)
 
       set(typedLettersAtom, []);
-      set(currentTimestampAtom, TIMES["10"]!);
+      set(currentTimestampAtom, time);
       set(typingRunStateAtom, TypingRunState.STOPPED);
       set(currentCharIndexAtom, -1);
       set(startTimeAtom, 0);
@@ -290,12 +291,6 @@ export const wordsCountsAtom = atom<number>(WORDS_COUNTS["10"]!, async (get, set
 });
 wordsCountsAtom.debugLabel = `wordsCountsAtom`;
 
-// @ts-ignore
-export const timeAtom = atom<number>(TIMES["10"]!, (get, set, value: number) => {
-   set(timeAtom, value);
-   set(currentTimestampAtom, value);
-});
-timeAtom.debugLabel = `timeAtom`;
 
 export enum TypingRunSuccess {
    SUCCESS = `SUCCESS`,
@@ -332,3 +327,22 @@ export const typingRunSuccessAtom = atom<TypingRunSuccess>((get) => {
    return TypingRunSuccess.INDETERMINATE;
 });
 typingRunSuccessAtom.debugLabel = `typingRunSuccessAtom`;
+
+export const consistencyScoreAtom = atom<number>((get) => {
+   const typedLetters = get(typedLettersAtom)
+      .map((letter, index) => {
+
+         return {
+            ...letter,
+            charIndex: index,
+         };
+      })
+   const rawPerSecond = [].map((count) =>
+      Math.round((count / 5) * 60)
+   );
+
+   const stddev = stdDev(rawPerSecond);
+   const avg = mean(rawPerSecond);
+   return roundTo2(kogasa(stddev / avg))
+});
+consistencyScoreAtom.debugLabel = `consistencyScoreAtom`;

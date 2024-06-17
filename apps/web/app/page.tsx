@@ -16,11 +16,14 @@ export default async function Home() {
    if (!session?.user) user = null;
    else {
       let dbUser = await xprisma.user.findUnique({
-         where: { id: session?.user?.id },
+         where: { id: session?.user?.id ?? `` },
          include: { configuration: true },
       });
-      const { updatePassword, verifyPassword, ...rest } = dbUser;
-      user = rest;
+      if (!dbUser) user = null;
+      else {
+         const { updatePassword, verifyPassword, ...rest } = dbUser;
+         user = rest;
+      }
    }
 
    const authenticated = !!session?.user;

@@ -42,8 +42,6 @@ export async function GET(req: NextRequest, ctx: { params: { lang: string } }) {
       return { words: [...used] }
    });
 
-   console.log({ response });
-
    return response.success
       ? NextResponse.json(response.result)
       : NextResponse.json({ error: response.error.message }, {

@@ -8,7 +8,6 @@ import { useBoolean } from "@hooks/useBoolean";
 import { AnimatePresence, motion } from "framer-motion";
 import { MousePointer } from "lucide-react";
 import TypingLetters from "@components/editor/TypingLetters";
-import { useTimer } from "@components/editor/hooks/useTimer";
 
 export interface TypingInputProps {
    start: () => void;

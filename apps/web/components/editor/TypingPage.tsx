@@ -1,8 +1,8 @@
 "use client";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useTimer } from "@components/editor/hooks/useTimer";
 import {
-   currentTimestampAtom,
+   totalRunTimeAtom,
    typedLettersAtom,
    typingFlagsAtom,
    TypingMode,
@@ -20,32 +20,37 @@ import RestartButton from "@components/editor/RestartButton";
 import TypeRunState from "./TypeRunState";
 import TypingInput from "@components/editor/TypingInput";
 import { LocalStorage } from "@lib/local-storage";
-import { toast } from "@repo/ui";
+import { Button, toast } from "@repo/ui";
 import { useAction } from "next-safe-action/hooks";
 import { saveTypingRun } from "@components/editor/actions";
 import { isExecuting } from "next-safe-action/status";
 import { AnimatePresence } from "framer-motion";
 import { TOASTS } from "@config/toasts";
 import SaveTypingRunPrompt from "@components/editor/SaveTypingRunPrompt";
-import { userConfigAtom } from "@atoms/user";
+import { autoSaveModeAtom, userConfigAtom } from "@atoms/user";
+import NewRunButton from "@components/editor/NewRunButton";
+import { SignedIn } from "@components/common/Auth";
+import { signIn } from "next-auth/react";
+import { currentTimestampAtom } from "@atoms/timer";
 
 export interface TypingEditorProps {
 }
 
-const TIME = 10;
 
 export const TYPING_RUN_LS_KEY = `typing-run`;
-
 const TypingPage = ({}: TypingEditorProps) => {
    const typedLetters = useAtomValue(typedLettersAtom);
    const time = useAtomValue(currentTimestampAtom);
    const wordCounts = useAtomValue(wordsCountsAtom);
    const mode = useAtomValue(typingModeAtom);
    const flags = useAtomValue(typingFlagsAtom);
+   const totalRunTime = useAtomValue(totalRunTimeAtom);
+
    const success = useAtomValue(typingRunSuccessAtom);
    const wc = useAtomValue(wordsCorrectnessAtom);
 
    const [userConfig, setUserConfig] = useAtom(userConfigAtom);
+   console.log({ userConfig });
 
    const { execute, status } = useAction(saveTypingRun, {
       onSuccess: res => {
@@ -65,10 +70,11 @@ const TypingPage = ({}: TypingEditorProps) => {
    useSaveLatestUserRun();
 
    const { start, timerState, resume, pause } = useTimer(() => {
-      console.log(typedLetters);
+      console.log(typedLetters.sort((a, b) => a.charIndex - b.charIndex));
 
       // Save to local storage:
       const typeRun = {
+         totalRunTime,
          typedLetters,
          time: mode === TypingMode.TIME ? time : null,
          wordCounts: mode === TypingMode.WORDS ? wordCounts : null,
@@ -82,6 +88,8 @@ const TypingPage = ({}: TypingEditorProps) => {
 
       LocalStorage.setItem(TYPING_RUN_LS_KEY, typeRun);
    });
+   const autoSaveMode = useAtomValue(autoSaveModeAtom);
+   const showSavePrompt = useMemo(() => timerState === TypingRunState.FINISHED && typingRun && !autoSaveMode, [timerState, typingRun]);
 
    function handleSaveTypingRun(): void {
       execute(typingRun);
@@ -108,18 +116,43 @@ const TypingPage = ({}: TypingEditorProps) => {
                <TypingInput resume={resume} pause={pause} start={start} />
             </div>
          )}
-         <div className={`flex items-center justify-center w-full`}>
+         <span className={`mt-4 w-full text-center`}>Total run time: {totalRunTime}ms</span>
+         <div className={`flex items-center justify-center w-full gap-4`}>
             <RestartButton />
+            <NewRunButton />
          </div>
          <AnimatePresence>
-            {timerState === TypingRunState.FINISHED && typingRun &&
+            {showSavePrompt &&
                <SaveTypingRunPrompt
-                  loading={isExecuting(status)} onDismiss={() => {
-                  setTypingRun(null!);
-                  LocalStorage.removeItem(TYPING_RUN_LS_KEY);
-               }} onSave={handleSaveTypingRun} />
+                  loading={isExecuting(status)}
+                  onDismiss={() => {
+                     setTypingRun(null!);
+                     LocalStorage.removeItem(TYPING_RUN_LS_KEY);
+                  }} onSave={handleSaveTypingRun} />
             }
          </AnimatePresence>
+         <AnimatePresence>
+            <SignedIn>
+               {showSavePrompt &&
+                  (
+                     <div className={`flex items-center justify-center w-full`}>
+                     <span className={`text-lg`}>
+                        <Button className={`!text-base !px-0`} variant={`link`}
+                                onClick={_ => signIn(`google`)}>Sign in </Button> to save your result.
+                     </span>
+                     </div>
+                  )
+               }
+            </SignedIn>
+         </AnimatePresence>
+         <div className={`w-full grid grid-cols-8 gap-4`}>
+            {typedLetters.map((letter, index) => (
+               <span key={`${letter.letter}-${letter.timestamp}`}
+                     className={`text-sm`}>
+                  {letter.letter} - {letter.timestamp}ms
+               </span>
+            ))}
+         </div>
          {timerState === TypingRunState.FINISHED && (
             <div className={`text-sm`}>
                <TypingRunSummary />

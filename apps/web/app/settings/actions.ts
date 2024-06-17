@@ -9,6 +9,7 @@ const schema = z.object({
    id: z.string(),
    test_difficulty: z.union([z.literal(`NORMAL`), z.literal(`EXPERT`), z.literal(`MASTER`)]),
    blind_mode: z.boolean(),
+   auto_save_mode: z.boolean(),
    input_freedom_mode: z.boolean(),
    input_confidence_mode: z.union([z.literal(`ON`), z.literal(`OFF`), z.literal(`MAX`)]),
    input_indicate_typos: z.union([z.literal(`BELOW`), z.literal(`OFF`), z.literal(`REPLACE`)]),

@@ -3,7 +3,7 @@ import Link from "next/link";
 import React, { ReactNode } from "react";
 import { signIn, signOut } from "next-auth/react";
 import { SignedIn, SignedOut } from "./Auth";
-import { LogIn, LogOut, Settings } from "lucide-react";
+import { LogIn, LogOut, Settings, Timer } from "lucide-react";
 import { APP_NAME } from "@config/site";
 import { usePathname } from "next/navigation";
 import { cn } from "lib/utils";
@@ -68,6 +68,15 @@ const Header = ({}: NavbarProps) => {
                      <span
                         className={`text-base drop-shadow-lg !font-semibold ${lexend.className} `}>
                      Settings
+                  </span>
+                  </Link>
+               </Button>
+               <Button variant={`ghost`} asChild>
+                  <Link title={`Settings`} href={`/_timer`} className={`flex items-center gap-2 !ml-12`}>
+                     <Timer size={16} />
+                     <span
+                        className={`text-base drop-shadow-lg !font-semibold ${lexend.className} `}>
+                     Timer
                   </span>
                   </Link>
                </Button>

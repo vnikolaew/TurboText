@@ -2,7 +2,7 @@
 import React, { PropsWithChildren, useMemo, useState } from "react";
 import { Button, Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, Input } from "@repo/ui";
 import { useAtom } from "jotai/index";
-import { currentTimestampAtom } from "@atoms/editor";
+import {  timeAtom } from "@atoms/timer";
 
 function parseTimeframe(timeframe: string) {
    // Regular expression to match the components
@@ -40,7 +40,7 @@ export const Kbd = ({ children }: PropsWithChildren) => {
 
 const CustomTimeConfigModal = ({ setOpen, open }: CustomTimeConfigModalProps) => {
    const [value, setValue] = useState(``);
-   const [time, setTime] = useAtom(currentTimestampAtom);
+   const [time, setTime] = useAtom(timeAtom);
    const [timeframe, setTimeframe] = useState<Timeframe>({
       hours: 0,
       minutes: 0,

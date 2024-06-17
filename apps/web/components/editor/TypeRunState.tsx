@@ -3,7 +3,6 @@ import { useAtomValue } from "jotai";
 import React from "react";
 import {
    completedWordsAtom,
-   currentTimestampAtom,
    TypingMode,
    typingModeAtom,
    TypingRunState,
@@ -11,6 +10,7 @@ import {
    wordsCountsAtom,
 } from "@atoms/editor";
 import { AnimatePresence, motion } from "framer-motion";
+import { currentTimestampAtom } from "@atoms/timer";
 
 export interface TypeRunStateProps {
 }
