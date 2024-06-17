@@ -21,7 +21,7 @@ const EditorToolbar = ({}: EditorToolbarProps) => {
    const [timeModalOpen, setTimeModalOpen] = useBoolean();
 
    return (
-      <div className={`rounded-full bg-neutral-800 !px-4 !py-1 flex items-center gap-2 shadow-md`}>
+      <div id={`editor-toolbar`} className={`rounded-full bg-neutral-800 !px-4 !py-1 flex items-center gap-2 shadow-md`}>
          <ToggleGroup
             onValueChange={values => setTypingFlags(values.map(Number).reduce((a, b) => a + b, 0))} type="multiple">
             <ToggleItem Icon={AtSign} value={TypingFlags.PUNCTUATION.toString()}
@@ -31,7 +31,11 @@ const EditorToolbar = ({}: EditorToolbarProps) => {
          </ToggleGroup>
          <Separator className={`h-4 bg-neutral-500 w-[1px]`} />
          <ToggleGroup
-            onValueChange={value => setTypingMode(value as TypingMode)} type="single">
+            onValueChange={value => {
+               if(!value?.length) return
+               console.log({ value });
+               setTypingMode(value as TypingMode);
+            }} type="single">
             <ToggleItem Icon={Clock2} value={TypingMode.TIME} active={typingMode === TypingMode.TIME} text={`time`} />
             <ToggleItem Icon={Baseline} value={TypingMode.WORDS} active={typingMode === TypingMode.WORDS}
                         text={`words`} />

@@ -101,3 +101,88 @@ export function getMonthName(monthIndex: number) {
 
    return monthNames[monthIndex];
 }
+
+
+export function formatMillisecondsToTime(ms: number) {
+   // Convert milliseconds to total seconds
+   let totalSeconds = Math.floor(ms / 1000);
+
+   // Extract hours, minutes, and remaining seconds
+   let hours = Math.floor(totalSeconds / 3600);
+   let minutes = Math.floor((totalSeconds % 3600) / 60);
+   let seconds = totalSeconds % 60;
+
+   // Format hours, minutes, and seconds to always be two digits
+   let formattedHours = String(hours).padStart(2, "0");
+   let formattedMinutes = String(minutes).padStart(2, "0");
+   let formattedSeconds = String(seconds).padStart(2, "0");
+
+   // Combine and return the formatted time
+   return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+}
+
+export function formatMilliseconds(ms: number) {
+   const millisecondsInSecond = 1000;
+   const millisecondsInMinute = millisecondsInSecond * 60;
+   const millisecondsInHour = millisecondsInMinute * 60;
+   const millisecondsInDay = millisecondsInHour * 24;
+   const millisecondsInMonth = millisecondsInDay * 30.44; // Average month length
+   const millisecondsInYear = millisecondsInDay * 365.25; // Average year length
+
+   const years = Math.floor(ms / millisecondsInYear);
+   if (years > 0) return years + ` year${years > 1 ? `s` : ``}`;
+   ms %= millisecondsInYear;
+
+   const months = Math.floor(ms / millisecondsInMonth);
+   if (months > 0) return months + ` month${months > 1 ? `s` : ``}`;
+   ms %= millisecondsInMonth;
+
+   const days = Math.floor(ms / millisecondsInDay);
+   if (days > 0) return days + ` day${days > 1 ? `s` : ``}`;
+   ms %= millisecondsInDay;
+
+   const hours = Math.floor(ms / millisecondsInHour);
+   if (hours > 0) return hours + ` hour${hours > 1 ? `s` : ``}`;
+   ms %= millisecondsInHour;
+
+   const minutes = Math.floor(ms / millisecondsInMinute);
+   if (minutes > 0) return minutes + ` minute${minutes > 1 ? `s` : ``}`;
+   ms %= millisecondsInMinute;
+
+   const seconds = Math.floor(ms / millisecondsInSecond);
+   if (seconds > 0) return seconds + ` second${seconds > 1 ? `s` : ``}`;
+   ms %= millisecondsInSecond;
+
+   const milliseconds = ms % millisecondsInSecond;
+   return milliseconds + ` millisecond${milliseconds > 1 ? `s` : ``}`;
+}
+
+export function exportObjectAsJson(obj: any, filename: string) {
+   // Convert object to JSON string
+   const jsonString = JSON.stringify(obj, null, 2);
+
+   // Create a Blob from the JSON string
+   const blob = new Blob([jsonString], { type: "application/json" });
+
+   // Create a link element
+   const link = document.createElement("a");
+
+   // Create a URL for the Blob and set it as the href attribute of the link
+   const url = URL.createObjectURL(blob);
+   link.href = url;
+
+   // Set the download attribute of the link with the desired file name
+   link.download = filename;
+
+   // Append the link to the document body
+   document.body.appendChild(link);
+
+   // Programmatically click the link to trigger the download
+   link.click();
+
+   // Remove the link from the document
+   document.body.removeChild(link);
+
+   // Release the Blob URL
+   URL.revokeObjectURL(url);
+}

@@ -3,7 +3,7 @@ import Link from "next/link";
 import React, { ReactNode } from "react";
 import { signIn, signOut } from "next-auth/react";
 import { SignedIn, SignedOut } from "./Auth";
-import { LogIn, LogOut } from "lucide-react";
+import { LogIn, LogOut, Settings } from "lucide-react";
 import { APP_NAME } from "@config/site";
 import { usePathname } from "next/navigation";
 import { cn } from "lib/utils";
@@ -50,7 +50,7 @@ const InteractiveHeaderLink = ({ icon, title, href }: InteractiveHeaderLinkProps
  * @constructor
  */
 const Header = ({}: NavbarProps) => {
-   const userDataLoading = useAtomValue(userDataLoadingAtom)
+   const userDataLoading = useAtomValue(userDataLoadingAtom);
 
    return (
       <header
@@ -58,24 +58,33 @@ const Header = ({}: NavbarProps) => {
          <div className={`container flex h-14 max-w-screen-2xl items-center !w-3/4 justify-between`}>
             <nav className={`flex flex-1 items-center space-x-4 lg:space-x-6`}>
                <Link href={`/`} className={`flex items-center gap-3`}>
-                  <RocketLogo className={`fill-amber-600 w-8 h-8 fill-amber-500 shadow-md`} />
+                  <RocketLogo className={`w-8 h-8 fill-amber-500 shadow-md`} />
                   <span
-                     className={`font-semibold text-lg !test-gradient drop-shadow-lg !font-semibold ${lexend.className} uppercase`}>{APP_NAME}</span>
+                     className={`text-lg !test-gradient drop-shadow-lg !font-semibold ${lexend.className} uppercase`}>{APP_NAME}</span>
                </Link>
+               <Button variant={`ghost`} asChild>
+                  <Link title={`Settings`} href={`/settings`} className={`flex items-center gap-2 !ml-12`}>
+                     <Settings size={16} />
+                     <span
+                        className={`text-base drop-shadow-lg !font-semibold ${lexend.className} `}>
+                     Settings
+                  </span>
+                  </Link>
+               </Button>
             </nav>
             <div className={`flex-1 text-center flex items-center gap-8 justify-center`}>
             </div>
             <div className={`flex flex-1 items-center justify-end space-x-8`}>
                <SignedIn>
-                  <div className={`flex items-center gap-4`}>
+                  <div className={`flex items-center gap-6`}>
                      <div>
                         {userDataLoading ? (
                            <Skeleton className={`h-12 w-12 rounded-full bg-neutral-700`} />
-                        )  : <UserAvatarDropdown />}
+                        ) : <UserAvatarDropdown />}
                      </div>
                      {userDataLoading ? (
                         <Skeleton className={`h-8 w-32 rounded-lg bg-neutral-700`} />
-                     )  : (
+                     ) : (
                         <Button
                            className={`px-4 gap-2 rounded-lg !py-2 !h-fit`}
                            onClick={_ => signOut({ redirect: true, callbackUrl: `/` })} variant={"ghost"}

@@ -49,7 +49,7 @@ const CustomWordsConfigModal = ({ open, setOpen }: CustomWordsConfigModalProps) 
                   if (Number.isNaN(Number(value))) console.log(`Input is not a number`);
                   setWordsCount(Number(value))
                   setOpen(false)
-               }} variant={`default`} className={`w-full`}>ok</Button>
+               }} variant={`default`} className={`w-full`}>OK</Button>
             </DialogFooter>
          </DialogContent>
       </Dialog>

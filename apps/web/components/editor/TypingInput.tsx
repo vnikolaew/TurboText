@@ -3,18 +3,20 @@ import React, { Fragment, useEffect } from "react";
 import { useTypingEditor } from "@components/editor/hooks/useTypingEditor";
 import { useAtomValue } from "jotai";
 import { TypingRunState, typingRunStateAtom, wordsAtom } from "@atoms/editor";
-import { userAtom } from "@atoms/user";
-import Letter from "@components/common/Letter";
-import { cn } from "@lib/utils";
+import { calculateSHA256, cn } from "@lib/utils";
 import { useBoolean } from "@hooks/useBoolean";
 import { AnimatePresence, motion } from "framer-motion";
 import { MousePointer } from "lucide-react";
+import TypingLetters from "@components/editor/TypingLetters";
+import { useTimer } from "@components/editor/hooks/useTimer";
 
 export interface TypingInputProps {
    start: () => void;
+   pause: () => void;
+   resume: () => void;
 }
 
-const TypingInput = ({ start }: TypingInputProps) => {
+const TypingInput = ({ start, pause, resume }: TypingInputProps) => {
    const {
       editorRef,
       currentLetterRef,
@@ -27,19 +29,18 @@ const TypingInput = ({ start }: TypingInputProps) => {
 
    const timerState = useAtomValue(typingRunStateAtom);
    const words = useAtomValue(wordsAtom);
-   const user = useAtomValue(userAtom);
    const [showFocusLost, setShowFocusLost] = useBoolean();
 
    useEffect(() => {
-      const handler= () => {
-         if(showFocusLost) {
-            setShowFocusLost(false)
-            editorRef.current?.focus()
+      const handler = () => {
+         if (showFocusLost) {
+            setShowFocusLost(false);
+            editorRef.current?.focus();
          }
-      }
+      };
 
-      window.addEventListener(`keydown`, handler)
-      return () => window.removeEventListener(`keydown`, handler)
+      window.addEventListener(`keydown`, handler);
+      return () => window.removeEventListener(`keydown`, handler);
 
    }, [showFocusLost]);
 
@@ -54,7 +55,14 @@ const TypingInput = ({ start }: TypingInputProps) => {
                   transition={{ duration: .3 }}
                   exit={{ opacity: 0 }}
                   onKeyDown={console.log}
-                  onClick={_ => setShowFocusLost(false)}
+                  onClick={_ => {
+                     if(timerState === TypingRunState.PAUSED) {
+                        console.log(`Resuming`);
+                        resume();
+                     }
+
+                     setShowFocusLost(false);
+                  }}
                   className={`absolute left-1/2 top-3/5 -translate-x-1/2 -translate-y-1/2 text-neutral-300 flex items-center gap-2 z-[30]`}>
                   <MousePointer size={18} />
                   <span className={`text-sm`}>
@@ -63,37 +71,47 @@ const TypingInput = ({ start }: TypingInputProps) => {
                </motion.div>
             )}
          </AnimatePresence>
-         <div
-            onBlur={_ => setTimeout(() => setShowFocusLost(true), 2000)}
-            style={{
-               caretColor: `transparent`,
-            }}
-            ref={editorRef}
-            className={cn(`bg-transparent flex w-full items-center gap-2 text-wrap break-normal !py-2 cursor-default focus:!outline-none text-wrap flex-wrap mt-8`,
-               showFocusLost && `blur-sm`)}
-            tabIndex={0}
-            autoFocus
-            onKeyDown={timerState === TypingRunState.FINISHED ? null : onKeyDown}>
-            <div
-               style={{
-                  top, left,
-                  transition: `left 100ms`,
+         <AnimatePresence presenceAffectsLayout mode={`wait`}>
+            <motion.div
+               initial={{ opacity: 100 }}
+               animate={{ opacity: 100 }}
+               exit={{ opacity: 0 }}
+               transition={{ duration: .3 }}
+               onBlur={e => {
+                  const toolbar = document.getElementById(`editor-toolbar`);
+                  if (!toolbar?.contains(e.relatedTarget)) {
+                     return setTimeout(() => {
+                        if (timerState === TypingRunState.RUNNING) {
+                           console.log(`Pausing`);
+                           pause();
+                        }
+                        setShowFocusLost(true);
+                     }, 2000);
+                  }
                }}
-               className={`h-[2rem] w-[2px] bg-neutral-100 animate-pulse absolute z-10 text-red-500 `}></div>
-            {/*<div className={``} ref={editorBeginningRef} id={`editor-beginning self-start`} />*/}
-            {words.map((word, index) => (
-               <span className={`inline-flex items-center gap-.5 text-neutral-600 `} key={word + index}>
-                       {[...word].map((char, i) => (
-                          <Letter
-                             ref={currentCharIndex === i + words.slice(0, index).reduce((prev, curr) => prev + curr.length, 0) ? currentLetterRef! : ((currentCharIndex <= 0 && index === 0 && i === 0) ? currentLetterRef : null)}
-                             className={cn(
-                                lettersCorrectness[i + words.slice(0, index).reduce((prev, curr) => prev + curr.length, 0)] && `text-neutral-300`,
-                                lettersCorrectness[i + words.slice(0, index).reduce((prev, curr) => prev + curr.length, 0)] === false && `text-red-500 line-through decoration-red-500 decoration-3`,
-                             )} key={char + i}>{char}</Letter>
-                       ))}
-                   </span>
-            ))}
-         </div>
+               style={{
+                  caretColor: `transparent`,
+               }}
+               key={calculateSHA256(words.join(`,`))}
+               ref={editorRef}
+               className={cn(`bg-transparent flex w-full items-center gap-2 text-wrap break-normal !py-2 cursor-default focus:!outline-none flex-wrap mt-8`,
+                  showFocusLost && `blur-sm`)}
+               tabIndex={0}
+               autoFocus
+               onKeyDown={timerState === TypingRunState.FINISHED ? null : onKeyDown}>
+               <div
+                  style={{
+                     top, left,
+                     transition: `left 100ms`,
+                  }}
+                  className={`h-[2rem] w-[2px] bg-neutral-100 animate-pulse absolute z-10 text-red-500 `}></div>
+               <TypingLetters
+                  currentLetterRef={currentLetterRef!}
+                  words={words}
+                  currentCharIndex={currentCharIndex}
+                  lettersCorrectness={lettersCorrectness} />
+            </motion.div>
+         </AnimatePresence>
       </Fragment>
    );
 };

@@ -20,9 +20,11 @@ model User {
   accounts      Account[]
   sessions      Session[]
 
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
-  typingRuns TypingRun[]
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+  typingRuns    TypingRun[]
+  tags          Tag[]
+  configuration UserConfiguration?
 }
 
 model Account {
@@ -42,7 +44,8 @@ model Account {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user                User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userConfigurationId String?
 
   @@id([provider, providerAccountId])
 }
@@ -53,8 +56,9 @@ model Session {
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  userConfigurationId String?
 }
 
 model VerificationToken {
@@ -65,15 +69,111 @@ model VerificationToken {
   @@id([identifier, token])
 }
 
+model Tag {
+  id       String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId   String
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name     String
+  metadata Json?  @default("null") @db.JsonB
+
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  userConfigurationId String?
+}
+
 model TypingRun {
-  id     String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: NoAction)
-  time   Int
+  id        String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String
+  user      User   @relation(fields: [userId], references: [id], onDelete: NoAction)
+  time      Int?
+  wordCount Int?
 
-  metadata     Json? @default("null") @db.JsonB
-  typedLetters Json  @db.JsonB
+  mode         TypingRunMode
+  flags        Int
+  metadata     Json?         @default("null") @db.JsonB
+  typedLetters Json          @db.JsonB
 
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  userConfigurationId String?
+}
+
+enum TypingRunMode {
+  TIME
+  WORDS
+}
+
+enum RunDifficulty {
+  NORMAL
+  EXPERT
+  MASTER
+}
+
+enum ConfidenceMode {
+  ON
+  OFF
+  MAX
+}
+
+enum CaretSmoothness {
+  OFF
+  SLOW
+  MEDIUM
+  FAST
+}
+
+enum CaretStyle {
+  OFF
+  CURSOR
+  BLOCK
+  BLOCK_FILLED
+  UNDERSCORE
+}
+
+enum ShowAverage {
+  OFF
+  SPEED
+  ACC
+  BOTH
+}
+
+enum IndicateTypos {
+  OFF
+  BELOW
+  REPLACE
+}
+
+model UserConfiguration {
+  id String @id @default(cuid())
+
+  userId          String        @unique
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  test_difficulty RunDifficulty @default(NORMAL)
+
+  blind_mode Boolean @default(false)
+
+  input_freedom_mode    Boolean        @default(false)
+  input_confidence_mode ConfidenceMode @default(OFF)
+  input_indicate_typos  IndicateTypos  @default(OFF)
+
+  sound_click_sound String?
+  sound_error_sound String?
+
+  caret_smoothness CaretSmoothness @default(OFF)
+  caret_style      CaretStyle      @default(OFF)
+  pace_caret_style CaretStyle      @default(OFF)
+
+  theme_flip_colors   Boolean @default(false)
+  theme_colorful_mode Boolean @default(false)
+
+  elements_show_key_tips          Boolean     @default(false)
+  elements_show_oof_warning       Boolean     @default(false)
+  elements_show_caps_lock_warning Boolean     @default(false)
+  elements_show_average           ShowAverage @default(OFF)
+
+  language String @default("en-US")
+
+  metadata  Json?    @default("null") @db.JsonB
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

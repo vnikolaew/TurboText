@@ -21,7 +21,17 @@ const customAdapter = {
    // @ts-ignore
    createUser({ id, iss, ...user }: AdapterUser): Awaitable<AdapterUser> {
       const { email, name, picture, image, emailVerified } = user as unknown as GoogleProfile;
-      return xprisma.user.create({ data: { email, name, image: picture ?? image, emailVerified } });
+      return xprisma.user.create({
+         data: {
+            email, name, image: picture ?? image, emailVerified,
+            configuration: {
+               create: {
+                  sound_click_sound: null,
+                  sound_error_sound: null,
+               },
+            },
+         },
+      });
    },
 } satisfies Adapter;
 

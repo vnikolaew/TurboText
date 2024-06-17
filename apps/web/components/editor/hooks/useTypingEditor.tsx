@@ -8,8 +8,10 @@ import {
    startTimeAtom,
    typedLettersAtom,
    wordRangesAtom,
+   wordRangesByEndsAtom,
 } from "@atoms/editor";
 import { useAtomCallback } from "jotai/utils";
+import { userTestDifficultyAtom } from "@atoms/user";
 
 export enum TypedLetterFlags {
    INSERTED = 1,
@@ -29,15 +31,14 @@ export interface WordRange {
    range: [number, number];
 }
 
-
 export function useTypingEditor(onStart?: () => void) {
-   const [typedLetters, setTypedLetters] = useAtom(typedLettersAtom);
+   const [typedLetters] = useAtom(typedLettersAtom);
 
    const wordRanges = useAtomValue(wordRangesAtom);
-   const charsByIndex: Record<number, string> = useAtomValue(charsByIndexAtom);
 
    const [currentCharIndex] = useAtom(currentCharIndexAtom);
    const [lettersCorrectness] = useAtom(lettersCorrectnessAtom);
+   const userTestDifficulty = useAtomValue(userTestDifficultyAtom)
 
    const currentLetterRef = useRef<HTMLElement>();
    const editorRef = useRef<HTMLDivElement>();
@@ -59,8 +60,7 @@ export function useTypingEditor(onStart?: () => void) {
 
    const onKeyDown = useAtomCallback(useCallback((get, set, e: KeyboardEvent<HTMLDivElement>) => {
       e.preventDefault();
-      let key = e.key;
-      let ctrl = e.ctrlKey;
+      let { key, ctrlKey: ctrl } = e;
 
       if (key === `r` && ctrl) window.location.reload();
 
@@ -68,14 +68,19 @@ export function useTypingEditor(onStart?: () => void) {
       const startTime = get(startTimeAtom);
       const charsByIndex = get(charsByIndexAtom);
       const currentCharIndex = get(currentCharIndexAtom);
+      const lettersCorrectness = get(lettersCorrectnessAtom)
+      const wordRangesByEnds = get(wordRangesByEndsAtom)
+      const typedLetters = get(typedLettersAtom);
+
+      if (e.key === `Shift`) return;
 
       if (e.key === `Backspace`) {
          set(currentCharIndexAtom, c => Math.max(-1, c - 1));
 
          set(typedLettersAtom, l => [...l, {
-            correct: false,
+            correct: null,
             timestamp: performance.now() - startTime,
-            letter: charsByIndex[currentCharIndex + 1]!,
+            letter: charsByIndex[currentCharIndex]!,
             flags: TypedLetterFlags.DELETED,
             charIndex: currentCharIndex,
          }]);
@@ -85,9 +90,10 @@ export function useTypingEditor(onStart?: () => void) {
             wc2[currentCharIndex] = null;
             return wc2;
          });
+         return;
       }
 
-      if (charCode >= "a".charCodeAt(0) && charCode <= "z".charCodeAt(0)) {
+      if (charCode >= "!".charCodeAt(0) && charCode <= "z".charCodeAt(0)) {
          set(currentCharIndexAtom, c => c + 1);
 
          if (currentCharIndex + 1 === 0) {
@@ -96,11 +102,22 @@ export function useTypingEditor(onStart?: () => void) {
          }
 
          const correct = charCode === charsByIndex[currentCharIndex + 1]?.charCodeAt(0);
+
+         // Set letter correctness
          set(lettersCorrectnessAtom, wc => {
             let wc2 = [...wc];
             wc2[currentCharIndex + 1] = correct;
             return wc2;
          });
+
+         // Determine if we are at the end of a word
+         const endOfWord = wordRangesByEnds.has(currentCharIndex + 1);
+         if(endOfWord){
+            const [start, end] = wordRangesByEnds.get(currentCharIndex + 1)!
+
+            const areAllLettersCorrect = lettersCorrectness.slice(start, end).every(Boolean) && correct;
+            console.log({ areAllLettersCorrect });
+         }
 
          set(typedLettersAtom, l => [...l,
             currentCharIndex + 1 === 0 ?
@@ -118,17 +135,17 @@ export function useTypingEditor(onStart?: () => void) {
                   flags: TypedLetterFlags.INSERTED,
                }]);
       }
-   }, [onStart]), );
+   }, [onStart]));
 
-return {
-   top,
-   left,
-   editorRef,
-   currentLetterRef,
-   currentCharIndex,
-   lettersCorrectness,
-   onKeyDown,
-   typedLetters,
-   wordRanges,
-} as const;
+   return {
+      top,
+      left,
+      editorRef,
+      currentLetterRef,
+      currentCharIndex,
+      lettersCorrectness,
+      onKeyDown,
+      typedLetters,
+      wordRanges,
+   } as const;
 }

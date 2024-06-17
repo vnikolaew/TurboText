@@ -25,23 +25,24 @@ const ScrollToTopButton = ({}: ScrollToTopButtonProps) => {
    };
 
    // @ts-ignore
-   return <AnimatePresence mode={`sync`}>
+   return <AnimatePresence >
       {
          showButton && (
             <motion.div
+               key={`scroll-to-top`}
                transition={{ duration: 0.3 }}
                initial={{
-                  height: 0,
-                  opacity: 0,
+                  opacity: 100,
                }}
-               animate={{ height: `auto`, opacity: 100 }} exit={{ height: 0, opacity: 0 }}
+               className={`!z-[100]`}
+               animate={{ opacity: 100 }} exit={{ opacity: 0 }}
             >
                <TooltipProvider> <Tooltip>
                   <TooltipTrigger asChild>
                      <MotionButton
                         variant={`secondary`}
                         onClick={scrollToTop}
-                        className={`rounded-full !p-2 fixed bottom-8 right-8 !h-fit opacity-70`}>
+                        className={`rounded-full !p-2 fixed bottom-8 right-8 !h-fit opacity-70 !z-[100]`}>
                         <ChevronUp size={28} />
                      </MotionButton>
                   </TooltipTrigger>

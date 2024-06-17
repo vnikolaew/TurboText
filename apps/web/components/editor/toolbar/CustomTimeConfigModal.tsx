@@ -95,7 +95,7 @@ const CustomTimeConfigModal = ({ setOpen, open }: CustomTimeConfigModalProps) =>
                   if (Number.isNaN(Number(value))) console.log(`Input is not a number`);
                   setTime(Number(value));
                   setOpen(false);
-               }} variant={`ghost`} className={`w-full`}>ok</Button>
+               }} variant={`default`} className={`w-full`}>OK</Button>
             </DialogFooter>
          </DialogContent>
       </Dialog>);

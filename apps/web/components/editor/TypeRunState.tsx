@@ -1,10 +1,12 @@
 "use client";
-import { useAtom, useAtomValue } from "jotai";
+import { useAtomValue } from "jotai";
 import React from "react";
 import {
    completedWordsAtom,
-   currentTimestampAtom, TypingMode,
-   typingModeAtom, TypingRunState,
+   currentTimestampAtom,
+   TypingMode,
+   typingModeAtom,
+   TypingRunState,
    typingRunStateAtom,
    wordsCountsAtom,
 } from "@atoms/editor";
@@ -26,7 +28,8 @@ const TypeRunState = ({}: TypeRunStateProps) => {
    let children;
    if (typingMode === TypingMode.TIME) {
       children = <motion.div
-         initial={{ opacity: 0 }}
+         initial={{ opacity: 100 }}
+         key={`time`}
          animate={{ opacity: 100 }}
          exit={{ opacity: 0 }}
          transition={{ duration: .3}}
@@ -39,6 +42,7 @@ const TypeRunState = ({}: TypeRunStateProps) => {
       </motion.div>;
    }  else if (typingMode === TypingMode.WORDS) {
       children = <motion.div
+         key={`words`}
          initial={{ opacity: 100 }}
          animate={{ opacity: 100 }}
          transition={{ duration: .3}}

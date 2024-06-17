@@ -8,33 +8,38 @@ import { useAtomValue } from "jotai";
 import {
    completedWordsAtom,
    lettersCorrectnessPercentageAtom,
+   timeAtom,
+   typedLettersAtom,
+   typingModeAtom,
    TypingRunState,
    typingRunStateAtom,
-   typedLettersAtom,
+   wordsCompletionTimesAtom,
 } from "@atoms/editor";
 import { SignedOut } from "@components/common/Auth";
 import { signIn } from "next-auth/react";
 import RestartButton from "@components/editor/RestartButton";
 
 export interface TypingEditorStatisticsProps {
-   time: number;
 }
 
 // TODO:
 // Stats: WPM, Accuracy, Raw, Characters, Consistency, Time, TestType
 const TypingRunSummary = ({
-                             time,
                           }: TypingEditorStatisticsProps) => {
    const typedLetters = useAtomValue(typedLettersAtom);
    const timerState = useAtomValue(typingRunStateAtom);
+   const correctnessPercentage = useAtomValue(lettersCorrectnessPercentageAtom);
+   const completedWords = useAtomValue(completedWordsAtom);
+   const mode = useAtomValue(typingModeAtom)
+   const time = useAtomValue(timeAtom)
+
+   const wordCompletionTimes = useAtomValue(wordsCompletionTimesAtom )
 
    const getWordCompletionTime = useCallback(({ range: [start, end] }: WordRange) => {
       return typedLetters.reverse().find(l => l.charIndex === end)?.timestamp!
          - typedLetters.reverse().find(l => l.charIndex === start)?.timestamp!;
    }, [typedLetters]);
 
-   const correctnessPercentage = useAtomValue(lettersCorrectnessPercentageAtom);
-   const completedWords = useAtomValue(completedWordsAtom);
 
    const copyScreenshotToClipboard = () => {
       html2canvas(document.getElementById(`editor`)!)
@@ -68,6 +73,7 @@ const TypingRunSummary = ({
          <div>WPM: {(completedWords.length / time * 60).toFixed(0)}</div>
          <div>Accuracy: {correctnessPercentage.toFixed(0)}%</div>
          <div>Time: {time}s</div>
+         <div>Mode: {mode}</div>
          <TooltipProvider>
             <Tooltip>
                <TooltipTrigger asChild>
@@ -82,11 +88,11 @@ const TypingRunSummary = ({
                </TooltipContent>
             </Tooltip>
          </TooltipProvider>
-        <div className={`flex items-center justify-center w-full`}>
-           {timerState === TypingRunState.FINISHED && (
-              <RestartButton />
-           )}
-        </div>
+         <div className={`flex items-center justify-center w-full`}>
+            {timerState === TypingRunState.FINISHED && (
+               <RestartButton />
+            )}
+         </div>
          <SignedOut>
             <Button onClick={_ => signIn(`google`, { callbackUrl: `/?save=true` })} variant={`link`}>Sign in to save
                your

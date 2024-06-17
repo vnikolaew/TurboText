@@ -1,15 +1,24 @@
-import { useAtom } from "jotai/index";
-import { WORDS_COUNTS, wordsCountsAtom } from "@atoms/editor";
+import { useAtom, useAtomValue, useSetAtom } from "jotai/index";
+import { generateWordsAtom, WORDS_COUNTS, wordsCountsAtom } from "@atoms/editor";
 import { ToggleGroup } from "@repo/ui";
 import { ToggleItem } from "@components/editor/toolbar/ToggleItem";
 import React from "react";
 
 export const WordsSelect = () => {
-   const [words, setWords] = useAtom(wordsCountsAtom);
+   const [words, setWordCounts] = useAtom(wordsCountsAtom);
+   const generateWords = useSetAtom(generateWordsAtom)
+   const wc = useAtomValue(wordsCountsAtom)
 
    return (
       <ToggleGroup
-         onValueChange={value => setWords(Number(value))} type="single">
+         onValueChange={async value => {
+            if(!value?.length) {
+               await generateWords(wc)
+               return;
+            }
+
+            setWordCounts(Number(value));
+         }} type="single">
          {Object.entries(WORDS_COUNTS).map(([key, value]) => (
             <ToggleItem
                key={key}

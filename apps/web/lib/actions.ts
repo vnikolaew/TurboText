@@ -35,6 +35,7 @@ export const publicAction = createSafeActionClient({
 export type SafeExecuteResponse<T> = {
    success: true; result: T
 } | { success: false, error: any }
+
 /**
  * A helper method for wrapping actions in a try / catch.
  */

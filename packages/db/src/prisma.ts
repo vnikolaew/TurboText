@@ -17,22 +17,28 @@ export let prisma = globalForPrisma.prisma ?? new PrismaClient({
    transactionOptions: { isolationLevel: `Serializable` },
 });
 
-export enum PublicNotesFilter {
-   PUBLIC,
-   PRIVATE,
-   ALL
+export enum TypingFlags {
+   PUNCTUATION = 1,
+   NUMBERS = 1 << 1,
 }
-
 
 export let xprisma = prisma.$extends({
    result: {
       typingRun: {
-        typedLettersInfo: {
-           needs: { typedLetters: true },
-           compute({ typedLetters }) {
-              return typedLetterInfoSchema.safeParse(typedLetters)?.data;
-           },
-        }
+         hasFlag: {
+            needs: { flags: true },
+            compute({ flags }) {
+               return (flag: number) => (flags & flag) !== 0;
+            },
+         },
+         typedLettersInfo: {
+            needs: { typedLetters: true },
+            compute({ typedLetters }) {
+               const res = typedLetterInfoSchema.safeParse({ typedLetters });
+               console.log(res.error);
+               return res?.data;
+            },
+         },
       },
       account: {
          deleteResetToken: {
@@ -42,7 +48,7 @@ export let xprisma = prisma.$extends({
                   if (!Object.hasOwn(account?.metadata as object ?? {}, "reset_token")) return account;
 
                   const { reset_token, ...rest } = account!.metadata as Record<string, any>;
-                  return await xprisma.account.update({
+                  return xprisma.account.update({
                      where: {
                         userId: account.userId,
                         provider_providerAccountId: {
@@ -56,6 +62,47 @@ export let xprisma = prisma.$extends({
          },
       },
       user: {
+         currentStreak: {
+            needs: { typingRuns: true },
+            compute({ typingRuns }): number {
+               // Sort the dates in ascending order
+               typingRuns.sort((a, b) => a - b);
+
+               // Initialize streak variables
+               let currentStreak = 1;
+               let maxStreak = 1;
+               let streakStartDate = typingRuns[0];
+
+               // Iterate through the sorted dates
+               for (let i = 1; i < typingRuns.length; i++) {
+                  // Calculate the difference between consecutive dates in days
+                  let diffInTime = typingRuns[i] - typingRuns[i - 1];
+                  let diffInDays = diffInTime / (1000 * 3600 * 24);
+
+                  // Check if the difference is less than or equal to 1 day
+                  if (diffInDays <= 1) {
+                     currentStreak++;
+                  } else {
+                     currentStreak = 1; // Reset the current streak
+                  }
+
+                  // Update the maximum streak if needed
+                  if (currentStreak > maxStreak) {
+                     maxStreak = currentStreak;
+                  }
+               }
+
+               return maxStreak;
+            },
+         },
+         totalTimeTypingMs: {
+            needs: { typingRuns: true },
+            compute({ typingRuns }) {
+               return typingRuns
+                  ?.map(r => (r as any)?.typedLettersInfo?.typedLetters?.at(-1)?.timestamp!)
+                  ?.reduce((a, b) => a + b, 0);
+            },
+         },
          cookieConsent: {
             needs: { metadata: true },
             compute({ metadata }) {
@@ -72,7 +119,7 @@ export let xprisma = prisma.$extends({
             needs: { id: true },
             compute(user) {
                return async (password: string) => {
-                  return await xprisma.user.update({
+                  return xprisma.user.update({
                      where: { id: user.id },
                      data: {
                         password: bcrypt.hashSync(password, 10),
@@ -137,12 +184,18 @@ export let xprisma = prisma.$extends({
             image?: string
          }, select?: Prisma.UserSelect<InternalArgs>) {
 
-            let user = await xprisma.user.create({
+            let user: User = await xprisma.user.create({
                data: {
                   email,
                   password: bcrypt.hashSync(password, 10),
                   name: username,
                   image,
+                  configuration: {
+                     create: {
+                        sound_click_sound: null,
+                        sound_error_sound: null
+                     }
+                  }
                },
                select: {
                   id: true,

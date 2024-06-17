@@ -1,9 +1,9 @@
 "use client";
 
-import React, { ReactNode } from "react";
-import { Check, Cookie } from "lucide-react";
+import React from "react";
+import { Check, Cookie, X } from "lucide-react";
 
-export const TOASTS: Record<string, Record<string, any> & { message: ReactNode }> = {
+export const TOASTS = {
    FORGOT_PASSWORD: {
       message: `Password reset successful`,
       description: `You've successfully reset your password.`,
@@ -33,7 +33,7 @@ export const TOASTS: Record<string, Record<string, any> & { message: ReactNode }
       className: ``,
       classNames: {
          title: `text-lg`, description: `text-md`,
-      },icon: <Cookie className={`text-orange-800`} size={16} />,
+      }, icon: <Cookie className={`text-orange-800`} size={16} />,
       duration: 10_000,
    },
    ACCEPT_COOKIE_CONSENT_SUCCESS: {
@@ -115,6 +115,15 @@ Export successful
             </div>),
       className: `text-base font-normal`,
    },
+   SAVE_TYPING_RUN_FAILURE: {
+      message:
+         (
+            <div className={`flex items-center gap-2`}>
+               <Check className={`text-green-600 bg-green-600`} size={18} />
+               <span>Your latest run could not be saved!</span>
+            </div>),
+      className: `text-base font-normal`,
+   },
    PUBLIC_LINK_COPIED_SUCCESS: {
       message:
          (
@@ -124,6 +133,97 @@ Export successful
             </div>),
       className: `text-base font-normal`,
    },
+   DELETE_TAG_FAILURE: {
+      message:
+         (
+            <div className={`flex items-center gap-2`}>
+               <Check className={`text-green-600 bg-green-600`} size={18} />
+               <span>Tag could not be deleted</span>
+            </div>),
+      className: `text-base font-normal`,
+   },
+   DELETE_TAG_SUCCESS: {
+      message:
+         (
+            <div className={`flex items-center gap-2`}>
+               <Check className={`text-green-600 bg-green-600`} size={18} />
+               <span>Tag successfully deleted</span>
+            </div>),
+      className: `text-base font-normal`,
+   },
+   ADD_NEW_TAG_SUCCESS: {
+      message:
+         (
+            <div className={`flex items-center gap-2`}>
+               <Check className={`text-green-600 bg-green-600`} size={18} />
+               <span>Tag successfully added</span>
+            </div>),
+      className: `text-base font-normal`,
+   },
+   EDIT_USERNAME_FAILURE: (error: string) =>  ({
+      message:
+         (
+            <div className={`flex items-center gap-2`}>
+               <X className={`text-red-600 bg-red-600`} size={18} />
+               <span>Username could not be edited: {error}</span>
+            </div>),
+      description: error,
+      className: `text-base font-normal`,
+   }),
+   EDIT_USERNAME_SUCCESS: {
+      message:
+         (
+            <div className={`flex items-center gap-2`}>
+               <Check className={`text-green-600 bg-green-600`} size={18} />
+               <span>Username successfully edited</span>
+            </div>),
+      className: `text-base font-normal`,
+   },
+   EDIT_TAG_FAILURE: {
+      message:
+         (
+            <div className={`flex items-center gap-2`}>
+               <Check className={`text-green-600 bg-green-600`} size={18} />
+               <span>Tag could not be edited</span>
+            </div>),
+      className: `text-base font-normal`,
+   },
+   IMPORT_SETTINGS_FAILURE: {
+      message:
+         (
+            <div className={`flex items-center gap-2`}>
+               <Check className={`text-green-600 bg-green-600`} size={18} />
+               <span>Could not parse JSON settings</span>
+            </div>),
+      className: `text-base font-normal`,
+   },
+   IMPORT_SETTINGS_SUCCESS: {
+      message:
+         (
+            <div className={`flex items-center gap-2`}>
+               <Check className={`text-green-600 bg-green-600`} size={18} />
+               <span>Settings successfully imported</span>
+            </div>),
+      className: `text-base font-normal`,
+   },
+   EDIT_TAG_SUCCESS: {
+      message:
+         (
+            <div className={`flex items-center gap-2`}>
+               <Check className={`text-green-600 bg-green-600`} size={18} />
+               <span>Tag successfully edited</span>
+            </div>),
+      className: `text-base font-normal`,
+   },
+   ADD_NEW_TAG_FAILURE: (error: string) => ({
+      message:
+         (
+            <div className={`flex items-center gap-2`}>
+               <Check className={`text-green-600 bg-green-600`} size={18} />
+               <span>An error occurred: {error}</span>
+            </div>),
+      className: `text-base font-normal`,
+   }),
 } as const;
 
 // export const toast = ({ message, ...config }: ExternalToast & { message: ReactNode }) => sonnerToast(message, config);

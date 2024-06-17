@@ -5,9 +5,11 @@ import { useSession } from "next-auth/react";
 import { useAction } from "next-safe-action/hooks";
 import { saveTypingRun } from "@components/editor/actions";
 import { z } from "zod";
-import { TYPED_LETTER_LS_KEY } from "@components/editor/TypingPage";
+import { TYPING_RUN_LS_KEY } from "@components/editor/TypingPage";
 import { toast } from "@repo/ui";
 import { TOASTS } from "@config/toasts";
+import { LocalStorage } from "@lib/local-storage";
+import { TypingMode } from "@atoms/editor";
 
 export const typedLettersSchema = z.object({
    typedLetters: z.array(z.object({
@@ -18,31 +20,40 @@ export const typedLettersSchema = z.object({
       flags: z.number().nullable(),
    })),
    time: z.number(),
+   wordCounts: z.number(),
+   mode: z.union([z.literal(TypingMode.TIME), z.literal(TypingMode.WORDS)]),
+   flags: z.number().min(0).nullable(),
+   metadata: z.record(z.string(), z.any()).nullable(),
 });
+
+export type TypingRun = z.infer<typeof typedLettersSchema>;
 
 export function useSaveLatestUserRun() {
    const [save] = useQueryState(`save`, parseAsBoolean.withDefault(false));
    const session = useSession();
 
-   const { result, execute, status } = useAction(saveTypingRun, {
+   const { execute, status } = useAction(saveTypingRun, {
       onSuccess: res => {
          if (res.success) {
             console.log(res);
-            localStorage.removeItem(TYPED_LETTER_LS_KEY);
+            localStorage.removeItem(TYPING_RUN_LS_KEY);
          }
       },
       onError: console.error,
    });
 
    useEffect(() => {
-      const typedLetters = JSON.parse(localStorage.getItem(TYPED_LETTER_LS_KEY)!);
-      const result = typedLettersSchema.safeParse(typedLetters);
+      if(!save) return;
+      const result = LocalStorage.getParsedItem(TYPING_RUN_LS_KEY, typedLettersSchema);
 
-      if (save && typedLetters && session?.status === `authenticated` && result.success) {
-         console.log(`Saving run to DB`, { typedLetters: typedLetters });
-         execute(result.data);
+      if (session?.status === `authenticated` && result) {
+         console.log(`Saving run to DB`, { typedLetters: result.typedLetters });
+         execute(result);
 
          toast(TOASTS.SAVE_TYPING_RUN_SUCCESS!);
+      } else {
+         toast(TOASTS.SAVE_TYPING_RUN_FAILURE!);
+
       }
    }, [save, session]);
 }

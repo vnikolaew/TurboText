@@ -52,7 +52,16 @@ const AppFooter = async ({}: AppFooterProps) => {
             <RocketLogo className={`w-10 h-10 fill-amber-500`} />
          }
          appName={APP_NAME}
-         links={LINKS}
+         links={{
+            links: [
+               {
+                  title: `About`, href: `/about`,
+               },
+               {
+                  title: `Contact`, href: `mailto:${LINKS.email}`,
+               },
+            ], title: `LINKS`,
+         }}
          legal={FOOTER_LEGAL}
          socialLinks={{ ...LINKS, title: `Socials` }}
       />

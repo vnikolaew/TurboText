@@ -11,10 +11,9 @@ import {
    wordsCountsAtom,
 } from "@atoms/editor";
 
-
 export function useTimer(onFinish?: () => void) {
    const [currentTimestamp, setCurrentTimestamp] = useAtom(currentTimestampAtom);
-   const [wordCounts, setWordCounts] = useAtom(wordsCountsAtom);
+   const [wordCounts, ] = useAtom(wordsCountsAtom);
    const typingMode = useAtomValue(typingModeAtom);
    const completedWords = useAtomValue(completedWordsAtom);
 
@@ -22,27 +21,36 @@ export function useTimer(onFinish?: () => void) {
 
    const intervalId = useRef<NodeJS.Timeout>(null!);
 
-   useEffect(() => {
-      if(typingMode !== TypingMode.WORDS) return
+   const handleFinish = useCallback(() => {
+      clearInterval(intervalId?.current);
+      setTimerState(TypingRunState.FINISHED);
+      onFinish?.();
+   }, [intervalId, onFinish, setTimerState]);
 
-      if(completedWords.length >= wordCounts) {
+   useEffect(() => {
+      if(timerState === TypingRunState.FINISHED){
          console.log(`Finished!`);
-         setTimerState(TypingRunState.FINISHED)
       }
-   }, [completedWords, typingMode, wordCounts])
+   },  [timerState])
+
+   useEffect(() => {
+      if (typingMode !== TypingMode.WORDS) return;
+
+      if (completedWords.length >= wordCounts) {
+         console.log(`Finished!`);
+         handleFinish()
+      }
+   }, [completedWords, typingMode, wordCounts, timerState]);
 
    useEffect(() => {
       if (currentTimestamp <= 0 && timerState === TypingRunState.RUNNING) {
-         setTimerState(TypingRunState.FINISHED);
-         clearInterval(intervalId?.current);
-         onFinish?.();
+         handleFinish()
       }
-   }, [currentTimestamp, completedWords, typingMode, setTimerState ]);
+   }, [currentTimestamp, completedWords, typingMode, setTimerState]);
 
    const start = useCallback(() => {
       if (timerState === TypingRunState.RUNNING || currentTimestamp === 0) return;
 
-      console.log(`we are here`, typingMode, timerState, currentTimestamp, wordCounts);
       if (typingMode === TypingMode.TIME) {
          if (intervalId.current) clearInterval(intervalId.current);
          intervalId.current = setInterval(() => {

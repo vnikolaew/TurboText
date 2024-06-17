@@ -67,6 +67,10 @@ const config: Config = {
             sm: "calc(var(--radius) - 4px)",
          },
          keyframes: {
+            "animate-alert": {
+               "0%": { opacity: "50%" },
+               "100%": { opacity: "100%" },
+            },
             "accordion-down": {
                from: { height: "0" },
                to: { height: "var(--radix-accordion-content-height)" },
@@ -79,9 +83,11 @@ const config: Config = {
          animation: {
             "accordion-down": "accordion-down 0.2s ease-out",
             "accordion-up": "accordion-up 0.2s ease-out",
+            "alert": "animate-alert 2s ease-out alternate infinite",
          },
       },
    },
-   plugins: [require("tailwindcss-animate")],
+   plugins: [require("tailwindcss-animate"),
+   ],
 };
 export default config;

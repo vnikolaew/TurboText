@@ -14,6 +14,7 @@ const RestartButton = ({}: RestartButtonProps) => {
    function handleRestart(): void {
       restart();
    }
+
    return (
       <TooltipProvider>
          <Tooltip>

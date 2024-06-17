@@ -15,6 +15,8 @@ import ScrollToTopButton from "@components/common/ScrollToTopButton";
 import { Toaster } from "@repo/ui";
 import LoadingBar from "@components/common/LoadingBar";
 import WithTransition from "@components/common/WithTransition";
+import { __IS_PROD__ } from "@lib/consts";
+import { Analytics } from "@vercel/analytics/react";
 
 const inter = Inter({ weight: ["400"], subsets: ["latin"], variable: "--font-sans" });
 
@@ -27,7 +29,7 @@ export const metadata: Metadata = {
    }],
    applicationName: APP_NAME,
    icons: appLogo.src,
-   keywords: [`intelligent`, `notes`, `note-taking`, `AI`],
+   keywords: [`speed`, `typing`, `speed-typing`, `test`, `web`, `keyboard`],
    category: `notes`,
    creator: AUTHOR,
    referrer: `no-referrer`,
@@ -53,6 +55,7 @@ export default function RootLayout({
          <Suspense fallback={`...`}>
             <CookieConsentBanner />
          </Suspense>
+         {__IS_PROD__ && <Analytics />}
          <Toaster />
          <AppFooter />
          </body>

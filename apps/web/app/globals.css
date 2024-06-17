@@ -93,3 +93,13 @@ body {
     background: var(--background);
     font-synthesis: none;
 }
+
+::-moz-selection { /* Code for Firefox */
+    color: black;
+    background: #f59e0b;
+}
+
+::selection {
+    color: black;
+    background: #f59e0b;
+}

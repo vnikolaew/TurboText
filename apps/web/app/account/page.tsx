@@ -1,63 +1,15 @@
 import React from "react";
-import {Separator, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, UserAvatar } from "@repo/ui";
+import { Separator, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, UserAvatar } from "@repo/ui";
 import { auth } from "@auth";
 import { xprisma } from "@repo/db";
 import moment from "moment";
 import { notFound } from "next/navigation";
-import AccountLinks from "@app/account/_components/AccountLinks";
+import AccountLinks from "@app/account/_components/AccountPageLinks";
 import EmailNotVerifiedNotification from "@app/account/_components/EmailNotVerifiedNotification";
 import UserActivitySection from "@app/account/_components/UserActivitySection";
+import { formatMillisecondsToTime } from "@lib/utils";
 
 export interface PageProps {
-}
-
-function formatMillisecondsToTime(ms: number) {
-   // Convert milliseconds to total seconds
-   let totalSeconds = Math.floor(ms / 1000);
-
-   // Extract hours, minutes, and remaining seconds
-   let hours = Math.floor(totalSeconds / 3600);
-   let minutes = Math.floor((totalSeconds % 3600) / 60);
-   let seconds = totalSeconds % 60;
-
-   // Format hours, minutes, and seconds to always be two digits
-   let formattedHours = String(hours).padStart(2, "0");
-   let formattedMinutes = String(minutes).padStart(2, "0");
-   let formattedSeconds = String(seconds).padStart(2, "0");
-
-   // Combine and return the formatted time
-   return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
-}
-
-function calculateCurrentStreak(typingRuns: Date[]) {
-   // Sort the dates in ascending order
-   typingRuns.sort((a, b) => a - b);
-
-   // Initialize streak variables
-   let currentStreak = 1;
-   let maxStreak = 1;
-   let streakStartDate = typingRuns[0];
-
-   // Iterate through the sorted dates
-   for (let i = 1; i < typingRuns.length; i++) {
-      // Calculate the difference between consecutive dates in days
-      let diffInTime = typingRuns[i] - typingRuns[i - 1];
-      let diffInDays = diffInTime / (1000 * 3600 * 24);
-
-      // Check if the difference is less than or equal to 1 day
-      if (diffInDays <= 1) {
-         currentStreak++;
-      } else {
-         currentStreak = 1; // Reset the current streak
-      }
-
-      // Update the maximum streak if needed
-      if (currentStreak > maxStreak) {
-         maxStreak = currentStreak;
-      }
-   }
-
-   return maxStreak;
 }
 
 const Page = async ({}: PageProps) => {
@@ -66,13 +18,15 @@ const Page = async ({}: PageProps) => {
       where: { id: session?.user?.id },
       include: { typingRuns: true },
    });
-   if (!user) notFound();
-   console.log({ user });
 
-   const streak = calculateCurrentStreak(user.typingRuns.map(r => r.createdAt));
-   const totalTimeTypingMs = user.typingRuns
-      .map(r => r.typedLettersInfo?.at(-1)?.timestamp)
-      .reduce((a, b) => a + b, 0);
+   if (!user) notFound();
+
+   user.typingRuns = user.typingRuns.map(run => {
+      const { hasFlag, ...rest } = run;
+      return rest;
+   });
+
+   console.log({ user });
 
    return (
       <section className={`w-2/3 mx-auto mt-24 flex flex-col items-center gap-4`}>
@@ -103,7 +57,7 @@ const Page = async ({}: PageProps) => {
                            </Tooltip>
                         </TooltipProvider>
                         <span className={`text-sm text-neutral-500`}>
-                        Current streak: {streak} days
+                        Current streak: {user.streak} days
                      </span>
                      </div>
                   </div>
@@ -121,7 +75,7 @@ const Page = async ({}: PageProps) => {
                </div>
                <div className={`flex flex-col items-start gap-1`}>
                   <span className={`text-neutral-500 text-sm`}>Time typing</span>
-                  <h2 className={`text-3xl text-white`}>{formatMillisecondsToTime(totalTimeTypingMs)}</h2>
+                  <h2 className={`text-3xl text-white`}>{formatMillisecondsToTime(user.totalTimeTypingMs)}</h2>
                </div>
             </div>
             <Separator orientation={`vertical`} className={`h-20 w-[4px] rounded-full bg-neutral-700`} />
@@ -131,8 +85,11 @@ const Page = async ({}: PageProps) => {
          <div className={`w-full bg-stone-950 rounded-lg shadow-lg flex items-center p-6 py-10 gap-8 mt-8`}>
             <UserActivitySection typingRuns={user.typingRuns} />
          </div>
+         <div className={`w-full bg-stone-950 rounded-lg shadow-lg flex items-center p-6 py-10 gap-8 mt-8`}>
+            <pre>{JSON.stringify(user.typingRuns, null, 2)}</pre>
+         </div>
       </section>
-);
+   );
 };
 
 export default Page;
