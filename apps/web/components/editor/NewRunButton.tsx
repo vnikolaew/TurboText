@@ -1,9 +1,9 @@
 "use client"
 import React from "react";
 import { useSetAtom } from "jotai/index";
-import { newTestAtom}  from "@atoms/editor";
 import { Button, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@repo/ui";
 import { ChevronRight } from "lucide-react";
+import { newTestAtom } from "@atoms/actions";
 
 export interface NewRunButtonProps {
 }

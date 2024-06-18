@@ -9,12 +9,9 @@ export interface WithInitialStateProps {
 
 
 const WithInitialState = ({ user }: WithInitialStateProps) => {
-   console.log({ user });
   useHydrateAllAtoms(user)
 
-   return (
-      <Fragment />
-   );
+   return <Fragment />;
 };
 
 export default WithInitialState;

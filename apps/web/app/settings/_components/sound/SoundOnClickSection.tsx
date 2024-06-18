@@ -7,6 +7,8 @@ import { soundOnClickAtom } from "@atoms/user";
 import { useAction } from "next-safe-action/hooks";
 import { updateUserConfiguration } from "@app/settings/actions";
 import { cn } from "@lib/utils";
+import { useAtomValue } from "jotai";
+import { soundClicksAtom } from "@app/settings/atoms";
 
 export interface SoundOnClickSectionProps {
 }
@@ -32,6 +34,7 @@ const SOUNDS = [
 
 const SoundOnClickSection = ({}: SoundOnClickSectionProps) => {
    const [soundOnClick, setSoundOnClick] = useAtom(soundOnClickAtom);
+   const soundClicks = useAtomValue(soundClicksAtom)
 
    const { execute, status } = useAction(updateUserConfiguration, {
       onSuccess: res => {
@@ -41,7 +44,6 @@ const SoundOnClickSection = ({}: SoundOnClickSectionProps) => {
          }
       },
    });
-
 
    return (
       <div className={`flex flex-col w-full items-start gap-2`}>
@@ -57,11 +59,18 @@ const SoundOnClickSection = ({}: SoundOnClickSectionProps) => {
          <div className={`w-full grid grid-cols-5 gap-4 mt-4`}>
             {SOUNDS.map((sound, index) => (
                <Button
-                  onClick={_ => execute({ sound_click_sound: sound })}
+                  onClick={_ => {
+                     const audio = new Audio(soundClicks[index])
+                     audio?.play().then(() => {
+                        execute({ sound_click_sound: sound });
+                     })
+                  }}
                   variant={`secondary`}
                   className={cn(`!w-full`,
                      soundOnClick === sound && `bg-amber-500`)}
-                  key={sound}>{sound}</Button>
+                  key={sound}>
+                  {sound}
+               </Button>
             ))}
 
          </div>

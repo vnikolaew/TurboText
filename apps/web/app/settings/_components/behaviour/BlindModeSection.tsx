@@ -38,9 +38,7 @@ const BlindModeSection = ({}: BlindModeSectionProps) => {
                </span>
             </h2>
             <p className={`mt-2 text-base`}>
-               Normal is the classic type test experience. Expert fails the test if you submit (press space) an
-               incorrect word. Master fails if you press a single incorrect key (meaning you have to achieve 100%
-               accuracy).
+               No errors or incorrect words are highlighted. Helps you to focus on raw speed. If enabled, quick end is recommended.
             </p>
          </div>
          <div className={`flex items-center gap-2 w-full h-full my-auto justify-center`}>

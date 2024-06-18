@@ -3,29 +3,28 @@ import { useCallback, useEffect, useRef } from "react";
 import { useAtom, useAtomValue } from "jotai";
 import {
    completedWordsAtom,
-   TypingMode,
    typingModeAtom,
-   TypingRunState,
    typingRunStateAtom,
-   wordsCountsAtom,
 } from "@atoms/editor";
 import { currentTimestampAtom, pauseAtom, resumeAtom, startAtom, timerIntervalAtom } from "@atoms/timer";
 import { useSetAtom } from "jotai/index";
+import { wordsCountsAtom } from "@atoms/words";
+import { TypingMode, TypingRunState } from "@atoms/consts";
 
 export function useTimer(onFinish?: () => void) {
    const [currentTimestamp, setCurrentTimestamp] = useAtom(currentTimestampAtom);
-   const [wordCounts, ] = useAtom(wordsCountsAtom);
+   const wordCounts = useAtomValue(wordsCountsAtom);
    const typingMode = useAtomValue(typingModeAtom);
    const completedWords = useAtomValue(completedWordsAtom);
 
    const [timerState, setTimerState] = useAtom(typingRunStateAtom);
 
    const intervalId = useRef<NodeJS.Timeout>(null!);
-   const timerIntervalId = useAtom(timerIntervalAtom)
+   const timerIntervalId = useAtom(timerIntervalAtom);
 
-   const startAction = useSetAtom(startAtom)
-   const pauseAction = useSetAtom(pauseAtom)
-   const resumeAction = useSetAtom(resumeAtom)
+   const startAction = useSetAtom(startAtom);
+   const pauseAction = useSetAtom(pauseAtom);
+   const resumeAction = useSetAtom(resumeAtom);
 
    const handleFinish = useCallback(() => {
       clearInterval(intervalId?.current);
@@ -34,23 +33,23 @@ export function useTimer(onFinish?: () => void) {
    }, [intervalId, onFinish, setTimerState]);
 
    useEffect(() => {
-      if(timerState === TypingRunState.FINISHED){
+      if (timerState === TypingRunState.FINISHED) {
          console.log(`Finished!`);
       }
-   },  [timerState])
+   }, [timerState]);
 
    useEffect(() => {
       if (typingMode !== TypingMode.WORDS) return;
 
       if (completedWords.length >= wordCounts) {
          console.log(`Finished!`);
-         handleFinish()
+         handleFinish();
       }
    }, [completedWords, typingMode, wordCounts, timerState]);
 
    useEffect(() => {
       if (currentTimestamp <= 0 && timerState === TypingRunState.RUNNING) {
-         handleFinish()
+         handleFinish();
       }
    }, [currentTimestamp, completedWords, typingMode, setTimerState]);
 
@@ -62,7 +61,7 @@ export function useTimer(onFinish?: () => void) {
          // intervalId.current = setInterval(() => {
          //    setCurrentTimestamp(prev => prev - 1);
          // }, 1_000);
-         startAction()
+         startAction();
       }
 
       setTimerState(TypingRunState.RUNNING);
@@ -73,7 +72,7 @@ export function useTimer(onFinish?: () => void) {
 
       if (typingMode === TypingMode.TIME) {
          // if (intervalId.current) clearInterval(intervalId.current);
-         pauseAction()
+         pauseAction();
          setTimerState(TypingRunState.PAUSED);
       }
 
@@ -88,7 +87,7 @@ export function useTimer(onFinish?: () => void) {
          // intervalId.current = setInterval(() => {
          //    setCurrentTimestamp(prev => prev - 1);
          // }, 1_000);
-         resumeAction()
+         resumeAction();
       }
 
       setTimerState(TypingRunState.RUNNING);

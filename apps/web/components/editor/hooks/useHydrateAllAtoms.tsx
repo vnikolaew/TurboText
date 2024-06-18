@@ -1,16 +1,11 @@
 "use client";
 
 import {
-   DEFAULT_WORD_COUNT,
    lettersCorrectnessAtom,
    typingFlagsAtom,
-   TypingMode,
    typingModeAtom,
-   TypingRunState,
    typingRunStateAtom,
-   WORDS_COUNTS,
    wordsAtom,
-   wordsCountsAtom,
 } from "@atoms/editor";
 import { generate } from "random-words";
 import { userAtom, userConfigAtom, userDataLoadingAtom } from "@atoms/user";
@@ -18,6 +13,8 @@ import { useRef } from "react";
 import { currentTimestampAtom, TIMES } from "@atoms/timer";
 import { User, UserConfiguration } from "@repo/db";
 import { useHydrateAtoms } from "jotai/utils";
+import { DEFAULT_WORD_COUNT, TypingMode, TypingRunState, WORDS_COUNTS } from "@atoms/consts";
+import { wordsCountsAtom } from "@atoms/words";
 
 export function useHydrateAllAtoms(user?: User & { configuration: UserConfiguration }) {
    const WORDS = useRef(generate(DEFAULT_WORD_COUNT) as string[]);
@@ -31,7 +28,6 @@ export function useHydrateAllAtoms(user?: User & { configuration: UserConfigurat
          .fill(null) as null[]],
       [userAtom, user],
       [currentTimestampAtom, TIMES["10"]],
-      [userAtom, user],
       [typingRunStateAtom, TypingRunState.STOPPED],
       [typingModeAtom, TypingMode.TIME],
       [wordsCountsAtom, WORDS_COUNTS["10"]],

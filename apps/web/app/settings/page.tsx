@@ -7,10 +7,13 @@ import Sections from "./_components/Sections";
 import type { Metadata } from "next";
 import { APP_DESCRIPTION, APP_NAME, AUTHOR, AUTHOR_WEBSITE } from "@config/site";
 import appLogo from "@public/logo.jpg";
+import WithInitialState from "@app/settings/_components/common/WithInitialState";
+import { getClickSoundsFiles } from "./_queries";
 
 export interface PageProps {
    searchParams?: { sections: string | string[] | undefined };
 }
+
 
 export const metadata: Metadata = {
    title: `Settings | ${APP_NAME}`,
@@ -27,7 +30,7 @@ export const metadata: Metadata = {
    referrer: `no-referrer`,
 };
 
-const Page = async ({ }: PageProps) => {
+const Page = async ({}: PageProps) => {
    const session = await auth();
    const user = await xprisma.user.findUnique({
       where: { id: session?.user?.id ?? `` },
@@ -40,6 +43,7 @@ const Page = async ({ }: PageProps) => {
 
    return (
       <section className={`w-3/4 mx-auto my-24 flex flex-col items-center gap-4`}>
+         <WithInitialState soundClicks={getClickSoundsFiles()}/>
          <Sections />
          <SettingsAccordion user={rest} />
       </section>

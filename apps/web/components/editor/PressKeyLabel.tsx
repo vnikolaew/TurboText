@@ -1,7 +1,8 @@
 "use client";
 import React from "react";
 import { useAtomValue } from "jotai";
-import { TypingRunState, typingRunStateAtom } from "@atoms/editor";
+import { typingRunStateAtom } from "@atoms/editor";
+import { TypingRunState } from "@atoms/consts";
 
 export interface PressKeyLabelProps {
 }

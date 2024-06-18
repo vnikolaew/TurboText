@@ -38,23 +38,25 @@ export const saveTypingRun = authorizedAction(schema, async ({
 
    const activeTags: Tag[] = await xprisma.user.getActiveTags({ userId });
    const userConfig = await xprisma.userConfiguration.findFirst({ where: { userId } });
-   if(!userConfig) return { success: false, error: `User configuration for user ${userId} not found.` };
+   if (!userConfig) return { success: false, error: `User configuration for user ${userId} not found.` };
 
    const userWpm = await xprisma.user.getUserPersonalBestWpm({ userId });
+   const { language, test_difficulty, blind_mode, input_confidence_mode } = userConfig;
    console.log({ userWpm, userConfig });
 
    const currentWpm = getRunWpm(mode, totalRunTime, wordCounts);
+   const isPersonalBest = currentWpm > userWpm;
 
    const run = await xprisma.typingRun.create({
       data: {
          metadata: {
             ...(metadata ?? {}),
             tags: activeTags.map(t => t.id),
-            language: userConfig.language,
-            test_difficulty: userConfig.test_difficulty,
-            blind_mode: userConfig.blind_mode,
-            confidence_mode: userConfig.input_confidence_mode,
-            isPersonalBest: currentWpm > userWpm,
+            language,
+            test_difficulty,
+            blind_mode,
+            confidence_mode: input_confidence_mode   ,
+            isPersonalBest,
          },
          userId,
          typedLetters,

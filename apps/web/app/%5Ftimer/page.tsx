@@ -1,6 +1,6 @@
 "use client";
 import { useAtom, useAtomValue } from "jotai";
-import React from "react";
+import React, { } from "react";
 import {
    currentTimerStampAtom,
    pauseAtom,

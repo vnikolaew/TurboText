@@ -7,20 +7,18 @@ import html2canvas from "html2canvas";
 import { useAtomValue } from "jotai";
 import {
    completedWordsAtom,
-   consistencyScoreAtom,
    lettersCorrectnessPercentageAtom,
    totalRunTimeAtom,
    typedLettersAtom,
    typingModeAtom,
-   TypingRunState,
-   typingRunStateAtom,
-   wordsCompletionTimesAtom,
-   wpmAtom,
+   typingRunStateAtom, typingRunSuccessAtom,
 } from "@atoms/editor";
 import { SignedOut } from "@components/common/Auth";
 import { signIn } from "next-auth/react";
 import RestartButton from "@components/editor/RestartButton";
 import { timeAtom } from "@atoms/timer";
+import { consistencyScoreAtom, wpmAtom } from "@atoms/stats";
+import { TypingRunState } from "@atoms/consts";
 
 export interface TypingEditorStatisticsProps {
 }
@@ -39,8 +37,7 @@ const TypingRunSummary = ({}: TypingEditorStatisticsProps) => {
    const time = useAtomValue(timeAtom);
    const totalRunTime = useAtomValue(totalRunTimeAtom);
    const wpm = useAtomValue(wpmAtom)
-
-   const wordCompletionTimes = useAtomValue(wordsCompletionTimesAtom);
+   const success = useAtomValue(typingRunSuccessAtom)
 
    const getWordCompletionTime = useCallback(({ range: [start, end] }: WordRange) => {
       return typedLetters.reverse().find(l => l.charIndex === end)?.timestamp!
@@ -64,7 +61,7 @@ const TypingRunSummary = ({}: TypingEditorStatisticsProps) => {
    };
 
    return (
-      <div className={`flex flex-col items-center justify-center gap-8`}>
+      <div className={`flex flex-col items-center justify-center gap-8 w-full text-sm`}>
          <div className={`flex items-center gap-2 w-full justify-center flex-wrap`}>
             {completedWords.map(({ word, range: [start, end] }, i) => (
                <span
@@ -89,9 +86,10 @@ const TypingRunSummary = ({}: TypingEditorStatisticsProps) => {
             <div>Run time: {totalRunTime}ms</div>
             <Separator className={`h-4 w[2px]`} orientation={`vertical`} />
             <div>Mode: {mode}</div>
+            <div>Success: {success}</div>
          </div>
          <TooltipProvider>
-            <Tooltip>
+         <Tooltip>
                <TooltipTrigger asChild>
                   <Button onClick={copyScreenshotToClipboard} variant={`ghost`} size={`icon`}>
                      <Image size={18} />

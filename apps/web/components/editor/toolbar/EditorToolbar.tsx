@@ -4,15 +4,9 @@ import React from "react";
 import { AtSign, Baseline, Clock2, Hash, Wrench } from "lucide-react";
 import { useAtom, useAtomValue } from "jotai";
 import {
-   DEFAULT_WORD_COUNT,
-   generateWordsAtom,
-   TypingFlags,
    typingFlagsAtom,
-   TypingMode,
    typingModeAtom,
-   TypingRunState,
    typingRunStateAtom,
-   wordsCountsAtom,
 } from "@atoms/editor";
 import { ToggleItem } from "@components/editor/toolbar/ToggleItem";
 import { WordsSelect } from "@components/editor/toolbar/WordsSelect";
@@ -22,6 +16,8 @@ import { useBoolean } from "@hooks/useBoolean";
 import CustomTimeConfigModal from "@components/editor/toolbar/CustomTimeConfigModal";
 import { AnimatePresence, motion } from "framer-motion";
 import { useSetAtom } from "jotai/index";
+import { generateWordsAtom, wordsCountsAtom } from "@atoms/words";
+import { DEFAULT_WORD_COUNT, TypingFlags, TypingMode, TypingRunState } from "@atoms/consts";
 
 export interface EditorToolbarProps {
 }

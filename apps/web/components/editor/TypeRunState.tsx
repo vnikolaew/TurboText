@@ -3,14 +3,13 @@ import { useAtomValue } from "jotai";
 import React from "react";
 import {
    completedWordsAtom,
-   TypingMode,
    typingModeAtom,
-   TypingRunState,
    typingRunStateAtom,
-   wordsCountsAtom,
 } from "@atoms/editor";
 import { AnimatePresence, motion } from "framer-motion";
 import { currentTimestampAtom } from "@atoms/timer";
+import { wordsCountsAtom } from "@atoms/words";
+import { TypingMode, TypingRunState } from "@atoms/consts";
 
 export interface TypeRunStateProps {
 }
@@ -48,7 +47,7 @@ const TypeRunState = ({}: TypeRunStateProps) => {
          transition={{ duration: .3}}
          exit={{ opacity: 0 }}
          className={`text-amber-600 text-5xl inline-flex items-center gap-4`}>
-         {completedWords.length}/{wordCounts}
+         {completedWords?.length}/{wordCounts}
       </motion.div>;
    } else children = null;
 

@@ -37,8 +37,8 @@ export async function getUserWithTypingRuns() {
    if (!user) return null;
 
    user.typingRuns = user.typingRuns.map(run => {
-      const { hasFlag, ...rest } = run;
-      return rest;
+      // const { hasFlag, ...rest } = run;
+      return run;
    });
 
    return user;

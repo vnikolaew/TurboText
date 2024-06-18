@@ -38,6 +38,8 @@ export interface SettingsAccordionProps {
 
 const SettingsAccordion = ({ user }: SettingsAccordionProps) => {
    const [sections, setSections] = useQueryState(`sections`, parseAsArrayOf(parseAsString).withDefault([]));
+
+   //@ts-ignore
    useHydrateAtoms([
       [userConfigAtom, user.configuration],
       [cookiePreferencesAtom, user.cookiePreferences!],

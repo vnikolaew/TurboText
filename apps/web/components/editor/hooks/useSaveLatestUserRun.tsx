@@ -1,6 +1,5 @@
 "use client";
 import { useEffect } from "react";
-import { parseAsBoolean, useQueryState } from "nuqs";
 import { useSession } from "next-auth/react";
 import { useAction } from "next-safe-action/hooks";
 import { saveTypingRun } from "@components/editor/actions";
@@ -9,7 +8,8 @@ import { TYPING_RUN_LS_KEY } from "@components/editor/TypingPage";
 import { toast } from "@repo/ui";
 import { TOASTS } from "@config/toasts";
 import { LocalStorage } from "@lib/local-storage";
-import { TypingMode } from "@atoms/editor";
+import { TypingMode } from "@atoms/consts";
+import { useSearchParams } from "next/navigation";
 
 export const typedLettersSchema = z.object({
    typedLetters: z.array(z.object({
@@ -30,7 +30,8 @@ export const typedLettersSchema = z.object({
 export type TypingRun = z.infer<typeof typedLettersSchema>;
 
 export function useSaveLatestUserRun() {
-   const [save] = useQueryState(`save`, parseAsBoolean.withDefault(false));
+   // const params = useSearchParams();
+   const save = false
    const session = useSession();
 
    const { execute, status } = useAction(saveTypingRun, {
@@ -56,5 +57,5 @@ export function useSaveLatestUserRun() {
          toast(TOASTS.SAVE_TYPING_RUN_FAILURE!);
 
       }
-   }, [save, session]);
+   }, [save, session?.status]);
 }

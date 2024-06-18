@@ -1,74 +1,41 @@
-import { atom } from "jotai";
+import { atom, useAtomValue } from "jotai";
 import { generate } from "random-words";
 import { TypedLetterInfo, WordRange } from "@components/editor/hooks/useTypingEditor";
 import { injectPunctuation, strings } from "@lib/strings";
-import { userLanguageAtom, userTestDifficultyAtom } from "@atoms/user";
-import { groupBy, maxBy } from "lodash";
-import { kogasa, mean, roundTo2, stdDev } from "@lib/numbers";
-import { currentTimestampAtom, timeAtom } from "@atoms/timer";
-
-export enum TypingRunState {
-   STOPPED = `STOPPED`,
-   RUNNING = `RUNNING`,
-   PAUSED = `PAUSED`,
-   FINISHED = `FINISHED`
-}
+import { userTestDifficultyAtom } from "@atoms/user";
+import { currentTimestampAtom, stopAtom } from "@atoms/timer";
+import { useEffect } from "react";
+import { useSetAtom } from "jotai/index";
+import { LocalStorage } from "@lib/local-storage";
+import { TYPING_RUN_LS_KEY } from "@components/editor/TypingPage";
+import { TypingRun } from "@components/editor/hooks/useSaveLatestUserRun";
+import { maxBy } from "lodash";
+import { wordsCountsAtom } from "@atoms/words";
+import { DEFAULT_WORD_COUNT, TypingFlags, TypingMode, TypingRunState, TypingRunSuccess } from "@atoms/consts";
 
 // EDITOR
-export const DEFAULT_WORD_COUNT = 40;
 
 const WORDS = generate(DEFAULT_WORD_COUNT) as string[];
 
-export const WORDS_COUNTS = {
-   10: 10,
-   25: 25,
-   50: 50,
-   100: 100,
-} as const;
+export const typingModeAtom = atom<TypingMode>(TypingMode.TIME);
+typingModeAtom.debugLabel = `typingModeAtom`;
 
-
-export const LANGUAGES_MAP = {
-   en: `English`,
-   es: `Spanish`,
-   it: `Italian`,
-   fr: `French`,
-   de: `German`,
-   ru: `Russian`,
-   mo: `Mongolian`,
-   arb: `Arabic`,
-   cs: `Czech`,
-};
-
-// @ts-ignore
-export const generateWordsAtom = atom(null, async (get, set, wc?: number) => {
-   const mode = get(typingModeAtom);
-   const wordCount = get(wordsCountsAtom);
-   const userLanguage = get(userLanguageAtom) as unknown as string;
-
-   const languageCode = Object
-      .entries(LANGUAGES_MAP)
-      .find(([, value]) => value === userLanguage)?.[0];
-
-   const res = await fetch(`/api/words/${languageCode}/generate?limit=${wc ?? wordCount}`)
-      .then(r => r.json());
-   console.log({ res });
-
-   if (res.words?.length) {
-      set(wordsAtom, res.words as string[]);
-   }
-});
-
-generateWordsAtom.debugLabel = `generateWordsAtom`;
+export const lettersCorrectnessAtom = atom<(boolean | null)[]>(
+   Array
+      .from({ length: WORDS.reduce((a, b) => a + b?.length, 0) })
+      .fill(null) as null[],
+);
+lettersCorrectnessAtom.debugLabel = `lettersCorrectnessAtom`;
 
 // @ts-ignore
 export const wordsAtom = atom<string[]>(WORDS, (get, set, words: string[]) => {
    set(wordsAtom, words);
    set(lettersCorrectnessAtom, Array
-      .from({ length: words.reduce((a, b) => a + b.length, 0) })
+      .from({ length: words?.reduce((a, b) => a + b.length, 0) })
       .fill(null) as null[]);
 });
-
 wordsAtom.debugLabel = `wordsAtom`;
+
 
 export const charsByIndexAtom = atom((get) => {
    const words = get(wordsAtom);
@@ -89,7 +56,7 @@ export const wordRangesAtom = atom<WordRange[]>((get) => {
       const startIndex = words.slice(0, index).reduce((a, b) => a + b.length, 0);
       return {
          word,
-         range: [startIndex, startIndex + word.length - 1] as const,
+         range: [startIndex, startIndex + word?.length - 1] as const,
       };
    });
 });
@@ -101,29 +68,11 @@ export const wordRangesByEndsAtom = atom<Map<number, [number, number]>>((get) =>
 });
 wordRangesByEndsAtom.debugLabel = `wordRangesByEndsAtom`;
 
-export const completedWordsAtom = atom((get) => {
-   const wordRanges = get(wordRangesAtom);
-   const typedLetters = get(typedLettersAtom);
-
-   return wordRanges
-      .filter(({ range: [, end] }) => {
-         return end <= (typedLetters.at(-1)?.charIndex ?? 0);
-      });
-});
-completedWordsAtom.debugLabel = `completedWordsAtom`;
-
 export const startTimeAtom = atom<number>(0);
 startTimeAtom.debugLabel = `startTimeAtom`;
 
 export const currentCharIndexAtom = atom<number>(-1);
 currentCharIndexAtom.debugLabel = `currentCharIndexAtom`;
-
-export const lettersCorrectnessAtom = atom<(boolean | null)[]>(
-   Array
-      .from({ length: WORDS.reduce((a, b) => a + b.length, 0) })
-      .fill(null) as null[],
-);
-lettersCorrectnessAtom.debugLabel = `lettersCorrectnessAtom`;
 
 export const wordsCorrectnessAtom = atom<(boolean | null)[]>(
    (get) => {
@@ -138,9 +87,10 @@ export const wordsCorrectnessAtom = atom<(boolean | null)[]>(
 );
 wordsCorrectnessAtom.debugLabel = `wordsCorrectnessAtom`;
 
+
 export const lettersCorrectnessPercentageAtom = atom<number>((get) => {
    const lettersCorrectness = get(lettersCorrectnessAtom);
-   return lettersCorrectness.filter(Boolean).length / lettersCorrectness.filter(l => l !== null).length * 100;
+   return lettersCorrectness.filter(Boolean)?.length / lettersCorrectness.filter(l => l !== null)?.length * 100;
 });
 
 lettersCorrectnessPercentageAtom.debugLabel = `lettersCorrectnessPercentageAtom`;
@@ -148,17 +98,30 @@ lettersCorrectnessPercentageAtom.debugLabel = `lettersCorrectnessPercentageAtom`
 export const typedLettersAtom = atom<TypedLetterInfo[]>([]);
 typedLettersAtom.debugLabel = `typedLettersAtom`;
 
+
+export const completedWordsAtom = atom((get) => {
+   const wordRanges = get(wordRangesAtom);
+   const typedLetters = get(typedLettersAtom);
+
+   return wordRanges
+      .filter(({ range: [, end] }) => {
+         return end <= (typedLetters.at(-1)?.charIndex ?? 0);
+      });
+});
+completedWordsAtom.debugLabel = `completedWordsAtom`;
+
+
 export const wordsCompletionTimesAtom = atom((get) => {
    const typedLetters = get(typedLettersAtom);
    const completedWords = get(completedWordsAtom);
 
-   if (!typedLetters.length) return [];
-   const lettersReversed = typedLetters.reverse();
+   if (!typedLetters?.length) return [];
+   const lettersReversed = typedLetters?.reverse();
 
    return completedWords
-      .filter(({ range: [, end] }) =>
+      ?.filter(({ range: [, end] }) =>
          end <= (maxBy(typedLetters, l => l.charIndex)!.charIndex))
-      .map(({ range: [start, end], word }) => {
+      ?.map(({ range: [start, end], word }) => {
          const time = lettersReversed.find(l => l.charIndex === end)?.timestamp!
             - lettersReversed.find(l => l.charIndex === start)?.timestamp!;
          return { word, time };
@@ -166,20 +129,6 @@ export const wordsCompletionTimesAtom = atom((get) => {
 });
 wordsCompletionTimesAtom.debugLabel = `wordsCompletionTimesAtom`;
 
-
-export enum TypingMode {
-   TIME = `TIME`,
-   QUOTE = `QUOTE`,
-   WORDS = `WORDS`,
-}
-
-export const typingModeAtom = atom<TypingMode>(TypingMode.TIME);
-typingModeAtom.debugLabel = `typingModeAtom`;
-
-export enum TypingFlags {
-   PUNCTUATION = 1,
-   NUMBERS = 1 << 1,
-}
 
 //@ts-ignore
 export const typingFlagsAtom = atom<number>(0, (get, set, flags: number) => {
@@ -242,76 +191,13 @@ typingRunStateAtom.debugLabel = `typingRunStateAtom`;
 export const totalRunTimeAtom = atom<number>(get => {
    const state = get(typingRunStateAtom);
    if (state === TypingRunState.FINISHED) return performance.now() - get(startTimeAtom);
-   return get(wordsCompletionTimesAtom)?.reduce((a, b) => a + b.time, 0);
+   return get(wordsCompletionTimesAtom)?.reduce((a, b) => a + b?.time, 0);
 });
 totalRunTimeAtom.debugLabel = `totalRunTimeAtom`;
 
-export const wpmAtom = atom<number>(get => {
-   const mode = get(typingModeAtom);
-   const wordCount = get(wordsCountsAtom);
-   const totalRunTime = get(totalRunTimeAtom);
-
-   return (mode === TypingMode.TIME ? DEFAULT_WORD_COUNT : wordCount) / (totalRunTime / 1_000) * 60
-});
-wpmAtom.debugLabel = `wpmAtom`;
-
-export const newTestAtom = atom(
-   null, // it's a convention to pass `null` for the first argument
-   async (get, set) => {
-      const count = get(wordsCountsAtom);
-      const words = generate(count) as string[];
-      const time = get(timeAtom);
-
-      const mode = get(typingModeAtom);
-      if (mode === TypingMode.WORDS) await set(generateWordsAtom, count);
-
-      set(typedLettersAtom, []);
-      set(currentTimestampAtom, time!);
-      set(typingRunStateAtom, TypingRunState.STOPPED);
-      set(currentCharIndexAtom, -1);
-      set(startTimeAtom, 0);
-      set(lettersCorrectnessAtom, Array
-         .from({ length: words.reduce((a, b) => a + b.length, 0) })
-         .fill(null) as null[]);
-
-   },
-);
-newTestAtom.debugLabel = `newTestAtom`;
-
-export const restartAtom = atom(
-   null, // it's a convention to pass `null` for the first argument
-   (get, set) => {
-      const words = get(wordsAtom);
-      const time = get(timeAtom);
-
-      set(typedLettersAtom, []);
-      set(currentTimestampAtom, time);
-      set(typingRunStateAtom, TypingRunState.STOPPED);
-      set(currentCharIndexAtom, -1);
-      set(startTimeAtom, 0);
-      set(lettersCorrectnessAtom, Array
-         .from({ length: words.reduce((a, b) => a + b.length, 0) })
-         .fill(null) as null[]);
-
-   },
-);
-restartAtom.debugLabel = `restartAtom`;
-// @ts-ignore
-export const wordsCountsAtom = atom<number>(WORDS_COUNTS["10"]!, async (get, set, wordCounts: number) => {
-   set(wordsCountsAtom, wordCounts);
-   await set(generateWordsAtom, wordCounts);
-});
-wordsCountsAtom.debugLabel = `wordsCountsAtom`;
-
-
-export enum TypingRunSuccess {
-   SUCCESS = `SUCCESS`,
-   FAILED = `FAILED`,
-   INDETERMINATE = `INDETERMINATE`,
-}
 
 // @ts-ignore
-export const typingRunSuccessAtom = atom<TypingRunSuccess>((get) => {
+export const typingRunSuccessAtom = atom<TypingRunSuccess>((get, _) => {
    const runState = get(typingRunStateAtom);
 
    const userTestDifficulty: string = get(userTestDifficultyAtom);
@@ -320,18 +206,26 @@ export const typingRunSuccessAtom = atom<TypingRunSuccess>((get) => {
 
    const charsByIndex = get(charsByIndexAtom);
 
-   if (userTestDifficulty === `MASTER` && wordsCorrectness.some(x => x === false))
-      return TypingRunSuccess.FAILED;
+   if (userTestDifficulty === `MASTER` && lettersCorrectness.some(x => x === false)) {
+      console.log(`Test failed. Level: ${userTestDifficulty}`);
 
-   if (userTestDifficulty === `EXPERT` && lettersCorrectness.some(l => l === false))
+      // Handle failure:
       return TypingRunSuccess.FAILED;
+   }
+
+   if (userTestDifficulty === `EXPERT` && wordsCorrectness.some(l => l === false)) {
+      console.log(`Test failed. Level: ${userTestDifficulty}`);
+
+      // Handle failure:
+      return TypingRunSuccess.FAILED;
+   }
 
    if (runState === TypingRunState.RUNNING) return TypingRunSuccess.INDETERMINATE;
    if (runState === TypingRunState.FINISHED) {
-      const correct = lettersCorrectness.filter(l => l === true).length;
-      console.log({ correct, all: Object.keys(charsByIndex).length, userTestDifficulty });
+      const correct = lettersCorrectness.filter(l => l === true)?.length;
+      console.log({ correct, all: Object.keys(charsByIndex)?.length, userTestDifficulty });
 
-      if (correct === Object.keys(charsByIndex).length) {
+      if (correct === Object.keys(charsByIndex)?.length) {
          return TypingRunSuccess.SUCCESS;
       } else return TypingRunSuccess.FAILED;
    }
@@ -340,18 +234,49 @@ export const typingRunSuccessAtom = atom<TypingRunSuccess>((get) => {
 });
 typingRunSuccessAtom.debugLabel = `typingRunSuccessAtom`;
 
-export const consistencyScoreAtom = atom<number>((get) => {
-   const typedLettersGrouped = Object.entries(groupBy(
-      get(typedLettersAtom),
-      l => Math.floor(l.timestamp / 1000)))
-      .map(([k, v]) => v.length);
+export const typingRunAtom = atom<TypingRun>(get => {
+   const typedLetters = useAtomValue(typedLettersAtom);
+   const time = useAtomValue(currentTimestampAtom);
+   const wordCounts = useAtomValue(wordsCountsAtom);
+   const mode = useAtomValue(typingModeAtom);
+   const flags = useAtomValue(typingFlagsAtom);
+   const totalRunTime = useAtomValue(totalRunTimeAtom);
 
-   const rawPerSecond = typedLettersGrouped.map((count) =>
-      Math.round((count / 5) * 60),
-   );
-
-   const stddev = stdDev(rawPerSecond);
-   const avg = mean(rawPerSecond);
-   return roundTo2(kogasa(stddev / avg));
+   return {
+      totalRunTime,
+      typedLetters,
+      time: mode === TypingMode.TIME ? time : null,
+      wordCounts: mode === TypingMode.WORDS ? wordCounts : null,
+      flags,
+      mode,
+      metadata: {},
+   };
+}, (get, set, value: TypingRun | null) => {
+   set(typingRunAtom, value);
 });
-consistencyScoreAtom.debugLabel = `consistencyScoreAtom`;
+
+
+export const useTypingRunSuccess = () => {
+   const success = useAtomValue(typingRunSuccessAtom);
+   const stop = useSetAtom(stopAtom);
+   const setState = useSetAtom(typingRunStateAtom);
+   const setCurrentCharIndex = useSetAtom(currentCharIndexAtom);
+   const setStartTime = useSetAtom(startTimeAtom);
+   const typingRun = useAtomValue(typingRunAtom);
+
+   useEffect(() => {
+      if (success === TypingRunSuccess.FAILED) {
+         console.log(`Test failed!`);
+         stop();
+         setCurrentCharIndex(-1);
+         setStartTime(0);
+         setState(TypingRunState.FINISHED);
+
+         // Save to local storage:
+         console.log({ typingRun });
+
+         LocalStorage.setItem(TYPING_RUN_LS_KEY, typingRun);
+      }
+
+   }, [success, typingRun]);
+};

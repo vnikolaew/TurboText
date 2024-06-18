@@ -2,8 +2,8 @@
 import { Button, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@repo/ui";
 import React from "react";
 import { useSetAtom } from "jotai/index";
-import { restartAtom } from "@atoms/editor";
 import { RotateCw } from "lucide-react";
+import { restartAtom } from "@atoms/actions";
 
 export interface RestartButtonProps {
 }

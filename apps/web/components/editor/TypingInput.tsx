@@ -2,12 +2,13 @@
 import React, { Fragment, useEffect } from "react";
 import { useTypingEditor } from "@components/editor/hooks/useTypingEditor";
 import { useAtomValue } from "jotai";
-import { TypingRunState, typingRunStateAtom, wordsAtom } from "@atoms/editor";
+import { typingRunStateAtom, wordsAtom } from "@atoms/editor";
 import { calculateSHA256, cn } from "@lib/utils";
 import { useBoolean } from "@hooks/useBoolean";
 import { AnimatePresence, motion } from "framer-motion";
 import { MousePointer } from "lucide-react";
 import TypingLetters from "@components/editor/TypingLetters";
+import { TypingRunState } from "@atoms/consts";
 
 export interface TypingInputProps {
    start: () => void;

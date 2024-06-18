@@ -11,6 +11,7 @@ import type { Metadata } from "next";
 import { APP_DESCRIPTION, APP_NAME, AUTHOR, AUTHOR_WEBSITE } from "@config/site";
 import appLogo from "@public/logo.jpg";
 import { getUserWithTypingRuns } from "@app/account/_queries";
+import TypingRunsStatsSection from "@app/account/_components/TypingRunsStatsSection";
 
 export const metadata: Metadata = {
    title: `Account | ${APP_NAME}`,
@@ -32,7 +33,7 @@ export interface PageProps {
 }
 
 const Page = async ({}: PageProps) => {
-   const user = await getUserWithTypingRuns()
+   const user = await getUserWithTypingRuns();
    if (!user) notFound();
 
    return (
@@ -88,13 +89,15 @@ const Page = async ({}: PageProps) => {
             <Separator orientation={`vertical`} className={`h-20 w-[4px] rounded-full bg-neutral-700`} />
             <AccountLinks username={user.name!} />
          </div>
-
          <div className={`w-full bg-stone-950 rounded-lg shadow-lg flex items-center p-6 py-10 gap-8 mt-8`}>
-            <UserActivitySection typingRuns={user.typingRuns} />
+            <UserActivitySection typingRuns={user.typingRuns.map(run => {
+               const { hasFlag, ...rest } = run;
+               return rest;
+            })} />
          </div>
-         {/*<div className={`w-full bg-stone-950 rounded-lg shadow-lg flex items-center p-6 py-10 gap-8 mt-8`}>*/}
-         {/*   <pre>{JSON.stringify(user.typingRuns, null, 2)}</pre>*/}
-         {/*</div>*/}
+         <div className={`w-full bg-stone-950 rounded-lg shadow-lg flex items-center p-12 py-10 gap-8 mt-8`}>
+            <TypingRunsStatsSection runs={user.typingRuns} />
+         </div>
          <div className={`w-full bg-stone-950 rounded-lg shadow-lg flex items-center p-6 py-10 gap-8 mt-8`}>
             <LatestUserRuns user={user} />
          </div>

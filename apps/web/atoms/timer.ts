@@ -81,3 +81,13 @@ export const resumeAtom = atom(null, (get, set) => {
    set(timerIntervalAtom, interval);
 });
 resumeAtom.debugLabel = `resumeAtom`
+
+export const stopAtom = atom(null, (get, set) => {
+   let interval = get(timerIntervalAtom);
+   const time = get(timeAtom)
+
+   clearInterval(interval);
+   set(timerIntervalAtom, null!)
+   set(currentTimestampAtom, time)
+});
+stopAtom.debugLabel = `stopAtom`

@@ -12,8 +12,8 @@ import {
 } from "@repo/ui";
 import React, { useState } from "react";
 import { useAtom } from "jotai";
-import { wordsCountsAtom } from "@atoms/editor";
 import { Kbd } from "@components/editor/toolbar/CustomTimeConfigModal";
+import { wordsCountsAtom } from "@atoms/words";
 
 export interface CustomWordsConfigModalProps {
    open: boolean;
