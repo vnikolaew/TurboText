@@ -4,12 +4,15 @@ import React from "react";
 import { AtSign, Baseline, Clock2, Hash, Wrench } from "lucide-react";
 import { useAtom, useAtomValue } from "jotai";
 import {
+   DEFAULT_WORD_COUNT,
+   generateWordsAtom,
    TypingFlags,
    typingFlagsAtom,
    TypingMode,
    typingModeAtom,
    TypingRunState,
    typingRunStateAtom,
+   wordsCountsAtom,
 } from "@atoms/editor";
 import { ToggleItem } from "@components/editor/toolbar/ToggleItem";
 import { WordsSelect } from "@components/editor/toolbar/WordsSelect";
@@ -18,6 +21,7 @@ import CustomWordsConfigModal from "@components/editor/toolbar/CustomWordsConfig
 import { useBoolean } from "@hooks/useBoolean";
 import CustomTimeConfigModal from "@components/editor/toolbar/CustomTimeConfigModal";
 import { AnimatePresence, motion } from "framer-motion";
+import { useSetAtom } from "jotai/index";
 
 export interface EditorToolbarProps {
 }
@@ -27,10 +31,13 @@ const EditorToolbar = ({}: EditorToolbarProps) => {
    const [typingMode, setTypingMode] = useAtom(typingModeAtom);
    const [cwModalOpen, setCwModalOpen] = useBoolean();
    const [timeModalOpen, setTimeModalOpen] = useBoolean();
+
+   const wordCount = useAtomValue(wordsCountsAtom)
+   const generateWords = useSetAtom(generateWordsAtom);
    const state = useAtomValue(typingRunStateAtom);
 
    return (
-      <AnimatePresence initial mode={`wait`} >
+      <AnimatePresence initial mode={`wait`}>
          {state !== TypingRunState.RUNNING && (
             <motion.div
                initial={{ opacity: 100 }}
@@ -49,15 +56,23 @@ const EditorToolbar = ({}: EditorToolbarProps) => {
                </ToggleGroup>
                <Separator className={`h-4 bg-neutral-500 w-[1px]`} />
                <ToggleGroup
-                  onValueChange={value => {
+                  onValueChange={async value => {
                      if (!value?.length) return;
                      console.log({ value });
+                     if(value === TypingMode.WORDS) await generateWords(wordCount)
+                     else await generateWords(DEFAULT_WORD_COUNT)
+
                      setTypingMode(value as TypingMode);
                   }} type="single">
-                  <ToggleItem Icon={Clock2} value={TypingMode.TIME} active={typingMode === TypingMode.TIME}
-                              text={`time`} />
-                  <ToggleItem Icon={Baseline} value={TypingMode.WORDS} active={typingMode === TypingMode.WORDS}
-                              text={`words`} />
+                  <ToggleItem
+                     Icon={Clock2} value={TypingMode.TIME}
+                     active={typingMode === TypingMode.TIME}
+                     text={`time`} />
+                  <ToggleItem
+                     Icon={Baseline}
+                     value={TypingMode.WORDS}
+                     active={typingMode === TypingMode.WORDS}
+                     text={`words`} />
                </ToggleGroup>
                <Separator className={`h-4 bg-neutral-500 w-[1px]`} />
                {typingMode === TypingMode.TIME && <TimeSelect />}

@@ -165,6 +165,9 @@ importers:
       bcryptjs:
         specifier: ^2.4.3
         version: 2.4.3
+      lodash:
+        specifier: ^4.17.21
+        version: 4.17.21
       zod:
         specifier: ^3.23.8
         version: 3.23.8
@@ -175,6 +178,9 @@ importers:
       '@types/bcryptjs':
         specifier: ^2.4.6
         version: 2.4.6
+      '@types/lodash':
+        specifier: ^4.17.5
+        version: 4.17.5
       prisma:
         specifier: latest
         version: 5.15.0
@@ -4531,7 +4537,6 @@ packages:
 
   /@types/lodash@4.17.5:
     resolution: {integrity: sha512-MBIOHVZqVqgfro1euRDWX7OO0fBVUUMrN6Pwm8LQsz8cWhEpihlvR70ENj3f40j58TNxZaWv2ndSkInykNBBJw==}
-    dev: false
 
   /@types/minimatch@5.1.2:
     resolution: {integrity: sha512-K0VQKziLUWkVKiRVrx4a40iPaxTUefQmjtkQofBkYRcoaaL/8rhwDWww9qWbrgicNOgnpIsMxyNIUM4+n6dUIA==}

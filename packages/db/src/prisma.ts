@@ -1,7 +1,9 @@
-import { Prisma, PrismaClient, User } from "@prisma/client";
+import { Prisma, PrismaClient, Tag, TypingRun, User } from "@prisma/client";
 import { InternalArgs } from "@prisma/client/runtime/library";
 import bcrypt from "bcryptjs";
 import { typedLetterInfoSchema } from "./utils";
+import { groupBy } from "lodash";
+import { kogasa, mean, roundTo2, stdDev } from "./numbers";
 
 export const __IS_DEV__ = process.env.NODE_ENV === `development`;
 
@@ -25,6 +27,43 @@ export enum TypingFlags {
 export let xprisma = prisma.$extends({
    result: {
       typingRun: {
+         consistency: {
+            needs: { typedLetters: true },
+            compute({ typedLetters }) {
+               const res = typedLetterInfoSchema.safeParse({ typedLetters });
+               if(!res.success) return 0.00;
+
+               const typedLettersGrouped = Object.entries(groupBy(
+                  res.data.typedLetters,
+                  l => Math.floor(l!.timestamp / 1000)))
+                  .map(([k, v]) => v.length);
+
+               const rawPerSecond = typedLettersGrouped.map((count) =>
+                  Math.round((count / 5) * 60),
+               );
+
+               const stddev = stdDev(rawPerSecond);
+               const avg = mean(rawPerSecond);
+               return roundTo2(kogasa(stddev / avg));
+            },
+         },
+         accuracy: {
+            needs: { typedLetters: true, mode: true, totalTimeMilliseconds: true, wordCount: true },
+            compute({ typedLetters, mode, totalTimeMilliseconds, wordCount }) {
+               const res = typedLetterInfoSchema.safeParse({ typedLetters });
+               if(!res.success) return 0.00;
+
+               return res.data.typedLetters?.filter(l => l.correct === true)?.length
+                  / res.data.typedLetters?.filter(l => l !== null)?.length * 100;
+            },
+         },
+         wpm: {
+            needs: { mode: true, totalTimeMilliseconds: true, wordCount: true },
+            compute({ mode, totalTimeMilliseconds, wordCount }) {
+               const wc = mode === `TIME` ? 40 : wordCount!;
+               return (wc / (totalTimeMilliseconds / 1000)) * 60;
+            },
+         },
          hasFlag: {
             needs: { flags: true },
             compute({ flags }) {
@@ -35,7 +74,6 @@ export let xprisma = prisma.$extends({
             needs: { typedLetters: true },
             compute({ typedLetters }) {
                const res = typedLetterInfoSchema.safeParse({ typedLetters });
-               console.log(res.error);
                return res?.data;
             },
          },
@@ -99,7 +137,7 @@ export let xprisma = prisma.$extends({
             needs: { typingRuns: true },
             compute({ typingRuns }) {
                return typingRuns
-                  ?.map(r => (r as any)?.typedLettersInfo?.typedLetters?.at(-1)?.timestamp!)
+                  ?.map(r => r?.totalTimeMilliseconds)
                   ?.reduce((a, b) => a + b, 0);
             },
          },
@@ -140,6 +178,29 @@ export let xprisma = prisma.$extends({
    },
    model: {
       user: {
+         async getUserPersonalBestWpm({ userId }: { userId: string }) {
+            const userWpm: number = (await xprisma.typingRun.findMany({
+               where: { userId },
+               select: {
+                  wordCount: true, totalTimeMilliseconds: true, mode: true
+               }
+            })).map(({ mode, wordCount, totalTimeMilliseconds }: Partial<TypingRun>) => {
+               const wc = mode === `TIME` ? 40 : wordCount!;
+               const wpm = (wc / (totalTimeMilliseconds! / 1000)) * 60;
+               return wpm
+            }).sort((a, b) => (b - a))[0];
+
+            return userWpm;
+         },
+         async getActiveTags({ userId }: { userId: string }) {
+            const tags: Tag[] = await xprisma.tag.findMany({
+               where: {
+                  userId, metadata: { path: [`active`], equals: true },
+               },
+            });
+
+            return tags;
+         },
          async signIn({ email, password, username }: {
             email: string;
             password: string,
@@ -193,9 +254,9 @@ export let xprisma = prisma.$extends({
                   configuration: {
                      create: {
                         sound_click_sound: null,
-                        sound_error_sound: null
-                     }
-                  }
+                        sound_error_sound: null,
+                     },
+                  },
                },
                select: {
                   id: true,

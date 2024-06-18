@@ -1,11 +1,11 @@
 "use client";
 import { useAtom, useSetAtom } from "jotai/index";
-import { generateWordsAtom, TypingMode, typingModeAtom, wordsCountsAtom } from "@atoms/editor";
+import { DEFAULT_WORD_COUNT, generateWordsAtom, TypingMode, typingModeAtom, wordsCountsAtom } from "@atoms/editor";
 import { ToggleGroup } from "@repo/ui";
 import { ToggleItem } from "@components/editor/toolbar/ToggleItem";
 import React from "react";
 import { useAtomValue } from "jotai";
-import { TIMES, timeAtom } from "@atoms/timer";
+import { timeAtom, TIMES } from "@atoms/timer";
 
 export const TimeSelect = () => {
    const [time, setTime] = useAtom(timeAtom);
@@ -20,7 +20,7 @@ export const TimeSelect = () => {
 
             // setWords(generate(Number(value)) as string[])
             if(mode === TypingMode.TIME) {
-               await generateWords(40)
+               await generateWords(DEFAULT_WORD_COUNT)
             } else if(mode === TypingMode.WORDS) {
                await generateWords(wc)
             }

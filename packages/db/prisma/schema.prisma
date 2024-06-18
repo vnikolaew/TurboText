@@ -82,20 +82,20 @@ model Tag {
 }
 
 model TypingRun {
-  id        String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  userId    String
-  user      User   @relation(fields: [userId], references: [id], onDelete: NoAction)
-  time      Int?
-  wordCount Int?
+  id                    String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId                String
+  user                  User   @relation(fields: [userId], references: [id], onDelete: NoAction)
+  time                  Int?
+  wordCount             Int?
+  totalTimeMilliseconds Int
 
   mode         TypingRunMode
   flags        Int
   metadata     Json?         @default("null") @db.JsonB
   typedLetters Json          @db.JsonB
 
-  createdAt           DateTime @default(now())
-  updatedAt           DateTime @updatedAt
-  userConfigurationId String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum TypingRunMode {
@@ -150,7 +150,8 @@ model UserConfiguration {
   user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   test_difficulty RunDifficulty @default(NORMAL)
 
-  blind_mode Boolean @default(false)
+  blind_mode     Boolean @default(false)
+  auto_save_mode Boolean @default(false)
 
   input_freedom_mode    Boolean        @default(false)
   input_confidence_mode ConfidenceMode @default(OFF)

@@ -27,10 +27,7 @@ const UserActivitySection = ({ typingRuns }: UserActivitySectionProps) => {
          return `${year}-${month}-${day}`
       }))
 
-   console.log({ grouped });
-
    return (
-
       <div className={`h-[200px] z-[30] w-full`}>
          <div className={`w-1/2`}>
             <CalendarHeatmap

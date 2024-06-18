@@ -66,7 +66,7 @@ const Header = ({}: NavbarProps) => {
                   <Link title={`Settings`} href={`/settings`} className={`flex items-center gap-2 !ml-12`}>
                      <Settings size={16} />
                      <span
-                        className={`text-base drop-shadow-lg !font-semibold ${lexend.className} `}>
+                        className={`text-base drop-shadow-lg !font-semibold`}>
                      Settings
                   </span>
                   </Link>
@@ -75,7 +75,7 @@ const Header = ({}: NavbarProps) => {
                   <Link title={`Settings`} href={`/_timer`} className={`flex items-center gap-2 !ml-12`}>
                      <Timer size={16} />
                      <span
-                        className={`text-base drop-shadow-lg !font-semibold ${lexend.className} `}>
+                        className={`text-base drop-shadow-lg !font-semibold`}>
                      Timer
                   </span>
                   </Link>

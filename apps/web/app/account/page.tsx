@@ -1,32 +1,39 @@
 import React from "react";
 import { Separator, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, UserAvatar } from "@repo/ui";
-import { auth } from "@auth";
-import { xprisma } from "@repo/db";
 import moment from "moment";
 import { notFound } from "next/navigation";
 import AccountLinks from "@app/account/_components/AccountPageLinks";
 import EmailNotVerifiedNotification from "@app/account/_components/EmailNotVerifiedNotification";
 import UserActivitySection from "@app/account/_components/UserActivitySection";
 import { formatMillisecondsToTime } from "@lib/utils";
+import LatestUserRuns from "@app/account/_components/LatestUserRuns";
+import type { Metadata } from "next";
+import { APP_DESCRIPTION, APP_NAME, AUTHOR, AUTHOR_WEBSITE } from "@config/site";
+import appLogo from "@public/logo.jpg";
+import { getUserWithTypingRuns } from "@app/account/_queries";
+
+export const metadata: Metadata = {
+   title: `Account | ${APP_NAME}`,
+   description: APP_DESCRIPTION,
+   authors: [{
+      url: AUTHOR_WEBSITE,
+      name: AUTHOR,
+   }],
+   applicationName: APP_NAME,
+   icons: appLogo.src,
+   keywords: [`speed`, `typing`, `speed-typing`, `test`, `web`, `keyboard`],
+   category: `notes`,
+   creator: AUTHOR,
+   referrer: `no-referrer`,
+};
+
 
 export interface PageProps {
 }
 
 const Page = async ({}: PageProps) => {
-   const session = await auth();
-   const user = await xprisma.user.findUnique({
-      where: { id: session?.user?.id },
-      include: { typingRuns: true },
-   });
-
+   const user = await getUserWithTypingRuns()
    if (!user) notFound();
-
-   user.typingRuns = user.typingRuns.map(run => {
-      const { hasFlag, ...rest } = run;
-      return rest;
-   });
-
-   console.log({ user });
 
    return (
       <section className={`w-2/3 mx-auto mt-24 flex flex-col items-center gap-4`}>
@@ -85,8 +92,11 @@ const Page = async ({}: PageProps) => {
          <div className={`w-full bg-stone-950 rounded-lg shadow-lg flex items-center p-6 py-10 gap-8 mt-8`}>
             <UserActivitySection typingRuns={user.typingRuns} />
          </div>
+         {/*<div className={`w-full bg-stone-950 rounded-lg shadow-lg flex items-center p-6 py-10 gap-8 mt-8`}>*/}
+         {/*   <pre>{JSON.stringify(user.typingRuns, null, 2)}</pre>*/}
+         {/*</div>*/}
          <div className={`w-full bg-stone-950 rounded-lg shadow-lg flex items-center p-6 py-10 gap-8 mt-8`}>
-            <pre>{JSON.stringify(user.typingRuns, null, 2)}</pre>
+            <LatestUserRuns user={user} />
          </div>
       </section>
    );

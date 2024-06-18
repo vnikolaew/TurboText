@@ -3,7 +3,7 @@ import { generate } from "random-words";
 import { TypedLetterInfo, WordRange } from "@components/editor/hooks/useTypingEditor";
 import { injectPunctuation, strings } from "@lib/strings";
 import { userLanguageAtom, userTestDifficultyAtom } from "@atoms/user";
-import { maxBy } from "lodash";
+import { groupBy, maxBy } from "lodash";
 import { kogasa, mean, roundTo2, stdDev } from "@lib/numbers";
 import { currentTimestampAtom, timeAtom } from "@atoms/timer";
 
@@ -15,8 +15,9 @@ export enum TypingRunState {
 }
 
 // EDITOR
+export const DEFAULT_WORD_COUNT = 40;
 
-const WORDS = generate(40) as string[];
+const WORDS = generate(DEFAULT_WORD_COUNT) as string[];
 
 export const WORDS_COUNTS = {
    10: 10,
@@ -49,11 +50,11 @@ export const generateWordsAtom = atom(null, async (get, set, wc?: number) => {
       .find(([, value]) => value === userLanguage)?.[0];
 
    const res = await fetch(`/api/words/${languageCode}/generate?limit=${wc ?? wordCount}`)
-      .then(r => r.json())
+      .then(r => r.json());
    console.log({ res });
 
-   if(res.words?.length) {
-      set(wordsAtom, res.words as string[])
+   if (res.words?.length) {
+      set(wordsAtom, res.words as string[]);
    }
 });
 
@@ -240,19 +241,30 @@ typingRunStateAtom.debugLabel = `typingRunStateAtom`;
 
 export const totalRunTimeAtom = atom<number>(get => {
    const state = get(typingRunStateAtom);
-   if(state === TypingRunState.FINISHED) return performance.now() - get(startTimeAtom);
-   return get(wordsCompletionTimesAtom)?.reduce((a, b) => a + b.time, 0)
+   if (state === TypingRunState.FINISHED) return performance.now() - get(startTimeAtom);
+   return get(wordsCompletionTimesAtom)?.reduce((a, b) => a + b.time, 0);
 });
 totalRunTimeAtom.debugLabel = `totalRunTimeAtom`;
 
+export const wpmAtom = atom<number>(get => {
+   const mode = get(typingModeAtom);
+   const wordCount = get(wordsCountsAtom);
+   const totalRunTime = get(totalRunTimeAtom);
+
+   return (mode === TypingMode.TIME ? DEFAULT_WORD_COUNT : wordCount) / (totalRunTime / 1_000) * 60
+});
+wpmAtom.debugLabel = `wpmAtom`;
+
 export const newTestAtom = atom(
    null, // it's a convention to pass `null` for the first argument
-   (get, set) => {
+   async (get, set) => {
       const count = get(wordsCountsAtom);
       const words = generate(count) as string[];
-      const time = get(timeAtom)
+      const time = get(timeAtom);
 
-      set(wordsAtom, words);
+      const mode = get(typingModeAtom);
+      if (mode === TypingMode.WORDS) await set(generateWordsAtom, count);
+
       set(typedLettersAtom, []);
       set(currentTimestampAtom, time!);
       set(typingRunStateAtom, TypingRunState.STOPPED);
@@ -270,7 +282,7 @@ export const restartAtom = atom(
    null, // it's a convention to pass `null` for the first argument
    (get, set) => {
       const words = get(wordsAtom);
-      const time = get(timeAtom)
+      const time = get(timeAtom);
 
       set(typedLettersAtom, []);
       set(currentTimestampAtom, time);
@@ -329,20 +341,17 @@ export const typingRunSuccessAtom = atom<TypingRunSuccess>((get) => {
 typingRunSuccessAtom.debugLabel = `typingRunSuccessAtom`;
 
 export const consistencyScoreAtom = atom<number>((get) => {
-   const typedLetters = get(typedLettersAtom)
-      .map((letter, index) => {
+   const typedLettersGrouped = Object.entries(groupBy(
+      get(typedLettersAtom),
+      l => Math.floor(l.timestamp / 1000)))
+      .map(([k, v]) => v.length);
 
-         return {
-            ...letter,
-            charIndex: index,
-         };
-      })
-   const rawPerSecond = [].map((count) =>
-      Math.round((count / 5) * 60)
+   const rawPerSecond = typedLettersGrouped.map((count) =>
+      Math.round((count / 5) * 60),
    );
 
    const stddev = stdDev(rawPerSecond);
    const avg = mean(rawPerSecond);
-   return roundTo2(kogasa(stddev / avg))
+   return roundTo2(kogasa(stddev / avg));
 });
 consistencyScoreAtom.debugLabel = `consistencyScoreAtom`;

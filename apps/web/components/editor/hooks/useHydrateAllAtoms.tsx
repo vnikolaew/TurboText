@@ -1,6 +1,7 @@
 "use client";
 
 import {
+   DEFAULT_WORD_COUNT,
    lettersCorrectnessAtom,
    typingFlagsAtom,
    TypingMode,
@@ -19,7 +20,7 @@ import { User, UserConfiguration } from "@repo/db";
 import { useHydrateAtoms } from "jotai/utils";
 
 export function useHydrateAllAtoms(user?: User & { configuration: UserConfiguration }) {
-   const WORDS = useRef(generate(40) as string[]);
+   const WORDS = useRef(generate(DEFAULT_WORD_COUNT) as string[]);
 
    //@ts-ignore
    useHydrateAtoms([

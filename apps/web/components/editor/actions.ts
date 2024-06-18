@@ -2,7 +2,7 @@
 
 import { authorizedAction } from "@lib/actions";
 import { sleep } from "@lib/utils";
-import { TypingRunMode, xprisma } from "@repo/db";
+import { Tag, TypingRunMode, xprisma } from "@repo/db";
 import { z } from "zod";
 
 
@@ -20,7 +20,6 @@ const schema = z.object({
    mode: z.union([z.literal(TypingRunMode.TIME), z.literal(TypingRunMode.WORDS)]),
    flags: z.number().min(0).nullable(),
    metadata: z.record(z.string(), z.any()).nullable(),
-
 });
 
 /**
@@ -37,9 +36,26 @@ export const saveTypingRun = authorizedAction(schema, async ({
                                                              }, { userId }) => {
    await sleep(1_000);
 
+   const activeTags: Tag[] = await xprisma.user.getActiveTags({ userId });
+   const userConfig = await xprisma.userConfiguration.findFirst({ where: { userId } });
+   if(!userConfig) return { success: false, error: `User configuration for user ${userId} not found.` };
+
+   const userWpm = await xprisma.user.getUserPersonalBestWpm({ userId });
+   console.log({ userWpm, userConfig });
+
+   const currentWpm = getRunWpm(mode, totalRunTime, wordCounts);
+
    const run = await xprisma.typingRun.create({
       data: {
-         metadata,
+         metadata: {
+            ...(metadata ?? {}),
+            tags: activeTags.map(t => t.id),
+            language: userConfig.language,
+            test_difficulty: userConfig.test_difficulty,
+            blind_mode: userConfig.blind_mode,
+            confidence_mode: userConfig.input_confidence_mode,
+            isPersonalBest: currentWpm > userWpm,
+         },
          userId,
          typedLetters,
          time,
@@ -54,3 +70,8 @@ export const saveTypingRun = authorizedAction(schema, async ({
    console.log({ run });
    return { success: true, run: rest };
 });
+
+function getRunWpm(mode: string, totalTimeMilliseconds: number, wordCount: number | null) {
+   const wc = mode === `TIME` ? 40 : wordCount!;
+   return (wc / (totalTimeMilliseconds / 1000)) * 60;
+}

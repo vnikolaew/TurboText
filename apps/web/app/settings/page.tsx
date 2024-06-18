@@ -4,11 +4,28 @@ import React from "react";
 import { notFound } from "next/navigation";
 import SettingsAccordion from "@app/settings/_components/SettingsAccordion";
 import Sections from "./_components/Sections";
+import type { Metadata } from "next";
+import { APP_DESCRIPTION, APP_NAME, AUTHOR, AUTHOR_WEBSITE } from "@config/site";
+import appLogo from "@public/logo.jpg";
 
 export interface PageProps {
    searchParams?: { sections: string | string[] | undefined };
 }
 
+export const metadata: Metadata = {
+   title: `Settings | ${APP_NAME}`,
+   description: APP_DESCRIPTION,
+   authors: [{
+      url: AUTHOR_WEBSITE,
+      name: AUTHOR,
+   }],
+   applicationName: APP_NAME,
+   icons: appLogo.src,
+   keywords: [`speed`, `typing`, `speed-typing`, `test`, `web`, `keyboard`],
+   category: `notes`,
+   creator: AUTHOR,
+   referrer: `no-referrer`,
+};
 
 const Page = async ({ }: PageProps) => {
    const session = await auth();
