@@ -1,6 +1,7 @@
 "use client";
 import { User, UserConfiguration } from "@repo/db";
 import { atom } from "jotai";
+import { selectAtom } from "jotai/utils";
 import { focusAtom } from "jotai-optics";
 import { Session } from "next-auth";
 
@@ -34,7 +35,7 @@ export const blindModeAtom = focusAtom<UserConfiguration["blind_mode"]>(userConf
 blindModeAtom.debugLabel = `blindModeAtom`;
 
 // @ts-ignore
-export const userLanguageAtom = focusAtom(userConfigAtom, optic => optic.prop(`language`));
+export const userLanguageAtom = focusAtom(userConfigAtom, optic => optic?.prop(`language`));
 userLanguageAtom.debugLabel = `userLanguageAtom`;
 
 // @ts-ignore

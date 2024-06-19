@@ -1,8 +1,7 @@
 import { atom, useAtomValue } from "jotai";
 import { generate } from "random-words";
-import { TypedLetterInfo, WordRange } from "@components/editor/hooks/useTypingEditor";
-import { userTestDifficultyAtom } from "@atoms/user";
-import { currentTimestampAtom, startAtom, stopAtom } from "@atoms/timer";
+import { capsLockWarningAtom, userTestDifficultyAtom } from "@atoms/user";
+import { currentTimestampAtom, startAtom, stopAtom, totalPauseTimeAtom } from "@atoms/timer";
 import { useEffect } from "react";
 import { useSetAtom } from "jotai/index";
 import { LocalStorage } from "@lib/local-storage";
@@ -10,7 +9,14 @@ import { TYPING_RUN_LS_KEY } from "@components/editor/TypingEditor";
 import { TypingRun } from "@components/editor/hooks/useSaveLatestUserRun";
 import { maxBy } from "lodash";
 import { wordsCountsAtom } from "@atoms/words";
-import { DEFAULT_WORD_COUNT, TypedLetterFlags, TypingMode, TypingRunState, TypingRunSuccess } from "@atoms/consts";
+import {
+   DEFAULT_WORD_COUNT,
+   TypedLetterFlags, TypedLetterInfo,
+   TypingMode,
+   TypingRunState,
+   TypingRunSuccess,
+   WordRange,
+} from "@atoms/consts";
 import { typingFlagsAtom } from "./flags";
 
 // EDITOR
@@ -131,8 +137,11 @@ typingRunStateAtom.debugLabel = `typingRunStateAtom`;
 
 export const totalRunTimeAtom = atom<number>(get => {
    const state = get(typingRunStateAtom);
-   if (state === TypingRunState.FINISHED) return performance.now() - get(startTimeAtom);
-   return get(wordsCompletionTimesAtom)?.reduce((a, b) => a + b?.time, 0);
+   const start = get(startTimeAtom);
+   const totalPauseTime = get(totalPauseTimeAtom)
+   console.log({ start, totalPauseTime});
+   return performance.now() - start - totalPauseTime;
+   // return sum(get(wordsCompletionTimesAtom).map(w => w.time)) - get(totalPauseTimeAtom)
 });
 totalRunTimeAtom.debugLabel = `totalRunTimeAtom`;
 
@@ -141,7 +150,7 @@ totalRunTimeAtom.debugLabel = `totalRunTimeAtom`;
 export const typingRunSuccessAtom = atom<TypingRunSuccess>((get, _) => {
    const runState = get(typingRunStateAtom);
 
-   const userTestDifficulty: string = get(userTestDifficultyAtom);
+   const userTestDifficulty: string = get(userTestDifficultyAtom) as unknown as string;
    const wordsCorrectness = get(wordsCorrectnessAtom);
    const lettersCorrectness = get(lettersCorrectnessAtom);
 
@@ -180,12 +189,14 @@ export const typingRunAtom = atom<TypingRun>(get => {
    const mode = get(typingModeAtom);
    const flags = get(typingFlagsAtom);
    const totalRunTime = get(totalRunTimeAtom);
+   const completedWords = get(completedWordsAtom)?.length;
 
    return {
       totalRunTime,
       typedLetters,
       time: mode === TypingMode.TIME ? time : null,
       wordCounts: mode === TypingMode.WORDS ? wordCounts : null,
+      completedWords,
       flags,
       mode,
       metadata: {},
@@ -200,16 +211,15 @@ export const useTypingRunSuccess = () => {
    const stop = useSetAtom(stopAtom);
    const setState = useSetAtom(typingRunStateAtom);
    const setCurrentCharIndex = useSetAtom(currentCharIndexAtom);
-   const setStartTime = useSetAtom(startTimeAtom);
    const typingRun = useAtomValue(typingRunAtom);
 
    useEffect(() => {
       if (success === TypingRunSuccess.FAILED) {
          console.log(`Test failed!`);
-         stop();
          setCurrentCharIndex(-1);
-         setStartTime(0);
+         // setStartTime(0);
          setState(TypingRunState.FINISHED);
+         stop();
 
          // Save to local storage:
          console.log({ typingRun });
@@ -224,9 +234,15 @@ export const onKeyPressAtom = atom(null, (get, set, e: KeyboardEvent<HTMLDivElem
    e.preventDefault();
    let { key, ctrlKey: ctrl } = e;
 
+
    if (key === `r` && ctrl) window.location.reload();
 
    const charCode = e.key.charCodeAt(0);
+   const capsLockSwitch = e.key === `CapsLock`
+   if(capsLockSwitch) {
+      set(capsLockOnAtom, l => !l)
+      return
+   }
 
    const startTime = get(startTimeAtom);
    const charsByIndex = get(charsByIndexAtom);
@@ -298,3 +314,12 @@ export const onKeyPressAtom = atom(null, (get, set, e: KeyboardEvent<HTMLDivElem
    }
 });
 onKeyPressAtom.debugLabel = `onKeyPressAtom`;
+
+export const caretCoordinatesAtom = atom<{ top: number; left: number }>({
+   top: 0,
+   left: 0,
+});
+caretCoordinatesAtom.debugLabel = `caretCoordinatesAtom`;
+
+export const capsLockOnAtom = atom(false);
+capsLockOnAtom.debugLabel = `capsLockOnAtom`;

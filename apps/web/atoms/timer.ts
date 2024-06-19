@@ -41,6 +41,8 @@ export const startAtom = atom(null, (get, set) => {
    const mode = get(typingModeAtom);
 
    set(startTimeAtom, performance.now());
+   set(totalPauseTimeAtom, 0)
+   set(currentPauseStartTimeAtom, 0)
    if (mode === TypingMode.WORDS) return;
 
    let interval = get(timerIntervalAtom);
@@ -69,9 +71,10 @@ export const pauseAtom = atom(null, (get, set) => {
    if (timerState !== TypingRunState.RUNNING) return;
 
    const mode = get(typingModeAtom);
-   if (mode === TypingMode.TIME) {
-      set(typingRunStateAtom, TypingRunState.PAUSED);
+   set(typingRunStateAtom, TypingRunState.PAUSED);
+   set(currentPauseStartTimeAtom, performance.now())
 
+   if (mode === TypingMode.TIME) {
       let interval = get(timerIntervalAtom);
       if (!interval) return;
 
@@ -81,11 +84,24 @@ export const pauseAtom = atom(null, (get, set) => {
 });
 pauseAtom.debugLabel = `pauseAtom`;
 
+export const totalPauseTimeAtom = atom(0);
+totalPauseTimeAtom.debugLabel = `totalPauseTimeAtom`;
+
+export const currentPauseStartTimeAtom = atom(0);
+currentPauseStartTimeAtom.debugLabel = `currentPauseStartTimeAtom`;
+
+
 export const resumeAtom = atom(null, (get, set) => {
    const timerState = get(typingRunStateAtom);
    if (timerState !== TypingRunState.PAUSED) return;
 
    const mode = get(typingModeAtom);
+
+   set(typingRunStateAtom, TypingRunState.RUNNING);
+   const currentPause = performance.now() - get(currentPauseStartTimeAtom);
+
+   set(totalPauseTimeAtom, t => t + currentPause);
+   set(currentPauseStartTimeAtom, 0)
 
    if(mode === TypingMode.TIME) {
       let interval = get(timerIntervalAtom);
@@ -104,7 +120,6 @@ export const resumeAtom = atom(null, (get, set) => {
       }, 1000);
 
       set(timerIntervalAtom, interval);
-      set(typingRunStateAtom, TypingRunState.RUNNING);
    }
 
 });

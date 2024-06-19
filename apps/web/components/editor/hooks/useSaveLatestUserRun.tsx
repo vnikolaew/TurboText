@@ -20,6 +20,7 @@ export const typedLettersSchema = z.object({
    })),
    time: z.number(),
    totalRunTime: z.number(),
+   completedWords: z.number(),
    wordCounts: z.number(),
    mode: z.union([z.literal(TypingMode.TIME), z.literal(TypingMode.WORDS)]),
    flags: z.number().min(0).nullable(),
@@ -35,8 +36,8 @@ export function useSaveLatestUserRun() {
 
    const { execute, status } = useAction(saveTypingRun, {
       onSuccess: res => {
-         if (res.success) {
-            console.log(res);
+         if (res?.data?.success) {
+            console.log(res.data);
             localStorage.removeItem(TYPING_RUN_LS_KEY);
          }
       },

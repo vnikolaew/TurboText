@@ -2,12 +2,13 @@ import { atom } from "jotai/index";
 import { groupBy } from "lodash";
 import { kogasa, mean, roundTo2, stdDev } from "@lib/numbers";
 import {
+   completedWordsAtom,
    totalRunTimeAtom,
    typedLettersAtom,
    typingModeAtom,
 } from "@atoms/editor";
 import { wordsCountsAtom } from "@atoms/words";
-import { DEFAULT_WORD_COUNT, TypingMode } from "@atoms/consts";
+import { TypingMode } from "@atoms/consts";
 
 export const consistencyScoreAtom = atom<number>((get) => {
    const typedLettersGrouped = Object.entries(groupBy(
@@ -29,8 +30,9 @@ export const wpmAtom = atom<number>(get => {
    const mode = get(typingModeAtom);
    const wordCount = get(wordsCountsAtom);
    const totalRunTime = get(totalRunTimeAtom);
+   const completedWords = get(completedWordsAtom);
 
-   return (mode === TypingMode.TIME ? DEFAULT_WORD_COUNT : wordCount) / (totalRunTime / 1_000) * 60;
+   return (mode === TypingMode.TIME ? completedWords.length : wordCount) / (totalRunTime / 1_000) * 60;
 });
 wpmAtom.debugLabel = `wpmAtom`;
 

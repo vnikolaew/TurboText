@@ -21,12 +21,8 @@ export const TimeSelect = () => {
          onValueChange={async value => {
             if(!value?.length) return;
 
-            // setWords(generate(Number(value)) as string[])
-            if(mode === TypingMode.TIME) {
-               await generateWords(DEFAULT_WORD_COUNT)
-            } else if(mode === TypingMode.WORDS) {
-               await generateWords(wc)
-            }
+            const wordsToGenerate = mode === TypingMode.WORDS ? wc : DEFAULT_WORD_COUNT;
+            await generateWords(wordsToGenerate)
 
             setTime(Number(value));
          }} type="single">

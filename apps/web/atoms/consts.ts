@@ -48,3 +48,15 @@ export enum TypingRunState {
    FINISHED = `FINISHED`
 }
 
+export interface TypedLetterInfo {
+   charIndex: number;
+   timestamp: number;
+   letter: string;
+   correct?: boolean | null;
+   flags?: number | null;
+}
+
+export interface WordRange {
+   word: string;
+   range: [number, number];
+}

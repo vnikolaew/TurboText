@@ -31,7 +31,7 @@ const TypeRunState = ({}: TypeRunStateProps) => {
          key={`time`}
          animate={{ opacity: 100 }}
          exit={{ opacity: 0 }}
-         transition={{ duration: .3}}
+         transition={{ duration: .3 }}
          className={`text-amber-600 text-5xl inline-flex items-center gap-4`}>
          {currentTimestamp}
          <span
@@ -39,19 +39,21 @@ const TypeRunState = ({}: TypeRunStateProps) => {
             {timerState}
          </span>
       </motion.div>;
-   }  else if (typingMode === TypingMode.WORDS) {
+   } else if (typingMode === TypingMode.WORDS) {
       children = <motion.div
          key={`words`}
          initial={{ opacity: 100 }}
          animate={{ opacity: 100 }}
-         transition={{ duration: .3}}
+         transition={{ duration: .3 }}
          exit={{ opacity: 0 }}
          className={`text-amber-600 text-5xl inline-flex items-center gap-4`}>
          {completedWords?.length}/{wordCounts}
       </motion.div>;
    } else children = null;
 
-   return <AnimatePresence initial>{children}</AnimatePresence>;
+   return <AnimatePresence initial>
+      {children}
+   </AnimatePresence>;
 };
 
 export default TypeRunState;

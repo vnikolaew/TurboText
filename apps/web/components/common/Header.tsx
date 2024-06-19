@@ -5,11 +5,8 @@ import { signIn, signOut } from "next-auth/react";
 import { SignedIn, SignedOut } from "./Auth";
 import { Crown, LogIn, LogOut, Settings, Timer } from "lucide-react";
 import { APP_NAME } from "@config/site";
-import { usePathname } from "next/navigation";
-import { cn } from "lib/utils";
 import UserAvatarDropdown from "@/components/common/UserAvatarDropdown";
 import { Button, Skeleton } from "@repo/ui";
-import { InteractiveLink } from "@components/common/InteractiveLink";
 import RocketLogo from "@components/icons/RocketLogo";
 import { Lexend_Deca } from "next/font/google";
 import { useAtomValue } from "jotai";
@@ -29,21 +26,6 @@ export interface InteractiveHeaderLinkProps {
    title: ReactNode;
 }
 
-const InteractiveHeaderLink = ({ icon, title, href }: InteractiveHeaderLinkProps) => {
-   const pathname = usePathname();
-   return (
-      <InteractiveLink
-         className={cn(`text-base inline-flex gap-2 items-center !text-neutral-300`,
-            pathname === href && `font-semibold !test-gradient`)}
-         underlineClassname={cn(`bg-neutral-300`,
-            pathname === href && `bg-neutral-300`)
-         }
-         href={href}>
-         {icon}
-         {title}
-      </InteractiveLink>
-   );
-};
 
 /**
  * The site's header, containing the Navbar as well.
@@ -64,7 +46,7 @@ const Header = ({}: NavbarProps) => {
                </Link>
             </nav>
             <div className={`flex-1 text-center flex items-center gap-4 justify-center`}>
-               <Button variant={`ghost`} asChild>
+               <Button className={`hover:!bg-transparent text-neutral-400`} variant={`ghost`} asChild>
                   <Link title={`Settings`} href={`/settings`} className={`flex items-center gap-2`}>
                      <Settings size={16} />
                      <span
@@ -73,7 +55,7 @@ const Header = ({}: NavbarProps) => {
                   </span>
                   </Link>
                </Button>
-               <Button variant={`ghost`} asChild>
+               <Button className={`hover:!bg-transparent text-neutral-400`} variant={`ghost`} asChild>
                   <Link title={`Settings`} href={`/_timer`} className={`flex items-center gap-2`}>
                      <Timer size={16} />
                      <span
@@ -82,7 +64,7 @@ const Header = ({}: NavbarProps) => {
                   </span>
                   </Link>
                </Button>
-               <Button variant={`ghost`} asChild>
+               <Button className={`hover:!bg-transparent text-neutral-400`} variant={`ghost`} asChild>
                   <Link title={`Leaderboard`} href={`/leaderboard`} className={`flex items-center gap-2`}>
                      <Crown className={`fill-neutral-300 stroke-neutral-300 `} size={16} />
                      <span

@@ -1,6 +1,5 @@
 "use client";
 import React, { useCallback } from "react";
-import { WordRange } from "@components/editor/hooks/useTypingEditor";
 import { Button, Separator, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@repo/ui";
 import { Image } from "lucide-react";
 import html2canvas from "html2canvas";
@@ -18,7 +17,7 @@ import { signIn } from "next-auth/react";
 import RestartButton from "@components/editor/RestartButton";
 import { timeAtom } from "@atoms/timer";
 import { consistencyScoreAtom, wpmAtom } from "@atoms/stats";
-import { TypingRunState } from "@atoms/consts";
+import { TypingRunState, WordRange } from "@atoms/consts";
 
 export interface TypingEditorStatisticsProps {
 }

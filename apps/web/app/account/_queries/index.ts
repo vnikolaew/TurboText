@@ -29,6 +29,7 @@ export async function getUniqueRunTags(user: User & { typingRuns: TypingRun[] })
  */
 export async function getUserWithTypingRuns() {
    const session = await auth();
+   if(!session?.user) return null;
 
    const user = await xprisma.user.findUnique({
       where: { id: session?.user?.id },

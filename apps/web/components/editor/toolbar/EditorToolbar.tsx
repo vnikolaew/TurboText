@@ -15,6 +15,7 @@ import { useSetAtom } from "jotai/index";
 import { generateWordsAtom, wordsCountsAtom } from "@atoms/words";
 import { DEFAULT_WORD_COUNT, TypingFlags, TypingMode, TypingRunState } from "@atoms/consts";
 import { toggleNumbersAtom, togglePunctuationAtom, typingFlagsAtom } from "@atoms/flags";
+import { timeAtom } from "@atoms/timer";
 
 export interface EditorToolbarProps {
 }
@@ -23,6 +24,7 @@ const EditorToolbar = ({}: EditorToolbarProps) => {
    const typingFlags = useAtomValue(typingFlagsAtom);
    const togglePunctuation = useSetAtom(togglePunctuationAtom);
    const toggleNumbers = useSetAtom(toggleNumbersAtom)
+   const [time, setTime] = useAtom(timeAtom);
 
    const [typingMode, setTypingMode] = useAtom(typingModeAtom);
    const [cwModalOpen, setCwModalOpen] = useBoolean();

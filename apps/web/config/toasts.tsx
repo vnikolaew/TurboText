@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Check, Cookie, X } from "lucide-react";
+import { Check, Cookie, Info, X } from "lucide-react";
 
 export const TOASTS = {
    FORGOT_PASSWORD: {
@@ -160,7 +160,7 @@ Export successful
             </div>),
       className: `text-base font-normal`,
    },
-   EDIT_USERNAME_FAILURE: (error: string) =>  ({
+   EDIT_USERNAME_FAILURE: (error: string) => ({
       message:
          (
             <div className={`flex items-center gap-2`}>
@@ -222,6 +222,22 @@ Export successful
                <Check className={`text-green-600 bg-green-600`} size={18} />
                <span>An error occurred: {error}</span>
             </div>),
+      className: `text-base font-normal`,
+   }),
+   RUN_FAILED: (error: string) => ({
+      message:
+         (
+            <div className={`flex items-center gap-2`}>
+               <Info />
+               Notice
+            </div>
+         ),
+      description: (
+         <div className={`flex items-center gap-2`}>
+            <X className={`text-red-600`} size={18} />
+            <span>Test failed - {error}</span>
+         </div>
+      ),
       className: `text-base font-normal`,
    }),
 } as const;

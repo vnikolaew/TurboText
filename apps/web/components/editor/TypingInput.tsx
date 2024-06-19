@@ -1,8 +1,7 @@
 "use client";
-import React, { Fragment, useEffect } from "react";
-import { useTypingEditor } from "@components/editor/hooks/useTypingEditor";
+import React, { Fragment, useEffect, useRef } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
-import { typingRunStateAtom, wordsAtom } from "@atoms/editor";
+import { caretCoordinatesAtom, onKeyPressAtom, typingRunStateAtom, wordsAtom } from "@atoms/editor";
 import { calculateSHA256, cn } from "@lib/utils";
 import { useBoolean } from "@hooks/useBoolean";
 import { AnimatePresence, motion } from "framer-motion";
@@ -17,14 +16,12 @@ export interface TypingInputProps {
 const TypingInput = ({}: TypingInputProps) => {
    const pause = useSetAtom(pauseAtom);
    const resume = useSetAtom(resumeAtom);
+   const { top, left } = useAtomValue(caretCoordinatesAtom);
+   const onKeyDown = useSetAtom(onKeyPressAtom);
+   const editorRef = useRef<HTMLDivElement>();
 
-   const {
-      editorRef,
-      currentLetterRef,
-      left,
-      top,
-      onKeyDown,
-   } = useTypingEditor();
+   useEffect(() => editorRef?.current?.focus(), []);
+
 
    const timerState = useAtomValue(typingRunStateAtom);
    const words = useAtomValue(wordsAtom);
@@ -104,7 +101,7 @@ const TypingInput = ({}: TypingInputProps) => {
                      transition: `left 100ms`,
                   }}
                   className={`h-[2rem] w-[2px] bg-neutral-100 animate-pulse absolute z-10 text-red-500 `}></div>
-               <TypingLetters currentLetterRef={currentLetterRef!} />
+               <TypingLetters />
             </motion.div>
          </AnimatePresence>
       </Fragment>

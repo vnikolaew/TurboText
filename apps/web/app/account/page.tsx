@@ -35,7 +35,6 @@ export interface PageProps {
 const Page = async ({}: PageProps) => {
    const user = await getUserWithTypingRuns();
    if (!user) notFound();
-   console.log(user?.typingRuns.map(r => r.createdAt));
 
    return (
       <section className={`w-2/3 mx-auto mt-24 flex flex-col items-center gap-4`}>

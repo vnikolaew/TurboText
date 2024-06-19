@@ -1,18 +1,31 @@
 "use client";
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect, useRef } from "react";
 import Letter from "@components/common/Letter";
 import { cn } from "@lib/utils";
 import { useAtomValue } from "jotai";
-import { currentCharIndexAtom, lettersCorrectnessAtom, wordsAtom } from "@atoms/editor";
+import { caretCoordinatesAtom, currentCharIndexAtom, lettersCorrectnessAtom, wordsAtom } from "@atoms/editor";
+import { useAtom } from "jotai/index";
 
 export interface TypingLettersProps {
-   currentLetterRef?: React.RefObject<HTMLElement>;
 }
 
-const TypingLetters = ({ currentLetterRef }: TypingLettersProps) => {
-   const words = useAtomValue(wordsAtom)
-   const currentCharIndex = useAtomValue(currentCharIndexAtom)
-   const lettersCorrectness = useAtomValue(lettersCorrectnessAtom)
+const TypingLetters = ({}: TypingLettersProps) => {
+      const words = useAtomValue(wordsAtom);
+      const currentCharIndex = useAtomValue(currentCharIndexAtom);
+      const lettersCorrectness = useAtomValue(lettersCorrectnessAtom);
+      const currentLetterRef = useRef<HTMLSpanElement>();
+      const [, setCoords] = useAtom(caretCoordinatesAtom);
+
+      useEffect(() => {
+         const rects = currentLetterRef?.current?.getBoundingClientRect();
+         if (!rects) return;
+
+         if (currentCharIndex <= -1) {
+            setCoords({ top: rects.top, left: rects.left });
+         } else {
+            setCoords({ top: rects.top, left: rects.left + rects.width + 1 });
+         }
+      }, [currentCharIndex]);
 
       return (
          <Fragment>

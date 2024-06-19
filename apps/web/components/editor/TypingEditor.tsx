@@ -6,7 +6,6 @@ import { useAtom, useAtomValue } from "jotai";
 import TypingRunSummary from "@components/editor/TypingRunSummary";
 import Confetti from "react-confetti";
 import RestartButton from "@components/editor/RestartButton";
-import TypeRunState from "./TypeRunState";
 import TypingInput from "@components/editor/TypingInput";
 import { LocalStorage } from "@lib/local-storage";
 import { Button, toast } from "@repo/ui";
@@ -15,12 +14,15 @@ import { saveTypingRun } from "@components/editor/actions";
 import { AnimatePresence } from "framer-motion";
 import { TOASTS } from "@config/toasts";
 import SaveTypingRunPrompt from "@components/editor/SaveTypingRunPrompt";
-import { autoSaveModeAtom, userConfigAtom } from "@atoms/user";
+import { autoSaveModeAtom } from "@atoms/user";
 import NewRunButton from "@components/editor/NewRunButton";
-import { SignedIn } from "@components/common/Auth";
+import { SignedOut } from "@components/common/Auth";
 import { signIn } from "next-auth/react";
 import { TypingRunState } from "@atoms/consts";
 import { useSaveLatestUserRun } from "./hooks/useSaveLatestUserRun";
+import { totalPauseTimeAtom } from "@atoms/timer";
+import TypeRunState from "./TypeRunState";
+import CapsLockWarning from "@components/editor/CapsLockWarning";
 
 export interface TypingEditorProps {
 }
@@ -29,9 +31,9 @@ export interface TypingEditorProps {
 export const TYPING_RUN_LS_KEY = `typing-run`;
 
 const TypingEditor = ({}: TypingEditorProps) => {
-   const userConfig = useAtomValue(userConfigAtom);
    const typedLetters = useAtomValue(typedLettersAtom);
    const totalRunTime = useAtomValue(totalRunTimeAtom);
+   const totalPauseTime = useAtomValue(totalPauseTimeAtom)
    const [typingRun, setTypingRun] = useAtom(typingRunAtom);
 
    useTypingRunSuccess();
@@ -39,8 +41,8 @@ const TypingEditor = ({}: TypingEditorProps) => {
 
    const { isExecuting, execute } = useAction(saveTypingRun, {
       onSuccess: res => {
-         if (res.success) {
-            console.log(res);
+         if (res.data?.success) {
+            console.log(res.data);
             localStorage.removeItem(TYPING_RUN_LS_KEY);
 
             toast(TOASTS.SAVE_TYPING_RUN_SUCCESS);
@@ -82,10 +84,12 @@ const TypingEditor = ({}: TypingEditorProps) => {
          {timerState !== TypingRunState.FINISHED && (
             <div id={`editor`} className={`rounded-md px-4 py-8`}>
                <TypeRunState />
+               <CapsLockWarning/>
                <TypingInput />
             </div>
          )}
          <span className={`mt-4 w-full text-center`}>Total run time: {totalRunTime}ms</span>
+         <span className={`mt-4 w-full text-center`}>Total pause time: {totalPauseTime}ms</span>
          <div className={`flex items-center justify-center w-full gap-4`}>
             <RestartButton />
             <NewRunButton />
@@ -101,7 +105,7 @@ const TypingEditor = ({}: TypingEditorProps) => {
             }
          </AnimatePresence>
          <AnimatePresence>
-            <SignedIn>
+            <SignedOut>
                {showSavePrompt &&
                   (
                      <div className={`flex items-center justify-center w-full`}>
@@ -112,7 +116,7 @@ const TypingEditor = ({}: TypingEditorProps) => {
                      </div>
                   )
                }
-            </SignedIn>
+            </SignedOut>
          </AnimatePresence>
          <div className={`w-full grid grid-cols-8 gap-4`}>
             {typedLetters?.map((letter, index) => (
@@ -127,4 +131,5 @@ const TypingEditor = ({}: TypingEditorProps) => {
    );
 };
 
-export default TypingEditor;
+
+export default TypingEditor

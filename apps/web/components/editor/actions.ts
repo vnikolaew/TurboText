@@ -4,9 +4,10 @@ import { authorizedAction } from "@lib/actions";
 import { sleep } from "@lib/utils";
 import { Tag, TypingRunMode, xprisma } from "@repo/db";
 import { z } from "zod";
-import { TypedLetterInfo } from "@components/editor/hooks/useTypingEditor";
 import { kogasa, mean, roundTo2, stdDev } from "@lib/numbers";
 import { groupBy } from "lodash";
+import { TypedLetterInfo } from "@atoms/consts";
+import { completedWordsAtom } from "@atoms/editor";
 
 const schema = z.object({
    typedLetters: z.array(z.object({
@@ -18,6 +19,7 @@ const schema = z.object({
    })),
    time: z.number().nullable(),
    totalRunTime: z.number(),
+   completedWords: z.number(),
    wordCounts: z.number().nullable(),
    mode: z.union([z.literal(TypingRunMode.TIME), z.literal(TypingRunMode.WORDS)]),
    flags: z.number().min(0).nullable(),
@@ -36,6 +38,7 @@ export const saveTypingRun = authorizedAction
                         totalRunTime,
                         wordCounts,
                         mode,
+                        completedWords,
                         flags,
                         metadata,
                      }, ctx: { userId },
@@ -51,7 +54,7 @@ export const saveTypingRun = authorizedAction
             consistency,
             accuracy,
             isPersonalBest,
-         } = await getRunStats(mode, typedLetters, totalRunTime, wordCounts, userId);
+         } = await getRunStats(typedLetters, totalRunTime, mode === `TIME` ? completedWords! : wordCounts!, userId);
 
          const { language, test_difficulty, blind_mode, input_confidence_mode } = userConfig;
          console.log({ userConfig });
@@ -65,6 +68,7 @@ export const saveTypingRun = authorizedAction
                   test_difficulty,
                   blind_mode,
                   confidence_mode: input_confidence_mode,
+                  completedWords,
                   isPersonalBest,
                   wpm,
                   consistency,
@@ -86,8 +90,8 @@ export const saveTypingRun = authorizedAction
       },
    );
 
-async function getRunStats(mode: string, typedLetters: TypedLetterInfo[], totalTimeMilliseconds: number, wordCount: number | null, userId: string) {
-   const wpm = getRunWpm(mode, totalTimeMilliseconds, wordCount);
+async function getRunStats(typedLetters: TypedLetterInfo[], totalTimeMilliseconds: number, completedWords: number , userId: string) {
+   const wpm = getRunWpm(totalTimeMilliseconds, completedWords);
    const consistency = getRunConsistency(typedLetters);
    const accuracy = getRunAccuracy(typedLetters);
 
@@ -97,9 +101,8 @@ async function getRunStats(mode: string, typedLetters: TypedLetterInfo[], totalT
    return { wpm, consistency, accuracy, isPersonalBest } as const;
 }
 
-function getRunWpm(mode: string, totalTimeMilliseconds: number, wordCount: number | null) {
-   const wc = mode === `TIME` ? 40 : wordCount!;
-   return (wc / (totalTimeMilliseconds / 1000)) * 60;
+function getRunWpm(totalTimeMilliseconds: number, completedWords: number) {
+   return (completedWords / (totalTimeMilliseconds / 1000)) * 60;
 }
 
 function getRunConsistency(typedLetters: TypedLetterInfo[]) {

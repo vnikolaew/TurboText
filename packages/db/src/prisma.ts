@@ -19,11 +19,6 @@ export let prisma = globalForPrisma.prisma ?? new PrismaClient({
    transactionOptions: { isolationLevel: `Serializable` },
 });
 
-export enum TypingFlags {
-   PUNCTUATION = 1,
-   NUMBERS = 1 << 1,
-}
-
 export let xprisma = prisma.$extends({
    result: {
       typingRun: {
@@ -58,9 +53,9 @@ export let xprisma = prisma.$extends({
             },
          },
          wpm: {
-            needs: { mode: true, totalTimeMilliseconds: true, wordCount: true },
-            compute({ mode, totalTimeMilliseconds, wordCount }) {
-               const wc = mode === `TIME` ? 40 : wordCount!;
+            needs: { mode: true, totalTimeMilliseconds: true, wordCount: true, metadata: true },
+            compute({ mode, totalTimeMilliseconds, wordCount, metadata   }) {
+               const wc = mode === `TIME` ? (metadata?.completedWords ?? 40) : wordCount!;
                return (wc / (totalTimeMilliseconds / 1000)) * 60;
             },
          },
@@ -182,10 +177,10 @@ export let xprisma = prisma.$extends({
             const userWpm: number = (await xprisma.typingRun.findMany({
                where: { userId },
                select: {
-                  wordCount: true, totalTimeMilliseconds: true, mode: true
+                  wordCount: true, totalTimeMilliseconds: true, mode: true, metadata: true
                }
-            })).map(({ mode, wordCount, totalTimeMilliseconds }: Partial<TypingRun>) => {
-               const wc = mode === `TIME` ? 40 : wordCount!;
+            })).map(({ mode, wordCount, totalTimeMilliseconds, metadata }: Partial<TypingRun>) => {
+               const wc = mode === `TIME` ? (metadata?.completedWords ?? 40) : wordCount!;
                const wpm = (wc / (totalTimeMilliseconds! / 1000)) * 60;
                return wpm
             }).sort((a, b) => (b - a))[0];

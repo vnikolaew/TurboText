@@ -8,6 +8,7 @@ import EditorToolbar from "@components/editor/toolbar/EditorToolbar";
 import PressKeyLabel from "@components/editor/PressKeyLabel";
 import { xprisma } from "@repo/db";
 import TypingEditor from "@components/editor/TypingEditor";
+import OnRunFailed from "@components/editor/toasts/OnRunFailed";
 
 export default async function Home() {
    const session = await auth();
@@ -42,6 +43,7 @@ export default async function Home() {
          </div>
          <WithInitialState user={user!} />
          <TypingEditor />
+         <OnRunFailed />
          <ServerSignedOut>
             <SignInButton />
          </ServerSignedOut>

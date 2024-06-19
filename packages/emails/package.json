@@ -15,13 +15,13 @@
     "@react-email/tailwind": "0.0.17-canary.0",
     "react-email": "2.1.4",
     "resend": "^3.2.0",
-    "react": "19.0.0-rc-f994737d14-20240522",
-    "react-dom": "19.0.0-rc-f994737d14-20240522"
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@types/node": "^20.12.7",
-    "@types/react": "latest"
+    "@types/react": "18.3.1"
   }
 }

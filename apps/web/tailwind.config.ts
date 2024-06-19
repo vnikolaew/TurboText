@@ -22,6 +22,9 @@ const config: Config = {
          },
       },
       extend: {
+         gridTemplateColumns: {
+            "13": "repeat(13, minmax(0, 1fr))",
+         },
          fontFamily: {
             sans: ["var(--font-sans)", ...fontFamily.sans],
             mono: ["var(--font-mono)", ...fontFamily.mono],

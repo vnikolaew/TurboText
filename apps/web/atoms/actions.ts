@@ -3,16 +3,15 @@ import { atom } from "jotai/index";
 import {
    currentCharIndexAtom,
    lettersCorrectnessAtom,
-   startTimeAtom,
    typedLettersAtom,
    typingModeAtom,
    typingRunStateAtom,
    wordsAtom,
 } from "@atoms/editor";
 import { generate } from "random-words";
-import { currentTimestampAtom, timeAtom } from "@atoms/timer";
+import { currentTimestampAtom, timeAtom, totalPauseTimeAtom } from "@atoms/timer";
 import { generateWordsAtom, wordsCountsAtom } from "@atoms/words";
-import { TypingMode, TypingRunState } from "./consts";
+import { DEFAULT_WORD_COUNT, TypingMode, TypingRunState } from "./consts";
 
 
 export const newTestAtom = atom(
@@ -24,12 +23,14 @@ export const newTestAtom = atom(
 
       const mode = get(typingModeAtom);
       if (mode === TypingMode.WORDS) await set(generateWordsAtom, count);
+      else await set(generateWordsAtom, DEFAULT_WORD_COUNT)
 
       set(typedLettersAtom, []);
       set(currentTimestampAtom, time!);
       set(typingRunStateAtom, TypingRunState.STOPPED);
       set(currentCharIndexAtom, -1);
-      set(startTimeAtom, 0);
+      // set(startTimeAtom, 0);
+      set(totalPauseTimeAtom, 0);
       set(lettersCorrectnessAtom, Array
          .from({ length: words.reduce((a, b) => a + b.length, 0) })
          .fill(null) as null[]);
@@ -48,7 +49,8 @@ export const restartAtom = atom(
       set(currentTimestampAtom, time);
       set(typingRunStateAtom, TypingRunState.STOPPED);
       set(currentCharIndexAtom, -1);
-      set(startTimeAtom, 0);
+      // set(startTimeAtom, 0);
+      set(totalPauseTimeAtom, 0);
       set(lettersCorrectnessAtom, Array
          .from({ length: words.reduce((a, b) => a + b.length, 0) })
          .fill(null) as null[]);
