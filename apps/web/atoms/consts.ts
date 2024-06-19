@@ -30,7 +30,10 @@ export enum TypingFlags {
    NUMBERS = 1 << 1,
 }
 
-
+export enum TypedLetterFlags {
+   INSERTED = 1,
+   DELETED = 2
+}
 
 export enum TypingRunSuccess {
    SUCCESS = `SUCCESS`,

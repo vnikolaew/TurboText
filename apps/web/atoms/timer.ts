@@ -1,5 +1,6 @@
 import { atom } from "jotai/index";
-import { startTimeAtom } from "@atoms/editor";
+import { startTimeAtom, typingModeAtom, typingRunStateAtom } from "@atoms/editor";
+import { TypingMode, TypingRunState } from "@atoms/consts";
 
 export const TIMES = {
    10: 10,
@@ -19,31 +20,41 @@ export const timeAtom = atom<number>(TIMES["10"]!, (get, set, value: number) => 
 });
 timeAtom.debugLabel = `timeAtom`;
 
-export const timerIntervalAtom = atom<NodeJS.Timeout>(null!, (get, set, value: number) =>  {
-   set(timerIntervalAtom, value)
-   if(value) set(runningAtom, true)
-   else set(runningAtom, false)
+export const timerIntervalAtom = atom<NodeJS.Timeout>(null!, (get, set, value: number) => {
+   set(timerIntervalAtom, value);
+   if (value) set(runningAtom, true);
+   else set(runningAtom, false);
 });
 
-timerIntervalAtom.debugLabel = `timerIntervalAtom`
+timerIntervalAtom.debugLabel = `timerIntervalAtom`;
 
 export const runningAtom = atom<boolean>(false);
-runningAtom.debugLabel = `runningAtom`
+runningAtom.debugLabel = `runningAtom`;
 
 export const startAtom = atom(null, (get, set) => {
+   const timerState = get(typingRunStateAtom);
+   const currentTimestamp = get(currentTimestampAtom);
+
+   if (timerState === TypingRunState.RUNNING || currentTimestamp === 0) return;
+
+   set(typingRunStateAtom, TypingRunState.RUNNING);
+   const mode = get(typingModeAtom);
+
+   set(startTimeAtom, performance.now());
+   if (mode === TypingMode.WORDS) return;
+
    let interval = get(timerIntervalAtom);
    if (interval) clearInterval(interval);
 
-   set(currentTimestampAtom , get(timeAtom))
-   set(startTimeAtom, performance.now())
+   set(currentTimestampAtom, get(timeAtom));
 
    interval = setInterval(() => {
       const current = get(currentTimestampAtom);
       console.log({ current });
       if (current <= 0) {
          clearInterval(interval);
-         set(timerIntervalAtom, null)
-         return
+         set(timerIntervalAtom, null);
+         return;
       } else {
          set(currentTimestampAtom, t => Math.max(t - 1, 0));
       }
@@ -51,43 +62,61 @@ export const startAtom = atom(null, (get, set) => {
 
    set(timerIntervalAtom, interval);
 });
-startAtom.debugLabel = `startAtom`
+startAtom.debugLabel = `startAtom`;
 
 export const pauseAtom = atom(null, (get, set) => {
-   let interval = get(timerIntervalAtom);
-   if (!interval) return;
+   const timerState = get(typingRunStateAtom);
+   if (timerState !== TypingRunState.RUNNING) return;
 
-   clearInterval(interval);
-   set(timerIntervalAtom, null!)
+   const mode = get(typingModeAtom);
+   if (mode === TypingMode.TIME) {
+      set(typingRunStateAtom, TypingRunState.PAUSED);
+
+      let interval = get(timerIntervalAtom);
+      if (!interval) return;
+
+      clearInterval(interval);
+      set(timerIntervalAtom, null!);
+   }
 });
-pauseAtom.debugLabel = `pauseAtom`
+pauseAtom.debugLabel = `pauseAtom`;
 
 export const resumeAtom = atom(null, (get, set) => {
-   let interval = get(timerIntervalAtom);
-   if (interval) return;
+   const timerState = get(typingRunStateAtom);
+   if (timerState !== TypingRunState.PAUSED) return;
 
-   interval = setInterval(() => {
-      const current = get(currentTimestampAtom);
-      console.log({ current });
-      if (current <= 0) {
-         clearInterval(interval);
-         set(timerIntervalAtom, null)
-         return
-      } else {
-         set(currentTimestampAtom, t => Math.max(t - 1, 0));
-      }
-   }, 1000);
+   const mode = get(typingModeAtom);
 
-   set(timerIntervalAtom, interval);
+   if(mode === TypingMode.TIME) {
+      let interval = get(timerIntervalAtom);
+      if (interval) return;
+
+      interval = setInterval(() => {
+         const current = get(currentTimestampAtom);
+         console.log({ current });
+         if (current <= 0) {
+            clearInterval(interval);
+            set(timerIntervalAtom, null);
+            return;
+         } else {
+            set(currentTimestampAtom, t => Math.max(t - 1, 0));
+         }
+      }, 1000);
+
+      set(timerIntervalAtom, interval);
+      set(typingRunStateAtom, TypingRunState.RUNNING);
+   }
+
 });
-resumeAtom.debugLabel = `resumeAtom`
+resumeAtom.debugLabel = `resumeAtom`;
 
 export const stopAtom = atom(null, (get, set) => {
    let interval = get(timerIntervalAtom);
-   const time = get(timeAtom)
+   const time = get(timeAtom);
 
    clearInterval(interval);
-   set(timerIntervalAtom, null!)
-   set(currentTimestampAtom, time)
+   set(timerIntervalAtom, null!);
+   set(currentTimestampAtom, time);
+   set(typingRunStateAtom, TypingRunState.FINISHED);
 });
-stopAtom.debugLabel = `stopAtom`
+stopAtom.debugLabel = `stopAtom`;

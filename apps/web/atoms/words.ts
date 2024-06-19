@@ -14,8 +14,6 @@ export const generateWordsAtom = atom(null, async (get, set, wc?: number) => {
 
    const res = await fetch(`/api/words/${languageCode}/generate?limit=${wc ?? wordCount}`)
       .then(r => r.json());
-   console.log({ res });
-
    if (res.words?.length) {
       set(wordsAtom, res.words as string[]);
    }

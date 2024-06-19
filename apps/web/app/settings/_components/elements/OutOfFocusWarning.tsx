@@ -16,9 +16,9 @@ const OutOfFocusWarning = ({}: OutOfFocusWarningProps) => {
 
    const { execute, status } = useAction(updateUserConfiguration, {
       onSuccess: res => {
-         if (res.success) {
+         if (res.data?.success) {
             console.log(res);
-            setOofWarning(res.userConfig.elements_show_oof_warning);
+            setOofWarning(res.data?.userConfig?.elements_show_oof_warning);
          }
       },
    });

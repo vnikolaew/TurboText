@@ -1,6 +1,6 @@
 "use client";
 import { useAtom, useAtomValue } from "jotai";
-import React, { } from "react";
+import React from "react";
 import {
    currentTimerStampAtom,
    pauseAtom,
@@ -45,7 +45,6 @@ const Page = ({}: PageProps) => {
                <Button onClick={_ => resume()}>Resume</Button>
             )}
          </div>
-
       </div>
    );
 };

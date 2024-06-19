@@ -11,6 +11,7 @@ import { DEFAULT_WORD_COUNT, TypingMode } from "@atoms/consts";
 
 export const TimeSelect = () => {
    const [time, setTime] = useAtom(timeAtom);
+
    const generateWords = useSetAtom(generateWordsAtom)
    const mode = useAtomValue(typingModeAtom)
    const wc = useAtomValue(wordsCountsAtom)

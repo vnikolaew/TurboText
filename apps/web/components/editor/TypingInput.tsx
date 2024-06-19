@@ -1,7 +1,7 @@
 "use client";
 import React, { Fragment, useEffect } from "react";
 import { useTypingEditor } from "@components/editor/hooks/useTypingEditor";
-import { useAtomValue } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { typingRunStateAtom, wordsAtom } from "@atoms/editor";
 import { calculateSHA256, cn } from "@lib/utils";
 import { useBoolean } from "@hooks/useBoolean";
@@ -9,23 +9,22 @@ import { AnimatePresence, motion } from "framer-motion";
 import { MousePointer } from "lucide-react";
 import TypingLetters from "@components/editor/TypingLetters";
 import { TypingRunState } from "@atoms/consts";
+import { pauseAtom, resumeAtom } from "@atoms/timer";
 
 export interface TypingInputProps {
-   start: () => void;
-   pause: () => void;
-   resume: () => void;
 }
 
-const TypingInput = ({ start, pause, resume }: TypingInputProps) => {
+const TypingInput = ({}: TypingInputProps) => {
+   const pause = useSetAtom(pauseAtom);
+   const resume = useSetAtom(resumeAtom);
+
    const {
       editorRef,
       currentLetterRef,
-      currentCharIndex,
       left,
       top,
-      lettersCorrectness,
       onKeyDown,
-   } = useTypingEditor(start);
+   } = useTypingEditor();
 
    const timerState = useAtomValue(typingRunStateAtom);
    const words = useAtomValue(wordsAtom);
@@ -56,7 +55,7 @@ const TypingInput = ({ start, pause, resume }: TypingInputProps) => {
                   exit={{ opacity: 0 }}
                   onKeyDown={console.log}
                   onClick={_ => {
-                     if(timerState === TypingRunState.PAUSED) {
+                     if (timerState === TypingRunState.PAUSED) {
                         console.log(`Resuming`);
                         resume();
                      }
@@ -105,11 +104,7 @@ const TypingInput = ({ start, pause, resume }: TypingInputProps) => {
                      transition: `left 100ms`,
                   }}
                   className={`h-[2rem] w-[2px] bg-neutral-100 animate-pulse absolute z-10 text-red-500 `}></div>
-               <TypingLetters
-                  currentLetterRef={currentLetterRef!}
-                  words={words}
-                  currentCharIndex={currentCharIndex}
-                  lettersCorrectness={lettersCorrectness} />
+               <TypingLetters currentLetterRef={currentLetterRef!} />
             </motion.div>
          </AnimatePresence>
       </Fragment>

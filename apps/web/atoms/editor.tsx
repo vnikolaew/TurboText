@@ -1,17 +1,17 @@
 import { atom, useAtomValue } from "jotai";
 import { generate } from "random-words";
 import { TypedLetterInfo, WordRange } from "@components/editor/hooks/useTypingEditor";
-import { injectPunctuation, strings } from "@lib/strings";
 import { userTestDifficultyAtom } from "@atoms/user";
-import { currentTimestampAtom, stopAtom } from "@atoms/timer";
+import { currentTimestampAtom, startAtom, stopAtom } from "@atoms/timer";
 import { useEffect } from "react";
 import { useSetAtom } from "jotai/index";
 import { LocalStorage } from "@lib/local-storage";
-import { TYPING_RUN_LS_KEY } from "@components/editor/TypingPage";
+import { TYPING_RUN_LS_KEY } from "@components/editor/TypingEditor";
 import { TypingRun } from "@components/editor/hooks/useSaveLatestUserRun";
 import { maxBy } from "lodash";
 import { wordsCountsAtom } from "@atoms/words";
-import { DEFAULT_WORD_COUNT, TypingFlags, TypingMode, TypingRunState, TypingRunSuccess } from "@atoms/consts";
+import { DEFAULT_WORD_COUNT, TypedLetterFlags, TypingMode, TypingRunState, TypingRunSuccess } from "@atoms/consts";
+import { typingFlagsAtom } from "./flags";
 
 // EDITOR
 
@@ -29,24 +29,20 @@ lettersCorrectnessAtom.debugLabel = `lettersCorrectnessAtom`;
 
 // @ts-ignore
 export const wordsAtom = atom<string[]>(WORDS, (get, set, words: string[]) => {
-   set(wordsAtom, words);
-   set(lettersCorrectnessAtom, Array
-      .from({ length: words?.reduce((a, b) => a + b.length, 0) })
-      .fill(null) as null[]);
+   console.log({ words });
+   if (Array.isArray(words)) {
+      set(lettersCorrectnessAtom, Array
+         .from({ length: words?.reduce((a, b) => a + b.length, 0) })
+         .fill(null) as null[]);
+      set(wordsAtom, words);
+   }
 });
 wordsAtom.debugLabel = `wordsAtom`;
 
 
 export const charsByIndexAtom = atom((get) => {
    const words = get(wordsAtom);
-   return words.flatMap((word, index) => {
-      const currIndex = words.slice(0, index).reduce((a, b) => a + b.length, 0);
-      return Object
-         .entries([...word])
-         .map(([index, char]) => {
-            return ({ [currIndex + parseInt(index)]: char });
-         });
-   }).reduce((a, b) => ({ ...a, ...b }), {});
+   return words.flatMap(w => [...w]);
 });
 charsByIndexAtom.debugLabel = `charsByIndexAtom`;
 
@@ -130,61 +126,6 @@ export const wordsCompletionTimesAtom = atom((get) => {
 wordsCompletionTimesAtom.debugLabel = `wordsCompletionTimesAtom`;
 
 
-//@ts-ignore
-export const typingFlagsAtom = atom<number>(0, (get, set, flags: number) => {
-
-   const mode = get(typingModeAtom);
-   const wc = get(wordsCountsAtom);
-
-   console.log(get(typingFlagsAtom) & TypingFlags.NUMBERS);
-   const addingNumbers = Boolean((get(typingFlagsAtom) & TypingFlags.NUMBERS) === 0 && (flags & TypingFlags.NUMBERS));
-   const removingNumbers = (get(typingFlagsAtom) & TypingFlags.NUMBERS) && (flags & TypingFlags.NUMBERS) === 0;
-
-   const addingPunctuation = Boolean((get(typingFlagsAtom) & TypingFlags.PUNCTUATION) === 0 && (flags & TypingFlags.PUNCTUATION));
-   const removingPunctuation = (get(typingFlagsAtom) & TypingFlags.PUNCTUATION) && (flags & TypingFlags.PUNCTUATION) === 0;
-
-   console.log({ addingNumbers, addingPunctuation });
-   if (addingNumbers) {
-      if (mode === TypingMode.WORDS) {
-         set(wordsAtom, w => {
-            const newWords = [...w];
-            for (let x = 0; x < 2; x++) {
-               newWords[Math.floor(Math.random() * newWords.length)] = Math.floor(Math.random() * 1_000).toString();
-            }
-            return newWords;
-         });
-      } else {
-         set(wordsAtom, w => {
-            const newWords = [...w];
-            for (let x = 0; x < 2; x++) {
-               newWords.splice(Math.floor(Math.random() * newWords.length), 0, Math.floor(Math.random() * 1_000).toString());
-            }
-            return newWords;
-         });
-      }
-
-   } else if (removingNumbers) {
-      if (mode === TypingMode.WORDS) set(wordsAtom, generate(wc) as string[]);
-      else set(wordsAtom, w => w.map(x => x.replace(/\d+/g, "")).filter(x => !!x.length));
-   }
-
-   if (addingPunctuation) {
-      const withPunctuation = injectPunctuation(get(wordsAtom), strings.punctuation);
-      set(wordsAtom, withPunctuation);
-   } else if (removingPunctuation) {
-      set(wordsAtom, w => w.map(x => {
-         [...strings.punctuation].forEach(char => {
-            x = x.replaceAll(char, ``);
-         });
-         return x;
-      }));
-   }
-
-   set(typingFlagsAtom, flags);
-});
-typingFlagsAtom.debugLabel = `typingFlagsAtom`;
-
-
 export const typingRunStateAtom = atom<TypingRunState>(TypingRunState.STOPPED);
 typingRunStateAtom.debugLabel = `typingRunStateAtom`;
 
@@ -223,11 +164,9 @@ export const typingRunSuccessAtom = atom<TypingRunSuccess>((get, _) => {
    if (runState === TypingRunState.RUNNING) return TypingRunSuccess.INDETERMINATE;
    if (runState === TypingRunState.FINISHED) {
       const correct = lettersCorrectness.filter(l => l === true)?.length;
-      console.log({ correct, all: Object.keys(charsByIndex)?.length, userTestDifficulty });
+      console.log({ correct, all: charsByIndex?.length, userTestDifficulty });
 
-      if (correct === Object.keys(charsByIndex)?.length) {
-         return TypingRunSuccess.SUCCESS;
-      } else return TypingRunSuccess.FAILED;
+      return correct === charsByIndex?.length ? TypingRunSuccess.SUCCESS : TypingRunSuccess.FAILED;
    }
 
    return TypingRunSuccess.INDETERMINATE;
@@ -235,12 +174,12 @@ export const typingRunSuccessAtom = atom<TypingRunSuccess>((get, _) => {
 typingRunSuccessAtom.debugLabel = `typingRunSuccessAtom`;
 
 export const typingRunAtom = atom<TypingRun>(get => {
-   const typedLetters = useAtomValue(typedLettersAtom);
-   const time = useAtomValue(currentTimestampAtom);
-   const wordCounts = useAtomValue(wordsCountsAtom);
-   const mode = useAtomValue(typingModeAtom);
-   const flags = useAtomValue(typingFlagsAtom);
-   const totalRunTime = useAtomValue(totalRunTimeAtom);
+   const typedLetters = get(typedLettersAtom);
+   const time = get(currentTimestampAtom);
+   const wordCounts = get(wordsCountsAtom);
+   const mode = get(typingModeAtom);
+   const flags = get(typingFlagsAtom);
+   const totalRunTime = get(totalRunTimeAtom);
 
    return {
       totalRunTime,
@@ -280,3 +219,82 @@ export const useTypingRunSuccess = () => {
 
    }, [success, typingRun]);
 };
+
+export const onKeyPressAtom = atom(null, (get, set, e: KeyboardEvent<HTMLDivElement>) => {
+   e.preventDefault();
+   let { key, ctrlKey: ctrl } = e;
+
+   if (key === `r` && ctrl) window.location.reload();
+
+   const charCode = e.key.charCodeAt(0);
+
+   const startTime = get(startTimeAtom);
+   const charsByIndex = get(charsByIndexAtom);
+   const currentCharIndex = get(currentCharIndexAtom);
+   const lettersCorrectness = get(lettersCorrectnessAtom);
+   const wordRangesByEnds = get(wordRangesByEndsAtom);
+
+   if (e.key === `Shift` || (e.ctrlKey && e.key === `Control`)) return;
+   if (e.key === `Shift`) return;
+
+   if (e.key === `Backspace`) {
+      set(currentCharIndexAtom, c => Math.max(-1, c - 1));
+
+      set(typedLettersAtom, l => [...l, {
+         correct: null,
+         timestamp: performance.now() - startTime,
+         letter: charsByIndex[currentCharIndex]!,
+         flags: TypedLetterFlags.DELETED,
+         charIndex: currentCharIndex,
+      }]);
+
+      set(lettersCorrectnessAtom, wc => {
+         let wc2 = [...wc];
+         wc2[currentCharIndex] = null;
+         return wc2;
+      });
+      return;
+   }
+
+   if (charCode >= "!".charCodeAt(0) && charCode <= "z".charCodeAt(0)) {
+      set(currentCharIndexAtom, c => c + 1);
+
+      if (currentCharIndex + 1 === 0) set(startAtom);
+
+      console.log({ charCode, char: charsByIndex[currentCharIndex + 1] });
+      const correct = charCode === charsByIndex[currentCharIndex + 1]?.charCodeAt(0);
+
+      // Set letter correctness
+      set(lettersCorrectnessAtom, wc => {
+         let wc2 = [...wc];
+         wc2[currentCharIndex + 1] = correct;
+         return wc2;
+      });
+
+      // Determine if we are at the end of a word
+      const endOfWord = wordRangesByEnds.has(currentCharIndex + 1);
+      if (endOfWord) {
+         const [start, end] = wordRangesByEnds.get(currentCharIndex + 1)!;
+
+         const areAllLettersCorrect = lettersCorrectness.slice(start, end).every(Boolean) && correct;
+         console.log({ areAllLettersCorrect });
+      }
+
+      set(typedLettersAtom, l => [...l,
+         currentCharIndex + 1 === 0 ?
+            {
+               charIndex: currentCharIndex + 1,
+               letter: charsByIndex[currentCharIndex + 1]!,
+               timestamp: 0,
+               correct,
+               flags: TypedLetterFlags.INSERTED,
+            } : {
+               charIndex: currentCharIndex + 1,
+               letter: charsByIndex[currentCharIndex + 1]!,
+               correct,
+               timestamp: performance.now() - startTime,
+               flags: TypedLetterFlags.INSERTED,
+            }]);
+   }
+});
+onKeyPressAtom.debugLabel = `onKeyPressAtom`;

@@ -5,7 +5,6 @@ import { useBoolean } from "@hooks/useBoolean";
 import LoadingButton from "@components/common/LoadingButton";
 import { useAction } from "next-safe-action/hooks";
 import { TOASTS } from "@config/toasts";
-import { isExecuting } from "next-safe-action/status";
 import { changeUsername } from "@app/settings/_components/danger/actions";
 import { useSession } from "next-auth/react";
 
@@ -17,7 +16,7 @@ const UpdateUsernameModal = ({ children, username }: UpdateUsernameModalProps) =
    const [value, setValue] = useState(username);
    const [open, setOpen] = useBoolean();
    const { update } = useSession();
-   const { execute, status } = useAction(changeUsername, {
+   const { execute, status, isExecuting   } = useAction(changeUsername, {
       onSuccess: async res => {
          if (res.success) {
             console.log(res);
@@ -55,7 +54,7 @@ const UpdateUsernameModal = ({ children, username }: UpdateUsernameModalProps) =
                <LoadingButton
                   onClick={handleChangeUsername}
                   loadingText={`Saving ...`}
-                  loading={isExecuting(status)}>
+                  loading={isExecuting}>
                   Update
                </LoadingButton>
             </DialogFooter>

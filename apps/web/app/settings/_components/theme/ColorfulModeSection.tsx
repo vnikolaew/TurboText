@@ -16,9 +16,9 @@ const ColorfulModeSection = ({}: ColorfulModeSectionProps) => {
 
    const { execute, status } = useAction(updateUserConfiguration, {
       onSuccess: res => {
-         if (res.success) {
+         if (res.data?.success) {
             console.log(res);
-            setColorfulMode(res.userConfig.theme_colorful_mode);
+            setColorfulMode(res.data?.userConfig?.theme_colorful_mode);
          }
       },
    });

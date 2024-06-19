@@ -4,12 +4,11 @@ import { useSession } from "next-auth/react";
 import { useAction } from "next-safe-action/hooks";
 import { saveTypingRun } from "@components/editor/actions";
 import { z } from "zod";
-import { TYPING_RUN_LS_KEY } from "@components/editor/TypingPage";
+import { TYPING_RUN_LS_KEY } from "@components/editor/TypingEditor";
 import { toast } from "@repo/ui";
 import { TOASTS } from "@config/toasts";
 import { LocalStorage } from "@lib/local-storage";
 import { TypingMode } from "@atoms/consts";
-import { useSearchParams } from "next/navigation";
 
 export const typedLettersSchema = z.object({
    typedLetters: z.array(z.object({
@@ -55,7 +54,6 @@ export function useSaveLatestUserRun() {
          toast(TOASTS.SAVE_TYPING_RUN_SUCCESS!);
       } else {
          toast(TOASTS.SAVE_TYPING_RUN_FAILURE!);
-
       }
    }, [save, session?.status]);
 }

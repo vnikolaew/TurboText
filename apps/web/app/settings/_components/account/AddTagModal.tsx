@@ -4,7 +4,6 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogT
 import { useAction } from "next-safe-action/hooks";
 import { addTag } from "@app/settings/_components/account/actions";
 import { TOASTS } from "@config/toasts";
-import { isExecuting } from "next-safe-action/status";
 import LoadingButton from "@components/common/LoadingButton";
 import { useBoolean } from "@hooks/useBoolean";
 
@@ -14,7 +13,7 @@ export interface AddTagModalProps extends PropsWithChildren {
 const AddTagModal = ({ children }: AddTagModalProps) => {
    const [value, setValue] = useState(``);
    const [ open, setOpen] = useBoolean()
-   const { execute, status } = useAction(addTag, {
+   const { execute, status, isExecuting } = useAction(addTag, {
       onSuccess: res => {
          if (res.success) {
             console.log(res);
@@ -45,7 +44,7 @@ const AddTagModal = ({ children }: AddTagModalProps) => {
                   className={`!w-full !text-lg !bg-black focus:!outline-neutral-300`} />
             </div>
             <DialogFooter className={`w-full !mt-2`}>
-               <LoadingButton onClick={handleAddTag} loadingText={`Adding ...`} loading={isExecuting(status)}>
+               <LoadingButton onClick={handleAddTag} loadingText={`Adding ...`} loading={isExecuting}>
                   Add
                </LoadingButton>
             </DialogFooter>

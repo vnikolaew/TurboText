@@ -17,9 +17,9 @@ const BlindModeSection = ({}: BlindModeSectionProps) => {
 
    const { execute, status } = useAction(updateUserConfiguration, {
       onSuccess: res => {
-         if (res.success) {
+         if (res?.data?.success) {
             console.log(res);
-            setBlindMode(res.userConfig.blind_mode);
+            setBlindMode(res.data?.userConfig.blind_mode);
          }
       },
    });

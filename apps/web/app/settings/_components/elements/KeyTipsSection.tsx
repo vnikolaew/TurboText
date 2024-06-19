@@ -16,9 +16,9 @@ const KeyTipsSection = ({}: KeyTipsSectionProps) => {
 
    const { execute, status } = useAction(updateUserConfiguration, {
       onSuccess: res => {
-         if (res.success) {
+         if (res.data?.success) {
             console.log(res);
-            setKeyTips(res.userConfig.elements_show_key_tips);
+            setKeyTips(res.data?.userConfig?.elements_show_key_tips);
          }
       },
    });

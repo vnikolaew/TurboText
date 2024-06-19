@@ -38,9 +38,9 @@ const SoundOnClickSection = ({}: SoundOnClickSectionProps) => {
 
    const { execute, status } = useAction(updateUserConfiguration, {
       onSuccess: res => {
-         if (res.success) {
+         if (res.data?.success) {
             console.log(res);
-            setSoundOnClick(res.userConfig.sound_click_sound);
+            setSoundOnClick(res.data?.userConfig?.sound_click_sound);
          }
       },
    });

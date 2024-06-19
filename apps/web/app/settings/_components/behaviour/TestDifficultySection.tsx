@@ -32,9 +32,9 @@ const TestDifficultySection = ({}: TestDifficultySectionProps) => {
 
    const { execute, status } = useAction(updateUserConfiguration, {
       onSuccess: res => {
-         if (res.success) {
+         if (res.data?.success) {
             console.log(res);
-            setTestDifficulty(res.userConfig.test_difficulty)
+            setTestDifficulty(res.data?.userConfig?.test_difficulty!)
          }
       },
    });

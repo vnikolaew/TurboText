@@ -18,9 +18,9 @@ const PaceCaretStyleSection = ({}: PaceCaretStyleSectionProps) => {
 
    const { execute, status } = useAction(updateUserConfiguration, {
       onSuccess: res => {
-         if (res.success) {
+         if (res.data?.success) {
             console.log(res);
-            setCaretStyle(res.userConfig.pace_caret_style);
+            setCaretStyle(res.data?.userConfig?.pace_caret_style);
          }
       },
    });

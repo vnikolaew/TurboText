@@ -16,9 +16,9 @@ const CapsLockWarning = ({}: CapsLockWarningProps) => {
 
    const { execute, status } = useAction(updateUserConfiguration, {
       onSuccess: res => {
-         if (res.success) {
+         if (res?.data?.success) {
             console.log(res);
-            setCapsLockWarning(res.userConfig.elements_show_caps_lock_warning);
+            setCapsLockWarning(res.data?.userConfig?.elements_show_caps_lock_warning);
          }
       },
    });

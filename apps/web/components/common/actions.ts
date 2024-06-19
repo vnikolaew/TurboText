@@ -18,58 +18,59 @@ export interface CookiePreferences {
 /**
  * A public action for accepting all site cookies.
  */
-export const acceptAllCookies = publicAction(z.any(), async (_, { userId }) => {
-   await sleep(2000);
+export const acceptAllCookies = publicAction.schema(z.any())
+   .action(async ({ ctx: { userId } }) => {
+      await sleep(2000);
 
-   const user = await xprisma.user.findUnique({
-      where: { id: userId },
-   });
-   if (!user) return { success: false };
+      const user = await xprisma.user.findUnique({
+         where: { id: userId },
+      });
+      if (!user) return { success: false };
 
-   await xprisma.user.update({
-      where: {
-         id: userId,
-      },
-      data: {
-         metadata: {
-            ...user.metadata as Record<string, any>,
-            "cookie-consent": true,
-            "cookie-preferences": {
-               Necessary: true,
-               Statistics: true,
-               Functionality: true,
-               Marketing: true,
+      await xprisma.user.update({
+         where: {
+            id: userId,
+         },
+         data: {
+            metadata: {
+               ...user.metadata as Record<string, any>,
+               "cookie-consent": true,
+               "cookie-preferences": {
+                  Necessary: true,
+                  Statistics: true,
+                  Functionality: true,
+                  Marketing: true,
+               },
             },
          },
-      },
+      });
+      return { success: true };
    });
-   return { success: true };
-});
 
 /**
  * A public action for declining all site cookies.
  */
-export const declineCookieConsent = publicAction(z.any(), async (_, { userId }) => {
-   await sleep(2000);
-   const user = await xprisma.user.findFirst({
-      where: { id: userId },
-   });
-   if (!user) return { success: false };
+export const declineCookieConsent = publicAction.schema(z.any())
+   .action(async ({ ctx: { userId }, parsedInput }) => {
+      await sleep(2000);
+      const user = await xprisma.user.findFirst({
+         where: { id: userId },
+      });
+      if (!user) return { success: false };
 
-   await xprisma.user.update({
-      where: {
-         id: userId,
-      },
-      data: {
-         metadata: {
-            ...user.metadata as Record<string, any>,
-            "cookie-consent": false,
+      await xprisma.user.update({
+         where: {
+            id: userId,
          },
-      },
+         data: {
+            metadata: {
+               ...user.metadata as Record<string, any>,
+               "cookie-consent": false,
+            },
+         },
+      });
+      return { success: true };
    });
-   return { success: true };
-});
-
 
 const cookiePreferencesSchema = z.object({
    Necessary: z.boolean(),
@@ -81,7 +82,10 @@ const cookiePreferencesSchema = z.object({
 /**
  * A public action for managing user's cookie preferences.
  */
-export const updateCookiePreferences = authorizedAction(cookiePreferencesSchema, async (cookiePreferences: CookiePreferences, { userId }) => {
+export const updateCookiePreferences = authorizedAction.schema(cookiePreferencesSchema).action(async ({
+                                                                                                         ctx: { userId },
+                                                                                                         parsedInput: cookiePreferences,
+                                                                                                      }) => {
    await sleep(2000);
    const user = await xprisma.user.findUnique({
       where: { id: userId },
@@ -109,28 +113,29 @@ const changeThemeSchema = z.union([z.literal(`light`), z.literal(`dark`), z.lite
 /**
  * An authorized action for changing the user's site color theme.
  */
-export const changeUserTheme = authorizedAction(changeThemeSchema, async (theme, { userId }) => {
-   await sleep(2000);
+export const changeUserTheme = authorizedAction.schema(changeThemeSchema)
+   .action(async ({ ctx: { userId }, parsedInput: theme }) => {
+      await sleep(2000);
 
-   const user = await xprisma.user.findFirst({
-      where: { id: userId },
-   });
-   if (!user) return { success: false };
+      const user = await xprisma.user.findFirst({
+         where: { id: userId },
+      });
+      if (!user) return { success: false };
 
-   await xprisma.user.update({
-      where: {
-         id: userId,
-      },
-      data: {
-         metadata: {
-            ...user.metadata as Record<string, any>,
-            "theme": theme,
+      await xprisma.user.update({
+         where: {
+            id: userId,
          },
-      },
-   });
+         data: {
+            metadata: {
+               ...user.metadata as Record<string, any>,
+               "theme": theme,
+            },
+         },
+      });
 
-   return { success: true };
-});
+      return { success: true };
+   });
 
 
 const changeUserProfilePictureSchema = z.object({
@@ -140,17 +145,18 @@ const changeUserProfilePictureSchema = z.object({
 /**
  * An authorized action for changing the user's profile picture.
  */
-export const changeUserProfilePicture = authorizedAction(changeUserProfilePictureSchema, async ({ avatarSrc }, { userId }) => {
-   await sleep(2000);
+export const changeUserProfilePicture = authorizedAction
+   .schema(changeUserProfilePictureSchema)
+   .action(async ({ ctx: { userId }, parsedInput: { avatarSrc } }) => {
+      await sleep(2000);
 
-   const user = await xprisma.user.update({
-      where: { id: userId },
-      data: { image: avatarSrc },
+      const user = await xprisma.user.update({
+         where: { id: userId },
+         data: { image: avatarSrc },
+      });
+
+      return { success: true, user };
    });
-
-
-   return { success: true, user };
-});
 
 
 const reportIssueSchema = z.object({
@@ -162,17 +168,18 @@ const reportIssueSchema = z.object({
 /**
  * An authorized action for reporting an application issue.
  */
-export const reportIssue = authorizedAction(reportIssueSchema, async ({ type, description, priority }, { userId }) => {
-   await sleep(2000);
-   const session = await auth();
+export const reportIssue = authorizedAction
+   .schema(reportIssueSchema)
+   .action(async ({ ctx: { userId }, parsedInput: { type, description, priority } }) => {
+      await sleep(2000);
+      const session = await auth();
 
-   try {
-      return { success: true };
-   } catch (err) {
-      return { success: false, error: err };
-   }
-});
-
+      try {
+         return { success: true };
+      } catch (err) {
+         return { success: false, error: err };
+      }
+   });
 
 const changeLanguageSchema = z.object({
    language: z.string(),
@@ -182,28 +189,26 @@ const changeLanguageSchema = z.object({
 /**
  * A public action for changing the user's language.
  */
-export const changeUserLanguage = publicAction(changeLanguageSchema, async ({ language }, { userId }) => {
-   await sleep(1000);
-   const cookie = cookies().get(USER_LOCALE_COOKIE_NAME);
+export const changeUserLanguage = publicAction.schema(changeLanguageSchema)
+   .action(async ({ ctx: { userId }, parsedInput: { language } }) => {
+      await sleep(1000);
+      const cookie = cookies().get(USER_LOCALE_COOKIE_NAME);
 
-   console.log(`Current cookie value: ${cookie?.value}`);
-   console.log(`Setting value to ${language}`);
+      if (userId) {
+         const user = await xprisma.user.findUnique({ where: { id: userId } });
+         await xprisma.user.update({
+            where: { id: userId },
+            data: {
+               metadata: { ...(user.metadata ?? {}), language },
+            },
+         });
+      }
 
-   if (userId) {
-      const user = await xprisma.user.findUnique({ where: { id: userId } });
-      await xprisma.user.update({
-         where: { id: userId },
-         data: {
-            metadata: { ...(user.metadata ?? { }), language },
-         },
+      cookies().set(USER_LOCALE_COOKIE_NAME, language, {
+         sameSite: `none`,
+         secure: true,
+         httpOnly: true,
       });
-   }
 
-   cookies().set(USER_LOCALE_COOKIE_NAME, language, {
-      sameSite: `none`,
-      secure: true,
-      httpOnly: true,
+      return { success: true };
    });
-
-   return { success: true };
-});

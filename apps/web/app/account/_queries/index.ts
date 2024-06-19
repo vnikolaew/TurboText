@@ -32,14 +32,15 @@ export async function getUserWithTypingRuns() {
 
    const user = await xprisma.user.findUnique({
       where: { id: session?.user?.id },
-      include: { typingRuns: true },
+      include: {
+         typingRuns: {
+            orderBy: {
+               createdAt: `desc`,
+            },
+         },
+      },
    });
    if (!user) return null;
-
-   user.typingRuns = user.typingRuns.map(run => {
-      // const { hasFlag, ...rest } = run;
-      return run;
-   });
 
    return user;
 }

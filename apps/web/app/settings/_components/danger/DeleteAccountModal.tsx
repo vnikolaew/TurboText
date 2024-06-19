@@ -18,7 +18,6 @@ import { useAction } from "next-safe-action/hooks";
 import { TOASTS } from "@config/toasts";
 import { deleteAccount } from "@app/settings/_components/danger/actions";
 import { useRouter } from "next/navigation";
-import { isExecuting } from "next-safe-action/status";
 import { TriangleAlert } from "lucide-react";
 
 export interface DeleteAccountModalProps extends PropsWithChildren {
@@ -28,7 +27,7 @@ const DeleteAccountModal = ({ children }: DeleteAccountModalProps) => {
    const [open, setOpen] = useBoolean();
 
    const router = useRouter();
-   const { execute, status } = useAction(deleteAccount, {
+   const { execute, status, isExecuting } = useAction(deleteAccount, {
       onSuccess: res => {
          if (res.success) {
             console.log(res);
@@ -69,7 +68,7 @@ const DeleteAccountModal = ({ children }: DeleteAccountModalProps) => {
                <LoadingButton
                   onClick={handleDelete}
                   loadingText={`Saving ...`}
-                  loading={isExecuting(status)}>
+                  loading={isExecuting}>
                   Delete
                </LoadingButton>
             </DialogFooter>

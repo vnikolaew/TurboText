@@ -2,10 +2,10 @@ import React, { PropsWithChildren, useState } from "react";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, Input, toast } from "@repo/ui";
 import { useAction } from "next-safe-action/hooks";
 import { editTag } from "@app/settings/_components/account/actions";
-import { isExecuting } from "next-safe-action/status";
 import LoadingButton from "@components/common/LoadingButton";
 import { TOASTS } from "@config/toasts";
 import { useBoolean } from "@hooks/useBoolean";
+import { Tag } from "@repo/db";
 
 export interface EditTagModalProps extends PropsWithChildren {
    tag: Tag;
@@ -14,7 +14,7 @@ export interface EditTagModalProps extends PropsWithChildren {
 const EditTagModal = ({ tag, children }: EditTagModalProps) => {
    const [value, setValue] = useState(tag.name);
    const [ open, setOpen] = useBoolean()
-   const { execute, status } = useAction(editTag, {
+   const { execute, status, isExecuting } = useAction(editTag, {
       onSuccess: res => {
          if (res.success) {
             console.log(res);
@@ -45,7 +45,7 @@ const EditTagModal = ({ tag, children }: EditTagModalProps) => {
                   className={`!w-full !text-lg !bg-black focus:!outline-neutral-300`} />
             </div>
             <DialogFooter className={`w-full !mt-2`}>
-               <LoadingButton onClick={handleAddTag} loadingText={`Saving ...`} loading={isExecuting(status)}>
+               <LoadingButton onClick={handleAddTag} loadingText={`Saving ...`} loading={isExecuting}>
                   Edit
                </LoadingButton>
             </DialogFooter>

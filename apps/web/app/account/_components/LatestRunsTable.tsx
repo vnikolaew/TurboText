@@ -26,7 +26,6 @@ export interface LatestRunsTableProps {
 }
 
 const LatestRunsTable = ({ runs, tagsById }: LatestRunsTableProps) => {
-   console.log({ runMetadata: runs.map(x => x.metadata) });
    const [pagingCursor, setPagingCursor] = useState(10);
 
    const runsNormalized = runs?.slice(0, pagingCursor).map((run, index) => {

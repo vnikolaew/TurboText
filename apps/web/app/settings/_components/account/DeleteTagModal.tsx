@@ -5,7 +5,6 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogT
 import { useAction } from "next-safe-action/hooks";
 import { deleteTag } from "@app/settings/_components/account/actions";
 import { TOASTS } from "@config/toasts";
-import { isExecuting } from "next-safe-action/status";
 import LoadingButton from "@components/common/LoadingButton";
 import { Tag } from "@repo/db";
 
@@ -15,7 +14,7 @@ export interface DeleteTagModalProps extends PropsWithChildren {
 
 const DeleteTagModal = ({ children, tag }: DeleteTagModalProps) => {
    const [open, setOpen] = useBoolean();
-   const { execute, status } = useAction(deleteTag, {
+   const { execute, status, isExecuting } = useAction(deleteTag, {
       onSuccess: res => {
          if (res.success) {
             console.log(res);
@@ -46,7 +45,7 @@ const DeleteTagModal = ({ children, tag }: DeleteTagModalProps) => {
             <DialogFooter className={`w-full !mt-2`}>
                <LoadingButton
                   onClick={handleAddTag}
-                  loadingText={`Deleting ...`} loading={isExecuting(status)}>
+                  loadingText={`Deleting ...`} loading={isExecuting}>
                   Delete
                </LoadingButton>
             </DialogFooter>

@@ -1,8 +1,9 @@
-"use client"
+"use client";
 import { atom } from "jotai/index";
 import {
    currentCharIndexAtom,
-  lettersCorrectnessAtom, startTimeAtom,
+   lettersCorrectnessAtom,
+   startTimeAtom,
    typedLettersAtom,
    typingModeAtom,
    typingRunStateAtom,
@@ -12,7 +13,6 @@ import { generate } from "random-words";
 import { currentTimestampAtom, timeAtom } from "@atoms/timer";
 import { generateWordsAtom, wordsCountsAtom } from "@atoms/words";
 import { TypingMode, TypingRunState } from "./consts";
-
 
 
 export const newTestAtom = atom(

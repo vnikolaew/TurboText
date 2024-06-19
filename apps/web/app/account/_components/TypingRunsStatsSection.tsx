@@ -1,7 +1,8 @@
 import { TypingRun } from "@repo/db";
+import { sum } from "lodash";
 import React, { ReactNode } from "react";
 
-function formatSeconds(seconds: number) {
+export function formatSeconds(seconds: number) {
    const minutes = Math.floor(seconds / 60);
    const remainingSeconds = seconds % 60;
    return `${minutes.toString().padStart(2, "0")}:${remainingSeconds.toFixed(0).padStart(2, "0")}`;
@@ -12,20 +13,20 @@ export interface TypingRunsStatsSectionProps {
 }
 
 const TypingRunsStatsSection = ({ runs }: TypingRunsStatsSectionProps) => {
-   const wordsTyped = runs.map(r => r.wordCount!).reduce((a, b) => a + b, 0);
-   const timeTyping = runs.map(r => r.totalTimeMilliseconds!).reduce((a, b) => a + b, 0);
+   const wordsTyped = sum(runs.map(r => r.wordCount!));
+   const timeTyping = sum(runs.map(r => r.totalTimeMilliseconds!))
 
    const highestWpm = runs.sort((a, b) => b.wpm - a.wpm)?.at(0)?.wpm?.toFixed(0);
-   const averageWpm = runs.map(r => r.wpm as number).reduce((a, b) => a + b, 0) / runs.length;
-   const averageWpmLast10 = runs.slice(0, 10).map(r => r.wpm as number).reduce((a, b) => a + b, 0) / runs.length;
+   const averageWpm = sum(runs.map(r => r.wpm as number)) / runs.length;
+   const averageWpmLast10 = sum(runs.slice(0, 10).map(r => r.wpm as number)) / runs.length;
 
    const highestAcc = runs.sort((a, b) => b.accuracy - a.accuracy)?.at(0)?.accuracy?.toFixed(0);
-   const averageAcc = runs.map(r => r.accuracy as number).reduce((a, b) => a + b, 0) / runs.length;
-   const averageAccLast10 = runs.slice(0, 10).map(r => r.accuracy as number).reduce((a, b) => a + b, 0) / runs.length;
+   const averageAcc = sum(runs.map(r => r.accuracy as number)) / runs.length;
+   const averageAccLast10 = sum(runs.slice(0, 10).map(r => r.accuracy as number)) / runs.length;
 
    const highestConsistency = runs.sort((a, b) => b.consistency - a.consistency )?.at(0)?.consistency?.toFixed(0);
-   const averageConsistency = runs.map(r => r.consistency as number).reduce((a, b) => a + b, 0) / runs.length;
-   const averageConsistencyLast10 = runs.slice(0, 10).map(r => r.consistency as number).reduce((a, b) => a + b, 0) / runs.length;
+   const averageConsistency = sum(runs.map(r => r.consistency as number)) / runs.length;
+   const averageConsistencyLast10 = sum(runs.slice(0, 10).map(r => r.consistency as number)) / runs.length;
 
    return (
       <div className={`flex flex-col items-center gap-4 w-full`}>

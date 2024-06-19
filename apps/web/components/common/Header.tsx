@@ -3,7 +3,7 @@ import Link from "next/link";
 import React, { ReactNode } from "react";
 import { signIn, signOut } from "next-auth/react";
 import { SignedIn, SignedOut } from "./Auth";
-import { LogIn, LogOut, Settings, Timer } from "lucide-react";
+import { Crown, LogIn, LogOut, Settings, Timer } from "lucide-react";
 import { APP_NAME } from "@config/site";
 import { usePathname } from "next/navigation";
 import { cn } from "lib/utils";
@@ -62,8 +62,10 @@ const Header = ({}: NavbarProps) => {
                   <span
                      className={`text-lg !test-gradient drop-shadow-lg !font-semibold ${lexend.className} uppercase`}>{APP_NAME}</span>
                </Link>
+            </nav>
+            <div className={`flex-1 text-center flex items-center gap-4 justify-center`}>
                <Button variant={`ghost`} asChild>
-                  <Link title={`Settings`} href={`/settings`} className={`flex items-center gap-2 !ml-12`}>
+                  <Link title={`Settings`} href={`/settings`} className={`flex items-center gap-2`}>
                      <Settings size={16} />
                      <span
                         className={`text-base drop-shadow-lg !font-semibold`}>
@@ -72,7 +74,7 @@ const Header = ({}: NavbarProps) => {
                   </Link>
                </Button>
                <Button variant={`ghost`} asChild>
-                  <Link title={`Settings`} href={`/_timer`} className={`flex items-center gap-2 !ml-12`}>
+                  <Link title={`Settings`} href={`/_timer`} className={`flex items-center gap-2`}>
                      <Timer size={16} />
                      <span
                         className={`text-base drop-shadow-lg !font-semibold`}>
@@ -80,8 +82,15 @@ const Header = ({}: NavbarProps) => {
                   </span>
                   </Link>
                </Button>
-            </nav>
-            <div className={`flex-1 text-center flex items-center gap-8 justify-center`}>
+               <Button variant={`ghost`} asChild>
+                  <Link title={`Leaderboard`} href={`/leaderboard`} className={`flex items-center gap-2`}>
+                     <Crown className={`fill-neutral-300 stroke-neutral-300 `} size={16} />
+                     <span
+                        className={`text-base drop-shadow-lg !font-semibold`}>
+                     Leaderboard
+                  </span>
+                  </Link>
+               </Button>
             </div>
             <div className={`flex flex-1 items-center justify-end space-x-8`}>
                <SignedIn>

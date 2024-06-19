@@ -3,7 +3,6 @@ import React, { PropsWithChildren, useState } from "react";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, Switch, toast } from "@repo/ui";
 import { useBoolean } from "@hooks/useBoolean";
 import LoadingButton from "@components/common/LoadingButton";
-import { isExecuting } from "next-safe-action/status";
 import { useAction } from "next-safe-action/hooks";
 import { TOASTS } from "@config/toasts";
 import { updateCookiePreferences } from "@components/common/actions";
@@ -36,20 +35,20 @@ const UpdateCookiePreferencesModal = ({ children }: UpdateCookiePreferencesModal
    const [cookiePreferences, setCookiePreferences] = useAtom(cookiePreferencesAtom);
    const [value, setValue] = useState(``);
    const [open, setOpen] = useBoolean();
-   const { execute, status } = useAction(updateCookiePreferences, {
+   const { execute, status, isExecuting } = useAction(updateCookiePreferences, {
       onSuccess: async res => {
          if (res.success) {
             console.log(res);
             toast(TOASTS.CHANGE_COOKIE_PREFERENCES_SUCCESS);
          } else {
-            toast(TOASTS.EDIT_USERNAME_FAILURE);
+            toast(TOASTS.EDIT_USERNAME_FAILURE(res.error));
          }
          setOpen(false);
       },
    });
 
    function handleChangePrefs(_): void {
-
+      execute(cookiePreferences)
    }
 
    return (
@@ -78,7 +77,7 @@ const UpdateCookiePreferencesModal = ({ children }: UpdateCookiePreferencesModal
                <LoadingButton
                   onClick={handleChangePrefs}
                   loadingText={`Saving ...`}
-                  loading={isExecuting(status)}>
+                  loading={isExecuting}>
                   Accept selected
                </LoadingButton>
             </DialogFooter>

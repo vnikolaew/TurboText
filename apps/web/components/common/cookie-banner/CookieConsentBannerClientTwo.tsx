@@ -8,7 +8,6 @@ import Link from "next/link";
 import { CustomizePreferencesModal } from "./CookieConsentBannerClient";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion, MotionProps } from "framer-motion";
-import { isExecuting } from "next-safe-action/status";
 import { toast } from "@repo/ui";
 import { useBoolean } from "@hooks/useBoolean";
 
@@ -35,7 +34,7 @@ const customizePrefsModalProps: MotionProps = {
 };
 
 const CookieConsentBannerClientTwo = ({ cookiePreferences }: CookieConsentBannerClientTwoProps) => {
-   const { status, execute: acceptAction } = useAction(acceptAllCookies, {
+   const { status, execute: acceptAction, isExecuting } = useAction(acceptAllCookies, {
       onSuccess: res => {
          if (res.success) {
             setHideBanner(true);
@@ -45,7 +44,7 @@ const CookieConsentBannerClientTwo = ({ cookiePreferences }: CookieConsentBanner
       },
    });
 
-   const { status: declineStatus, execute: declineAction } = useAction(declineCookieConsent, {
+   const {  isExecuting: declineExecuting } = useAction(declineCookieConsent, {
       onSuccess: res => {
          setHideBanner(true);
          setShowManagePrefsBanner(true);
@@ -88,10 +87,10 @@ const CookieConsentBannerClientTwo = ({ cookiePreferences }: CookieConsentBanner
                      </button>
 
                      <button
-                        disabled={isExecuting(status)}
+                        disabled={isExecuting}
                         onClick={_ => acceptAction(undefined)}
                         className=" text-xs w-1/2 md:w-auto font-medium bg-gray-800 rounded-lg hover:bg-gray-700 text-white px-4 py-2.5 duration-300 transition-colors focus:outline-none items-center gap-2 flex">
-                        {isExecuting(status) ? (
+                        {isExecuting ? (
                            <>
                               <Loader2 size={14} className={`animate-spin`} />
                               Accepting ...

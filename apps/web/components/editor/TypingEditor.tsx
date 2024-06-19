@@ -1,14 +1,9 @@
 "use client";
 import React, { useMemo } from "react";
 import { useTimer } from "@components/editor/hooks/useTimer";
-import {
-   totalRunTimeAtom,
-   typedLettersAtom,
-   useTypingRunSuccess,
-} from "@atoms/editor";
-import { useAtomValue } from "jotai";
+import { totalRunTimeAtom, typedLettersAtom, typingRunAtom, useTypingRunSuccess } from "@atoms/editor";
+import { useAtom, useAtomValue } from "jotai";
 import TypingRunSummary from "@components/editor/TypingRunSummary";
-import {  useSaveLatestUserRun } from "@components/editor/hooks/useSaveLatestUserRun";
 import Confetti from "react-confetti";
 import RestartButton from "@components/editor/RestartButton";
 import TypeRunState from "./TypeRunState";
@@ -17,15 +12,15 @@ import { LocalStorage } from "@lib/local-storage";
 import { Button, toast } from "@repo/ui";
 import { useAction } from "next-safe-action/hooks";
 import { saveTypingRun } from "@components/editor/actions";
-import { isExecuting } from "next-safe-action/status";
 import { AnimatePresence } from "framer-motion";
 import { TOASTS } from "@config/toasts";
 import SaveTypingRunPrompt from "@components/editor/SaveTypingRunPrompt";
-import { autoSaveModeAtom } from "@atoms/user";
+import { autoSaveModeAtom, userConfigAtom } from "@atoms/user";
 import NewRunButton from "@components/editor/NewRunButton";
 import { SignedIn } from "@components/common/Auth";
 import { signIn } from "next-auth/react";
 import { TypingRunState } from "@atoms/consts";
+import { useSaveLatestUserRun } from "./hooks/useSaveLatestUserRun";
 
 export interface TypingEditorProps {
 }
@@ -33,16 +28,16 @@ export interface TypingEditorProps {
 
 export const TYPING_RUN_LS_KEY = `typing-run`;
 
-const TypingPage = ({}: TypingEditorProps) => {
-   // const userConfig = useAtomValue(userConfigAtom);
+const TypingEditor = ({}: TypingEditorProps) => {
+   const userConfig = useAtomValue(userConfigAtom);
    const typedLetters = useAtomValue(typedLettersAtom);
    const totalRunTime = useAtomValue(totalRunTimeAtom);
-   // const [typingRun, setTypingRun] = useAtom(typingRunAtom);
+   const [typingRun, setTypingRun] = useAtom(typingRunAtom);
 
    useTypingRunSuccess();
    useSaveLatestUserRun();
 
-   const { execute, status } = useAction(saveTypingRun, {
+   const { isExecuting, execute } = useAction(saveTypingRun, {
       onSuccess: res => {
          if (res.success) {
             console.log(res);
@@ -55,15 +50,18 @@ const TypingPage = ({}: TypingEditorProps) => {
       onError: console.error,
    });
 
-   const { start, timerState, resume, pause } = useTimer(() => {
+   const { timerState } = useTimer(() => {
       console.log(typedLetters?.sort((a, b) => a.charIndex - b.charIndex));
-      // LocalStorage.setItem(TYPING_RUN_LS_KEY, typingRun);
+      LocalStorage.setItem(TYPING_RUN_LS_KEY, typingRun);
    });
+
    const autoSaveMode = useAtomValue(autoSaveModeAtom);
-   const showSavePrompt = useMemo(() => timerState === TypingRunState.FINISHED && !autoSaveMode, [timerState]);
+   const showSavePrompt = useMemo(() =>
+         timerState === TypingRunState.FINISHED && !autoSaveMode,
+      [timerState]);
 
    function handleSaveTypingRun(): void {
-      // execute(typingRun);
+      execute(typingRun);
    }
 
    return (
@@ -84,7 +82,7 @@ const TypingPage = ({}: TypingEditorProps) => {
          {timerState !== TypingRunState.FINISHED && (
             <div id={`editor`} className={`rounded-md px-4 py-8`}>
                <TypeRunState />
-               <TypingInput resume={resume} pause={pause} start={start} />
+               <TypingInput />
             </div>
          )}
          <span className={`mt-4 w-full text-center`}>Total run time: {totalRunTime}ms</span>
@@ -95,9 +93,9 @@ const TypingPage = ({}: TypingEditorProps) => {
          <AnimatePresence>
             {showSavePrompt &&
                <SaveTypingRunPrompt
-                  loading={isExecuting(status)}
+                  loading={isExecuting}
                   onDismiss={() => {
-                     // setTypingRun(null!);
+                     setTypingRun(null!);
                      LocalStorage.removeItem(TYPING_RUN_LS_KEY);
                   }} onSave={handleSaveTypingRun} />
             }
@@ -129,4 +127,4 @@ const TypingPage = ({}: TypingEditorProps) => {
    );
 };
 
-export default TypingPage;
+export default TypingEditor;

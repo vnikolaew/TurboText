@@ -17,9 +17,9 @@ const AutoSaveModeSection = ({}: AutoSaveModeSectionProps) => {
 
    const { execute, status } = useAction(updateUserConfiguration, {
       onSuccess: res => {
-         if (res.success) {
+         if (res.data?.success) {
             console.log(res);
-            setAutoSaveMode(res.userConfig.auto_save_mode);
+            setAutoSaveMode(res.data?.userConfig?.auto_save_mode);
          }
       },
    });

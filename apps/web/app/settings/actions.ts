@@ -38,27 +38,28 @@ const schema = z.object({
  * @param userId The user's ID.
  * @param configuration The new updated configuration.
  */
-export const updateUserConfiguration = authorizedAction(schema, async (configuration, { userId }) => {
-   for (let key in configuration) {
-      if (configuration[key] === undefined || configuration[key] === null) {
-         configuration[key] = undefined;
+export const updateUserConfiguration = authorizedAction.schema(schema)
+   .action(async ({ ctx: { userId }, parsedInput: configuration }) => {
+      for (let key in configuration) {
+         if (configuration[key] === undefined || configuration[key] === null) {
+            configuration[key] = undefined;
+         }
       }
-   }
 
-   console.log({ configuration });
+      console.log({ configuration });
 
-   const existing = await xprisma.userConfiguration.findFirst({
-      where: { userId },
+      const existing = await xprisma.userConfiguration.findFirst({
+         where: { userId },
+      });
+      if (!existing) return { success: false };
+
+      const userConfig = await xprisma.userConfiguration.update({
+         where: { id: existing.id },
+         data: {
+            ...configuration,
+         },
+      });
+
+      revalidatePath(`/settings`);
+      return { success: true, userConfig };
    });
-   if (!existing) return { success: false };
-
-   const userConfig = await xprisma.userConfiguration.update({
-      where: { id: existing.id },
-      data: {
-         ...configuration,
-      },
-   });
-
-   revalidatePath(`/settings`)
-   return { success: true, userConfig };
-});

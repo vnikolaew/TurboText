@@ -2,15 +2,18 @@
 import React, { Fragment } from "react";
 import Letter from "@components/common/Letter";
 import { cn } from "@lib/utils";
+import { useAtomValue } from "jotai";
+import { currentCharIndexAtom, lettersCorrectnessAtom, wordsAtom } from "@atoms/editor";
 
 export interface TypingLettersProps {
-   words: string[];
-   currentCharIndex: number;
-   lettersCorrectness: (boolean | null)[];
    currentLetterRef?: React.RefObject<HTMLElement>;
 }
 
-const TypingLetters = ({ words, lettersCorrectness, currentCharIndex, currentLetterRef }: TypingLettersProps) => {
+const TypingLetters = ({ currentLetterRef }: TypingLettersProps) => {
+   const words = useAtomValue(wordsAtom)
+   const currentCharIndex = useAtomValue(currentCharIndexAtom)
+   const lettersCorrectness = useAtomValue(lettersCorrectnessAtom)
+
       return (
          <Fragment>
             {words

@@ -3,7 +3,6 @@ import React, { PropsWithChildren, useState } from "react";
 import { useBoolean } from "@hooks/useBoolean";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, Input, toast } from "@repo/ui";
 import LoadingButton from "@components/common/LoadingButton";
-import { isExecuting } from "next-safe-action/status";
 import { z } from "zod";
 import { useAction } from "next-safe-action/hooks";
 import { updateUserConfiguration } from "@app/settings/actions";
@@ -42,7 +41,7 @@ const schema = z.object({
 const ImportSettingsModal = ({children}: ImportSettingsModalProps) => {
    const [value, setValue] = useState(``);
    const [open, setOpen] = useBoolean();
-   const { execute, status } = useAction(updateUserConfiguration, {
+   const { execute, status, isExecuting } = useAction(updateUserConfiguration, {
       onSuccess: res => {
          if (res.success) {
             console.log(res);
@@ -90,7 +89,7 @@ const ImportSettingsModal = ({children}: ImportSettingsModalProps) => {
                <LoadingButton
                   onClick={handleImport}
                   loadingText={`Saving ...`}
-                  loading={isExecuting(status)}>
+                  loading={isExecuting}>
                   Import settings
                </LoadingButton>
             </DialogFooter>

@@ -1,4 +1,3 @@
-import TypingPage from "@components/editor/TypingPage";
 import WithUserLoading from "@app/_components/WithUserLoading";
 import WithInitialState from "@components/editor/WithInitialState";
 import WithTransition from "@components/common/WithTransition";
@@ -8,6 +7,7 @@ import { ServerSignedOut } from "@components/common/Auth.server";
 import EditorToolbar from "@components/editor/toolbar/EditorToolbar";
 import PressKeyLabel from "@components/editor/PressKeyLabel";
 import { xprisma } from "@repo/db";
+import TypingEditor from "@components/editor/TypingEditor";
 
 export default async function Home() {
    const session = await auth();
@@ -41,7 +41,7 @@ export default async function Home() {
             <PressKeyLabel />
          </div>
          <WithInitialState user={user!} />
-         <TypingPage />
+         <TypingEditor />
          <ServerSignedOut>
             <SignInButton />
          </ServerSignedOut>

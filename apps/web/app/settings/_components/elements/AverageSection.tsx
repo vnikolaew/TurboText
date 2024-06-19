@@ -35,9 +35,9 @@ const AverageSection = ({}: AverageSectionProps) => {
 
    const { execute, status } = useAction(updateUserConfiguration, {
       onSuccess: res => {
-         if (res.success) {
+         if (res.data?.success) {
             console.log(res);
-            setAverage(res.userConfig.elements_show_average);
+            setAverage(res.data?.userConfig?.elements_show_average);
          }
       },
    });

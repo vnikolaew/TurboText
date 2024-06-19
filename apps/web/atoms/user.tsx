@@ -1,7 +1,6 @@
 "use client";
 import { User, UserConfiguration } from "@repo/db";
 import { atom } from "jotai";
-import { selectAtom } from "jotai/utils";
 import { focusAtom } from "jotai-optics";
 import { Session } from "next-auth";
 
@@ -16,11 +15,18 @@ userAtom.debugLabel = `userAtom`;
 export const userConfigAtom = atom<UserConfiguration>(null!);
 userConfigAtom.debugLabel = `userConfigAtom`;
 
-export const cookiePreferencesAtom = atom<Record<string, boolean>>({ });
+export interface CookiePreferences {
+   Necessary: boolean,
+   Statistics: boolean,
+   Functionality: boolean,
+   Marketing: boolean,
+
+}
+export const cookiePreferencesAtom = atom<CookiePreferences>({ });
 cookiePreferencesAtom .debugLabel = `cookiePreferencesAtom`;
 
 // @ts-ignore
-export const userTestDifficultyAtom = focusAtom<UserConfiguration["test_difficulty"]>(userConfigAtom, optic => optic.prop(`test_difficulty`));
+export const userTestDifficultyAtom = focusAtom<UserConfiguration["test_difficulty"]>(userConfigAtom, optic => optic?.prop(`test_difficulty`));
 userTestDifficultyAtom.debugLabel = `userTestDifficultyAtom`;
 
 // @ts-ignore
@@ -28,7 +34,7 @@ export const blindModeAtom = focusAtom<UserConfiguration["blind_mode"]>(userConf
 blindModeAtom.debugLabel = `blindModeAtom`;
 
 // @ts-ignore
-export const userLanguageAtom = selectAtom(userConfigAtom, config => config?.language);
+export const userLanguageAtom = focusAtom(userConfigAtom, optic => optic.prop(`language`));
 userLanguageAtom.debugLabel = `userLanguageAtom`;
 
 // @ts-ignore

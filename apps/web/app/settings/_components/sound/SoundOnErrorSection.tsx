@@ -24,9 +24,9 @@ const SoundOnErrorSection = ({}: SoundOnErrorSectionProps) => {
 
    const { execute, status } = useAction(updateUserConfiguration, {
       onSuccess: res => {
-         if (res.success) {
+         if (res.data?.success) {
             console.log(res);
-            setSoundOnError(res.userConfig.sound_error_sound);
+            setSoundOnError(res.data?.userConfig?.sound_error_sound);
          }
       },
    });

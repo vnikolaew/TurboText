@@ -17,9 +17,9 @@ const FreedomModeSection = ({}: FreedomModeSectionProps) => {
 
    const { execute, status } = useAction(updateUserConfiguration, {
       onSuccess: res => {
-         if (res.success) {
+         if (res.data?.success) {
             console.log(res);
-            setFreedomMode(res.userConfig.input_freedom_mode);
+            setFreedomMode(res.data?.userConfig?.input_freedom_mode);
          }
       },
    });

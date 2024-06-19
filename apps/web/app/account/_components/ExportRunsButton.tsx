@@ -2,32 +2,16 @@
 import React from "react";
 import { Button } from "@repo/ui";
 import { FileText } from "lucide-react";
-import { useAction } from "next-safe-action/hooks";
-import { exportRuns } from "@app/account/actions";
 import { CSVLink } from "react-csv";
 import moment from "moment";
-import { TypingFlags } from "@atoms/editor";
 import { TypingRun } from "@repo/db";
+import { TypingFlags } from "@atoms/consts";
 
 export interface ExportRunsButtonProps {
    runs: TypingRun[];
 }
 
 const ExportRunsButton = ({ runs }: ExportRunsButtonProps) => {
-   const { result, execute, status } = useAction(exportRuns, {
-      onSuccess: res => {
-         if (res.success) {
-            console.log({ res });
-         }
-      },
-   });
-
-   console.log({ runs });
-
-   async function handleExport() {
-      execute({ runs });
-   }
-
    return (
       <CSVLink filename={`results.csv`} data={runs.map(run => {
          const { metadata, id, totalTimeMilliseconds, wordCount, time, createdAt, flags, mode, userId } = run;
@@ -50,7 +34,7 @@ const ExportRunsButton = ({ runs }: ExportRunsButtonProps) => {
             timestamp: moment(createdAt).toDate().getTime()
          }
       })}>
-         <Button onClick={handleExport} variant={`secondary`}
+         <Button variant={`secondary`}
                  className={`px-20 rounded-full items-center gap-2 shadow-md`}>
             <FileText size={20} />
             Export CSV

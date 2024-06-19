@@ -32,9 +32,9 @@ const ConfidenceModeSection = ({}: ConfidenceModeSetionProps) => {
 
    const { execute, status } = useAction(updateUserConfiguration, {
       onSuccess: res => {
-         if (res.success) {
+         if (res.data?.success) {
             console.log(res);
-            setConfidenceMode(res.userConfig.input_confidence_mode);
+            setConfidenceMode(res.data?.userConfig?.input_confidence_mode);
          }
       },
    });

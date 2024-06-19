@@ -36,9 +36,9 @@ const SmoothCaretSection = ({}: SmoothCaretSectionProps) => {
 
    const { execute, status } = useAction(updateUserConfiguration, {
       onSuccess: res => {
-         if (res.success) {
+         if (res.data?.success) {
             console.log(res);
-            setSmoothCaret(res.userConfig.caret_smoothness);
+            setSmoothCaret(res.data?.userConfig?.caret_smoothness);
          }
       },
    });

@@ -6,7 +6,6 @@ import { updateCookiePreferences } from "../actions";
 import { useAction } from "next-safe-action/hooks";
 import { LoadingSpinner } from "../LoadingSpinner";
 import { cn } from "@/lib/utils";
-import { isExecuting } from "next-safe-action/status";
 import { motion, MotionProps } from "framer-motion";
 import { TOASTS } from "@/config/toasts";
 import { Button, Card, CardContent, CardFooter, CardHeader, Separator, Switch, toast } from "@repo/ui";
@@ -40,7 +39,7 @@ export const CustomizePreferencesModal = ({
    });
    console.log(`we are here!`);
 
-   const { status, execute: handleSavePreferencesAction } = useAction(updateCookiePreferences, {
+   const { status, isExecuting, execute: handleSavePreferencesAction } = useAction(updateCookiePreferences, {
       onSuccess: res => {
          if (res.success) {
             onBack?.();
@@ -82,7 +81,6 @@ export const CustomizePreferencesModal = ({
                      label={`Functionality`}
                      checked={preferences.Functionality}
                      onCheckedChange={value => setPreferences({ ...preferences, Functionality: value })} />
-
                   <PreferenceSwitch
                      label={`Marketing`}
                      checked={preferences.Marketing}
@@ -96,11 +94,11 @@ export const CustomizePreferencesModal = ({
                   </Link>
                </Button>
                <Button
-                  disabled={isExecuting(status)}
+                  disabled={isExecuting}
                   onClick={_ => handleSavePreferencesAction(preferences)}
                   size={`sm`}
                   className={` rounded-md !px-8 shadow-md`} variant={`default`}>
-                  {isExecuting(status) ? (<LoadingSpinner text={`Saving ...`} />) : (
+                  {isExecuting ? (<LoadingSpinner text={`Saving ...`} />) : (
                      `Save and submit`
                   )}
                </Button>

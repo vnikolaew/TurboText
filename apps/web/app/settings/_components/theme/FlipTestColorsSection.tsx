@@ -16,9 +16,9 @@ const FlipTestColorsSection = ({}: FlipTestColorsProps) => {
 
    const { execute, status } = useAction(updateUserConfiguration, {
       onSuccess: res => {
-         if (res.success) {
+         if (res.data?.success) {
             console.log(res);
-            setFlipColors(res.userConfig.theme_flip_colors);
+            setFlipColors(res.data?.userConfig?.theme_flip_colors);
          }
       },
    });

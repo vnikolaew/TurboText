@@ -35,6 +35,7 @@ export interface PageProps {
 const Page = async ({}: PageProps) => {
    const user = await getUserWithTypingRuns();
    if (!user) notFound();
+   console.log(user?.typingRuns.map(r => r.createdAt));
 
    return (
       <section className={`w-2/3 mx-auto mt-24 flex flex-col items-center gap-4`}>
@@ -90,7 +91,7 @@ const Page = async ({}: PageProps) => {
             <AccountLinks username={user.name!} />
          </div>
          <div className={`w-full bg-stone-950 rounded-lg shadow-lg flex items-center p-6 py-10 gap-8 mt-8`}>
-            <UserActivitySection typingRuns={user.typingRuns.map(run => {
+            <UserActivitySection typingRuns={user?.typingRuns?.map(run => {
                const { hasFlag, ...rest } = run;
                return rest;
             })} />
