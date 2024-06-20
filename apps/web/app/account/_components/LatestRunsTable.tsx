@@ -87,8 +87,8 @@ const LatestRunsTable = ({ runs, tagsById }: LatestRunsTableProps) => {
             <TableCaption className={``}>
                A list of your latest typing runs.
             </TableCaption>
-            <TableHeader>
-               <TableRow>
+            <TableHeader >
+               <TableRow className={`text-sm`}>
                   <TableHead className="w-[100px]"></TableHead>
                   <SortableTableHead column={`wpm`} />
                   <TableHead className="text-left">raw</TableHead>
@@ -103,7 +103,7 @@ const LatestRunsTable = ({ runs, tagsById }: LatestRunsTableProps) => {
             </TableHeader>
             <TableBody>
                {runsNormalized.map((run, index) => (
-                  <TableRow className={`text-base`} key={run.id}>
+                  <TableRow className={`text-sm`} key={run.id}>
                      <TableCell className="font-medium">
                         {run.metadata?.isPersonalBest && (
                            <Crown className={`fill-neutral-300`} size={20} />

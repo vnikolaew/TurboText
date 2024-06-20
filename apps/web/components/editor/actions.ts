@@ -7,7 +7,6 @@ import { z } from "zod";
 import { kogasa, mean, roundTo2, stdDev } from "@lib/numbers";
 import { groupBy } from "lodash";
 import { TypedLetterInfo } from "@atoms/consts";
-import { completedWordsAtom } from "@atoms/editor";
 
 const schema = z.object({
    typedLetters: z.array(z.object({
@@ -83,14 +82,31 @@ export const saveTypingRun = authorizedAction
                totalTimeMilliseconds: totalRunTime,
             },
          });
-         const { hasFlag, ...rest } = run;
+         const userXpGained = (wpm * accuracy) / 100;
 
-         console.log({ run });
-         return { success: true, run: rest };
+         let userXp = await xprisma.userExperience.findFirst({ where: { userId } });
+         let newXp = userXp!.points + userXpGained;
+
+         const newUserLevel = xprisma.userExperience?.getLevelFromXp({ points: newXp });
+
+         userXp = await xprisma.userExperience.update({
+            where: { userId },
+            data: {
+               points: {
+                  increment: userXpGained,
+               },
+               level: newUserLevel,
+            },
+         });
+
+         const { hasFlag, ...rest } = run;
+         console.log({ run, userXp });
+
+         return { success: true, run: rest, userXp };
       },
    );
 
-async function getRunStats(typedLetters: TypedLetterInfo[], totalTimeMilliseconds: number, completedWords: number , userId: string) {
+async function getRunStats(typedLetters: TypedLetterInfo[], totalTimeMilliseconds: number, completedWords: number, userId: string) {
    const wpm = getRunWpm(totalTimeMilliseconds, completedWords);
    const consistency = getRunConsistency(typedLetters);
    const accuracy = getRunAccuracy(typedLetters);

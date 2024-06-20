@@ -60,3 +60,9 @@ export interface WordRange {
    word: string;
    range: [number, number];
 }
+
+
+export interface UserExperience {
+   points: number;
+   level: number;
+}

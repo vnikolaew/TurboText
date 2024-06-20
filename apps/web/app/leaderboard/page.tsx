@@ -1,4 +1,4 @@
-import { Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@repo/ui";
+import { Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Separator } from "@repo/ui";
 import React from "react";
 import { LANGUAGES_MAP, TypingMode } from "@atoms/consts";
 import { Crown, User } from "lucide-react";
@@ -69,6 +69,7 @@ const Page = async ({ searchParams }: PageProps) => {
                <Button variant={`secondary`} className={`rounded-full shadow-md px-8`}>Daily</Button>
             </div>
          </div>
+         <Separator className={`w-2/3 bg-neutral-700 h-[1px] rounded-md shadow-md`} />
          <div className={`flex items-center justify-between w-full`}>
             <div></div>
             <div>
@@ -87,7 +88,6 @@ const Page = async ({ searchParams }: PageProps) => {
             </div>
          </div>
          <div className={`mt-8 grid grid-cols-2 w-full gap-4`}>
-
             <div className={`w-full flex items-center justify-between`}>
                <span className={`text-2xl`}>Time 15</span>
                <div className={`flex items-center gap-2`}>
@@ -111,6 +111,8 @@ const Page = async ({ searchParams }: PageProps) => {
                   </Button>
                </div>
             </div>
+            <Separator className={`w-full bg-neutral-700 mx-auto`} />
+            <Separator className={`w-full bg-neutral-700 mx-auto` } />
 
             <LeaderboardTable
                rows={time15Runs.map(mapRow)}

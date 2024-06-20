@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { Separator, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, UserAvatar } from "@repo/ui";
 import moment from "moment";
 import { notFound } from "next/navigation";
@@ -12,6 +12,7 @@ import { APP_DESCRIPTION, APP_NAME, AUTHOR, AUTHOR_WEBSITE } from "@config/site"
 import appLogo from "@public/logo.jpg";
 import { getUserWithTypingRuns } from "@app/account/_queries";
 import TypingRunsStatsSection from "@app/account/_components/TypingRunsStatsSection";
+import { UserExperienceInfo } from "@app/account/UserExperienceInfo";
 
 export const metadata: Metadata = {
    title: `Account | ${APP_NAME}`,
@@ -65,10 +66,15 @@ const Page = async ({}: PageProps) => {
                            </Tooltip>
                         </TooltipProvider>
                         <span className={`text-sm text-neutral-500`}>
-                        Current streak: {user.streak} days
+                        Current streak: {user.currentStreak} day{user.currentStreak === 1 ? `` : `s`}
                      </span>
                      </div>
                   </div>
+               </div>
+               <div className={`w-full mt-4`}>
+                  <Suspense fallback={`Loading ...`}>
+                     <UserExperienceInfo />
+                  </Suspense>
                </div>
             </div>
             <Separator orientation={`vertical`} className={`h-20 w-[4px] rounded-full bg-neutral-700`} />

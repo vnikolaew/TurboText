@@ -30,6 +30,13 @@ const customAdapter = {
                   sound_error_sound: null,
                },
             },
+            experience: {
+               create: {
+                  level: 1,
+                  points: 0,
+                  metadata: {},
+               },
+            },
          },
       });
    },

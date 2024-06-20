@@ -26,7 +26,7 @@ export let xprisma = prisma.$extends({
             needs: { typedLetters: true },
             compute({ typedLetters }) {
                const res = typedLetterInfoSchema.safeParse({ typedLetters });
-               if(!res.success) return 0.00;
+               if (!res.success) return 0.00;
 
                const typedLettersGrouped = Object.entries(groupBy(
                   res.data.typedLetters,
@@ -46,7 +46,7 @@ export let xprisma = prisma.$extends({
             needs: { typedLetters: true, mode: true, totalTimeMilliseconds: true, wordCount: true },
             compute({ typedLetters, mode, totalTimeMilliseconds, wordCount }) {
                const res = typedLetterInfoSchema.safeParse({ typedLetters });
-               if(!res.success) return 0.00;
+               if (!res.success) return 0.00;
 
                return res.data.typedLetters?.filter(l => l.correct === true)?.length
                   / res.data.typedLetters?.filter(l => l !== null)?.length * 100;
@@ -54,7 +54,7 @@ export let xprisma = prisma.$extends({
          },
          wpm: {
             needs: { mode: true, totalTimeMilliseconds: true, wordCount: true, metadata: true },
-            compute({ mode, totalTimeMilliseconds, wordCount, metadata   }) {
+            compute({ mode, totalTimeMilliseconds, wordCount, metadata }) {
                const wc = mode === `TIME` ? (metadata?.completedWords ?? 40) : wordCount!;
                return (wc / (totalTimeMilliseconds / 1000)) * 60;
             },
@@ -172,17 +172,41 @@ export let xprisma = prisma.$extends({
       },
    },
    model: {
+      userExperience: {
+         getLevelFromXp({ points }: { points: number }) {
+            const EXPONENT = 1.2;
+            return Math.ceil(Math.pow((points / 100), 1 / EXPONENT));
+         },
+         xpNeededForNextLevel({ level }: { level: number }) {
+            const EXPONENT = 1.2;
+            return Math.floor((100 * Math.pow(level, EXPONENT)));
+         },
+         xpNeededForCurrentLevel({ level }: { level: number }) {
+            const EXPONENT = 1.2;
+            return Math.floor((100 * Math.pow(level - 1, EXPONENT)));
+         },
+         percentageUntilNextLevel: function({ points }: { points: number }) {
+            const EXPONENT = 1.2;
+            const level = Math.ceil(Math.pow((points / 100), 1 / EXPONENT));
+
+            const xpNeededForCurrentLevel = Math.floor((100 * Math.pow(level - 1, EXPONENT)));
+            const xpNeededForNextLevel = Math.floor((100 * Math.pow(level, EXPONENT)));
+
+            return (points - xpNeededForCurrentLevel)
+               / (xpNeededForNextLevel - xpNeededForCurrentLevel) * 100;
+         },
+      },
       user: {
          async getUserPersonalBestWpm({ userId }: { userId: string }) {
             const userWpm: number = (await xprisma.typingRun.findMany({
                where: { userId },
                select: {
-                  wordCount: true, totalTimeMilliseconds: true, mode: true, metadata: true
-               }
+                  wordCount: true, totalTimeMilliseconds: true, mode: true, metadata: true,
+               },
             })).map(({ mode, wordCount, totalTimeMilliseconds, metadata }: Partial<TypingRun>) => {
                const wc = mode === `TIME` ? (metadata?.completedWords ?? 40) : wordCount!;
                const wpm = (wc / (totalTimeMilliseconds! / 1000)) * 60;
-               return wpm
+               return wpm;
             }).sort((a, b) => (b - a))[0];
 
             return userWpm;

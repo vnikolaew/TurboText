@@ -42,31 +42,6 @@ const TypingInput = ({}: TypingInputProps) => {
 
    return (
       <Fragment>
-         <AnimatePresence>
-            {showFocusLost && (
-               <motion.div
-                  id={`focus-lost`}
-                  initial={{ opacity: 100 }}
-                  animate={{ opacity: 100 }}
-                  transition={{ duration: .3 }}
-                  exit={{ opacity: 0 }}
-                  onKeyDown={console.log}
-                  onClick={_ => {
-                     if (timerState === TypingRunState.PAUSED) {
-                        console.log(`Resuming`);
-                        resume();
-                     }
-
-                     setShowFocusLost(false);
-                  }}
-                  className={`absolute left-1/2 top-3/5 -translate-x-1/2 -translate-y-1/2 text-neutral-300 flex items-center gap-2 z-[30]`}>
-                  <MousePointer size={18} />
-                  <span className={`text-sm`}>
-                       Click here or press any key to focus
-                   </span>
-               </motion.div>
-            )}
-         </AnimatePresence>
          <AnimatePresence presenceAffectsLayout mode={`wait`}>
             <motion.div
                initial={{ opacity: 100 }}
@@ -82,7 +57,7 @@ const TypingInput = ({}: TypingInputProps) => {
                            pause();
                         }
                         setShowFocusLost(true);
-                     }, 2000);
+                     }, 1000);
                   }
                }}
                style={{
@@ -90,8 +65,8 @@ const TypingInput = ({}: TypingInputProps) => {
                }}
                key={calculateSHA256(words.join(`,`))}
                ref={editorRef}
-               className={cn(`bg-transparent flex w-full items-center gap-2 text-wrap break-normal !py-2 cursor-default focus:!outline-none flex-wrap mt-8`,
-                  showFocusLost && `blur-sm`)}
+               className={cn(`bg-transparent flex w-full items-center gap-2 text-wrap break-normal !py-2 cursor-default focus:!outline-none flex-wrap mt-8 relative`,
+                  showFocusLost && `backdrop-blur-md`)}
                tabIndex={0}
                autoFocus
                onKeyDown={timerState === TypingRunState.FINISHED ? null : onKeyDown}>
@@ -101,6 +76,33 @@ const TypingInput = ({}: TypingInputProps) => {
                      transition: `left 100ms`,
                   }}
                   className={`h-[2rem] w-[2px] bg-neutral-100 animate-pulse absolute z-10 text-red-500 `}></div>
+               <AnimatePresence>
+                  {showFocusLost && (
+                     <div className={`absolute top-0 left-0 w-full h-full backdrop-blur-sm bg-transparent flex items-center justify-center`}>
+                        <motion.div
+                           id={`focus-lost`}
+                           initial={{ opacity: 100 }}
+                           animate={{ opacity: 100 }}
+                           transition={{ duration: .2 }}
+                           exit={{ opacity: 0 }}
+                           onKeyDown={console.log}
+                           onClick={_ => {
+                              if (timerState === TypingRunState.PAUSED) {
+                                 console.log(`Resuming`);
+                                 resume();
+                              }
+
+                              setShowFocusLost(false);
+                           }}
+                           className={`text-neutral-300 flex items-center gap-2 !z-[100]`}>
+                           <MousePointer size={18} />
+                           <span className={`text-sm`}>
+                       Click here or press any key to focus
+                   </span>
+                        </motion.div>
+                     </div>
+                  )}
+               </AnimatePresence>
                <TypingLetters />
             </motion.div>
          </AnimatePresence>

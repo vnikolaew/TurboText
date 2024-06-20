@@ -9,6 +9,7 @@ import PressKeyLabel from "@components/editor/PressKeyLabel";
 import { xprisma } from "@repo/db";
 import TypingEditor from "@components/editor/TypingEditor";
 import OnRunFailed from "@components/editor/toasts/OnRunFailed";
+import OnRunSaved from "@components/editor/toasts/OnRunSaved";
 
 export default async function Home() {
    const session = await auth();
@@ -18,7 +19,23 @@ export default async function Home() {
    else {
       let dbUser = await xprisma.user.findUnique({
          where: { id: session?.user?.id ?? `` },
-         include: { configuration: true },
+         include: {
+            tags: {
+               select: {
+                  id: true, name: true,
+               },
+            },
+            experience: {
+               select: {
+                  id: true, points: true, level: true,
+               },
+            },
+            configuration: true, typingRuns: {
+               select: {
+                  id: true, typedLetters: true, mode: true, metadata: true, totalTimeMilliseconds: true,
+               },
+            },
+         },
       });
       if (!dbUser) user = null;
       else {
@@ -42,8 +59,9 @@ export default async function Home() {
             <PressKeyLabel />
          </div>
          <WithInitialState user={user!} />
-         <TypingEditor />
+         <TypingEditor user={user!} />
          <OnRunFailed />
+         <OnRunSaved />
          <ServerSignedOut>
             <SignInButton />
          </ServerSignedOut>

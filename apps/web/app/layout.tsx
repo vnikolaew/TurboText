@@ -17,6 +17,7 @@ import LoadingBar from "@components/common/LoadingBar";
 import WithTransition from "@components/common/WithTransition";
 import { __IS_PROD__ } from "@lib/consts";
 import { Analytics } from "@vercel/analytics/react";
+import WithInitialState from "./_components/WithInitialState";
 
 const inter = Inter({ weight: ["400"], subsets: ["latin"], variable: "--font-sans" });
 
@@ -50,6 +51,7 @@ export default function RootLayout({
             <WithTransition>
                {children}
             </WithTransition>
+            <WithInitialState  />
          </main>
          <ScrollToTopButton />
          <Suspense fallback={`...`}>

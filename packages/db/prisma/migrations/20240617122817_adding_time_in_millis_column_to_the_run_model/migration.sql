@@ -6,5 +6,5 @@
 
 */
 -- AlterTable
-ALTER TABLE "TypingRun" DROP COLUMN "userConfigurationId",
-ADD COLUMN     "totalTimeMilliseconds" INTEGER NOT NULL;
+-- ALTER TABLE "TypingRun" DROP COLUMN "userConfigurationId",
+-- ADD COLUMN     "totalTimeMilliseconds" INTEGER NOT NULL;

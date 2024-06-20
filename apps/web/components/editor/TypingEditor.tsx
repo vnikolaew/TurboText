@@ -1,5 +1,5 @@
 "use client";
-import React, { useMemo } from "react";
+import React, { Fragment, useMemo } from "react";
 import { useTimer } from "@components/editor/hooks/useTimer";
 import { totalRunTimeAtom, typedLettersAtom, typingRunAtom, useTypingRunSuccess } from "@atoms/editor";
 import { useAtom, useAtomValue } from "jotai";
@@ -14,7 +14,7 @@ import { saveTypingRun } from "@components/editor/actions";
 import { AnimatePresence } from "framer-motion";
 import { TOASTS } from "@config/toasts";
 import SaveTypingRunPrompt from "@components/editor/SaveTypingRunPrompt";
-import { autoSaveModeAtom } from "@atoms/user";
+import { autoSaveModeAtom, updateUserXpAtom } from "@atoms/user";
 import NewRunButton from "@components/editor/NewRunButton";
 import { SignedOut } from "@components/common/Auth";
 import { signIn } from "next-auth/react";
@@ -23,18 +23,23 @@ import { useSaveLatestUserRun } from "./hooks/useSaveLatestUserRun";
 import { totalPauseTimeAtom } from "@atoms/timer";
 import TypeRunState from "./TypeRunState";
 import CapsLockWarning from "@components/editor/CapsLockWarning";
+import TypingRunInfo from "./TypingRunInfo";
+import { TypingRun, User } from "@repo/db";
+import { useSetAtom } from "jotai/index";
 
 export interface TypingEditorProps {
+   user: User & { typingRuns: TypingRun[] };
 }
 
 
 export const TYPING_RUN_LS_KEY = `typing-run`;
 
-const TypingEditor = ({}: TypingEditorProps) => {
+const TypingEditor = ({ user }: TypingEditorProps) => {
    const typedLetters = useAtomValue(typedLettersAtom);
    const totalRunTime = useAtomValue(totalRunTimeAtom);
-   const totalPauseTime = useAtomValue(totalPauseTimeAtom)
+   const totalPauseTime = useAtomValue(totalPauseTimeAtom);
    const [typingRun, setTypingRun] = useAtom(typingRunAtom);
+   const setUserXp = useSetAtom(updateUserXpAtom);
 
    useTypingRunSuccess();
    useSaveLatestUserRun();
@@ -44,6 +49,9 @@ const TypingEditor = ({}: TypingEditorProps) => {
          if (res.data?.success) {
             console.log(res.data);
             localStorage.removeItem(TYPING_RUN_LS_KEY);
+
+            const newUserXp = { level: res.data.userXp?.level, points: res.data.userXp?.points };
+            setUserXp(newUserXp);
 
             toast(TOASTS.SAVE_TYPING_RUN_SUCCESS);
             // setTypingRun(null!);
@@ -81,13 +89,20 @@ const TypingEditor = ({}: TypingEditorProps) => {
                height={300}
             />
          )}
-         {timerState !== TypingRunState.FINISHED && (
-            <div id={`editor`} className={`rounded-md px-4 py-8`}>
-               <TypeRunState />
-               <CapsLockWarning/>
-               <TypingInput />
-            </div>
-         )}
+         <div id={`editor`} className={`rounded-md px-4 py-8`}>
+            {timerState !== TypingRunState.FINISHED && (
+               <Fragment>
+                  <TypeRunState />
+                  <CapsLockWarning />
+               </Fragment>
+            )}
+            {timerState !== TypingRunState.RUNNING && (
+                  <TypingRunInfo runs={user?.typingRuns} />
+            )}
+            {timerState !== TypingRunState.FINISHED && (
+                  <TypingInput />
+            )}
+         </div>
          <span className={`mt-4 w-full text-center`}>Total run time: {totalRunTime}ms</span>
          <span className={`mt-4 w-full text-center`}>Total pause time: {totalPauseTime}ms</span>
          <div className={`flex items-center justify-center w-full gap-4`}>
@@ -101,7 +116,8 @@ const TypingEditor = ({}: TypingEditorProps) => {
                   onDismiss={() => {
                      setTypingRun(null!);
                      LocalStorage.removeItem(TYPING_RUN_LS_KEY);
-                  }} onSave={handleSaveTypingRun} />
+                  }}
+                  onSave={handleSaveTypingRun} />
             }
          </AnimatePresence>
          <AnimatePresence>
@@ -126,10 +142,12 @@ const TypingEditor = ({}: TypingEditorProps) => {
                </span>
             ))}
          </div>
-         {timerState === TypingRunState.FINISHED && <TypingRunSummary />}
+         {
+            timerState === TypingRunState.FINISHED && <TypingRunSummary />
+         }
       </div>
-   );
+   )
 };
 
 
-export default TypingEditor
+export default TypingEditor;

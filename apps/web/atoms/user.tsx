@@ -1,9 +1,9 @@
 "use client";
-import { User, UserConfiguration } from "@repo/db";
+import { UserConfiguration } from "@repo/db";
 import { atom } from "jotai";
-import { selectAtom } from "jotai/utils";
 import { focusAtom } from "jotai-optics";
 import { Session } from "next-auth";
+import { UserExperience } from "@atoms/consts";
 
 export const userDataLoadingAtom = atom(false);
 
@@ -12,6 +12,21 @@ userDataLoadingAtom.debugLabel = `userDataLoadingAtom`;
 export const userAtom = atom<Session["user"] | null>(null!);
 userAtom.debugLabel = `userAtom`;
 
+export const prevUserXpAtom = atom<UserExperience>({ points: 0, level: 0 });
+prevUserXpAtom.debugLabel = `prevUserXpAtom`;
+
+export const userXpAtom = atom<UserExperience>({ points: 0, level: 0 });
+userXpAtom.debugLabel = `userXpAtom`;
+
+// @ts-ignore
+export const updateUserXpAtom = atom(null, (get, set, xp: UserExperience) => {
+   const current = get(userXpAtom);
+   set(userXpAtom, xp);
+   set(prevUserXpAtom, current)
+});
+
+export const userActiveTagsAtom = atom<string[]>([]);
+userActiveTagsAtom.debugLabel = `userActiveTagsAtom`;
 
 export const userConfigAtom = atom<UserConfiguration>(null!);
 userConfigAtom.debugLabel = `userConfigAtom`;

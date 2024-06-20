@@ -25,6 +25,7 @@ model User {
   typingRuns    TypingRun[]
   tags          Tag[]
   configuration UserConfiguration?
+  experience    UserExperience?
 }
 
 model Account {
@@ -173,6 +174,19 @@ model UserConfiguration {
   elements_show_average           ShowAverage @default(OFF)
 
   language String @default("en-US")
+
+  metadata  Json?    @default("null") @db.JsonB
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model UserExperience {
+  id     String @id @default(cuid())
+  userId String @unique
+
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  points Int  @default(0)
+  level  Int  @default(1)
 
   metadata  Json?    @default("null") @db.JsonB
   createdAt DateTime @default(now())

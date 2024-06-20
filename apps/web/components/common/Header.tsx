@@ -3,7 +3,7 @@ import Link from "next/link";
 import React, { ReactNode } from "react";
 import { signIn, signOut } from "next-auth/react";
 import { SignedIn, SignedOut } from "./Auth";
-import { Crown, LogIn, LogOut, Settings, Timer } from "lucide-react";
+import { Bell, Crown, LogIn, LogOut, Settings } from "lucide-react";
 import { APP_NAME } from "@config/site";
 import UserAvatarDropdown from "@/components/common/UserAvatarDropdown";
 import { Button, Skeleton } from "@repo/ui";
@@ -26,7 +26,6 @@ export interface InteractiveHeaderLinkProps {
    title: ReactNode;
 }
 
-
 /**
  * The site's header, containing the Navbar as well.
  * @constructor
@@ -44,23 +43,12 @@ const Header = ({}: NavbarProps) => {
                   <span
                      className={`text-lg !test-gradient drop-shadow-lg !font-semibold ${lexend.className} uppercase`}>{APP_NAME}</span>
                </Link>
-            </nav>
-            <div className={`flex-1 text-center flex items-center gap-4 justify-center`}>
                <Button className={`hover:!bg-transparent text-neutral-400`} variant={`ghost`} asChild>
                   <Link title={`Settings`} href={`/settings`} className={`flex items-center gap-2`}>
                      <Settings size={16} />
                      <span
                         className={`text-base drop-shadow-lg !font-semibold`}>
                      Settings
-                  </span>
-                  </Link>
-               </Button>
-               <Button className={`hover:!bg-transparent text-neutral-400`} variant={`ghost`} asChild>
-                  <Link title={`Settings`} href={`/_timer`} className={`flex items-center gap-2`}>
-                     <Timer size={16} />
-                     <span
-                        className={`text-base drop-shadow-lg !font-semibold`}>
-                     Timer
                   </span>
                   </Link>
                </Button>
@@ -73,14 +61,28 @@ const Header = ({}: NavbarProps) => {
                   </span>
                   </Link>
                </Button>
+               <Button className={`hover:!bg-transparent text-neutral-400`} variant={`ghost`} asChild>
+                  <Link title={`Progress`} href={`/_progress`} className={`flex items-center gap-2`}>
+                     <Crown className={`fill-neutral-300 stroke-neutral-300 `} size={16} />
+                     <span
+                        className={`text-base drop-shadow-lg !font-semibold`}>
+                     Progress
+                  </span>
+                  </Link>
+               </Button>
+            </nav>
+            <div className={`flex-1 text-center flex items-center gap-4 justify-center`}>
             </div>
             <div className={`flex flex-1 items-center justify-end space-x-8`}>
                <SignedIn>
                   <div className={`flex items-center gap-6`}>
-                     <div>
+                     <div id={`user-avatar`}>
                         {userDataLoading ? (
                            <Skeleton className={`h-12 w-12 rounded-full bg-neutral-700`} />
                         ) : <UserAvatarDropdown />}
+                     </div>
+                     <div>
+                        <Bell className={`text-neutral-400 fill-neutral-400 hover:!fill-neutral-300 transition-colors duration-200 hover:!text-neutral-300 cursor-pointer`} size={20} />
                      </div>
                      {userDataLoading ? (
                         <Skeleton className={`h-8 w-32 rounded-lg bg-neutral-700`} />

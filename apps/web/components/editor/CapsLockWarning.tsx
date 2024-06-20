@@ -14,7 +14,7 @@ const CapsLockWarning = ({}: CapsLockWarningProps) => {
       <>
          {capsLockOn && (
             <div
-               className={`absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] !rounded-lg !px-6 shadow-md text-black flex items-center gap-2 !z-[100] !bg-amber-600/70 py-2`}>
+               className={`absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] !rounded-lg !px-6 shadow-md text-black flex items-center gap-2 !z-[100] !bg-amber-500/70 py-2 backdrop-blur text-base`}>
                <Lock className={`text-black stroke-black`} size={18} />
                <span>
             Caps Lock

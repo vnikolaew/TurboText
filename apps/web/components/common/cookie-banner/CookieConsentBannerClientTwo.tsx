@@ -36,7 +36,7 @@ const customizePrefsModalProps: MotionProps = {
 const CookieConsentBannerClientTwo = ({ cookiePreferences }: CookieConsentBannerClientTwoProps) => {
    const { status, execute: acceptAction, isExecuting } = useAction(acceptAllCookies, {
       onSuccess: res => {
-         if (res.success) {
+         if (res.data?.success) {
             setHideBanner(true);
 
             toast(TOASTS.ACCEPT_COOKIE_CONSENT_SUCCESS!);
