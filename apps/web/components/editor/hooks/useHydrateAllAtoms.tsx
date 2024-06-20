@@ -27,8 +27,8 @@ export function useHydrateAllAtoms(user?: User & { configuration: UserConfigurat
    useHydrateAtoms([
       [wordsAtom, WORDS.current],
       [userDataLoadingAtom, false],
-      [userXpAtom, { points: user.experience?.points ?? 0, level: user.experience?.level ?? 0 }],
-      [prevUserXpAtom, { points: user.experience?.points ?? 0, level: user.experience?.level ?? 0 }],
+      [userXpAtom, { points: user?.experience?.points ?? 0, level: user?.experience?.level ?? 0 }],
+      [prevUserXpAtom, { points: user?.experience?.points ?? 0, level: user?.experience?.level ?? 0 }],
       [lettersCorrectnessAtom, Array
          .from({ length: WORDS.current.reduce((a, b) => a + b.length, 0) })
          .fill(null) as null[]],

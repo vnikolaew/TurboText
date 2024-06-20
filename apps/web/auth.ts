@@ -28,6 +28,7 @@ const customAdapter = {
                create: {
                   sound_click_sound: null,
                   sound_error_sound: null,
+                  language: `English`
                },
             },
             experience: {

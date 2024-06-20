@@ -42,7 +42,7 @@ const Page = async ({}: PageProps) => {
          {!user.emailVerified && (
             <EmailNotVerifiedNotification />
          )}
-         <div className={`w-full bg-stone-950 rounded-lg shadow-lg flex items-center p-6 py-10 gap-8 mt-8`}>
+         <div className={`w-full bg-stone-950/70 rounded-lg shadow-lg flex items-center p-6 py-10 gap-8 mt-8`}>
             <div className={`flex flex-col items-start gap-2`}>
                <div className={`flex items-center gap-4`}>
                   <UserAvatar className={`w-20 h-20`} imageSrc={user?.image!} />
@@ -95,16 +95,16 @@ const Page = async ({}: PageProps) => {
             <Separator orientation={`vertical`} className={`h-20 w-[4px] rounded-full bg-neutral-700`} />
             <AccountLinks username={user.name!} />
          </div>
-         <div className={`w-full bg-stone-950 rounded-lg shadow-lg flex items-center p-6 py-10 gap-8 mt-8`}>
+         <div className={`w-full bg-stone-950/70 rounded-lg shadow-lg flex items-center p-6 py-10 gap-8 mt-8`}>
             <UserActivitySection typingRuns={user?.typingRuns?.map(run => {
                const { hasFlag, ...rest } = run;
                return rest;
             })} />
          </div>
-         <div className={`w-full bg-stone-950 rounded-lg shadow-lg flex items-center p-12 py-10 gap-8 mt-8`}>
+         <div className={`w-full bg-stone-950/70 rounded-lg shadow-lg flex items-center p-12 py-10 gap-8 mt-8`}>
             <TypingRunsStatsSection runs={user.typingRuns} />
          </div>
-         <div className={`w-full bg-stone-950 rounded-lg shadow-lg flex items-center p-6 py-10 gap-8 mt-8`}>
+         <div className={`w-full bg-stone-950/70 rounded-lg shadow-lg flex items-center p-6 py-10 gap-8 mt-8`}>
             <LatestUserRuns user={user} />
          </div>
       </section>

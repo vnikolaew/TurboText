@@ -1,6 +1,6 @@
 import { atom, useAtomValue } from "jotai";
 import { generate } from "random-words";
-import { capsLockWarningAtom, userTestDifficultyAtom } from "@atoms/user";
+import { userTestDifficultyAtom } from "@atoms/user";
 import { currentTimestampAtom, startAtom, stopAtom, totalPauseTimeAtom } from "@atoms/timer";
 import { useEffect } from "react";
 import { useSetAtom } from "jotai/index";

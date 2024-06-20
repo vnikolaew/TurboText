@@ -173,7 +173,7 @@ model UserConfiguration {
   elements_show_caps_lock_warning Boolean     @default(false)
   elements_show_average           ShowAverage @default(OFF)
 
-  language String @default("en-US")
+  language String @default("English")
 
   metadata  Json?    @default("null") @db.JsonB
   createdAt DateTime @default(now())

@@ -61,15 +61,6 @@ const Header = ({}: NavbarProps) => {
                   </span>
                   </Link>
                </Button>
-               <Button className={`hover:!bg-transparent text-neutral-400`} variant={`ghost`} asChild>
-                  <Link title={`Progress`} href={`/_progress`} className={`flex items-center gap-2`}>
-                     <Crown className={`fill-neutral-300 stroke-neutral-300 `} size={16} />
-                     <span
-                        className={`text-base drop-shadow-lg !font-semibold`}>
-                     Progress
-                  </span>
-                  </Link>
-               </Button>
             </nav>
             <div className={`flex-1 text-center flex items-center gap-4 justify-center`}>
             </div>

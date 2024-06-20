@@ -25,6 +25,7 @@ const WithInitialState = async ({}: WithInitialStateProps) => {
           }
        }
    });
+   if(!user) return null
    const {verifyPassword, updatePassword, ...rest} = user;
 
    return <HydrateAllAtoms user={rest!} />;

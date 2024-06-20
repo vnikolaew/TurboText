@@ -15,15 +15,15 @@ const TypingRunInfo = ({ runs }: TypingRunInfoProps) => {
    const difficulty = useAtomValue(userTestDifficultyAtom);
    const activeTags = useAtomValue(userActiveTagsAtom);
 
-   const averagePace = sum(runs
+   const averagePace = runs?.length ?  sum(runs
          ?.filter(r => !isNaN(Number(r.metadata?.wpm)))
          ?.map(r => r.metadata?.wpm)) /
-      runs?.filter(r => !isNaN(Number(r.metadata?.wpm)))?.length!;
+      runs?.filter(r => !isNaN(Number(r.metadata?.wpm)))?.length! : 0;
 
-   const averageAccuracy = sum(runs
+   const averageAccuracy = runs?.length ?  sum(runs
          ?.filter(r => !isNaN(Number(r.metadata?.accuracy)))
          ?.map(r => r.metadata?.accuracy)) /
-      runs?.filter(r => !isNaN(Number(r.metadata?.accuracy)))?.length!;
+      runs?.filter(r => !isNaN(Number(r.metadata?.accuracy)))?.length! : 0;
 
    console.log({ runs, averagePace, averageAccuracy });
 
