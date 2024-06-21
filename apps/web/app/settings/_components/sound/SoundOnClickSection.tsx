@@ -2,39 +2,24 @@
 import React from "react";
 import { Volume2 } from "lucide-react";
 import { Button } from "@repo/ui";
-import { useAtom } from "jotai/index";
+import { useAtom, useSetAtom } from "jotai/index";
 import { soundOnClickAtom } from "@atoms/user";
 import { useAction } from "next-safe-action/hooks";
 import { updateUserConfiguration } from "@app/settings/actions";
 import { cn } from "@lib/utils";
+import { playSoundAtom, soundClicksAtom } from "@app/settings/atoms";
 import { useAtomValue } from "jotai";
-import { soundClicksAtom } from "@app/settings/atoms";
+import { SOUNDS } from "@lib/sounds";
 
 export interface SoundOnClickSectionProps {
 }
 
-const SOUNDS = [
-   "Off",
-   "Click",
-   "Beep",
-   "Pop",
-   "Nk creams",
-   "Typewriter",
-   "Osu",
-   "Hitmarker",
-   "Sine",
-   "Sawtooth",
-   "Square",
-   "Triangle",
-   "Pentatonic",
-   "Wholetone",
-   "Fist fight",
-   "Rubber keys",
-];
+
 
 const SoundOnClickSection = ({}: SoundOnClickSectionProps) => {
    const [soundOnClick, setSoundOnClick] = useAtom(soundOnClickAtom);
    const soundClicks = useAtomValue(soundClicksAtom)
+   const playSound = useSetAtom(playSoundAtom);
 
    const { execute, status } = useAction(updateUserConfiguration, {
       onSuccess: res => {
@@ -44,6 +29,7 @@ const SoundOnClickSection = ({}: SoundOnClickSectionProps) => {
          }
       },
    });
+   console.log({ sounds: SOUNDS.length, files: soundClicks.length });
 
    return (
       <div className={`flex flex-col w-full items-start gap-2`}>
@@ -59,11 +45,9 @@ const SoundOnClickSection = ({}: SoundOnClickSectionProps) => {
          <div className={`w-full grid grid-cols-5 gap-4 mt-4`}>
             {SOUNDS.map((sound, index) => (
                <Button
-                  onClick={_ => {
-                     const audio = new Audio(soundClicks[index])
-                     audio?.play().then(() => {
-                        execute({ sound_click_sound: sound });
-                     })
+                  onClick={async _ => {
+                     await playSound(index);
+                     execute({ sound_click_sound: sound });
                   }}
                   variant={`secondary`}
                   className={cn(`!w-full`,

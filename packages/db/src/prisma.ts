@@ -136,6 +136,12 @@ export let xprisma = prisma.$extends({
                   ?.reduce((a, b) => a + b, 0);
             },
          },
+         ogAccount: {
+            needs: { metadata: true },
+            compute({ metadata }) {
+               return (metadata as any)?.[`ogAccount`] ?? false;
+            },
+         },
          cookieConsent: {
             needs: { metadata: true },
             compute({ metadata }) {
@@ -274,6 +280,14 @@ export let xprisma = prisma.$extends({
                      create: {
                         sound_click_sound: null,
                         sound_error_sound: null,
+                        language: `English`
+                     },
+                  },
+                  experience: {
+                     create: {
+                        level: 1,
+                        points: 0,
+                        metadata: {},
                      },
                   },
                },

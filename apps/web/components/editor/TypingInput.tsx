@@ -9,6 +9,9 @@ import { MousePointer } from "lucide-react";
 import TypingLetters from "@components/editor/TypingLetters";
 import { TypingRunState } from "@atoms/consts";
 import { pauseAtom, resumeAtom } from "@atoms/timer";
+import { playSoundAtom } from "@app/settings/atoms";
+import { soundOnClickAtom } from "@atoms/user";
+import { SOUNDS } from "@lib/sounds";
 
 export interface TypingInputProps {
 }
@@ -19,6 +22,8 @@ const TypingInput = ({}: TypingInputProps) => {
    const { top, left } = useAtomValue(caretCoordinatesAtom);
    const onKeyDown = useSetAtom(onKeyPressAtom);
    const editorRef = useRef<HTMLDivElement>();
+   const playSound = useSetAtom(playSoundAtom)
+   const userSoundOnClick =useAtomValue(soundOnClickAtom) as string
 
    useEffect(() => editorRef?.current?.focus(), []);
 
@@ -69,10 +74,19 @@ const TypingInput = ({}: TypingInputProps) => {
                   showFocusLost && `backdrop-blur-md`)}
                tabIndex={0}
                autoFocus
-               onKeyDown={timerState === TypingRunState.FINISHED ? null : onKeyDown}>
+               onKeyDown={async e => {
+                  if(timerState === TypingRunState.FINISHED) return null;
+
+                  const soundIndex = SOUNDS.findIndex(sound => sound === userSoundOnClick);
+                  if(soundIndex > -1) {
+                     console.log({ soundIndex });
+                     await playSound(soundIndex)
+                  }
+                  onKeyDown(e);
+               }}>
                <div
                   style={{
-                     top, left,
+                    top, left,
                      transition: `left 100ms`,
                   }}
                   className={`h-[2rem] w-[2px] bg-neutral-100 animate-pulse absolute z-10 text-red-500 `}></div>

@@ -19,7 +19,7 @@ import { ChevronDown, ChevronUp, Crown, Tag } from "lucide-react";
 import { cn } from "@lib/utils";
 import moment from "moment";
 import TypingRunInfoCell from "@app/account/_components/TypingRunInfoCell";
-import { atom } from "jotai";
+import { atom, useAtomValue } from "jotai";
 import { useAtom } from "jotai/index";
 
 export interface LatestRunsTableProps {
@@ -50,7 +50,7 @@ const tableSortAtom = atom<{ key: keyof TableRun; desc: boolean }>({
 
 const LatestRunsTable = ({ runs, tagsById }: LatestRunsTableProps) => {
    const [pagingCursor, setPagingCursor] = useState(10);
-   const [tableSort, setTableSort] = useAtom(tableSortAtom);
+   const tableSort = useAtomValue(tableSortAtom);
 
    const runsNormalized = runs?.slice(0, pagingCursor)
       .map((run, index) => {
@@ -87,8 +87,8 @@ const LatestRunsTable = ({ runs, tagsById }: LatestRunsTableProps) => {
             <TableCaption className={``}>
                A list of your latest typing runs.
             </TableCaption>
-            <TableHeader >
-               <TableRow className={`text-sm`}>
+            <TableHeader className={`w-full`}>
+               <TableRow className={`text-sm w-full`}>
                   <TableHead className="w-[100px]"></TableHead>
                   <SortableTableHead column={`wpm`} />
                   <TableHead className="text-left">raw</TableHead>
@@ -98,12 +98,12 @@ const LatestRunsTable = ({ runs, tagsById }: LatestRunsTableProps) => {
                   <TableHead className="text-left">mode</TableHead>
                   <TableHead className="text-left">info</TableHead>
                   <TableHead className="text-left">tags</TableHead>
-                  <SortableTableHead column={`createdAt`} />
+                  <SortableTableHead title={`date`} column={`createdAt`} />
                </TableRow>
             </TableHeader>
-            <TableBody>
+            <TableBody className={`w-full`}>
                {runsNormalized.map((run, index) => (
-                  <TableRow className={`text-sm`} key={run.id}>
+                  <TableRow className={`text-sm w-full`} key={run.id}>
                      <TableCell className="font-medium">
                         {run.metadata?.isPersonalBest && (
                            <Crown className={`fill-neutral-300`} size={20} />
@@ -115,7 +115,9 @@ const LatestRunsTable = ({ runs, tagsById }: LatestRunsTableProps) => {
                      <TableCell className="text-left">{`${run.consistency}%`}</TableCell>
                      <TableCell className={`text-left`}></TableCell>
                      <TableCell className={`text-left`}>{run.modeNormalized?.toLowerCase()}</TableCell>
-                     <TypingRunInfoCell run={run} />
+                     <TableCell className={`text-left`}>
+                        <TypingRunInfoCell run={run} />
+                     </TableCell>
                      <TableCell className="text-left">
                         <TooltipProvider>
                            <Tooltip>
@@ -138,16 +140,18 @@ const LatestRunsTable = ({ runs, tagsById }: LatestRunsTableProps) => {
                ))}
             </TableBody>
          </Table>
-         <div>
+         <div className={`flex items-center justify-center w-full`}>
             {runs.length > pagingCursor && (
-               <Button onClick={_ => setPagingCursor(p => p + 10)}>Load more</Button>
+               <Button onClick={_ => setPagingCursor(p => Math.min(p + 10, runs.length))}>
+                  Load more
+               </Button>
             )}
          </div>
       </Fragment>
    );
 };
 
-const SortableTableHead = ({ column }: { column: keyof TableRun }) => {
+const SortableTableHead = ({ column, title }: { column: keyof TableRun, title?: string }) => {
    const [tableSort, setTableSort] = useAtom(tableSortAtom);
 
    const handleChangeSort = useCallback((key: keyof TableRun) => {
@@ -161,7 +165,7 @@ const SortableTableHead = ({ column }: { column: keyof TableRun }) => {
       <TableHead
          onClick={_ => handleChangeSort(column)}
          className="text-left cursor-pointer inline-flex items-center gap-1">
-            {column}
+         {title ?? column}
          {tableSort.key === column && !tableSort.desc && (
             <ChevronUp size={18} />
          )}

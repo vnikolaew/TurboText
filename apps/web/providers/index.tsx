@@ -2,6 +2,7 @@ import React, { PropsWithChildren } from "react";
 import SessionProvider from "./SessionProvider";
 import { ThemeProvider } from "./ThemeProvider";
 import AtomProvider from "@providers/AtomProvider";
+import FontProvider from "@providers/FontProvider";
 
 interface ProvidersProps extends PropsWithChildren {
 }
@@ -17,7 +18,9 @@ const Providers = ({ children }: ProvidersProps) => {
                defaultTheme={`dark`}
                attribute={`class`}>
                <AtomProvider>
-                  {children}
+                  <FontProvider>
+                     {children}
+                  </FontProvider>
                </AtomProvider>
             </ThemeProvider>
          </SessionProvider>

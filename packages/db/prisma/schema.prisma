@@ -168,6 +168,9 @@ model UserConfiguration {
   theme_flip_colors   Boolean @default(false)
   theme_colorful_mode Boolean @default(false)
 
+  font_family String @default("SFMono")
+  font_size   Int    @default(2)
+
   elements_show_key_tips          Boolean     @default(false)
   elements_show_oof_warning       Boolean     @default(false)
   elements_show_caps_lock_warning Boolean     @default(false)

@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 
 import "./globals.css";
 import { cn } from "@lib/utils";
-import { sfMono } from "@assets/fonts";
+import { FONTS_MAP, sfMono } from "@assets/fonts";
 import Providers from "@providers";
 import Header from "@components/common/Header";
 import { APP_DESCRIPTION, APP_NAME, AUTHOR, AUTHOR_WEBSITE } from "@config/site";
@@ -15,9 +15,13 @@ import ScrollToTopButton from "@components/common/ScrollToTopButton";
 import { Toaster } from "@repo/ui";
 import LoadingBar from "@components/common/LoadingBar";
 import WithTransition from "@components/common/WithTransition";
-import { __IS_PROD__ } from "@lib/consts";
+import { __IS_PROD__, FONT_FAMILIES } from "@lib/consts";
 import { Analytics } from "@vercel/analytics/react";
 import WithInitialState from "./_components/WithInitialState";
+import WithUserConfig from "@providers/WithUserConfig";
+import { xprisma } from "@repo/db";
+import { auth } from "@auth";
+import { NextFontWithVariable } from "next/dist/compiled/@next/font";
 
 const inter = Inter({ weight: ["400"], subsets: ["latin"], variable: "--font-sans" });
 
@@ -36,32 +40,45 @@ export const metadata: Metadata = {
    referrer: `no-referrer`,
 };
 
-export default function RootLayout({
+export default async function RootLayout({
                                       children,
                                    }: Readonly<{
    children: React.ReactNode;
 }>) {
+   const session = await auth()
+   let font: NextFontWithVariable;
+   if(!session?.user) {
+      font = sfMono;
+   } else {
+      const userConfig = await xprisma.userConfiguration.findFirst({
+         where: { userId: session.user.id },
+      })
+      font = FONTS_MAP[userConfig?.font_family as (typeof FONT_FAMILIES)[number]] ?? sfMono;
+   }
+
    return (
       <html style={{ colorScheme: `dark` }} suppressHydrationWarning lang="en">
-      <Providers>
-         <body className={cn(`min-h-screen bg-background font-mono antialiased`, sfMono.variable)}>
-         <LoadingBar />
-         <Header />
-         <main className={cn(`flex-1 min-h-[70vh]`)}>
-            <WithTransition>
-               {children}
-            </WithTransition>
-            <WithInitialState  />
-         </main>
-         <ScrollToTopButton />
-         <Suspense fallback={`...`}>
-            <CookieConsentBanner />
-         </Suspense>
-         {__IS_PROD__ && <Analytics />}
-         <Toaster />
-         <AppFooter />
-         </body>
-      </Providers>
+         <WithUserConfig>
+            <Providers>
+               <body className={cn(`min-h-screen bg-background font-mono antialiased`, font!.variable)}>
+               <LoadingBar />
+               <Header />
+               <main className={cn(`flex-1 min-h-[70vh]`)}>
+                  <WithTransition>
+                     {children}
+                  </WithTransition>
+                  <WithInitialState  />
+               </main>
+               <ScrollToTopButton />
+               <Suspense fallback={`...`}>
+                  <CookieConsentBanner />
+               </Suspense>
+               {__IS_PROD__ && <Analytics />}
+               <Toaster />
+               <AppFooter />
+               </body>
+            </Providers>
+         </WithUserConfig>
       </html>
    );
 }

@@ -24,6 +24,9 @@ const schema = z.object({
    theme_flip_colors: z.boolean().nullable(),
    theme_colorful_mode: z.boolean().nullable(),
 
+   font_family: z.string().nullable(),
+   font_size: z.number().nullable(),
+
    elements_show_key_tips: z.boolean().nullable(),
    elements_show_oof_warning: z.boolean().nullable(),
    elements_show_caps_lock_warning: z.boolean().nullable(),

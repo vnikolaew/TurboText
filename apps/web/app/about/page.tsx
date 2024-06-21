@@ -5,9 +5,16 @@ import AboutUsSection from "./_components/AboutUsSection";
 import BugReportFeatureRequestSection from "@app/about/_components/BugReportFeatureRequestSection";
 import ContactSection from "@app/about/_components/ContactSection";
 import AppGlobalStatsSection from "@app/about/_components/AppGlobalStatsSection";
+import type { Metadata } from "next";
+import { APP_DESCRIPTION, APP_NAME } from "@config/site";
 
 export interface PagProps {
 }
+
+export const metadata: Metadata = {
+   title: `About | ${APP_NAME}`,
+   description: APP_DESCRIPTION,
+};
 
 const LAUNCH_DATE = new Date(2024, 6, 15);
 

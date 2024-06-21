@@ -1,8 +1,8 @@
 "use client";
 
 import { cn } from "@lib/utils";
-import { ScrollArea, Table, TableBody, TableCaption, TableCell, TableHeader, TableRow, UserAvatar } from "@repo/ui";
-import { Crown } from "lucide-react";
+import { Badge, ScrollArea, Table, TableBody, TableCaption, TableCell, TableHeader, TableRow, UserAvatar } from "@repo/ui";
+import { Baby, Crown } from "lucide-react";
 import moment from "moment";
 import React from "react";
 import { useSession } from "next-auth/react";
@@ -14,6 +14,7 @@ export interface LeaderboardRow {
       image?: string;
       level: number;
       name: string;
+      og: boolean
    };
    wpm: number;
    accuracy: number;
@@ -101,9 +102,21 @@ const LeaderboardTableRow = ({ row, index }: { row: LeaderboardRow, index: numbe
                   {row.user.level}
                </span>
             </div>
-            <span>
-               {row.user.name} {row.user.id === session?.data?.user?.id ? "(you)" : ""}
-            </span>
+            <div className={`flex items-center gap-2`}>
+               <span className={`text-nowrap`}>
+                  {row.user.name} {row.user.id === session?.data?.user?.id ? "(you)" : ""}
+               </span>
+               {row.user.og && (
+                  <span>
+                  <Badge className={`!bg-amber-500 !text-black inline-flex gap-2 items-center text-nowrap shadow-md`} variant={`default`} >
+                     <Baby size={14} />
+                     <span>
+                     OG Account
+                     </span>
+                  </Badge>
+                  </span>
+               )}
+            </div>
          </TableCell>
          <TableCell className={`col-span-2 text-right flex flex-col justify-end !px-0`}>
             <span>{row.wpm}</span>

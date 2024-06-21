@@ -22,7 +22,7 @@ userXpAtom.debugLabel = `userXpAtom`;
 export const updateUserXpAtom = atom(null, (get, set, xp: UserExperience) => {
    const current = get(userXpAtom);
    set(userXpAtom, xp);
-   set(prevUserXpAtom, current)
+   set(prevUserXpAtom, current);
 });
 
 export const userActiveTagsAtom = atom<string[]>([]);
@@ -38,8 +38,9 @@ export interface CookiePreferences {
    Marketing: boolean,
 
 }
-export const cookiePreferencesAtom = atom<CookiePreferences>({ });
-cookiePreferencesAtom .debugLabel = `cookiePreferencesAtom`;
+
+export const cookiePreferencesAtom = atom<CookiePreferences>({});
+cookiePreferencesAtom.debugLabel = `cookiePreferencesAtom`;
 
 // @ts-ignore
 export const userTestDifficultyAtom = focusAtom<UserConfiguration["test_difficulty"]>(userConfigAtom, optic => optic?.prop(`test_difficulty`));
@@ -76,36 +77,44 @@ soundOnErrorAtom.debugLabel = `soundOnErrorAtom`;
 
 // @ts-ignore
 export const smoothCaretAtom = focusAtom<UserConfiguration["caret_smoothness"]>(userConfigAtom, optic => optic.prop(`caret_smoothness`));
-smoothCaretAtom.debugLabel = `smoothCaretAtom`
+smoothCaretAtom.debugLabel = `smoothCaretAtom`;
 
 // @ts-ignore
 export const caretStyleAtom = focusAtom<UserConfiguration["caret_style"]>(userConfigAtom, optic => optic.prop(`caret_style`));
-caretStyleAtom.debugLabel = `caretStyleAtom`
+caretStyleAtom.debugLabel = `caretStyleAtom`;
 
 // @ts-ignore
 export const paceCaretStyleAtom = focusAtom<UserConfiguration["pace_caret_style"]>(userConfigAtom, optic => optic.prop(`pace_caret_style`));
-paceCaretStyleAtom.debugLabel = `paceCaretStyleAtom`
+paceCaretStyleAtom.debugLabel = `paceCaretStyleAtom`;
 
 // @ts-ignore
 export const flipColorsAtom = focusAtom<UserConfiguration["theme_flip_colors"]>(userConfigAtom, optic => optic.prop(`theme_flip_colors`));
-flipColorsAtom.debugLabel = `flipColorsAtom`
+flipColorsAtom.debugLabel = `flipColorsAtom`;
 
 // @ts-ignore
 export const colorfulModeAtom = focusAtom<UserConfiguration["theme_colorful_mode"]>(userConfigAtom, optic => optic.prop(`theme_colorful_mode`));
-colorfulModeAtom.debugLabel = `colorfulModeAtom`
+colorfulModeAtom.debugLabel = `colorfulModeAtom`;
 
 // @ts-ignore
 export const keyTipsAtom = focusAtom<UserConfiguration["elements_show_key_tips"]>(userConfigAtom, optic => optic.prop(`elements_show_key_tips`));
-keyTipsAtom.debugLabel = `keyTipsAtom`
+keyTipsAtom.debugLabel = `keyTipsAtom`;
 
 // @ts-ignore
 export const oofWarningtom = focusAtom<UserConfiguration["elements_show_oof_warning"]>(userConfigAtom, optic => optic.prop(`elents_show_oof_warning`));
-oofWarningtom.debugLabel = `oofWarningtom`
+oofWarningtom.debugLabel = `oofWarningtom`;
 
 // @ts-ignore
 export const capsLockWarningAtom = focusAtom<UserConfiguration["elements_show_caps_lock_warning"]>(userConfigAtom, optic => optic.prop(`elements_show_caps_lock_warning`));
-capsLockWarningAtom.debugLabel = `capsLockWarningAtom`
+capsLockWarningAtom.debugLabel = `capsLockWarningAtom`;
 
 // @ts-ignore
 export const averageAtom = focusAtom<UserConfiguration["elements_show_average"]>(userConfigAtom, optic => optic.prop(`elements_show_average`));
-averageAtom.debugLabel = `averageAtom`
+averageAtom.debugLabel = `averageAtom`;
+
+// @ts-ignore
+export const fontFamilyAtom = focusAtom<UserConfiguration["font_family"]>(userConfigAtom, optic => optic?.prop(`font_family`));
+fontFamilyAtom.debugLabel = `fontFamilyAtom`;
+
+// @ts-ignore
+export const fontSizeAtom = focusAtom<number>(userConfigAtom, optic => optic?.prop(`font_size`));
+fontSizeAtom.debugLabel = `fontSizeAtom`;

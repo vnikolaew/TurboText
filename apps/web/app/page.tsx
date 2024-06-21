@@ -12,10 +12,9 @@ import OnRunFailed from "@components/editor/toasts/OnRunFailed";
 import OnRunSaved from "@components/editor/toasts/OnRunSaved";
 
 interface HomeProps {
-   searchParams: { verified?: string };
 }
 
-export default async function Home({ searchParams }: HomeProps) {
+export default async function Home({ }: HomeProps) {
    const session = await auth();
 
    let user;

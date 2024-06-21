@@ -1,11 +1,17 @@
 import React from "react";
-import { APP_HOST_NAME, APP_NAME, LINKS } from "config/site";
+import { APP_DESCRIPTION, APP_HOST_NAME, APP_NAME, LINKS } from "config/site";
 import moment from "moment/moment";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import type { Metadata } from "next";
 
 export interface PageProps {
 }
+
+export const metadata: Metadata = {
+   title: `Terms of Service | ${APP_NAME}`,
+   description: APP_DESCRIPTION,
+};
 
 const LAST_UPDATED = new Date(2024, 4, 21);
 

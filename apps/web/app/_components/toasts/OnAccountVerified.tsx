@@ -5,6 +5,7 @@ import { TOASTS } from "@config/toasts";
 import { Check, X } from "lucide-react";
 import { useBoolean } from "@hooks/useBoolean";
 import { AnimatePresence, motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 export interface OnAccountVerifiedProps {
 }
@@ -14,6 +15,7 @@ const OnAccountVerified = ({}: OnAccountVerifiedProps) => {
    useEffect(() => {
       toast(TOASTS.ACCOUNT_VERIFIED);
    }, []);
+   const router = useRouter()
 
    return (
       <AnimatePresence>
@@ -37,7 +39,10 @@ const OnAccountVerified = ({}: OnAccountVerifiedProps) => {
                            </span>
                         </AlertDescription>
                      </div>
-                     <span className={``} onClick={_ => setShow(false)}>
+                     <span className={``} onClick={_ => {
+                        setShow(false);
+                        router.push(`/account`)
+                     }}>
                         <X className={`text-red-700 cursor-pointer`} />
                      </span>
                   </div>

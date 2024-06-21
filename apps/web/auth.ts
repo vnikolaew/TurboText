@@ -19,16 +19,21 @@ const RESEND_ONBOARDING_EMAIL = ``;
 const customAdapter = {
    ...PrismaAdapter(xprisma),
    // @ts-ignore
-   createUser({ id, iss, ...user }: AdapterUser): Awaitable<AdapterUser> {
+   async createUser({ id, iss, ...user }: AdapterUser): Promise<Awaitable<AdapterUser>> {
       const { email, name, picture, image, emailVerified } = user as unknown as GoogleProfile;
+      const userCount = await xprisma.user.count({});
+
       return xprisma.user.create({
          data: {
             email, name, image: picture ?? image, emailVerified,
+            metadata: {
+               ogAccount: userCount <= 1000,
+            },
             configuration: {
                create: {
                   sound_click_sound: null,
                   sound_error_sound: null,
-                  language: `English`
+                  language: `English`,
                },
             },
             experience: {

@@ -11,6 +11,7 @@ const SECTIONS = [
    "input",
    "sound",
    "caret",
+   "appearance",
    "theme",
    "elements",
    "danger zone",

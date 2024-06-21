@@ -1,7 +1,7 @@
 import { atom, useAtomValue } from "jotai";
 import { generate } from "random-words";
 import { userTestDifficultyAtom } from "@atoms/user";
-import { currentTimestampAtom, startAtom, stopAtom, totalPauseTimeAtom } from "@atoms/timer";
+import { startAtom, stopAtom, timeAtom, totalPauseTimeAtom } from "@atoms/timer";
 import { useEffect } from "react";
 import { useSetAtom } from "jotai/index";
 import { LocalStorage } from "@lib/local-storage";
@@ -178,8 +178,10 @@ export const typingRunSuccessAtom = atom<TypingRunSuccess>((get, _) => {
 
       const correct = lettersCorrectness.filter(l => l === true)?.length;
       console.log({ correct, all: charsByIndex?.length, userTestDifficulty });
+      if(userTestDifficulty === `EXPERT` && wordsCorrectness.some(l => l === false)) return TypingRunSuccess.FAILED;
+      if(userTestDifficulty === `MASTER` && lettersCorrectness.some(l => l === false)) return TypingRunSuccess.FAILED;
 
-      return correct === charsByIndex?.length ? TypingRunSuccess.SUCCESS : TypingRunSuccess.FAILED;
+      return TypingRunSuccess.SUCCESS ;
    }
 
    return TypingRunSuccess.INDETERMINATE;
@@ -188,7 +190,7 @@ typingRunSuccessAtom.debugLabel = `typingRunSuccessAtom`;
 
 export const typingRunAtom = atom<TypingRun>(get => {
    const typedLetters = get(typedLettersAtom);
-   const time = get(currentTimestampAtom);
+   const time = get(timeAtom);
    const wordCounts = get(wordsCountsAtom);
    const mode = get(typingModeAtom);
    const flags = get(typingFlagsAtom);

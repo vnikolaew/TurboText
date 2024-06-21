@@ -1,10 +1,11 @@
 "use client";
-import React, { Fragment, useEffect, useRef } from "react";
+import React, { Fragment, useCallback, useEffect, useMemo, useRef } from "react";
 import Letter from "@components/common/Letter";
-import { cn } from "@lib/utils";
 import { useAtomValue } from "jotai";
 import { caretCoordinatesAtom, currentCharIndexAtom, lettersCorrectnessAtom, wordsAtom } from "@atoms/editor";
 import { useAtom } from "jotai/index";
+import { flipColorsAtom, fontSizeAtom } from "@atoms/user";
+import { sum } from "lodash";
 
 export interface TypingLettersProps {
 }
@@ -13,8 +14,24 @@ const TypingLetters = ({}: TypingLettersProps) => {
       const words = useAtomValue(wordsAtom);
       const currentCharIndex = useAtomValue(currentCharIndexAtom);
       const lettersCorrectness = useAtomValue(lettersCorrectnessAtom);
+
       const currentLetterRef = useRef<HTMLSpanElement>();
       const [, setCoords] = useAtom(caretCoordinatesAtom);
+
+      const fontSize = useAtomValue(fontSizeAtom) as number;
+      const flipTestColors = useAtomValue(flipColorsAtom);
+      const letterStyle = useMemo(() => ({ fontSize: `${fontSize * 8}px` }), [fontSize]);
+
+      const getLetterCn = useCallback((index: number) => {
+         const correct = lettersCorrectness[index];
+
+         if (!flipTestColors) {
+            return correct ? `text-neutral-300`
+               : (correct === false ? `text-red-500 line-through decoration-red-500 decoration-3` : ``);
+         }
+         return correct ? `text-red-500 line-through decoration-red-500 decoration-3`
+            : (correct === false ? `text-neutral-300` : ``);
+      }, [lettersCorrectness, words, flipTestColors]);
 
       useEffect(() => {
          const rects = currentLetterRef?.current?.getBoundingClientRect();
@@ -34,17 +51,14 @@ const TypingLetters = ({}: TypingLettersProps) => {
                   <span className={`inline-flex items-center gap-.5 text-neutral-600 `} key={word + index}>
                        {[...word].map((char, i) => (
                           <Letter
-                             ref={currentCharIndex === i + words.slice(0, index).reduce((prev, curr) => prev + curr.length, 0) ? currentLetterRef! : ((currentCharIndex <= 0 && index === 0 && i === 0) ? currentLetterRef : null)}
-                             className={cn(
-                                lettersCorrectness[i + words.slice(0, index).reduce((prev, curr) => prev + curr.length, 0)] && `text-neutral-300`,
-                                lettersCorrectness[i + words.slice(0, index).reduce((prev, curr) => prev + curr.length, 0)] === false && `text-red-500 line-through decoration-red-500 decoration-3`,
-                             )} key={char + i}>{char}</Letter>
+                             ref={sum(words.slice(0, index).map(s => s.length)) + i === currentCharIndex ? currentLetterRef : null}
+                             style={letterStyle}
+                             className={getLetterCn(sum(words.slice(0, index).map(s => s.length)) + i)} key={char + i}>{char}</Letter>
                        ))}
                    </span>
                ))}
          </Fragment>
-      )
-         ;
+      );
    }
 ;
 

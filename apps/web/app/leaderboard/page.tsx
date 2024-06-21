@@ -1,6 +1,6 @@
-import { Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Separator } from "@repo/ui";
+import { Button, Separator } from "@repo/ui";
 import React from "react";
-import { LANGUAGES_MAP, TypingMode } from "@atoms/consts";
+import { TypingMode } from "@atoms/consts";
 import { Crown, User } from "lucide-react";
 import { LeaderboardRow, LeaderboardTable } from "@app/leaderboard/_components/LeaderboardTable";
 import { TypingRun, xprisma } from "@repo/db";
@@ -8,10 +8,18 @@ import { auth } from "@auth";
 import moment from "moment";
 import Link from "next/link";
 import { cn } from "@lib/utils";
+import LanguageFilter from "@app/leaderboard/_components/LanguageFilter";
+import type { Metadata } from "next";
+import { APP_DESCRIPTION, APP_NAME } from "@config/site";
 
 export interface PageProps {
-   searchParams: { daily?: string };
+   searchParams: { daily?: string, language?: string };
 }
+
+export const metadata: Metadata = {
+   title: `Leaderboard | ${APP_NAME}`,
+   description: APP_DESCRIPTION,
+};
 
 function mapRow(run: TypingRun, index: number): LeaderboardRow {
    return {
@@ -22,6 +30,7 @@ function mapRow(run: TypingRun, index: number): LeaderboardRow {
          image: run.user.image,
          level: run.user.experience?.level,
          name: run.user.name,
+         og: run.user.metadata?.ogAccount ?? false
       },
       wpm: run.wpm.toFixed(2),
       accuracy: run.accuracy.toFixed(2),
@@ -33,12 +42,19 @@ function mapRow(run: TypingRun, index: number): LeaderboardRow {
 
 const Page = async ({ searchParams }: PageProps) => {
    const daily = searchParams?.daily === `true`;
+   const language = searchParams?.language ?? `English`;
 
    const runs = await xprisma.typingRun.findMany({
       where: {
          ...(daily ? {
             createdAt: {
                gte: moment(new Date).subtract(1, `day`).toDate(),
+            },
+         } : {}),
+         ...(language ? {
+            metadata: {
+               path: [`language`],
+               equals: language,
             },
          } : {}),
       },
@@ -76,7 +92,7 @@ const Page = async ({ searchParams }: PageProps) => {
       <section className={`w-3/4 mx-auto mt-24 flex flex-col items-start gap-4`}>
          <div className={`flex items-center justify-between w-full`}>
             <h2 className={`text-4xl`}>
-               All-Time English Leaderboards
+               All-Time {language} Leaderboards
             </h2>
             <div className={`flex items-center gap-4`}>
                <Button asChild variant={`secondary`}
@@ -96,20 +112,9 @@ const Page = async ({ searchParams }: PageProps) => {
          </div>
          <Separator className={`w-2/3 bg-neutral-700 h-[1px] rounded-md shadow-md`} />
          <div className={`flex items-center justify-between w-full`}>
-            <div></div>
+            <div />
             <div>
-               <Select>
-                  <SelectTrigger className="w-[300px] !bg-black">
-                     <SelectValue placeholder="English" />
-                  </SelectTrigger>
-                  <SelectContent className={`!bg-black !rounded-lg`}>
-                     {Object.values(LANGUAGES_MAP).map((language, index) => (
-                        <SelectItem
-                           className={`!rounded-md cursor-pointer hover:!bg-neutral-300 transition-colors duration-100 hover:!text-black`}
-                           key={language} value={language}>{language}</SelectItem>
-                     ))}
-                  </SelectContent>
-               </Select>
+               <LanguageFilter language={language} />
             </div>
          </div>
          <div className={`mt-8 grid grid-cols-2 w-full gap-4`}>

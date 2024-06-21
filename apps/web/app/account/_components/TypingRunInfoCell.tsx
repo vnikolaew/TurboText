@@ -1,6 +1,6 @@
 "use client";
 import { TypingRun } from "@repo/db";
-import { TableCell, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@repo/ui";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@repo/ui";
 import React from "react";
 import { EyeOff, Globe, Star } from "lucide-react";
 
@@ -10,21 +10,19 @@ export interface TypingRunInfoCellProps {
 
 const TypingRunInfoCell = ({ run }: TypingRunInfoCellProps) => {
    return (
-      <TableCell className="text-left">
-         <div className={`flex items-center gap-1`}>
-            <IconWithTooltip text={run.metadata?.language ?? `English`}>
-               <Globe size={20} />
+      <div className={`flex items-center gap-1`}>
+         <IconWithTooltip text={run.metadata?.language ?? `English`}>
+            <Globe size={20} />
+         </IconWithTooltip>
+         <IconWithTooltip text={run.metadata?.test_difficulty ?? `NORMAL`}>
+            <Star size={20} />
+         </IconWithTooltip>
+         {run.metadata?.blind_mode && (
+            <IconWithTooltip text={`Blind mode`}>
+               <EyeOff size={20} />
             </IconWithTooltip>
-            <IconWithTooltip text={run.metadata?.test_difficulty ?? `NORMAL`}>
-               <Star size={20} />
-            </IconWithTooltip>
-            {run.metadata?.blind_mode && (
-               <IconWithTooltip text={`Blind mode`}>
-                  <EyeOff size={20} />
-               </IconWithTooltip>
-            )}
-         </div>
-      </TableCell>
+         )}
+      </div>
    );
 };
 
