@@ -27,7 +27,6 @@ export const startAtom = atom(null, (get, set) => {
 
    interval = setInterval(() => {
       const current = get(currentTimerStampAtom);
-      console.log({ current });
       if (current <= 0) {
          clearInterval(interval);
          set(timerIntervalAtom, null)
@@ -56,7 +55,6 @@ export const resumeAtom = atom(null, (get, set) => {
 
    interval = setInterval(() => {
       const current = get(currentTimerStampAtom);
-      console.log({ current });
       if (current <= 0) {
          clearInterval(interval);
          set(timerIntervalAtom, null)

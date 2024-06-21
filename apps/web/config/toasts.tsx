@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Check, Cookie, Info, X } from "lucide-react";
+import { Check, Cookie, X } from "lucide-react";
 
 export const TOASTS = {
    FORGOT_PASSWORD: {
@@ -225,14 +225,7 @@ Export successful
       className: `text-base font-normal`,
    }),
    RUN_FAILED: (error: string) => ({
-      message:
-         (
-            <div className={`flex items-center gap-2`}>
-               <Info />
-               Notice
-            </div>
-         ),
-      description: (
+      message: (
          <div className={`flex items-center gap-2`}>
             <X className={`text-red-600`} size={18} />
             <span>Test failed - {error}</span>
@@ -240,6 +233,15 @@ Export successful
       ),
       className: `text-base font-normal`,
    }),
+   ACCOUNT_VERIFIED: {
+      message: (
+         <div className={`flex items-center gap-2`}>
+            <X className={`text-red-600`} size={18} />
+            <span>Your account has been verified</span>
+         </div>
+      ),
+      className: `text-base font-normal`,
+   },
 } as const;
 
 // export const toast = ({ message, ...config }: ExternalToast & { message: ReactNode }) => sonnerToast(message, config);

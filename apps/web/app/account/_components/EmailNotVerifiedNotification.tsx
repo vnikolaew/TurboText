@@ -7,8 +7,18 @@ export interface EmailNotVerifiedNotificationProps {
 
 const EmailNotVerifiedNotification = ({}: EmailNotVerifiedNotificationProps) => {
 
-   function handleSendEmailVerification(): void {
-
+   async function handleSendEmailVerification() {
+      await fetch(`/api/email/verification/send`, {
+         method: `POST`,
+         credentials: `include`,
+         headers: {
+            Accept: `application/json`,
+         },
+      }).then(res => res.json()).then(res => {
+         if (res.ok) {
+            console.log({ res });
+         }
+      });
    }
 
    return (

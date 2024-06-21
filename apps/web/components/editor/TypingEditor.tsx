@@ -44,10 +44,10 @@ const TypingEditor = ({ user }: TypingEditorProps) => {
    useTypingRunSuccess();
    useSaveLatestUserRun();
 
-   const { isExecuting, execute } = useAction(saveTypingRun, {
+   const { isExecuting, execute, result } = useAction(saveTypingRun, {
       onSuccess: res => {
          if (res.data?.success) {
-            console.log(res.data);
+            console.log({ result });
             localStorage.removeItem(TYPING_RUN_LS_KEY);
 
             const newUserXp = { level: res.data.userXp?.level, points: res.data.userXp?.points };
@@ -67,8 +67,8 @@ const TypingEditor = ({ user }: TypingEditorProps) => {
 
    const autoSaveMode = useAtomValue(autoSaveModeAtom);
    const showSavePrompt = useMemo(() =>
-         timerState === TypingRunState.FINISHED && !autoSaveMode,
-      [timerState]);
+         timerState === TypingRunState.FINISHED && !autoSaveMode && !(result?.data?.success === true),
+      [timerState, result, autoSaveMode]);
 
    function handleSaveTypingRun(): void {
       execute(typingRun);
@@ -97,10 +97,10 @@ const TypingEditor = ({ user }: TypingEditorProps) => {
                </Fragment>
             )}
             {timerState !== TypingRunState.RUNNING && (
-                  <TypingRunInfo runs={user?.typingRuns} />
+               <TypingRunInfo runs={user?.typingRuns} />
             )}
             {timerState !== TypingRunState.FINISHED && (
-                  <TypingInput />
+               <TypingInput />
             )}
          </div>
          <span className={`mt-4 w-full text-center`}>Total run time: {totalRunTime}ms</span>
@@ -146,7 +146,7 @@ const TypingEditor = ({ user }: TypingEditorProps) => {
             timerState === TypingRunState.FINISHED && <TypingRunSummary />
          }
       </div>
-   )
+   );
 };
 
 

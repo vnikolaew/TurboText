@@ -12,7 +12,8 @@ import { APP_DESCRIPTION, APP_NAME, AUTHOR, AUTHOR_WEBSITE } from "@config/site"
 import appLogo from "@public/logo.jpg";
 import { getUserWithTypingRuns } from "@app/account/_queries";
 import TypingRunsStatsSection from "@app/account/_components/TypingRunsStatsSection";
-import { UserExperienceInfo } from "@app/account/UserExperienceInfo";
+import { UserExperienceInfo } from "@app/account/_components/UserExperienceInfo";
+import OnAccountVerified from "@app/_components/toasts/OnAccountVerified";
 
 export const metadata: Metadata = {
    title: `Account | ${APP_NAME}`,
@@ -31,9 +32,10 @@ export const metadata: Metadata = {
 
 
 export interface PageProps {
+   searchParams: { verified?: string };
 }
 
-const Page = async ({}: PageProps) => {
+const Page = async ({ searchParams }: PageProps) => {
    const user = await getUserWithTypingRuns();
    if (!user) notFound();
 
@@ -41,6 +43,9 @@ const Page = async ({}: PageProps) => {
       <section className={`w-2/3 mx-auto mt-24 flex flex-col items-center gap-4`}>
          {!user.emailVerified && (
             <EmailNotVerifiedNotification />
+         )}
+         {user.emailVerified && searchParams?.verified === `true` && (
+            <OnAccountVerified />
          )}
          <div className={`w-full bg-stone-950/70 rounded-lg shadow-lg flex items-center p-6 py-10 gap-8 mt-8`}>
             <div className={`flex flex-col items-start gap-2`}>

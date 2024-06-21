@@ -1,6 +1,6 @@
 import { auth } from "@auth";
 import React from "react";
-import { xprisma } from "@repo/db";
+import { xprisma } from "../../../../../packages/db/src";
 import { Progress, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@repo/ui";
 
 const EXPONENT = 1.2;

@@ -9,7 +9,7 @@ import { TOASTS } from "@config/toasts";
 export interface OnRunFailedProps {
 }
 
-const OnRunFailed = ({}: OnRunFailedProps) => {
+const OnRunFailed = ({ } : OnRunFailedProps) => {
    const success = useAtomValue(typingRunSuccessAtom);
    useEffect(() => {
       if (success === TypingRunSuccess.FAILED) {

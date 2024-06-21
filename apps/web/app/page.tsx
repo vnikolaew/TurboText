@@ -11,7 +11,11 @@ import TypingEditor from "@components/editor/TypingEditor";
 import OnRunFailed from "@components/editor/toasts/OnRunFailed";
 import OnRunSaved from "@components/editor/toasts/OnRunSaved";
 
-export default async function Home() {
+interface HomeProps {
+   searchParams: { verified?: string };
+}
+
+export default async function Home({ searchParams }: HomeProps) {
    const session = await auth();
 
    let user;

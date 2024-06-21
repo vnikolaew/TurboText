@@ -13,8 +13,6 @@ const UserAvatarDropdown = ({}: UserAvatarDropdownProps) => {
    const session = useSession();
    const userXp = useAtomValue(userXpAtom)
 
-   console.log({ userXp });
-
    return (
       <Link className={`inline-flex items-center gap-2 group hover:!text-neutral-300`} href={`/account`}>
          <UserAvatar

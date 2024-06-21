@@ -5,12 +5,16 @@ import { ScrollArea, Table, TableBody, TableCaption, TableCell, TableHeader, Tab
 import { Crown } from "lucide-react";
 import moment from "moment";
 import React from "react";
+import { useSession } from "next-auth/react";
 
-
-interface LeaderboardRow {
+export interface LeaderboardRow {
    position: number;
-   username: string;
-   userImage?: string;
+   user: {
+      id: string;
+      image?: string;
+      level: number;
+      name: string;
+   };
    wpm: number;
    accuracy: number;
    consistency: number;
@@ -48,7 +52,8 @@ export const LeaderboardTable = ({ caption, rows, showWarning }: LeaderboardTabl
                         consistency
                       </span>
                </div>
-               <div className={`col-span-2 text-right flex items-center justify-end px-4 text-neutral-400`}>date
+               <div className={`col-span-2 text-right flex items-center justify-end px-4 text-neutral-400 text-xs`}>
+                  date
                </div>
             </div>
             <Table className={`min-h-[600px]`}>
@@ -63,12 +68,12 @@ export const LeaderboardTable = ({ caption, rows, showWarning }: LeaderboardTabl
                         </TableCell>
                      </TableRow>
                   )}
-                  {rows?.map((row, index) => (<LeaderboardTableRow key={index} row={row} index={index} />))}
+                  {rows?.map((row, index) => <LeaderboardTableRow key={index} row={row} index={index} />)}
                </TableBody>
             </Table>
          </ScrollArea>
          {showWarning && (
-            <div className={`w-full text-center text-amber-600 text-sm`}>
+            <div className={`w-full text-center text-amber-600 text-sm mt-2`}>
                Your account must have 2 hours typed to be placed on the leaderboard.
             </div>
          )}
@@ -77,34 +82,43 @@ export const LeaderboardTable = ({ caption, rows, showWarning }: LeaderboardTabl
    );
 };
 
-const LeaderboardTableRow = ({ row, index }: { row: LeaderboardRow, index: number }) => (
-   <TableRow key={index} className={cn(`grid grid-cols-13 w-full `,
-      index % 2 === 1 && `bg-black`)}>
-      <TableCell
-         className="font-medium text-center inline-flex justify-center items-center col-span-1">
-         {row.position === 1 ? (
-            <Crown className={`stroke-neutral-300 fill-neutral-300`} size={18} />
-         ) : row.position}
-      </TableCell>
-      <TableCell className={`inline-flex items-center gap-2 col-span-6`}>
-         <UserAvatar className={`w-6 h-6`} imageSrc={row?.userImage} />
-         <span>
-            {row.username}
-         </span>
-      </TableCell>
-      <TableCell className={`col-span-2 text-right flex flex-col justify-end !px-0`}>
-         <span>{row.wpm}</span>
-         <span className={`text-neutral-500`}>{row.accuracy}%</span>
-      </TableCell>
-      <TableCell className={`col-span-2 text-right flex flex-col justify-end !px-0`}>
-         <span>{row.raw}</span>
-         <span className={`text-neutral-500`}>{row.consistency}%</span>
-      </TableCell>
-      <TableCell className="col-span-2 text-right flex flex-col justify-end !pr-4">
-         <span className={`text-nowrap`}>{moment(row.date).format(`DD MMM YYYY`)}</span>
-         <span className={`text-neutral-500`}>
-            {moment(row.date).format(`HH:mm`)}
-         </span>
-      </TableCell>
-   </TableRow>
-);
+const LeaderboardTableRow = ({ row, index }: { row: LeaderboardRow, index: number }) => {
+   const session = useSession();
+
+   return (
+      <TableRow key={index} className={cn(`grid grid-cols-13 w-full `,
+         index % 2 === 1 && `bg-black`)}>
+         <TableCell
+            className="font-medium text-center inline-flex justify-center items-center col-span-1">
+            {row.position === 1 ? (
+               <Crown className={`stroke-neutral-300 fill-neutral-300`} size={18} />
+            ) : row.position}
+         </TableCell>
+         <TableCell className={`inline-flex items-center gap-2 col-span-6`}>
+            <div className={`relative`}>
+               <UserAvatar className={`w-8 h-8 `} imageSrc={row?.user.image} />
+               <span className={`rounded-full bg-black p-0 text-xs absolute bottom-0 right-0 text-amber-500 px-0.5`}>
+                  {row.user.level}
+               </span>
+            </div>
+            <span>
+               {row.user.name} {row.user.id === session?.data?.user?.id ? "(you)" : ""}
+            </span>
+         </TableCell>
+         <TableCell className={`col-span-2 text-right flex flex-col justify-end !px-0`}>
+            <span>{row.wpm}</span>
+            <span className={`text-neutral-500`}>{row.accuracy}%</span>
+         </TableCell>
+         <TableCell className={`col-span-2 text-right flex flex-col justify-end !px-0`}>
+            <span>{row.raw}</span>
+            <span className={`text-neutral-500`}>{row.consistency}%</span>
+         </TableCell>
+         <TableCell className="col-span-2 text-right flex flex-col justify-end !pr-4">
+            <span className={`text-nowrap`}>{moment(row.date).format(`DD MMM YYYY`)}</span>
+            <span className={`text-neutral-500`}>
+               {moment(row.date).format(`HH:mm`)}
+            </span>
+         </TableCell>
+      </TableRow>
+   );
+};

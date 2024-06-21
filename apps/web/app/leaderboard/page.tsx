@@ -2,25 +2,31 @@ import { Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, 
 import React from "react";
 import { LANGUAGES_MAP, TypingMode } from "@atoms/consts";
 import { Crown, User } from "lucide-react";
-import { LeaderboardTable } from "@app/leaderboard/_components/LeaderboardTable";
+import { LeaderboardRow, LeaderboardTable } from "@app/leaderboard/_components/LeaderboardTable";
 import { TypingRun, xprisma } from "@repo/db";
 import { auth } from "@auth";
 import moment from "moment";
+import Link from "next/link";
+import { cn } from "@lib/utils";
 
 export interface PageProps {
    searchParams: { daily?: string };
 }
 
-function mapRow(run: TypingRun, index: number) {
+function mapRow(run: TypingRun, index: number): LeaderboardRow {
    return {
       position: index + 1,
       date: run.createdAt,
+      user: {
+         id: run.user.id,
+         image: run.user.image,
+         level: run.user.experience?.level,
+         name: run.user.name,
+      },
       wpm: run.wpm.toFixed(2),
       accuracy: run.accuracy.toFixed(2),
       consistency: run.consistency.toFixed(2),
       raw: run.raw?.toFixed(2),
-      username: run.user.name,
-      userImage: run.user.image,
       metadata: {},
    };
 }
@@ -39,7 +45,13 @@ const Page = async ({ searchParams }: PageProps) => {
       orderBy: {
          createdAt: `desc`,
       },
-      include: { user: { select: { id: true, name: true, image: true } } },
+      include: {
+         user: {
+            include: {
+               experience: { select: { id: true, level: true } },
+            },
+         },
+      },
       take: 100,
    });
 
@@ -51,6 +63,9 @@ const Page = async ({ searchParams }: PageProps) => {
       },
 
    });
+
+   const showWarning = user?.totalTimeTypingMs < (1000 * 60 * 2 * 60);
+
    const time15Runs = runs.filter(r => r.mode === TypingMode.TIME && r.time === 15)
       .sort((a, b) => b.wpm - a.wpm);
 
@@ -58,15 +73,25 @@ const Page = async ({ searchParams }: PageProps) => {
       .sort((a, b) => b.wpm - a.wpm);
 
    return (
-      <section className={`w-2/3 mx-auto mt-24 flex flex-col items-start gap-4`}>
+      <section className={`w-3/4 mx-auto mt-24 flex flex-col items-start gap-4`}>
          <div className={`flex items-center justify-between w-full`}>
             <h2 className={`text-4xl`}>
                All-Time English Leaderboards
             </h2>
             <div className={`flex items-center gap-4`}>
-               <Button variant={`secondary`}
-                       className={`rounded-full shadow-md px-8 bg-amber-600 hover:!bg-amber-700 !text-black`}>All-time</Button>
-               <Button variant={`secondary`} className={`rounded-full shadow-md px-8`}>Daily</Button>
+               <Button asChild variant={`secondary`}
+                       className={cn(`rounded-full shadow-md px-8 `,
+                          !daily && `bg-amber-600 hover:!bg-amber-700 !text-black`)}>
+                  <Link href={`/leaderboard`}>
+                     All-time
+                  </Link>
+               </Button>
+               <Button asChild variant={`secondary`} className={cn(`rounded-full shadow-md px-8`,
+                  daily && `bg-amber-600 hover:!bg-amber-700 !text-black`)}>
+                  <Link href={`/leaderboard?daily=true`}>
+                     Daily
+                  </Link>
+               </Button>
             </div>
          </div>
          <Separator className={`w-2/3 bg-neutral-700 h-[1px] rounded-md shadow-md`} />
@@ -112,14 +137,14 @@ const Page = async ({ searchParams }: PageProps) => {
                </div>
             </div>
             <Separator className={`w-full bg-neutral-700 mx-auto`} />
-            <Separator className={`w-full bg-neutral-700 mx-auto` } />
+            <Separator className={`w-full bg-neutral-700 mx-auto`} />
 
             <LeaderboardTable
                rows={time15Runs.map(mapRow)}
-               showWarning={user?.totalTimeTypingMs < (1000 * 60 * 2 * 60)} />
+               showWarning={showWarning} />
             <LeaderboardTable
                rows={time60Runs.map(mapRow)}
-               showWarning={user?.totalTimeTypingMs < (1000 * 60 * 2 * 60)} />
+               showWarning={showWarning} />
          </div>
       </section>
    );

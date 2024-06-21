@@ -11,7 +11,8 @@ import { maxBy } from "lodash";
 import { wordsCountsAtom } from "@atoms/words";
 import {
    DEFAULT_WORD_COUNT,
-   TypedLetterFlags, TypedLetterInfo,
+   TypedLetterFlags,
+   TypedLetterInfo,
    TypingMode,
    TypingRunState,
    TypingRunSuccess,
@@ -153,6 +154,7 @@ export const typingRunSuccessAtom = atom<TypingRunSuccess>((get, _) => {
    const userTestDifficulty: string = get(userTestDifficultyAtom) as unknown as string;
    const wordsCorrectness = get(wordsCorrectnessAtom);
    const lettersCorrectness = get(lettersCorrectnessAtom);
+   const mode = get(typingModeAtom)
 
    const charsByIndex = get(charsByIndexAtom);
 
@@ -172,6 +174,8 @@ export const typingRunSuccessAtom = atom<TypingRunSuccess>((get, _) => {
 
    if (runState === TypingRunState.RUNNING) return TypingRunSuccess.INDETERMINATE;
    if (runState === TypingRunState.FINISHED) {
+      if(mode === TypingMode.TIME) return TypingRunSuccess.SUCCESS;
+
       const correct = lettersCorrectness.filter(l => l === true)?.length;
       console.log({ correct, all: charsByIndex?.length, userTestDifficulty });
 

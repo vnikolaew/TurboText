@@ -25,8 +25,6 @@ const TypingRunInfo = ({ runs }: TypingRunInfoProps) => {
          ?.map(r => r.metadata?.accuracy)) /
       runs?.filter(r => !isNaN(Number(r.metadata?.accuracy)))?.length! : 0;
 
-   console.log({ runs, averagePace, averageAccuracy });
-
    return (
       <div className={`w-full flex items-center justify-center gap-8 text-neutral-400`}>
          <RunInfo>

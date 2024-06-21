@@ -29,7 +29,7 @@ export class EmailService {
             html,
          });
 
-         console.log(`Welcome e-mail successfully sent to: ${to} with ID: ${data?.id}`);
+         console.log(`E-mail successfully sent to: ${to} with ID: ${data?.id}`);
          return { success: true, id: data!.id! };
       } catch (err) {
          console.error(`An error occurred while sending a Welcome e-mail to: ${to}: ${err}`);
