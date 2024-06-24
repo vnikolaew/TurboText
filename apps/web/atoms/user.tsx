@@ -51,7 +51,9 @@ export const blindModeAtom = focusAtom<UserConfiguration["blind_mode"]>(userConf
 blindModeAtom.debugLabel = `blindModeAtom`;
 
 // @ts-ignore
-export const userLanguageAtom = focusAtom(userConfigAtom, optic => optic?.prop(`language`));
+export const userLanguageAtom = atom(get => {
+   return get(userConfigAtom)?.language;
+})
 userLanguageAtom.debugLabel = `userLanguageAtom`;
 
 // @ts-ignore
