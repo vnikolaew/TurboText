@@ -1,3 +1,3 @@
 #!/bin/bash
 
-npx turbo db:generate && npm run build
+cd ../../ && npx turbo db:generate && cd apps/web && npm run build
