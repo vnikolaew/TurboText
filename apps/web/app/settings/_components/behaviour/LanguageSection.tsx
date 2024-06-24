@@ -30,7 +30,7 @@ const LanguageSection = ({}: LanguageSectionProps) => {
       onSuccess: res => {
          if (res.data?.success) {
             console.log(res);
-            setUserLanguage(res.userConfig.language);
+            setUserLanguage(res?.data?.userConfig.language);
          }
       },
    });
