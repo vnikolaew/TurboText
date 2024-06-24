@@ -12,7 +12,8 @@ export const generateWordsAtom = atom(null, async (get, set, wc?: number) => {
       .entries(LANGUAGES_MAP)
       .find(([, value]) => value === userLanguage)?.[0];
 
-   const res = await fetch(`/api/words/${encodeURIComponent(languageCode ?? `en`)}/generate?limit=${encodeURIComponent(wc ?? wordCount)}`)
+   const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/words/${encodeURIComponent(languageCode ?? `en`)}/generate?limit=${encodeURIComponent(wc ?? wordCount)}`,{
+   })
       .then(r => r.json());
    if (res.words?.length) {
       set(wordsAtom, res.words as string[]);
