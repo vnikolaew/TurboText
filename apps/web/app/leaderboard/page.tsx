@@ -1,16 +1,15 @@
 import { Button, Separator } from "@repo/ui";
 import React from "react";
-import { TypingMode } from "@atoms/consts";
 import { Crown, User } from "lucide-react";
 import { LeaderboardRow, LeaderboardTable } from "@app/leaderboard/_components/LeaderboardTable";
 import { TypingRun, xprisma } from "@repo/db";
 import { auth } from "@auth";
-import moment from "moment";
 import Link from "next/link";
 import { cn } from "@lib/utils";
 import LanguageFilter from "@app/leaderboard/_components/LanguageFilter";
 import type { Metadata } from "next";
 import { APP_DESCRIPTION, APP_NAME } from "@config/site";
+import { getLeaderboard } from "@app/leaderboard/_queries";
 
 export interface PageProps {
    searchParams: { daily?: string, language?: string };
@@ -30,7 +29,7 @@ function mapRow(run: TypingRun, index: number): LeaderboardRow {
          image: run.user.image,
          level: run.user.experience?.level,
          name: run.user.name,
-         og: run.user.metadata?.ogAccount ?? false
+         og: run.user.metadata?.ogAccount ?? false,
       },
       wpm: run.wpm.toFixed(2),
       accuracy: run.accuracy.toFixed(2),
@@ -40,36 +39,16 @@ function mapRow(run: TypingRun, index: number): LeaderboardRow {
    };
 }
 
-const Page = async ({ searchParams }: PageProps) => {
+function getSearchParamsNormalized(searchParams: { daily?: string, language?: string }) {
    const daily = searchParams?.daily === `true`;
    const language = searchParams?.language ?? `English`;
 
-   const runs = await xprisma.typingRun.findMany({
-      where: {
-         ...(daily ? {
-            createdAt: {
-               gte: moment(new Date).subtract(1, `day`).toDate(),
-            },
-         } : {}),
-         ...(language ? {
-            metadata: {
-               path: [`language`],
-               equals: language,
-            },
-         } : {}),
-      },
-      orderBy: {
-         createdAt: `desc`,
-      },
-      include: {
-         user: {
-            include: {
-               experience: { select: { id: true, level: true } },
-            },
-         },
-      },
-      take: 100,
-   });
+   return { daily, language } as const;
+}
+
+
+const Page = async ({ searchParams }: PageProps) => {
+   const { daily, language, } = getSearchParamsNormalized(searchParams);
 
    const session = await auth();
    const user = await xprisma.user.findUnique({
@@ -77,16 +56,11 @@ const Page = async ({ searchParams }: PageProps) => {
       include: {
          typingRuns: true,
       },
-
    });
 
    const showWarning = user?.totalTimeTypingMs < (1000 * 60 * 2 * 60);
-
-   const time15Runs = runs.filter(r => r.mode === TypingMode.TIME && r.time === 15)
-      .sort((a, b) => b.wpm - a.wpm);
-
-   const time60Runs = runs.filter(r => r.mode === TypingMode.TIME && r.time === 60)
-      .sort((a, b) => b.wpm - a.wpm);
+   const { time60Runs, time15Runs, qualifiedUserIds } = await getLeaderboard({ daily, language });
+   console.log({ qualifiedUserIds });
 
    return (
       <section className={`w-3/4 mx-auto mt-24 flex flex-col items-start gap-4`}>

@@ -3,11 +3,52 @@ import React from "react";
 import SettingLayout from "../SettingLayout";
 import { Button } from "@repo/ui";
 import { TextCursor } from "lucide-react";
+import { useAtom } from "jotai/index";
+import { paceCaretSpeedAtom } from "@atoms/user";
+import { useAction } from "next-safe-action/hooks";
+import { updateUserConfiguration } from "@app/settings/actions";
+import { cn } from "@lib/utils";
 
 export interface PaceCaretSectionProps {
 }
 
+const PACE_CARET_SPEEDS = [
+   {
+      value: `OFF`,
+      label: `Off`,
+   },
+   {
+      value: `AVG`,
+      label: `Avg`,
+   }, {
+      value: `PB`,
+      label: `Pb`,
+   },
+   {
+      value: `LAST`,
+      label: `Last`,
+   },
+   {
+      value: `DAILY`,
+      label: `Daily`,
+   },
+   {
+      value: `CUSTOM`,
+      label: `Custom`,
+   },
+] as const;
+
 const PaceCaretSection = ({}: PaceCaretSectionProps) => {
+   const [paceCaretSpeed, setPaceCaretSpeed] = useAtom(paceCaretSpeedAtom);
+
+   const { execute, status } = useAction(updateUserConfiguration, {
+      onSuccess: res => {
+         if (res.data?.success) {
+            console.log(res);
+            setPaceCaretSpeed(res.data?.userConfig?.pace_caret_speed);
+         }
+      },
+   });
    return (
       <SettingLayout className={``}>
          <div className={`flex flex-col items-start gap-2`}>
@@ -18,24 +59,19 @@ const PaceCaretSection = ({}: PaceCaretSectionProps) => {
                </span>
             </h2>
             <p className={`mt-2 text-base`}>
-               Displays a second caret that moves at constant speed. The 'average' option averages the speed of last 10 results. The 'daily' option takes the highest speed of the last 24 hours.
+               Displays a second caret that moves at constant speed. The 'average' option averages the speed of last 10
+               results. The 'daily' option takes the highest speed of the last 24 hours.
             </p>
          </div>
          <div className={`flex items-center gap-2 w-full h-full my-auto justify-center flex-wrap`}>
-            <Button className={`flex-1`}>Off</Button>
-            <Button className={`flex-1`}>Avg</Button>
-            <Button className={`flex-1`}>
-               Pb
-            </Button>
-            <Button className={`flex-1`}>
-               Last
-            </Button>
-            <Button className={`flex-1`}>
-               Daily
-            </Button>
-            <Button className={`flex-1`}>
-               Custom
-            </Button>
+            {PACE_CARET_SPEEDS.map(({ value, label }, index) => (
+               <Button
+                  onClick={_ => execute({ pace_caret_speed: value })}
+                  className={cn(`flex-1 shadow-md`,
+                     paceCaretSpeed === value && `bg-amber-500`)}
+                  key={value}
+                  >{label}</Button>
+            ))}
          </div>
       </SettingLayout>
    );

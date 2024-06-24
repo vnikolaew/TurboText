@@ -15,7 +15,8 @@ export const metadata: Metadata = {
 
 const LAST_UPDATED = new Date(2024, 4, 21);
 
-export const dynamic = "force-static";
+// export const dynamic = "force-static";
+
 /**
  * The site's Terms of Service page.
  * @constructor

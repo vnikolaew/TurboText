@@ -14,6 +14,10 @@ import OnRunSaved from "@components/editor/toasts/OnRunSaved";
 interface HomeProps {
 }
 
+export const dynamic = `force-dynamic`;
+
+export const revalidate = 10;
+
 export default async function Home({ }: HomeProps) {
    const session = await auth();
 

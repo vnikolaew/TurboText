@@ -20,6 +20,7 @@ const schema = z.object({
    caret_smoothness: z.union([z.literal(`SLOW`), z.literal(`OFF`), z.literal(`MEDIUM`), z.literal(`FAST`)]),
    caret_style: z.union([z.literal(`CURSOR`), z.literal(`OFF`), z.literal(`BLOCK`), z.literal(`BLOCK_FILLED`), z.literal(`UNDERSCORE`)]),
    pace_caret_style: z.union([z.literal(`CURSOR`), z.literal(`OFF`), z.literal(`BLOCK`), z.literal(`BLOCK_FILLED`), z.literal(`UNDERSCORE`)]),
+   pace_caret_speed: z.union([z.literal(`AVG`), z.literal(`OFF`), z.literal(`PB`), z.literal(`LAST`), z.literal(`DAILY`), z.literal(`CUSTOM`)]),
 
    theme_flip_colors: z.boolean().nullable(),
    theme_colorful_mode: z.boolean().nullable(),

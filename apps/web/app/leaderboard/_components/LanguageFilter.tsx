@@ -18,7 +18,7 @@ const LanguageFilter = ({ language }: LanguageFilterProps) => {
          <SelectTrigger className="w-[300px] !bg-black">
             <SelectValue placeholder={language} />
          </SelectTrigger>
-         <SelectContent className={`!bg-black !rounded-lg`}>
+         <SelectContent className={`!bg-black !rounded-lg !z-[100]`}>
             {Object.values(LANGUAGES_MAP).map((language, index) => (
                <SelectItem
                   className={`!rounded-md cursor-pointer hover:!bg-neutral-300 transition-colors duration-100 hover:!text-black`}

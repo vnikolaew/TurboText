@@ -1,7 +1,17 @@
 "use client";
 
 import { cn } from "@lib/utils";
-import { Badge, ScrollArea, Table, TableBody, TableCaption, TableCell, TableHeader, TableRow, UserAvatar } from "@repo/ui";
+import {
+   Badge,
+   ScrollArea,
+   Table,
+   TableBody,
+   TableCaption,
+   TableCell,
+   TableHeader,
+   TableRow,
+   UserAvatar,
+} from "@repo/ui";
 import { Baby, Crown } from "lucide-react";
 import moment from "moment";
 import React from "react";
@@ -108,7 +118,7 @@ const LeaderboardTableRow = ({ row, index }: { row: LeaderboardRow, index: numbe
                </span>
                {row.user.og && (
                   <span>
-                  <Badge className={`!bg-amber-500 !text-black inline-flex gap-2 items-center text-nowrap shadow-md`} variant={`default`} >
+                  <Badge className={`!bg-amber-500 !text-black inline-flex gap-2 items-center text-nowrap shadow-md text-xs`} variant={`default`} >
                      <Baby size={14} />
                      <span>
                      OG Account

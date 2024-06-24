@@ -4,7 +4,7 @@ const nextConfig = {
       typedRoutes: true,
    },
    compiler: {},
-   eslint: { ignoreDuringBuilds: true },
+   eslint: { ignoreDuringBuilds: true  },
    webpack: (config, options) => {
       const isServer = options?.isServer;
       config.module.rules.push({

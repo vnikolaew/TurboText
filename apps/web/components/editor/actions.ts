@@ -25,6 +25,11 @@ const schema = z.object({
    metadata: z.record(z.string(), z.any()).nullable(),
 });
 
+export interface INotification {
+   type: string;
+   message: string;
+}
+
 /**
  * Save an authorized user's typing run.
  */
@@ -56,7 +61,6 @@ export const saveTypingRun = authorizedAction
          } = await getRunStats(typedLetters, totalRunTime, mode === `TIME` ? completedWords! : wordCounts!, userId);
 
          const { language, test_difficulty, blind_mode, input_confidence_mode } = userConfig;
-         console.log({ userConfig });
 
          const run = await xprisma.typingRun.create({
             data: {
@@ -82,29 +86,51 @@ export const saveTypingRun = authorizedAction
                totalTimeMilliseconds: totalRunTime,
             },
          });
-         const userXpGained = (wpm * accuracy) / 100;
 
-         let userXp = await xprisma.userExperience.findFirst({ where: { userId } });
-         let newXp = userXp!.points + userXpGained;
+         let userXp = await updateUserXp(wpm, accuracy, userId!);
+         const topWpmAllTime = await xprisma.typingRun.getTopWpmAllTime();
+         const topWpmToday = await xprisma.typingRun.getTopWpmAllTime();
 
-         const newUserLevel = xprisma.userExperience?.getLevelFromXp({ points: newXp });
+         let notification: INotification = null!;
 
-         userXp = await xprisma.userExperience.update({
-            where: { userId },
-            data: {
-               points: {
-                  increment: userXpGained,
-               },
-               level: newUserLevel,
-            },
-         });
+         if (wpm > topWpmAllTime ) {
+            notification = {
+               type: `ALL_TIME`,
+               message: `You scored a new all-time high WPM of ${wpm.toFixed(0)}!`,
+            };
+
+         } else if (wpm > topWpmToday ) {
+            notification = {
+               type: `TODAY`,
+               message: `You scored a new highest WPM today of ${wpm.toFixed(0)}!`,
+            };
+         }
 
          const { hasFlag, ...rest } = run;
-         console.log({ run, userXp });
-
-         return { success: true, run: rest, userXp };
+         return { success: true, run: rest, userXp, notification };
       },
    );
+
+async function updateUserXp(wpm: number, accuracy: number, userId: string) {
+   const userXpGained = (wpm * accuracy) / 100;
+
+   let userXp = await xprisma.userExperience.findFirst({ where: { userId } });
+   let newXp = userXp!.points + userXpGained;
+
+   const newUserLevel = xprisma.userExperience?.getLevelFromXp({ points: newXp });
+
+   userXp = await xprisma.userExperience.update({
+      where: { userId },
+      data: {
+         points: {
+            increment: userXpGained,
+         },
+         level: newUserLevel,
+      },
+   });
+
+   return userXp;
+}
 
 async function getRunStats(typedLetters: TypedLetterInfo[], totalTimeMilliseconds: number, completedWords: number, userId: string) {
    const wpm = getRunWpm(totalTimeMilliseconds, completedWords);

@@ -11,7 +11,7 @@ import { updateUserConfiguration } from "@app/settings/actions";
 export interface LanguageSectionProps {
 }
 
-const LANGUAGES = [
+export const LANGUAGES = [
    `English`,
    `Spanish`,
    `Italian`,
@@ -28,7 +28,7 @@ const LanguageSection = ({}: LanguageSectionProps) => {
 
    const { execute, status } = useAction(updateUserConfiguration, {
       onSuccess: res => {
-         if (res.success) {
+         if (res.data?.success) {
             console.log(res);
             setUserLanguage(res.userConfig.language);
          }
