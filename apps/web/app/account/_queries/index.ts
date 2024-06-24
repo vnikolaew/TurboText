@@ -29,7 +29,7 @@ export async function getUniqueRunTags(user: User & { typingRuns: TypingRun[] })
  */
 export async function getUserWithTypingRuns() {
    const session = await auth();
-   if(!session?.user) return null;
+   if (!session?.user) return null;
 
    const user = await xprisma.user.findUnique({
       where: { id: session?.user?.id },
@@ -44,4 +44,21 @@ export async function getUserWithTypingRuns() {
    if (!user) return null;
 
    return user;
+}
+
+const EXPONENT = 1.2;
+
+export async function getUserExperienceInfo() {
+   const session = await auth();
+   const userExperience = await xprisma.userExperience.findFirst({
+      where: { userId: session?.user?.id },
+   });
+   const level = xprisma.userExperience.getLevelFromXp({ points: userExperience?.points ?? 0 });
+
+   const xpNeededForCurrentLevel = Math.floor((100 * Math.pow(level - 1, EXPONENT)));
+   const xpNeededForNextLevel = Math.floor((100 * Math.pow(level, EXPONENT)));
+   const percentageUntilNextLevel = ((userExperience?.points ?? 0) - xpNeededForCurrentLevel)
+      / (xpNeededForNextLevel - xpNeededForCurrentLevel) * 100;
+
+   return { xpNeededForCurrentLevel, xpNeededForNextLevel, percentageUntilNextLevel, level, userExperience };
 }

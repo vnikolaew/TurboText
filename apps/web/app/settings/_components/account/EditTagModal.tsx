@@ -16,7 +16,7 @@ const EditTagModal = ({ tag, children }: EditTagModalProps) => {
    const [ open, setOpen] = useBoolean()
    const { execute, status, isExecuting } = useAction(editTag, {
       onSuccess: res => {
-         if (res.success) {
+         if (res.data?.success) {
             console.log(res);
             toast(TOASTS.EDIT_TAG_SUCCESS);
          } else {

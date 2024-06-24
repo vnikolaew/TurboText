@@ -24,7 +24,7 @@ import { typingFlagsAtom } from "./flags";
 
 const WORDS = generate(DEFAULT_WORD_COUNT) as string[];
 
-export const typingModeAtom = atom<TypingMode>(TypingMode.TIME);
+export const typingModeAtom = atom<TypingMode>( TypingMode.TIME);
 typingModeAtom.debugLabel = `typingModeAtom`;
 
 export const lettersCorrectnessAtom = atom<(boolean | null)[]>(
@@ -238,6 +238,7 @@ export const useTypingRunSuccess = () => {
 
 export const onKeyPressAtom = atom(null, (get, set, e: KeyboardEvent<HTMLDivElement>) => {
    e.preventDefault();
+   e.stopPropagation()
    let { key, ctrlKey: ctrl } = e;
 
 
@@ -245,6 +246,7 @@ export const onKeyPressAtom = atom(null, (get, set, e: KeyboardEvent<HTMLDivElem
 
    const charCode = e.key.charCodeAt(0);
    const capsLockSwitch = e.key === `CapsLock`
+
    if(capsLockSwitch) {
       set(capsLockOnAtom, l => !l)
       return

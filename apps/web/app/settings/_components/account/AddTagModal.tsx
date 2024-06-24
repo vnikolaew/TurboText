@@ -15,7 +15,7 @@ const AddTagModal = ({ children }: AddTagModalProps) => {
    const [ open, setOpen] = useBoolean()
    const { execute, status, isExecuting } = useAction(addTag, {
       onSuccess: res => {
-         if (res.success) {
+         if (res.data?.success) {
             console.log(res);
             toast(TOASTS.ADD_NEW_TAG_SUCCESS);
          } else {

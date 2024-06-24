@@ -29,7 +29,7 @@ const DeleteAccountModal = ({ children }: DeleteAccountModalProps) => {
    const router = useRouter();
    const { execute, status, isExecuting } = useAction(deleteAccount, {
       onSuccess: res => {
-         if (res.success) {
+         if (res.data?.success) {
             console.log(res);
             // toast(TOASTS.IMPORT_SETTINGS_SUCCESS)
             router.push(`/`);

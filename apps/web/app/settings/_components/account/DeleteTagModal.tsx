@@ -16,7 +16,7 @@ const DeleteTagModal = ({ children, tag }: DeleteTagModalProps) => {
    const [open, setOpen] = useBoolean();
    const { execute, status, isExecuting } = useAction(deleteTag, {
       onSuccess: res => {
-         if (res.success) {
+         if (res.data?.success) {
             console.log(res);
             toast(TOASTS.DELETE_TAG_SUCCESS);
          } else {

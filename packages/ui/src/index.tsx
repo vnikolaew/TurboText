@@ -2,6 +2,9 @@ import { ReactNode } from "react";
 import { ExternalToast, toast as sonnerToast } from "sonner";
 
 export * from "./components/ui/button"
+export * from "./components/ui/form"
+export * from "./components/ui/checkbox"
+export * from "./components/ui/command"
 export * from "./components/ui/badge"
 export * from "./components/ui/sheet"
 export * from "./components/ui/scroll-area"

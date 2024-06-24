@@ -1,5 +1,6 @@
 import NextAuth, { DefaultSession } from "next-auth";
 import Google, { GoogleProfile } from "next-auth/providers/google";
+import Github from "next-auth/providers/github";
 import { globalForPrisma, xprisma } from "@repo/db";
 import { PrismaClient, User } from "@prisma/client";
 import ResendProvider from "next-auth/providers/resend";
@@ -63,6 +64,7 @@ declare module "next-auth" {
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
    adapter: customAdapter,
+   trustHost: true,
    events: {
       // @ts-ignore
       createUser: async (user: { user: User }) => {
@@ -119,32 +121,40 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
    },
    session: { strategy: `jwt` },
    secret: process.env.AUTH_SECRET ?? `sdfsdfdsfwerwe`,
-   providers: [Google({
-      authorization: {
-         params: {
-            scope: `openid email profile https://www.googleapis.com/auth/drive`,
-            access_type: `offline`,
-            response_type: `code`,
+   providers: [
+      Github({
+         account: ({ access_token, id_token, authorization_details }) => {
+            console.log({ access_token, id_token, authorization_details});
          },
-      },
-   }), ResendProvider({
-      from: RESEND_ONBOARDING_EMAIL,
-      generateVerificationToken() {
-         return crypto.randomUUID();
-      },
-      async sendVerificationRequest({ request, url, identifier, provider, token }) {
-         try {
-            const res = await new EmailService().sendMail({
-               to: identifier,
-               subject: "Login Link to your Account",
-               html: "<p>Click the magic link below to sign in to your account:</p>\
+         allowDangerousEmailAccountLinking: true,
+         id: `github`,
+      }),
+      Google({
+         authorization: {
+            params: {
+               scope: `openid email profile https://www.googleapis.com/auth/drive`,
+               access_type: `offline`,
+               response_type: `code`,
+            },
+         },
+      }), ResendProvider({
+         from: RESEND_ONBOARDING_EMAIL,
+         generateVerificationToken() {
+            return crypto.randomUUID();
+         },
+         async sendVerificationRequest({ request, url, identifier, provider, token }) {
+            try {
+               const res = await new EmailService().sendMail({
+                  to: identifier,
+                  subject: "Login Link to your Account",
+                  html: "<p>Click the magic link below to sign in to your account:</p>\
                  <p><a href=\"" + url + "\"><b>Sign in</b></a></p>",
-            });
-         } catch (error) {
-            console.log({ error });
-         }
-      },
-   }),
+               });
+            } catch (error) {
+               console.log({ error });
+            }
+         },
+      }),
       Credentials({
             credentials: {
                email: {
@@ -164,11 +174,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                if (type === `signup`) {
                   // Handle user sign up:
                   const existing = await xprisma.user.findFirst({
-                        where: {
-                           email: email as string,
-                        },
-                     })
-                  ;
+                     where: {
+                        email: email as string,
+                     },
+                  });
                   if (existing) return null!;
 
                   // Retrieve Gravatar image:

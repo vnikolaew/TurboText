@@ -58,7 +58,7 @@ const AppFooter = async ({}: AppFooterProps) => {
                   title: `About`, href: `/about`,
                },
                {
-                  title: `Contact`, href: `mailto:${LINKS.email}`,
+                  title: `Contact`, href: `?contact=true`,
                },
             ], title: `LINKS`,
          }}

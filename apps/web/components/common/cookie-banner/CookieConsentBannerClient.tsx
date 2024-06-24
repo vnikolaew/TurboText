@@ -41,7 +41,7 @@ export const CustomizePreferencesModal = ({
 
    const { status, isExecuting, execute: handleSavePreferencesAction } = useAction(updateCookiePreferences, {
       onSuccess: res => {
-         if (res.success) {
+         if (res.data?.success) {
             onBack?.();
             hideBanner?.();
 

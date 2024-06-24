@@ -1,28 +1,28 @@
 import localFont from "next/font/local";
 import {
    Atkinson_Hyperlegible,
-   IBM_Plex_Sans,
-   Lexend_Deca,
-   Oxygen,
-   Ubuntu_Mono,
-   Courier_Prime,
-   Inconsolata,
-   Montserrat,
-   Roboto,
-   Fira_Code,
-   Itim,
-   Noto_Naskh_Arabic,
-   Roboto_Mono,
    Comfortaa,
-   JetBrains_Mono,
-   Nunito,
-   Source_Code_Pro,
-   Lalezar,
-   Open_Sans,
-   Titillium_Web,
+   Courier_Prime,
+   Fira_Code,
    IBM_Plex_Mono,
+   IBM_Plex_Sans,
+   Inconsolata,
+   Itim,
+   JetBrains_Mono,
+   Lalezar,
    Lato,
+   Lexend_Deca,
+   Montserrat,
+   Noto_Naskh_Arabic,
+   Nunito,
+   Open_Sans,
+   Oxygen,
+   Roboto,
+   Roboto_Mono,
+   Source_Code_Pro,
+   Titillium_Web,
    Ubuntu,
+   Ubuntu_Mono,
 } from "next/font/google";
 import { FONT_FAMILIES } from "@lib/consts";
 import { NextFontWithVariable } from "next/dist/compiled/@next/font";
@@ -62,6 +62,7 @@ export const ubuntu = Ubuntu({ subsets: ["latin"], weight: ["400"], variable: "-
 export const FONTS_MAP: Record<(typeof FONT_FAMILIES)[number], NextFontWithVariable> = {
    "Atkinson Hyperlegible": atkinsonHyperlegible,
    "CommitMono": sfMono,
+
    "IBM Plex Sans": ibmPlexSans,
    "Lexend Deca": lexendDeca,
    Oxygen: oxygen,
@@ -87,5 +88,6 @@ export const FONTS_MAP: Record<(typeof FONT_FAMILIES)[number], NextFontWithVaria
    "IBM Plex Mono": ibmPlexMono,
    Lato: lato,
    Ubuntu: ubuntu,
+   "SF Mono": sfMono
 };
 

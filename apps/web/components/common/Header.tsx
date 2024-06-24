@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import React, { ReactNode } from "react";
-import { signIn, signOut } from "next-auth/react";
+import { signOut } from "next-auth/react";
 import { SignedIn, SignedOut } from "./Auth";
 import { Bell, Crown, LogIn, LogOut, Settings } from "lucide-react";
 import { APP_NAME } from "@config/site";
@@ -91,10 +91,13 @@ const Header = ({}: NavbarProps) => {
                <SignedOut>
                   <Button
                      className={`px-4 gap-2 rounded-lg !py-2 !h-fit`}
-                     onClick={_ => signIn(`google`)} variant={"secondary"}
+                     asChild
+                      variant={"secondary"}
                   >
-                     <LogIn size={14} />
-                     {`Sign in`}
+                     <Link href={`/login`}>
+                        <LogIn size={14} />
+                        {`Sign in`}
+                     </Link>
                   </Button>
                </SignedOut>
             </div>

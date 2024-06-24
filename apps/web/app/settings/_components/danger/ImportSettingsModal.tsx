@@ -43,7 +43,7 @@ const ImportSettingsModal = ({children}: ImportSettingsModalProps) => {
    const [open, setOpen] = useBoolean();
    const { execute, status, isExecuting } = useAction(updateUserConfiguration, {
       onSuccess: res => {
-         if (res.success) {
+         if (res.data?.success) {
             console.log(res);
             toast(TOASTS.IMPORT_SETTINGS_SUCCESS)
             setValue(``);
