@@ -2,6 +2,5 @@
   "crons": [{
     "path": "/api/cron-job",
     "schedule": "0 5 * * *"
-  }],
-  "buildCommand": "sh ../../vercel.sh"
+  }]
 }
