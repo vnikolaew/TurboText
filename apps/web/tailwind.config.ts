@@ -3,6 +3,7 @@ import type { Config } from "tailwindcss";
 const { fontFamily } = require("tailwindcss/defaultTheme");
 
 const config: Config = {
+   safelist: [`animate-rainbow-bg`],
    darkMode: ["class"],
    content: [
       "./pages/**/*.{ts,tsx}",
@@ -70,6 +71,16 @@ const config: Config = {
             sm: "calc(var(--radius) - 4px)",
          },
          keyframes: {
+            "rainbow-bg": {
+               "0%": { backgroundColor: "red" },
+               "14%": { backgroundColor: "orange" },
+               "28%": { backgroundColor: "yellow" },
+               "42%": { backgroundColor: "green" },
+               "57%": { backgroundColor: "blue" },
+               "71%": { backgroundColor: "indigo" },
+               "85%": { backgroundColor: "violet" },
+               "100%": { backgroundColor: "red" },
+            },
             "animate-alert": {
                "0%": { opacity: "50%" },
                "100%": { opacity: "100%" },
@@ -84,6 +95,7 @@ const config: Config = {
             },
          },
          animation: {
+            "rainbow-bg": "rainbow-bg 10s linear infinite",
             "accordion-down": "accordion-down 0.2s ease-out",
             "accordion-up": "accordion-up 0.2s ease-out",
             "alert": "animate-alert 2s ease-out alternate infinite",

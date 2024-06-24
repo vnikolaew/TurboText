@@ -105,3 +105,33 @@ body {
     color: black;
     background: #f59e0b;
 }
+
+.rainbow-bg {
+    animation: rainbow-bg 10s linear infinite !important;
+}
+
+@keyframes rainbow-bg {
+    0% { background-color: red !important;
+    }
+    14% {
+        background-color: orange !important;
+    }
+    28% {
+        background-color: yellow !important;
+    }
+    42% {
+        background-color: green !important;
+    }
+    57% {
+        background-color: blue !important;
+    }
+    71% {
+        background-color: indigo !important;
+    }
+    85% {
+        background-color: violet !important;
+    }
+    100% {
+        background-color: red !important;
+    }
+}

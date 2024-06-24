@@ -43,7 +43,13 @@ export async function getUserWithTypingRuns() {
    });
    if (!user) return null;
 
-   return user;
+   const {updatePassword, verifyPassword, ...rest} = user;
+   rest.typingRuns = rest.typingRuns.map(run => {
+         const { hasFlag, ...rest } = run;
+         return rest;
+      },
+   );
+   return rest;
 }
 
 const EXPONENT = 1.2;

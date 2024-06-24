@@ -13,7 +13,7 @@ const AppGlobalStatsSection = ({runs}: AppGlobalStatsSectionProps) => {
       .reduce((a, b) => a + b, 0))?.split(` `);
 
    return (
-      <section id={`stats`} className={`w-full grid grid-cols-3 gap-4 mt-12`}>
+      <section id={`global-stats`} className={`w-full grid grid-cols-3 gap-4 mt-12`}>
          <div className={`flex flex-col items-center`}>
             <h3 className={`text-lg text-neutral-400`}>Total tests started</h3>
             <h2 className={`text-6xl`}>{runs.length}</h2>

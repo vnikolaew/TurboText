@@ -14,7 +14,7 @@ import {
 } from "@atoms/editor";
 import { SignedOut } from "@components/common/Auth";
 import { signIn } from "next-auth/react";
-import RestartButton from "@components/editor/RestartButton";
+import RestartButton from "@components/editor/buttons/RestartButton";
 import { timeAtom } from "@atoms/timer";
 import { consistencyScoreAtom, wpmAtom } from "@atoms/stats";
 import { TypingRunState, WordRange } from "@atoms/consts";

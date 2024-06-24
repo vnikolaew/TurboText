@@ -18,7 +18,7 @@ import { playSoundAtom } from "@app/settings/atoms";
 import { soundOnClickAtom } from "@atoms/user";
 import { SOUNDS } from "@lib/sounds";
 import TypingCaret from "@components/editor/TypingCaret";
-import FocusLostWarning from "@components/editor/FocusLostWarning";
+import FocusLostWarning from "@components/editor/warnings/FocusLostWarning";
 import PaceTypingCaret from "./PaceTypingCaret";
 
 export interface TypingInputProps {

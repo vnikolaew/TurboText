@@ -5,23 +5,25 @@ import { Link, Pencil } from "lucide-react";
 import { useBoolean } from "@hooks/useBoolean";
 import { TOASTS } from "@config/toasts";
 import EditProfileModal from "@app/account/_components/EditProfileModal";
+import { User } from "@repo/db";
 
 export interface AccountLinksProps {
-   username: string;
+   user: User
 }
 
-const AccountPageLinks = ({ username }: AccountLinksProps) => {
+const AccountPageLinks = ({ user }: AccountLinksProps) => {
    const [editProfileModalOpen, setEditProfileModalOpen] = useBoolean();
 
    function handleCopyLink(): void {
       window.navigator.clipboard
-         .writeText(`${process.env.NEXT_PUBLIC_BASE_URL}/profile/${encodeURIComponent(username)}`)
+         .writeText(`${process.env.NEXT_PUBLIC_BASE_URL}/profile/${encodeURIComponent(user.name!)}`)
          .then(_ => toast(TOASTS.PUBLIC_LINK_COPIED_SUCCESS!));
    }
 
    return (
       <Fragment>
          <EditProfileModal
+            initial={{ ...(user?.metadata ?? {}) }}
             editProfileModalOpen={editProfileModalOpen}
             setEditProfileModalOpen={setEditProfileModalOpen} />
          <div className={`h-full flex flex-col gap-4`}>

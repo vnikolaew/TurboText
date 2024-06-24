@@ -8,7 +8,7 @@ export interface ContactSectionProps {
 
 const ContactSection = ({}: ContactSectionProps) => {
    return (
-      <section id={`contact`} className={`text-left flex flex-col items-start gap-4`}>
+      <section id={`contact`} className={`text-left flex flex-col items-start gap-4 w-full !mb-12`}>
          <h2 className={`text-2xl mt-16 text-neutral-500`}>
             Contact
          </h2>

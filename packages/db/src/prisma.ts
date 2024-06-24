@@ -180,23 +180,23 @@ export let xprisma = prisma.$extends({
    model: {
       typingRun: {
          async getTopWpmToday() {
-            const top = await xprisma.$queryRaw`
+            const top = await xprisma.$queryRaw<TypingRun[]>`
                SELECT * FROM "TypingRun"
                WHERE "createdAt" >= NOW() - INTERVAL '1 day'
                ORDER BY metadata->>'wpm' DESC 
                LIMIT 1;
             `
 
-            return top?.at(0)?.metadata?.wpm;
+            return top?.at(0)
          },
          async getTopWpmAllTime() {
-            const top = await xprisma.$queryRaw`
+            const top = await xprisma.$queryRaw<TypingRun[]>`
                SELECT * FROM "TypingRun"
                ORDER BY metadata->>'wpm' DESC 
                LIMIT 1;
             `
 
-            return top?.at(0)?.metadata?.wpm;
+            return top?.at(0);
          }
       },
       userExperience: {

@@ -88,18 +88,18 @@ export const saveTypingRun = authorizedAction
          });
 
          let userXp = await updateUserXp(wpm, accuracy, userId!);
-         const topWpmAllTime = await xprisma.typingRun.getTopWpmAllTime();
-         const topWpmToday = await xprisma.typingRun.getTopWpmAllTime();
+         const topWpmAllTime = (await xprisma.typingRun.getTopWpmAllTime())?.metadata?.wpm;
+         const topWpmToday = (await xprisma.typingRun.getTopWpmToday())?.metadata?.wpm;
 
          let notification: INotification = null!;
 
-         if (wpm > topWpmAllTime ) {
+         if (wpm > topWpmAllTime) {
             notification = {
                type: `ALL_TIME`,
                message: `You scored a new all-time high WPM of ${wpm.toFixed(0)}!`,
             };
 
-         } else if (wpm > topWpmToday ) {
+         } else if (wpm > topWpmToday) {
             notification = {
                type: `TODAY`,
                message: `You scored a new highest WPM today of ${wpm.toFixed(0)}!`,

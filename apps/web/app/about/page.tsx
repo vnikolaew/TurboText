@@ -7,6 +7,8 @@ import ContactSection from "@app/about/_components/ContactSection";
 import AppGlobalStatsSection from "@app/about/_components/AppGlobalStatsSection";
 import type { Metadata } from "next";
 import { APP_DESCRIPTION, APP_NAME } from "@config/site";
+import WordsSetAndLanguageSection from "@app/about/_components/WordsSetAndLanguageSection";
+import StatsSection from "@app/about/_components/StatsSection";
 
 export interface PagProps {
 }
@@ -30,6 +32,8 @@ const Page = async ({}: PagProps) => {
             since {moment(LAUNCH_DATE).format(`Do of MMMM, YYYY`)}</h2>
          <AppGlobalStatsSection runs={runs} />
          <AboutUsSection />
+         <WordsSetAndLanguageSection />
+         <StatsSection />
          <BugReportFeatureRequestSection />
          <ContactSection />
       </section>

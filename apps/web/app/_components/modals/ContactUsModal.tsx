@@ -17,9 +17,9 @@ const ContactUsModal = ({}: ContactUsModalProps) => {
          if (!value) await setOpen(null);
          else await setOpen(true);
       }}>
-         <DialogContent className={`!min-w-1/2 !w-1/2 !max-w-[800px]`}>
+         <DialogContent className={`!min-w-1/2 !w-1/2 !max-w-[800px] !bg-neutral-900 !border-neutral-700`}>
             <DialogHeader>
-               <DialogTitle>
+               <DialogTitle className={`text-2xl`}>
                   Contact
                </DialogTitle>
             </DialogHeader>

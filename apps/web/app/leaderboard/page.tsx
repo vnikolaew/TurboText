@@ -60,7 +60,7 @@ const Page = async ({ searchParams }: PageProps) => {
 
    const showWarning = user?.totalTimeTypingMs < (1000 * 60 * 2 * 60);
    const { time60Runs, time15Runs, qualifiedUserIds } = await getLeaderboard({ daily, language });
-   console.log({ qualifiedUserIds });
+   console.log({ qualifiedUserIds: qualifiedUserIds.map(_ => _.userId) });
 
    return (
       <section className={`w-3/4 mx-auto mt-24 flex flex-col items-start gap-4`}>

@@ -32,9 +32,9 @@ export async function getLeaderboard({ daily, language }: { daily?: boolean, lan
                equals: language,
             },
          } : {}),
-         userId:  {
-            in:  qualifiedUserIds.map(_ => _.userId)
-         }
+         // userId:  {
+         //    in:  qualifiedUserIds.map(_ => _.userId)
+         // }
       },
       include: {
          user: {

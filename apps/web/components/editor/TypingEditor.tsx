@@ -5,7 +5,7 @@ import { totalRunTimeAtom, typedLettersAtom, typingRunAtom, useTypingRunSuccess 
 import { useAtomValue } from "jotai";
 import TypingRunSummary from "@components/editor/TypingRunSummary";
 import Confetti from "react-confetti";
-import RestartButton from "@components/editor/RestartButton";
+import RestartButton from "@components/editor/buttons/RestartButton";
 import TypingInput from "@components/editor/TypingInput";
 import { LocalStorage } from "@lib/local-storage";
 import { Button, toast } from "@repo/ui";
@@ -15,17 +15,18 @@ import { AnimatePresence } from "framer-motion";
 import { TOASTS } from "@config/toasts";
 import SaveTypingRunPrompt from "@components/editor/SaveTypingRunPrompt";
 import { autoSaveModeAtom, updateUserXpAtom } from "@atoms/user";
-import NewRunButton from "@components/editor/NewRunButton";
+import NewRunButton from "@components/editor/buttons/NewRunButton";
 import { SignedOut } from "@components/common/Auth";
 import { signIn } from "next-auth/react";
 import { TypingRunState } from "@atoms/consts";
 import { useSaveLatestUserRun } from "./hooks/useSaveLatestUserRun";
 import { totalPauseTimeAtom } from "@atoms/timer";
 import TypeRunState from "./TypeRunState";
-import CapsLockWarning from "@components/editor/CapsLockWarning";
+import CapsLockWarning from "@components/editor/warnings/CapsLockWarning";
 import TypingRunInfo from "./TypingRunInfo";
 import { TypingRun, User } from "@repo/db";
 import { useSetAtom } from "jotai/index";
+import PracticeWordsButton from "@components/editor/buttons/PracticeWordsButton";
 
 export interface TypingEditorProps {
    user: User & { typingRuns: TypingRun[] };
@@ -70,7 +71,7 @@ const TypingEditor = ({ user }: TypingEditorProps) => {
 
    const autoSaveMode = useAtomValue(autoSaveModeAtom);
    const showSavePrompt = useMemo(() =>
-         timerState === TypingRunState.FINISHED && !autoSaveMode && !(result?.data?.success === true),
+         timerState === TypingRunState.FINISHED ,
       [timerState, result, autoSaveMode]);
 
    function handleSaveTypingRun(): void {
@@ -112,6 +113,7 @@ const TypingEditor = ({ user }: TypingEditorProps) => {
          </div>
          <div className={`flex items-center justify-center w-full gap-4`}>
             <RestartButton />
+            <PracticeWordsButton />
             <NewRunButton />
          </div>
          <AnimatePresence>

@@ -12,7 +12,6 @@ export const playSoundAtom = atom<string[]>(null, async (get, set, index: number
    if (sound) {
       const audio = new Audio(sound);
       await audio?.play();
-      console.log(`Sound played!`);
    }
 });
 

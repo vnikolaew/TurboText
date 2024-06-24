@@ -1,4 +1,5 @@
 import { APP_NAME } from "@config/site";
+import { Info } from "lucide-react";
 import React from "react";
 
 export interface AboutUsSectionProps {
@@ -7,7 +8,12 @@ export interface AboutUsSectionProps {
 const AboutUsSection = ({}: AboutUsSectionProps) => {
    return (
       <section id={`about`} className={`text-left flex flex-col items-start gap-4`}>
-         <h2 className={`text-2xl mt-16 text-neutral-500`}>About us</h2>
+         <h2 className={`text-2xl mt-16 text-neutral-500 inline-flex items-center gap-2`}>
+            <Info size={24} />
+            <span>
+               About us
+            </span>
+         </h2>
          <p>
             Welcome to {APP_NAME}, your go-to platform for enhancing your typing skills and boosting your
             productivity. At {APP_NAME}, we provide an engaging and interactive environment where users can challenge

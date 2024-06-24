@@ -47,12 +47,12 @@ const Page = async ({ searchParams }: PageProps) => {
          {user.emailVerified && searchParams?.verified === `true` && (
             <OnAccountVerified />
          )}
-         <div className={`w-full bg-stone-950/70 rounded-lg shadow-lg flex items-center p-6 py-10 gap-8 mt-8`}>
+         <div className={`w-full bg-stone-950/70 rounded-lg shadow-lg flex items-center p-6 py-10 gap-8 mt-8 `}>
             <div className={`flex flex-col items-start gap-2`}>
                <div className={`flex items-center gap-4`}>
                   <UserAvatar className={`w-20 h-20`} imageSrc={user?.image!} />
                   <div className={`flex flex-col items-start gap-2`}>
-                     <h2 className={`text-2xl text-neutral-300`}>{user?.name}</h2>
+                     <h2 className={`text-2xl text-neutral-300 `}>{user?.name}</h2>
 
                      <div className={`flex flex-col gap-0`}>
                         <TooltipProvider>
@@ -98,7 +98,7 @@ const Page = async ({ searchParams }: PageProps) => {
                </div>
             </div>
             <Separator orientation={`vertical`} className={`h-20 w-[4px] rounded-full bg-neutral-700`} />
-            <AccountLinks username={user.name!} />
+            <AccountLinks user={user} />
          </div>
          <div className={`w-full bg-stone-950/70 rounded-lg shadow-lg flex items-center p-6 py-10 gap-8 mt-8`}>
             <UserActivitySection typingRuns={user?.typingRuns?.map(run => {

@@ -3,6 +3,9 @@
 import { cn } from "@lib/utils";
 import {
    Badge,
+   HoverCard,
+   HoverCardContent,
+   HoverCardTrigger,
    ScrollArea,
    Table,
    TableBody,
@@ -12,10 +15,17 @@ import {
    TableRow,
    UserAvatar,
 } from "@repo/ui";
-import { Baby, Crown } from "lucide-react";
+import { Crown } from "lucide-react";
 import moment from "moment";
-import React from "react";
+import React, { useState } from "react";
 import { useSession } from "next-auth/react";
+import MythicalBadge from "@app/account/_components/badges/MythicalBadge";
+import OgAccountBadge from "@app/account/_components/badges/OGAccountBadge";
+import Link from "next/link";
+import { TypingRun, User, UserExperience } from "@repo/db";
+import { useBoolean } from "@hooks/useBoolean";
+import { setLazyProp } from "next/dist/server/api-utils";
+import { LoadingSpinner } from "@components/common/LoadingSpinner";
 
 export interface LeaderboardRow {
    position: number;
@@ -95,6 +105,21 @@ export const LeaderboardTable = ({ caption, rows, showWarning }: LeaderboardTabl
 
 const LeaderboardTableRow = ({ row, index }: { row: LeaderboardRow, index: number }) => {
    const session = useSession();
+   const [userDetails, setUserDetails] = useState<Partial<User & { typingRuns: TypingRun[], experience: UserExperience }>>(null!);
+   const [loading, setLoading] = useBoolean();
+
+   async function handleOnHover() {
+      if(userDetails) return;
+      setLoading(true);
+      fetch(`/api/user/${row.user.id}/details`, {
+         method: 'GET',
+      }).then(r => r.json()).then(res => {
+         if(res.success) {
+            setUserDetails(res.user)
+            console.log({ user: res.user });
+         }
+      }).finally(() => setLoading(false))
+   }
 
    return (
       <TableRow key={index} className={cn(`grid grid-cols-13 w-full `,
@@ -113,19 +138,38 @@ const LeaderboardTableRow = ({ row, index }: { row: LeaderboardRow, index: numbe
                </span>
             </div>
             <div className={`flex items-center gap-2`}>
-               <span className={`text-nowrap`}>
-                  {row.user.name} {row.user.id === session?.data?.user?.id ? "(you)" : ""}
-               </span>
-               {row.user.og && (
-                  <span>
-                  <Badge className={`!bg-amber-500 !text-black inline-flex gap-2 items-center text-nowrap shadow-md text-xs`} variant={`default`} >
-                     <Baby size={14} />
-                     <span>
-                     OG Account
-                     </span>
-                  </Badge>
-                  </span>
-               )}
+               <HoverCard >
+                  <HoverCardTrigger asChild>
+                     <Link onMouseEnter={handleOnHover} href={`/profile/${row.user.id}`}>
+                        <span className={`text-nowrap`}>
+                           {row.user.name} {row.user.id === session?.data?.user?.id ? "(you)" : ""}
+                        </span>
+                     </Link>
+                  </HoverCardTrigger>
+                  <HoverCardContent>
+                     {loading ? (
+                        <span className={`inline-flex items-center gap-2`}>
+                        <LoadingSpinner text={`Loading...`} />
+                        </span>
+                     ) : (
+                        <div className={`flex flex-col gap-4 items-start`}>
+                           <div className={`flex items-center gap-2`}>
+                              <UserAvatar imageSrc={userDetails?.image} />
+                              <div className={`flex flex-col justify-between gap-0`}>
+                                 <span>{userDetails?.name}</span>
+                                 <span className={`text-xs text-muted-foreground`}>Joined {moment(userDetails?.createdAt)?.format(`DD MMM YYYY`)}</span>
+                              </div>
+                           </div>
+                           <span className={`text-muted-foreground`}>
+                              &bull; {userDetails?.typingRuns?.length} total runs
+                           </span>
+                        </div>
+                     )}
+                  </HoverCardContent>
+               </HoverCard>
+
+               {index === 0 && <MythicalBadge />}
+               {row.user.og && index > 0 && <OgAccountBadge />}
             </div>
          </TableCell>
          <TableCell className={`col-span-2 text-right flex flex-col justify-end !px-0`}>
