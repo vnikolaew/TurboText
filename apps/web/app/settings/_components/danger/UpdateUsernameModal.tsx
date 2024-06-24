@@ -18,12 +18,13 @@ const UpdateUsernameModal = ({ children, username }: UpdateUsernameModalProps) =
    const { update } = useSession();
    const { execute, status, isExecuting   } = useAction(changeUsername, {
       onSuccess: async res => {
-         if (res.success) {
+         if (res?.data?.success) {
             console.log(res);
             toast(TOASTS.EDIT_USERNAME_SUCCESS);
-            await update({ name: res.user.name })
+
+            await update({ name: res.data.user.name })
          } else {
-            toast(TOASTS.EDIT_USERNAME_FAILURE(res.error));
+            toast(TOASTS.EDIT_USERNAME_FAILURE(res.data.error));
          }
          setOpen(false);
       },

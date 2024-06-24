@@ -10,20 +10,27 @@ interface TypingRunInfoProps {
    runs: TypingRun[];
 }
 
+function getAverages(runs: TypingRun[]) {
+   const averagePace = runs?.length ? sum(runs
+         ?.filter(r => !isNaN(Number(r.metadata?.wpm)))
+         ?.map(r => r.metadata?.wpm)) /
+      runs?.filter(r => !isNaN(Number(r.metadata?.wpm)))?.length! : 0;
+
+   const averageAccuracy = runs?.length ? sum(runs
+         ?.filter(r => !isNaN(Number(r.metadata?.accuracy)))
+         ?.map(r => r.metadata?.accuracy)) /
+      runs?.filter(r => !isNaN(Number(r.metadata?.accuracy)))?.length! : 0;
+
+   return { averagePace, averageAccuracy };
+}
+
 const TypingRunInfo = ({ runs }: TypingRunInfoProps) => {
    const language = useAtomValue(userLanguageAtom);
    const difficulty = useAtomValue(userTestDifficultyAtom);
    const activeTags = useAtomValue(userActiveTagsAtom);
 
-   const averagePace = runs?.length ?  sum(runs
-         ?.filter(r => !isNaN(Number(r.metadata?.wpm)))
-         ?.map(r => r.metadata?.wpm)) /
-      runs?.filter(r => !isNaN(Number(r.metadata?.wpm)))?.length! : 0;
-
-   const averageAccuracy = runs?.length ?  sum(runs
-         ?.filter(r => !isNaN(Number(r.metadata?.accuracy)))
-         ?.map(r => r.metadata?.accuracy)) /
-      runs?.filter(r => !isNaN(Number(r.metadata?.accuracy)))?.length! : 0;
+   const { averagePace, averageAccuracy } = getAverages(runs);
+   console.log({ language, difficulty });
 
    return (
       <div className={`w-full flex items-center justify-center gap-8 text-neutral-400`}>
@@ -37,7 +44,7 @@ const TypingRunInfo = ({ runs }: TypingRunInfoProps) => {
          <RunInfo>
             <Star size={18} />
             <span>
-               {(difficulty as string).toLowerCase()}
+               {(difficulty as string)?.toLowerCase()}
             </span>
          </RunInfo>
          <RunInfo>

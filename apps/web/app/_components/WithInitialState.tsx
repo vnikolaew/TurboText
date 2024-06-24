@@ -8,25 +8,25 @@ export interface WithInitialStateProps {
 
 const WithInitialState = async ({}: WithInitialStateProps) => {
    const session = await auth();
-   if(!session?.user) return null;
+   if (!session?.user) return null;
 
    const user = await xprisma.user.findUnique({
       where: { id: session.user?.id ?? `` },
-       include: {
+      include: {
          experience: {
             select: {
-               id: true, level: true, points: true
-            }
+               id: true, level: true, points: true,
+            },
          },
-          configuration: {
+         configuration: {
             select: {
-               id: true, userId: true
-            }
-          }
-       }
+               id: true, userId: true,
+            },
+         },
+      },
    });
-   if(!user) return null
-   const {verifyPassword, updatePassword, ...rest} = user;
+   if (!user) return null;
+   const { verifyPassword, updatePassword, ...rest } = user;
 
    return <HydrateAllAtoms user={rest!} />;
 };

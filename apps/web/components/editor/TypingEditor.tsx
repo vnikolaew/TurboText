@@ -2,7 +2,7 @@
 import React, { Fragment, useMemo } from "react";
 import { useTimer } from "@components/editor/hooks/useTimer";
 import { totalRunTimeAtom, typedLettersAtom, typingRunAtom, useTypingRunSuccess } from "@atoms/editor";
-import { useAtom, useAtomValue } from "jotai";
+import { useAtomValue } from "jotai";
 import TypingRunSummary from "@components/editor/TypingRunSummary";
 import Confetti from "react-confetti";
 import RestartButton from "@components/editor/RestartButton";
@@ -38,7 +38,7 @@ const TypingEditor = ({ user }: TypingEditorProps) => {
    const typedLetters = useAtomValue(typedLettersAtom);
    const totalRunTime = useAtomValue(totalRunTimeAtom);
    const totalPauseTime = useAtomValue(totalPauseTimeAtom);
-   const [typingRun, setTypingRun] = useAtom(typingRunAtom);
+   const typingRun = useAtomValue(typingRunAtom);
    const setUserXp = useSetAtom(updateUserXpAtom);
 
    useTypingRunSuccess();
@@ -53,8 +53,11 @@ const TypingEditor = ({ user }: TypingEditorProps) => {
             const newUserXp = { level: res.data.userXp?.level, points: res.data.userXp?.points };
             setUserXp(newUserXp);
 
-            toast(TOASTS.SAVE_TYPING_RUN_SUCCESS);
-            // setTypingRun(null!);
+            if (res.data?.notification) {
+               toast(TOASTS.SAVE_TYPING_RUN_SUCCESS_NOTIFICATION(res.data?.notification!.message));
+            } else {
+               toast(TOASTS.SAVE_TYPING_RUN_SUCCESS);
+            }
          }
       },
       onError: console.error,
@@ -103,8 +106,10 @@ const TypingEditor = ({ user }: TypingEditorProps) => {
                <TypingInput />
             )}
          </div>
-         <span className={`mt-4 w-full text-center`}>Total run time: {totalRunTime}ms</span>
-         <span className={`mt-4 w-full text-center`}>Total pause time: {totalPauseTime}ms</span>
+         <div className={`flex items-center gap-2 w-full justify-center`}>
+            <span className={`mt-4 w-full text-center`}>Total run time: {totalRunTime}ms</span>
+            <span className={`mt-4 w-full text-center`}>Total pause time: {totalPauseTime}ms</span>
+         </div>
          <div className={`flex items-center justify-center w-full gap-4`}>
             <RestartButton />
             <NewRunButton />
@@ -114,7 +119,7 @@ const TypingEditor = ({ user }: TypingEditorProps) => {
                <SaveTypingRunPrompt
                   loading={isExecuting}
                   onDismiss={() => {
-                     setTypingRun(null!);
+                     // setTypingRun(null!);
                      LocalStorage.removeItem(TYPING_RUN_LS_KEY);
                   }}
                   onSave={handleSaveTypingRun} />
@@ -126,22 +131,15 @@ const TypingEditor = ({ user }: TypingEditorProps) => {
                   (
                      <div className={`flex items-center justify-center w-full`}>
                      <span className={`text-lg`}>
-                        <Button className={`!text-base !px-0`} variant={`link`}
-                                onClick={_ => signIn(`google`)}>Sign in </Button> to save your result.
+                        <Button
+                           className={`!text-base !px-0`} variant={`link`}
+                           onClick={_ => signIn(`google`)}>Sign in </Button> to save your result.
                      </span>
                      </div>
                   )
                }
             </SignedOut>
          </AnimatePresence>
-         <div className={`w-full grid grid-cols-8 gap-4`}>
-            {typedLetters?.map((letter, index) => (
-               <span key={`${letter.letter}-${letter.timestamp}`}
-                     className={`text-sm`}>
-                  {letter.letter} - {letter.timestamp}ms
-               </span>
-            ))}
-         </div>
          {
             timerState === TypingRunState.FINISHED && <TypingRunSummary />
          }

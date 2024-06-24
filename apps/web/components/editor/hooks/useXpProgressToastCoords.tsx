@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useAtomValue } from "jotai/index";
 import { prevUserXpAtom, userDataLoadingAtom, userXpAtom } from "@atoms/user";
@@ -12,7 +12,7 @@ export function useXpProgressToastCoords() {
    const session = useSession();
    const userDataLoading = useAtomValue(userDataLoadingAtom);
 
-   const [{ left, top }, setToastCoords] = useState<{ top: number, left: number }>(() => {
+   const getAvatarElementCoords = useCallback(() => {
       const userAvatarElement = document.getElementById(`user-avatar`);
       if (userAvatarElement) {
          const rects = userAvatarElement.getBoundingClientRect();
@@ -21,32 +21,20 @@ export function useXpProgressToastCoords() {
             top: rects.top + rects.height,
             left: rects.left,
          };
-      } else return { top: 0, left: 0 };
-   });
+      } else return null!;
+   }, []);
+
+   const [{ left, top }, setToastCoords] = useState<{ top: number, left: number }>(() => getAvatarElementCoords() ?? {top: 0, left: 0});
 
    useEffect(() => {
-      const userAvatarElement = document.getElementById(`user-avatar`);
-      if (userAvatarElement) {
-         const rects = userAvatarElement.getBoundingClientRect();
-
-         setToastCoords({
-            top: rects.top + rects.height,
-            left: rects.left,
-         });
-      }
+      const coords = getAvatarElementCoords();
+      if (coords) setToastCoords(coords);
    }, [userDataLoading, session]);
 
    useEffect(() => {
       if (userXp.points > userXpPrev?.points) {
-         const userAvatarElement = document.getElementById(`user-avatar`);
-         if (userAvatarElement) {
-
-            const rects = userAvatarElement.getBoundingClientRect();
-            setToastCoords({
-               top: rects.top + rects.height,
-               left: rects.left,
-            });
-         }
+         const coords = getAvatarElementCoords();
+         if (coords) setToastCoords(coords);
       }
    }, [userXp]);
 

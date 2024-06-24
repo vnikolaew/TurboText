@@ -37,7 +37,7 @@ const UpdateCookiePreferencesModal = ({ children }: UpdateCookiePreferencesModal
    const [open, setOpen] = useBoolean();
    const { execute, status, isExecuting } = useAction(updateCookiePreferences, {
       onSuccess: async res => {
-         if (res.success) {
+         if (res.data?.success) {
             console.log(res);
             toast(TOASTS.CHANGE_COOKIE_PREFERENCES_SUCCESS);
          } else {

@@ -87,6 +87,11 @@ caretStyleAtom.debugLabel = `caretStyleAtom`;
 export const paceCaretStyleAtom = focusAtom<UserConfiguration["pace_caret_style"]>(userConfigAtom, optic => optic.prop(`pace_caret_style`));
 paceCaretStyleAtom.debugLabel = `paceCaretStyleAtom`;
 
+
+// @ts-ignore
+export const paceCaretSpeedAtom = focusAtom<UserConfiguration["pace_caret_speed"]>(userConfigAtom, optic => optic.prop(`pace_caret_speed`));
+paceCaretSpeedAtom .debugLabel = `paceCaretSpeedAtom`;
+
 // @ts-ignore
 export const flipColorsAtom = focusAtom<UserConfiguration["theme_flip_colors"]>(userConfigAtom, optic => optic.prop(`theme_flip_colors`));
 flipColorsAtom.debugLabel = `flipColorsAtom`;

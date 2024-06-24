@@ -1,23 +1,16 @@
-import { auth } from "@auth";
 import React from "react";
-import { xprisma } from "../../../../../packages/db/src";
-import { Progress, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@repo/ui";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@repo/ui";
+import { getUserExperienceInfo } from "@app/account/_queries";
+import AnimatedProgress from "@app/account/_components/AnimatedProgress";
 
-const EXPONENT = 1.2;
 
 export async function UserExperienceInfo() {
-   const session = await auth();
-   const userExperience = await xprisma.userExperience.findFirst({
-      where: { userId: session?.user?.id },
-   });
-   const level = xprisma.userExperience.getLevelFromXp({ points: userExperience?.points ?? 0 });
-
-   const xpNeededForCurrentLevel = Math.floor((100 * Math.pow(level - 1, EXPONENT)));
-   const xpNeededForNextLevel = Math.floor((100 * Math.pow(level, EXPONENT)));
-   const percentageUntilNextLevel = ((userExperience?.points ?? 0) - xpNeededForCurrentLevel)
-      / (xpNeededForNextLevel - xpNeededForCurrentLevel) * 100;
-
-   console.log({ userExperience, level, xpNeededForCurrentLevel, xpNeededForNextLevel });
+   const {
+      percentageUntilNextLevel,
+      xpNeededForNextLevel,
+      level,
+      userExperience,
+   } = await getUserExperienceInfo();
 
    return (
       <div className={`w-full flex items-center gap-4`}>
@@ -26,7 +19,7 @@ export async function UserExperienceInfo() {
             <TooltipProvider delayDuration={0}>
                <Tooltip>
                   <TooltipTrigger asChild>
-                     <Progress className={`w-full !h-2 cursor-pointer`} value={percentageUntilNextLevel} />
+                     <AnimatedProgress value={percentageUntilNextLevel} />
                   </TooltipTrigger>
                   <TooltipContent
                      side={`top`}

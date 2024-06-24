@@ -10,18 +10,35 @@ import {
    userDataLoadingAtom,
    userXpAtom,
 } from "@atoms/user";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { currentTimestampAtom, TIMES } from "@atoms/timer";
 import { Tag, User, UserConfiguration } from "@repo/db";
 import { useHydrateAtoms } from "jotai/utils";
 import { DEFAULT_WORD_COUNT, TypingMode, TypingRunState, WORDS_COUNTS } from "@atoms/consts";
 import { wordsCountsAtom } from "@atoms/words";
 import { typingFlagsAtom } from "@atoms/flags";
+import { useAtom } from "jotai";
 
 export function useHydrateAllAtoms(user?: User & { configuration: UserConfiguration }) {
    const WORDS = useRef(generate(DEFAULT_WORD_COUNT) as string[]);
+   const [userConfig, setUserConfig] = useAtom(userConfigAtom);
 
    console.log({ user });
+   useEffect(() => {
+      if (!!userConfig) {
+         setUserConfig(user?.configuration ?? {
+            test_difficulty: "NORMAL",
+            elements_show_oof_warning: false,
+            elements_show_key_tips: false,
+            elements_show_caps_lock_warning: true,
+            elements_show_average: false,
+            theme_colorful_mode: false,
+            theme_flip_colors: false,
+            pace_caret_style: `OFF`,
+            caret_style: `NORMAL`,
+         });
+      }
+   }, []);
 
    //@ts-ignore
    useHydrateAtoms([
