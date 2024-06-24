@@ -115,6 +115,15 @@ Export successful
             </div>),
       className: `text-base font-normal`,
    },
+   SAVE_TYPING_RUN_SUCCESS_NOTIFICATION: (message: string) => ({
+      message:
+         (
+            <div className={`flex items-center gap-2`}>
+               <Check className={`text-green-600 bg-green-600`} size={18} />
+               <span>Your latest run has been saved! {message}</span>
+            </div>),
+      className: `text-base font-normal`,
+   }),
    SAVE_TYPING_RUN_FAILURE: {
       message:
          (

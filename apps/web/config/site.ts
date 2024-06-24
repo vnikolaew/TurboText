@@ -16,7 +16,7 @@ export const COMPANY_DETAILS = {
 export const LINKS = {
    twitter: `https://twitter.com/vnikolaew25`,
    github: `https://github.com/vnikolaew`,
-   discord: `https://discord.gg/turbotext`,
+   discord: `https://discord.gg/San8FrTghW`,
    linkedIn: `https://www.linkedin.com/in/victorio-nikolaev-384a43298`,
    email: `victorio.nikolaev25@gmail.com`,
    supportEmail: `victorio.nikolaev25@gmail.com`,

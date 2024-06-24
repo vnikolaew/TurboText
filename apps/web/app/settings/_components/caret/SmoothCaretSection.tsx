@@ -12,8 +12,7 @@ import { cn } from "@lib/utils";
 export interface SmoothCaretSectionProps {
 }
 
-const CARET_SMOOTHNESSES = [
-   {
+const CARET_SMOOTHNESSES = [ {
       value: `OFF`,
       label: `Off`,
    },
@@ -62,7 +61,9 @@ const SmoothCaretSection = ({}: SmoothCaretSectionProps) => {
                   onClick={_ => execute({ caret_smoothness: value })}
                   key={value}
                   className={cn(`flex-1`,
-                  smoothCaret === value && `bg-amber-500`)}>{label}</Button>
+                  smoothCaret === value && `bg-amber-500`)}
+               >
+                  {label}</Button>
             ))}
          </div>
       </SettingLayout>

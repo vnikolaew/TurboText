@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { parseAsArrayOf, parseAsString, useQueryState } from "nuqs";
+import { Logger } from "@lib/logger";
 
 export interface SectionsProps {
 }
@@ -20,6 +21,7 @@ const SECTIONS = [
 const Sections = ({}: SectionsProps) => {
    const [sections, setSections] = useQueryState(`sections`, parseAsArrayOf(parseAsString).withDefault([]));
 
+   Logger.info("test")
    return (
       <div className={`w-full flex items-center justify-between my-12`}>
          {SECTIONS.map((section) => (

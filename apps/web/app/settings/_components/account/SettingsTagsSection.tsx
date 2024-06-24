@@ -45,7 +45,7 @@ const SettingsTagsSection = ({ tags }: SettingsTagsSectionProps) => {
 const Tag = ({ tag }: { tag: TTag }) => {
    const { execute, status } = useAction(toggleTagActive, {
       onSuccess: res => {
-         if (res.success) {
+         if (res.data?.success) {
             console.log(res);
          } else {
          }

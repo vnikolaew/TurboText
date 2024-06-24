@@ -25,7 +25,7 @@ const ScrollToTopButton = ({}: ScrollToTopButtonProps) => {
    };
 
    // @ts-ignore
-   return <AnimatePresence >
+   return <AnimatePresence>
       {
          showButton && (
             <motion.div
@@ -37,19 +37,20 @@ const ScrollToTopButton = ({}: ScrollToTopButtonProps) => {
                className={`!z-[100]`}
                animate={{ opacity: 100 }} exit={{ opacity: 0 }}
             >
-               <TooltipProvider> <Tooltip>
-                  <TooltipTrigger asChild>
-                     <MotionButton
-                        variant={`secondary`}
-                        onClick={scrollToTop}
-                        className={`rounded-full !p-2 fixed bottom-8 right-8 !h-fit opacity-70 !z-[100]`}>
-                        <ChevronUp size={28} />
-                     </MotionButton>
-                  </TooltipTrigger>
-                  <TooltipContent side={`top`} className={`bg-black text-white rounded-full text-xs`}>
-                     Scroll to top
-                  </TooltipContent>
-               </Tooltip>
+               <TooltipProvider>
+                  <Tooltip>
+                     <TooltipTrigger asChild>
+                        <MotionButton
+                           variant={`secondary`}
+                           onClick={scrollToTop}
+                           className={`rounded-full !p-2 fixed bottom-8 right-8 !h-fit opacity-70 !z-[100]`}>
+                           <ChevronUp size={28} />
+                        </MotionButton>
+                     </TooltipTrigger>
+                     <TooltipContent side={`top`} className={`bg-black text-white rounded-full text-xs`}>
+                        Scroll to top
+                     </TooltipContent>
+                  </Tooltip>
                </TooltipProvider>
             </motion.div>
          )
