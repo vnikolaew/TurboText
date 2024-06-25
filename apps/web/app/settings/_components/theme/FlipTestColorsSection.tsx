@@ -27,12 +27,12 @@ const FlipTestColorsSection = ({}: FlipTestColorsProps) => {
       <SettingLayout className={``}>
          <div className={`flex flex-col items-start gap-2`}>
             <h2 className={`inline-flex items-center gap-2`}>
-               <Circle className={`text-neutral-500 `} size={20} />
-               <span className={`text-xl text-neutral-500`}>
+               <Circle className={`text-main `} size={20} />
+               <span className={`text-xl text-main`}>
                   Flip test colors
                </span>
             </h2>
-            <p className={`mt-2 text-base`}>
+            <p className={`mt-2 text-base !text-secondary`}>
                By default, typed text is brighter than the future text. When enabled, the colors will be flipped and the
                future text will be brighter than the already typed text.
             </p>

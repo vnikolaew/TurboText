@@ -24,7 +24,7 @@ const RestartButton = ({}: RestartButtonProps) => {
                   className={`hover:!bg-transparent group`}
                   variant={`ghost`}
                   size={`icon`}>
-                  <RotateCw className={`group-hover:!text-neutral-400  transition-colors duration-200`} size={18} />
+                  <RotateCw className={`group-hover:!text-neutral-400  transition-colors duration-200 !text-main`} size={18} />
                </Button>
             </TooltipTrigger>
             <TooltipContent

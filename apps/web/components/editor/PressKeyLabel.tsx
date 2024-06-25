@@ -13,7 +13,7 @@ const PressKeyLabel = ({}: PressKeyLabelProps) => {
    if(state !== TypingRunState.STOPPED) return null;
 
    return (
-      <div className={`text-sm text-neutral-500 mt-2`}>
+      <div className={`text-sm text-secondary mt-2`}>
          Press a key to begin your typing run. Mode: {mode}
       </div>
    );

@@ -1,25 +1,31 @@
 import { useAtom } from "jotai";
-import { userLanguageAtom } from "@atoms/user";
+import { userConfigAtom, userLanguageAtom } from "@atoms/user";
 import { useAction } from "next-safe-action/hooks";
 import { updateUserConfiguration } from "@app/settings/actions";
 import { CommandItem } from "@repo/ui";
 import { Check, ChevronRight, Languages } from "lucide-react";
+import { useSetAtom } from "jotai/index";
+import { generateWordsAtom } from "@atoms/words";
 
 export const LanguageOption = ({ language }: { language: string }) => {
    const [userLanguage, setUserLanguage] = useAtom(userLanguageAtom);
+   const setUserConfig = useSetAtom(userConfigAtom);
+   const generateWords = useSetAtom(generateWordsAtom)
 
    const { execute, status } = useAction(updateUserConfiguration, {
-      onSuccess: res => {
+      onSuccess: async res => {
          if (res?.data?.success) {
             console.log(res);
-            setUserLanguage(res.data.userConfig?.language);
+            // setUserLanguage(res.data.userConfig?.language);
+            setUserConfig(c => ({ ...c, language: res.data?.userConfig?.language }));
+            await generateWords()
          }
       },
    });
 
    return (
       <CommandItem
-         value={language}
+         value={`language-${language}`}
          onSelect={_ => execute({ language })}
          key={language} className={`flex items-center gap-6 w-full cursor-pointer`}>
          <div className={`flex items-center gap-1`}>

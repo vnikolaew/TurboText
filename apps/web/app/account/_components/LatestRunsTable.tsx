@@ -47,48 +47,53 @@ const tableSortAtom = atom<{ key: keyof TableRun; desc: boolean }>({
    desc: true,
 });
 
+function mapRun(run: TypingRun, tagsById: Record<string, TTag[]>) {
+   return {
+      ...run,
+      wpm: run.wpm.toFixed(2),
+      consistency: run.consistency.toFixed(2),
+      accuracy: run.accuracy.toFixed(2),
+      modeNormalized: `${run.mode?.toLowerCase()} ${run.mode === `TIME` ? run.time : run.wordCount}`,
+      tags: tagsById[run.metadata?.tags?.[0]]?.map(t => t.name)?.join(`, `) ?? `no tags`,
+      dateFormatted: <div className={`flex flex-col items-start gap-0`}>
+         <span>{moment(run.createdAt).format(`DD MMM YYYY`)}</span>
+         <span>{moment(run.createdAt).format(`HH:mm`)}</span>
+      </div>,
+   } as const;
+}
+
+type RunNormalized = ReturnType<typeof mapRun>
+
+function sortRuns(a: RunNormalized, b: RunNormalized, tableSort: { key: keyof TableRun; desc: boolean }) {
+   const first = a[tableSort.key];
+   const second = b[tableSort.key];
+
+   if (typeof first === `string`) {
+      return first.localeCompare(second) * (tableSort.desc ? -1 : 1);
+   }
+
+   return (first > second ? 1 : -1) * (tableSort.desc ? -1 : 1);
+}
+
 
 const LatestRunsTable = ({ runs, tagsById }: LatestRunsTableProps) => {
    const [pagingCursor, setPagingCursor] = useState(10);
    const tableSort = useAtomValue(tableSortAtom);
 
    const runsNormalized = runs?.slice(0, pagingCursor)
-      .map((run, index) => {
-         return {
-            ...run,
-            wpm: run.wpm.toFixed(2),
-            consistency: run.consistency.toFixed(2),
-            accuracy: run.accuracy.toFixed(2),
-            modeNormalized: `${run.mode?.toLowerCase()} ${run.wordCount}`,
-            tags: tagsById[run.metadata?.tags?.[0]]?.map(t => t.name)?.join(`, `) ?? `no tags`,
-            dateFormatted: <div className={`flex flex-col items-start gap-0`}>
-               <span>{moment(run.createdAt).format(`DD MMM YYYY`)}</span>
-               <span>{moment(run.createdAt).format(`HH:mm`)}</span>
-            </div>,
-         };
-      })
-      .sort((a, b) => {
-         const first = a[tableSort.key];
-         const second = b[tableSort.key];
+      .map(r => mapRun(r, tagsById))
+      .sort((a, b) =>sortRuns(a,b, tableSort));
 
-         if (typeof first === `string`) {
-            return first.localeCompare(second) * (tableSort.desc ? -1 : 1);
-         }
-
-         // if(typeof first === `number` || first instanceof Date) {
-         return (first > second ? 1 : -1) * (tableSort.desc ? -1 : 1);
-         // }
-      });
    console.log({ runsNormalized });
 
    return (
       <Fragment>
-         <Table>
-            <TableCaption className={``}>
+         <Table className={`!mb-12`}>
+            <TableCaption className={`!text-background !font-semibold !text-base`}>
                A list of your latest typing runs.
             </TableCaption>
             <TableHeader className={`w-full`}>
-               <TableRow className={`text-sm w-full`}>
+               <TableRow className={`text-sm w-full !text-secondary`}>
                   <TableHead className="w-[100px]"></TableHead>
                   <SortableTableHead column={`wpm`} />
                   <TableHead className="text-left">raw</TableHead>
@@ -103,7 +108,7 @@ const LatestRunsTable = ({ runs, tagsById }: LatestRunsTableProps) => {
             </TableHeader>
             <TableBody className={`w-full`}>
                {runsNormalized.map((run, index) => (
-                  <TableRow className={`text-sm w-full`} key={run.id}>
+                  <TableRow className={`text-sm w-full !text-main`} key={run.id}>
                      <TableCell className="font-medium">
                         {run.metadata?.isPersonalBest && (
                            <Crown className={`fill-neutral-300`} size={20} />

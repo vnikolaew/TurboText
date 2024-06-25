@@ -1,3 +1,8 @@
+@import "../public/themes/theme1.css";
+@import "../public/themes/theme2.css";
+@import "../public/themes/theme3.css";
+@import "../public/themes/theme4.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -78,32 +83,25 @@
     }
 }
 
-:root {
-    --background: #ffffff;
-    --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-    :root {
-        --background: #0a0a0a;
-        --foreground: #ededed;
-    }
-}
+/*:root {*/
+/*    --background: 0 0% 100% !important;*/
+/*    --foreground: 0 0% 9% !important;*/
+/*}*/
 
 body {
-    color: var(--foreground);
-    background: var(--background);
+    color: hsl(var(--foreground));
+    background: hsl(var(--background));
     font-synthesis: none;
 }
 
 ::-moz-selection { /* Code for Firefox */
     color: black;
-    background: #f59e0b;
+    background: hsl(var(--accent))
 }
 
 ::selection {
     color: black;
-    background: #f59e0b;
+    background: hsl(var(--accent))
 }
 
 .rainbow-bg {

@@ -27,7 +27,7 @@ const Page = async ({}: PagProps) => {
 
    return (
       <section className={`w-2/3 mx-auto my-24 flex flex-col items-center gap-4`}>
-         <h2 className={`text-xl text-neutral-400 max-w-[450px] text-wrap text-center leading-tight`}>
+         <h2 className={`text-xl text-main max-w-[450px] text-wrap text-center leading-tight`}>
             Helping users improve their typing speed
             since {moment(LAUNCH_DATE).format(`Do of MMMM, YYYY`)}</h2>
          <AppGlobalStatsSection runs={runs} />

@@ -43,12 +43,12 @@ const ConfidenceModeSection = ({}: ConfidenceModeSetionProps) => {
       <SettingLayout className={``}>
          <div className={`flex flex-col items-start gap-2`}>
             <h2 className={`inline-flex items-center gap-2`}>
-               <Delete className={`text-neutral-500 `} size={20} />
-               <span className={`text-xl text-neutral-500`}>
+               <Delete className={`text-main `} size={20} />
+               <span className={`text-xl text-main`}>
                   Confidence mode
                </span>
             </h2>
-            <p className={`mt-2 text-base`}>
+            <p className={`mt-2 text-base !text-secondary`}>
                When enabled, you will not be able to go back to previous words to fix mistakes. When turned up to the
                max, you won't be able to backspace at all.
             </p>

@@ -27,12 +27,12 @@ const ColorfulModeSection = ({}: ColorfulModeSectionProps) => {
       <SettingLayout className={``}>
          <div className={`flex flex-col items-start gap-2`}>
             <h2 className={`inline-flex items-center gap-2`}>
-               <PaintBucket className={`text-neutral-500 `} size={20} />
-               <span className={`text-xl text-neutral-500`}>
+               <PaintBucket className={`text-main `} size={20} />
+               <span className={`text-xl text-main`}>
                   Colorful mode
                </span>
             </h2>
-            <p className={`mt-2 text-base`}>
+            <p className={`mt-2 text-base !text-secondary`}>
                When enabled, the test words will use the main color, instead of the text color, making the website more
                colorful.
             </p>

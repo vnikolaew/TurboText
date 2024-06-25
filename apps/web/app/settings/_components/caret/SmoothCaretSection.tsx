@@ -46,12 +46,12 @@ const SmoothCaretSection = ({}: SmoothCaretSectionProps) => {
       <SettingLayout className={``}>
          <div className={`flex flex-col items-start gap-2`}>
             <h2 className={`inline-flex items-center gap-2`}>
-               <TextCursor className={`text-neutral-500 `} size={20} />
-               <span className={`text-xl text-neutral-500`}>
+               <TextCursor className={`text-main `} size={20} />
+               <span className={`text-xl text-main`}>
                   Smooth caret
                </span>
             </h2>
-            <p className={`mt-2 text-base`}>
+            <p className={`mt-2 text-base !text-secondary`}>
                The caret will move smoothly between letters and words.
             </p>
          </div>

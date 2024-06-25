@@ -48,12 +48,12 @@ const TestDifficultySection = ({}: TestDifficultySectionProps) => {
       <SettingLayout className={``}>
          <div className={`flex flex-col items-start gap-2`}>
             <h2 className={`inline-flex items-center gap-2`}>
-               <Star className={`text-neutral-500 fill-neutral-500`} size={20} />
-               <span className={`text-xl text-neutral-500`}>
+               <Star className={`text-main fill-main`} size={20} />
+               <span className={`text-xl text-main`}>
                   Difficulty
                </span>
             </h2>
-            <p className={`mt-2 text-base`}>
+            <p className={`mt-2 text-base text-secondary`}>
                Normal is the classic type test experience. Expert fails the test if you submit (press space) an
                incorrect word. Master fails if you press a single incorrect key (meaning you have to achieve 100%
                accuracy).

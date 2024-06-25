@@ -2,7 +2,6 @@
 
 import { cn } from "@lib/utils";
 import {
-   Badge,
    HoverCard,
    HoverCardContent,
    HoverCardTrigger,
@@ -24,7 +23,6 @@ import OgAccountBadge from "@app/account/_components/badges/OGAccountBadge";
 import Link from "next/link";
 import { TypingRun, User, UserExperience } from "@repo/db";
 import { useBoolean } from "@hooks/useBoolean";
-import { setLazyProp } from "next/dist/server/api-utils";
 import { LoadingSpinner } from "@components/common/LoadingSpinner";
 
 export interface LeaderboardRow {
@@ -55,25 +53,25 @@ export const LeaderboardTable = ({ caption, rows, showWarning }: LeaderboardTabl
       <div className={`flex flex-col items-start mb-12`}>
          <ScrollArea className={`h-[600px] w-full relative`}>
             <div className={`grid w-full grid-cols-13 sticky top-0 !py-1 !z-[100] backdrop-blur`}>
-               <div className={`col-span-1 text-neutral-500 text-center`}>#</div>
-               <div className={`col-span-6 text-left`}>name</div>
+               <div className={`col-span-1 text-secondary text-center`}>#</div>
+               <div className={`col-span-6 text-left !text-main`}>name</div>
                <div className={`col-span-2 text-right flex flex-col text-sm`}>
-                     <span className={`text-neutral-400 `}>
+                     <span className={`text-main `}>
                       wpm
                      </span>
-                  <span className={`text-neutral-500`}>
+                  <span className={`text-secondary`}>
                         accuracy
                       </span>
                </div>
                <div className={`col-span-2 text-right flex flex-col text-sm`}>
-                     <span className={`text-neutral-400`}>
+                     <span className={`text-main`}>
                      raw
                      </span>
-                  <span className={`text-neutral-500`}>
+                  <span className={`text-secondary`}>
                         consistency
                       </span>
                </div>
-               <div className={`col-span-2 text-right flex items-center justify-end px-4 text-neutral-400 text-xs`}>
+               <div className={`col-span-2 text-right flex items-center justify-end px-4 text-secondary text-xs`}>
                   date
                </div>
             </div>
@@ -84,7 +82,7 @@ export const LeaderboardTable = ({ caption, rows, showWarning }: LeaderboardTabl
                <TableBody>
                   {!rows?.length && (
                      <TableRow className={`hover:!bg-transparent`}>
-                        <TableCell className={`w-full text-center`}>
+                        <TableCell className={`w-full text-center !text-main`}>
                            There are no runs to show yet.
                         </TableCell>
                      </TableRow>
@@ -94,7 +92,7 @@ export const LeaderboardTable = ({ caption, rows, showWarning }: LeaderboardTabl
             </Table>
          </ScrollArea>
          {showWarning && (
-            <div className={`w-full text-center text-amber-600 text-sm mt-2`}>
+            <div className={`w-full text-center text-accent text-sm mt-2`}>
                Your account must have 2 hours typed to be placed on the leaderboard.
             </div>
          )}
@@ -105,27 +103,30 @@ export const LeaderboardTable = ({ caption, rows, showWarning }: LeaderboardTabl
 
 const LeaderboardTableRow = ({ row, index }: { row: LeaderboardRow, index: number }) => {
    const session = useSession();
-   const [userDetails, setUserDetails] = useState<Partial<User & { typingRuns: TypingRun[], experience: UserExperience }>>(null!);
+   const [userDetails, setUserDetails] = useState<Partial<User & {
+      typingRuns: TypingRun[],
+      experience: UserExperience
+   }>>(null!);
    const [loading, setLoading] = useBoolean();
 
    async function handleOnHover() {
-      if(userDetails) return;
+      if (userDetails) return;
       setLoading(true);
       fetch(`/api/user/${row.user.id}/details`, {
-         method: 'GET',
+         method: "GET",
       }).then(r => r.json()).then(res => {
-         if(res.success) {
-            setUserDetails(res.user)
+         if (res.success) {
+            setUserDetails(res.user);
             console.log({ user: res.user });
          }
-      }).finally(() => setLoading(false))
+      }).finally(() => setLoading(false));
    }
 
    return (
-      <TableRow key={index} className={cn(`grid grid-cols-13 w-full `,
-         index % 2 === 1 && `bg-black`)}>
+      <TableRow key={index} className={cn(`grid grid-cols-13 w-full !border-none`,
+         index % 2 === 1 && `bg-neutral-900`)}>
          <TableCell
-            className="font-medium text-center inline-flex justify-center items-center col-span-1">
+            className="font-medium text-center inline-flex justify-center items-center col-span-1 !text-main">
             {row.position === 1 ? (
                <Crown className={`stroke-neutral-300 fill-neutral-300`} size={18} />
             ) : row.position}
@@ -138,13 +139,18 @@ const LeaderboardTableRow = ({ row, index }: { row: LeaderboardRow, index: numbe
                </span>
             </div>
             <div className={`flex items-center gap-2`}>
-               <HoverCard >
+               <HoverCard>
                   <HoverCardTrigger asChild>
-                     <Link onMouseEnter={handleOnHover} href={`/profile/${row.user.id}`}>
-                        <span className={`text-nowrap`}>
+                     {row.user.id !== session?.data?.user?.id ? (
+                        <Link onMouseEnter={handleOnHover} href={`/profile/${row.user.id}`}>
+                           <span className={`text-nowrap !text-main`}> {row.user.name} {row.user.id === session?.data?.user?.id ? "(you)" : ""}
+                           </span>
+                        </Link>
+                     ) : (
+                        <span className={`text-nowrap !text-main`}>
                            {row.user.name} {row.user.id === session?.data?.user?.id ? "(you)" : ""}
                         </span>
-                     </Link>
+                     )}
                   </HoverCardTrigger>
                   <HoverCardContent>
                      {loading ? (
@@ -157,7 +163,8 @@ const LeaderboardTableRow = ({ row, index }: { row: LeaderboardRow, index: numbe
                               <UserAvatar imageSrc={userDetails?.image} />
                               <div className={`flex flex-col justify-between gap-0`}>
                                  <span>{userDetails?.name}</span>
-                                 <span className={`text-xs text-muted-foreground`}>Joined {moment(userDetails?.createdAt)?.format(`DD MMM YYYY`)}</span>
+                                 <span
+                                    className={`text-xs text-muted-foreground`}>Joined {moment(userDetails?.createdAt)?.format(`DD MMM YYYY`)}</span>
                               </div>
                            </div>
                            <span className={`text-muted-foreground`}>
@@ -173,16 +180,16 @@ const LeaderboardTableRow = ({ row, index }: { row: LeaderboardRow, index: numbe
             </div>
          </TableCell>
          <TableCell className={`col-span-2 text-right flex flex-col justify-end !px-0`}>
-            <span>{row.wpm}</span>
-            <span className={`text-neutral-500`}>{row.accuracy}%</span>
+            <span className={`!text-main`}>{row.wpm}</span>
+            <span className={`text-secondary`}>{row.accuracy}%</span>
          </TableCell>
          <TableCell className={`col-span-2 text-right flex flex-col justify-end !px-0`}>
-            <span>{row.raw}</span>
-            <span className={`text-neutral-500`}>{row.consistency}%</span>
+            <span className={`!text-main`}>{row.raw}</span>
+            <span  className={`text-secondary`}>{row.consistency}%</span>
          </TableCell>
          <TableCell className="col-span-2 text-right flex flex-col justify-end !pr-4">
-            <span className={`text-nowrap`}>{moment(row.date).format(`DD MMM YYYY`)}</span>
-            <span className={`text-neutral-500`}>
+            <span className={`text-nowrap !text-main`}>{moment(row.date).format(`DD MMM YYYY`)}</span>
+            <span className={`text-secondary`}>
                {moment(row.date).format(`HH:mm`)}
             </span>
          </TableCell>

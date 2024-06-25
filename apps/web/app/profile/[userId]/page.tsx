@@ -132,7 +132,7 @@ const Page = async ({ params }: PageProps) => {
             <div className={`!h-full p-4`}>
                <TooltipProvider>
                   <Tooltip>
-                     <TooltipTrigger asChild>
+                     <TooltipTrigger >
                         <ReportUserModal user={pick(rest,[`id`, `name` ])}>
                            <Flag size={28}
                                  className={`cursor-pointer stroke-neutral-300 fill-neutral-300 hover:!stroke-amber-600 transition-colors duration-200 hover:!fill-amber-600`} />
@@ -147,7 +147,7 @@ const Page = async ({ params }: PageProps) => {
                </TooltipProvider>
             </div>
          </div>
-         <div className={`w-full  rounded-lg shadow-lg flex items-center p-6 py-10 gap-8 mt-8`}>
+         <div className={`w-full rounded-lg flex items-center gap-8 mt-8`}>
             <div className={`flex-1 bg-stone-950/70 rounded-lg shadow-lg flex items-center p-12 px-16 gap-8 mt-8`}>
                <TimeRunsStats timeRuns={user.typingRuns} />
             </div>

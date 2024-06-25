@@ -8,13 +8,13 @@ export interface AboutUsSectionProps {
 const AboutUsSection = ({}: AboutUsSectionProps) => {
    return (
       <section id={`about`} className={`text-left flex flex-col items-start gap-4`}>
-         <h2 className={`text-2xl mt-16 text-neutral-500 inline-flex items-center gap-2`}>
+         <h2 className={`text-2xl mt-16 text-main inline-flex items-center gap-2`}>
             <Info size={24} />
             <span>
                About us
             </span>
          </h2>
-         <p>
+         <p className={`text-secondary`}>
             Welcome to {APP_NAME}, your go-to platform for enhancing your typing skills and boosting your
             productivity. At {APP_NAME}, we provide an engaging and interactive environment where users can challenge
             themselves with various typing tests and exercises designed to improve speed and accuracy. Our mission is
@@ -23,7 +23,7 @@ const AboutUsSection = ({}: AboutUsSectionProps) => {
             and a wide range of difficulty levels, we aim to make typing practice both fun and rewarding. Join our
             community today and take the first step towards mastering the art of typing!
          </p>
-         <p>
+         <p className={`text-secondary`}>
             Test yourself in various modes, track your progress and improve your speed.
          </p>
       </section>

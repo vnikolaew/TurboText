@@ -19,8 +19,6 @@ export function usePaceCaret({ top, left }: { top: number; left: number }) {
       const wordElementsWidth = wordElementsElement?.clientWidth!;
       const paceCaretSpeedAbsolute = wordElementsWidth / (wordCount / 50 * 60);
 
-      console.log({ wordHeight });
-
       intervalRef.current = setInterval(() => {
          if (paceCaretCoords.left > endLeft) clearInterval(intervalRef.current!);
          setPaceCaretCoords(c => ({ ...c, left: c.left + (paceCaretSpeedAbsolute / 10) }));
@@ -32,16 +30,6 @@ export function usePaceCaret({ top, left }: { top: number; left: number }) {
             setPaceCaretCoords({ top, left });
          }
       };
-   }, []);
-
-   useEffect(() => {
-      const wordsElement = document.getElementById(`editor-words`)!;
-      let wordElements = wordsElement.querySelectorAll(`span[data-word=true]`);
-      let totalWidth = sum(Array.from(wordElements).map(e => e.clientWidth));
-
-      const paceCaretSpeedAbsolute = totalWidth / (wordCount / 40 * 60);
-
-      console.log({ totalWidth, paceCaretSpeedAbsolute });
    }, []);
 
    return { paceCaretCoords, wordCount, intervalRef };

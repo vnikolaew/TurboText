@@ -32,6 +32,9 @@ const config: Config = {
          },
          colors: {
             border: "hsl(var(--border))",
+            main: "hsl(var(--main))",
+            accent: "hsl(var(--accent))",
+            "secondary-bg": "hsl(var(--secondary-bg))",
             input: "hsl(var(--input))",
             ring: "hsl(var(--ring))",
             background: "hsl(var(--background))",
@@ -52,10 +55,10 @@ const config: Config = {
                DEFAULT: "hsl(var(--muted))",
                foreground: "hsl(var(--muted-foreground))",
             },
-            accent: {
-               DEFAULT: "hsl(var(--accent))",
-               foreground: "hsl(var(--accent-foreground))",
-            },
+            // accent: {
+            //    DEFAULT: "hsl(var(--accent))",
+            //    foreground: "hsl(var(--accent-foreground))",
+            // },
             popover: {
                DEFAULT: "hsl(var(--popover))",
                foreground: "hsl(var(--popover-foreground))",

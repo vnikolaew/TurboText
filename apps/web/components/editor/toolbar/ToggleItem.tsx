@@ -13,8 +13,8 @@ export interface ToggleItemProps {
 
 export const ToggleItem = ({ value, active, text, Icon }: ToggleItemProps) => {
    return <ToggleGroupItem
-      className={cn(`inline-flex items-center gap-2 rounded-full data-[state=on]:!bg-neutral-800 hover:!bg-neutral-800 transition-colors duration-200`,
-         active && `!text-amber-500`)}
+      className={cn(`inline-flex items-center gap-2 rounded-full data-[state=on]:!bg-neutral-800 hover:!bg-neutral-800 transition-colors duration-200 !text-main`,
+         active && `!text-accent`)}
       value={value}
    >
       {Icon && (

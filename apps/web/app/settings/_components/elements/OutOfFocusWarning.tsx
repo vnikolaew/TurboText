@@ -27,12 +27,12 @@ const OutOfFocusWarning = ({}: OutOfFocusWarningProps) => {
       <SettingLayout className={``}>
          <div className={`flex flex-col items-start gap-2`}>
             <h2 className={`inline-flex items-center gap-2`}>
-               <CircleAlert className={`text-neutral-500 `} size={20} />
-               <span className={`text-xl text-neutral-500`}>
+               <CircleAlert className={`text-main`} size={20} />
+               <span className={`text-xl text-main`}>
                   Out of focus warning
                </span>
             </h2>
-            <p className={`mt-2 text-base`}>
+            <p className={`mt-2 text-base !text-secondary`}>
                Shows an out of focus reminder after 1 second of being 'out of focus' (not being able to type).
             </p>
          </div>

@@ -17,17 +17,17 @@ const ContactUsModal = ({}: ContactUsModalProps) => {
          if (!value) await setOpen(null);
          else await setOpen(true);
       }}>
-         <DialogContent className={`!min-w-1/2 !w-1/2 !max-w-[800px] !bg-neutral-900 !border-neutral-700`}>
+         <DialogContent className={`!min-w-1/2 !w-1/2 !max-w-[800px] !bg-secondary-bg !border-neutral-700`}>
             <DialogHeader>
-               <DialogTitle className={`text-2xl`}>
+               <DialogTitle className={`text-2xl !text-main`}>
                   Contact
                </DialogTitle>
             </DialogHeader>
-            <p className={`!mt-4`}>
+            <p className={`!mt-4 !text-secondary`}>
                Feel free to send an email to {LINKS.supportEmail}. For business inquiries, email {` `}
                {LINKS.email} (the buttons below will open the default mail client).
             </p>
-            <p className={`!mt-4`}>
+            <p className={`!mt-4 !text-secondary`}>
                Please <b className={`text-red-500`}>
                do not send
             </b> requests to delete account, update email, update name or clear personal bests - you
@@ -70,7 +70,7 @@ const ThreeDots = () => (
 
 const EmailButton = ({ icon, text, href }: { icon: ReactNode, text: string, href: string }) => {
    return (
-      <Button variant={`ghost`} asChild className={`rounded-full flex items-center justify-start gap-4 !py-6`}>
+      <Button variant={`ghost`} asChild className={`rounded-full flex items-center justify-start gap-4 !py-6 !text-main`}>
          <Link className={`flex items-center justify-start gap-4`} href={href!}>
             {icon}
             <span className={`text-lg`}>{text}</span>

@@ -32,7 +32,7 @@ const AppFooter = async ({}: AppFooterProps) => {
          {
             title: `Privacy Policy`,
             href: `/privacy-policy`,
-            icon: <Lock className={`fill-neutral-300 group-hover:!fill-amber-500 transition-colors duration-100`}
+            icon: <Lock className={`stroke-main group-hover:!stroke-accent transition-colors duration-100`}
                         size={12} />,
          },
          {

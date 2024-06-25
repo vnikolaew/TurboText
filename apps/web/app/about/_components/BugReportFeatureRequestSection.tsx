@@ -9,20 +9,20 @@ export interface BugReportFeatureRequestSectionProps {
 const BugReportFeatureRequestSection = ({}: BugReportFeatureRequestSectionProps) => {
    return (
       <section id={`bug-report`} className={`text-left flex flex-col items-start gap-4`}>
-         <h2 className={`text-xl mt-16 text-neutral-500 inline-flex items-center gap-2`}>
+         <h2 className={`text-xl mt-16 text-main inline-flex items-center gap-2`}>
             <Bug size={20} />
             <span>
                Bug report or feature request
             </span>
          </h2>
-         <p>
+         <p className={`text-secondary`}>
             If you encounter a bug or you have a feature request - you can join our
             <Link className={`text-blue-500 ml-1`} href={LINKS.discord}>
                Discord server
             </Link>, send us an email, a direct
             message on Twitter or create an issue on GitHub.
          </p>
-         <p>
+         <p className={`text-secondary`}>
             Test yourself in various modes, track your progress and improve your speed.
          </p>
       </section>

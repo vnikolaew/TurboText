@@ -6,6 +6,7 @@ import { useBoolean } from "@hooks/useBoolean";
 import { TOASTS } from "@config/toasts";
 import EditProfileModal from "@app/account/_components/EditProfileModal";
 import { User } from "@repo/db";
+import { useRouter } from "next/navigation";
 
 export interface AccountLinksProps {
    user: User
@@ -13,6 +14,7 @@ export interface AccountLinksProps {
 
 const AccountPageLinks = ({ user }: AccountLinksProps) => {
    const [editProfileModalOpen, setEditProfileModalOpen] = useBoolean();
+   const router = useRouter()
 
    function handleCopyLink(): void {
       window.navigator.clipboard
@@ -33,11 +35,12 @@ const AccountPageLinks = ({ user }: AccountLinksProps) => {
                      <TooltipTrigger asChild>
                         <Pencil onClick={_ => {
                            setEditProfileModalOpen(true);
-                        }} className={`text-neutral-300`} size={20} />
+                           router.push(`?edit-profile=true`)
+                        }} className={`text-main`} size={20} />
                      </TooltipTrigger>
                      <TooltipContent
                         side={`left`}
-                        className={`bg-black text-white rounded-xl text-sm border-neutral-700 !px-4 !py-2`}>
+                        className={`bg-black text-main rounded-xl text-sm border-neutral-700 !px-4 !py-2`}>
                         Edit profile
                      </TooltipContent>
                   </Tooltip>
@@ -47,11 +50,11 @@ const AccountPageLinks = ({ user }: AccountLinksProps) => {
                <TooltipProvider>
                   <Tooltip>
                      <TooltipTrigger asChild>
-                        <Link onClick={handleCopyLink} size={20} />
+                        <Link className={`text-main`} onClick={handleCopyLink} size={20} />
                      </TooltipTrigger>
                      <TooltipContent
                         side={`left`}
-                        className={`bg-black text-white rounded-xl text-sm border-neutral-700 !px-4 !py-2`}>
+                        className={`bg-black text-main rounded-xl text-sm border-neutral-700 !px-4 !py-2`}>
                         Copy public link
                      </TooltipContent>
                   </Tooltip>

@@ -16,7 +16,7 @@ const LatestUserRuns = async ({ user }: LatestUserRunsProps) => {
    });
 
    return (
-      <div className={`w-full flex flex-col gap-8`}>
+      <div className={`w-full flex flex-col gap-8 `}>
          <div className={`flex justify-end`}>
             <ExportRunsButton runs={user.typingRuns} />
          </div>

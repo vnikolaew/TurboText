@@ -18,10 +18,11 @@ import { __IS_PROD__ } from "@lib/consts";
 import { Analytics } from "@vercel/analytics/react";
 import WithInitialState from "./_components/WithInitialState";
 import WithUserConfig from "@providers/WithUserConfig";
-import { getUserFontFamily } from "@app/_queries";
+import { getUserConfig, getUserFontFamily } from "@app/_queries";
 import GlobalCommandsDialog from "@components/commands/GlobalCommandsDialog";
 import { WithContactModal } from "@app/_components/modals/ContactUsModal";
 import ShortcutsSection from "@app/_components/ShortcutsSection";
+import DynamicFontProvider from "@providers/DynamicFontProvider";
 
 const inter = Inter({ weight: ["400"], subsets: ["latin"], variable: "--font-sans" });
 
@@ -46,30 +47,34 @@ export default async function RootLayout({
    children: React.ReactNode;
 }>) {
    let font = await getUserFontFamily();
+   let config = await getUserConfig();
+   console.log({ config });
 
    return (
-      <html style={{ colorScheme: `dark` }} suppressHydrationWarning lang="en">
+      <html className={config?.theme ?? `theme-1`} style={{ colorScheme: `dark` }} suppressHydrationWarning lang="en">
       <WithUserConfig>
          <Providers>
             <body className={cn(`min-h-screen bg-background font-mono antialiased`, font!.variable)}>
-            <LoadingBar />
-            <Header />
-            <GlobalCommandsDialog />
-            <main className={cn(`flex-1 min-h-[70vh]`)}>
-               <WithTransition>
-                  {children}
-               </WithTransition>
-               <WithInitialState />
-            </main>
-            <ScrollToTopButton />
-            <Suspense fallback={`...`}>
-               <CookieConsentBanner />
-            </Suspense>
-            {__IS_PROD__ && <Analytics />}
-            <Toaster />
-            <WithContactModal />
-            <ShortcutsSection/>
-            <AppFooter />
+            <DynamicFontProvider>
+               <LoadingBar />
+               <Header />
+               <GlobalCommandsDialog />
+               <main className={cn(`flex-1 min-h-[70vh]`)}>
+                  <WithTransition>
+                     {children}
+                  </WithTransition>
+                  <WithInitialState />
+               </main>
+               <ScrollToTopButton />
+               <Suspense fallback={`...`}>
+                  <CookieConsentBanner />
+               </Suspense>
+               {__IS_PROD__ && <Analytics />}
+               <Toaster />
+               <WithContactModal />
+               <ShortcutsSection />
+               <AppFooter />
+            </DynamicFontProvider>
             </body>
          </Providers>
       </WithUserConfig>

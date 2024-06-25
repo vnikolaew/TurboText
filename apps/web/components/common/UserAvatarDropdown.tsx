@@ -14,7 +14,7 @@ const UserAvatarDropdown = ({}: UserAvatarDropdownProps) => {
    const userXp = useAtomValue(userXpAtom)
 
    return (
-      <Link className={`inline-flex items-center gap-2 group hover:!text-neutral-300`} href={`/account`}>
+      <Link className={`inline-flex items-center gap-2 group hover:!text-secondary`} href={`/account`}>
          <UserAvatar
             title={session?.data?.user?.name!} className={`cursor-pointer h-6 w-6`}
             imageSrc={session?.data?.user?.image!} />
@@ -23,7 +23,7 @@ const UserAvatarDropdown = ({}: UserAvatarDropdownProps) => {
             {session?.data?.user?.name}
          </span>
          <span
-            className={`text-black transition-colors duration-200 text-nowrap bg-neutral-400 p-1 px-1.5 rounded-sm text-xs`}>
+            className={`text-black transition-colors duration-200 text-nowrap bg-secondary p-1 px-1.5 rounded-sm text-xs`}>
             {userXp.level}
          </span>
       </Link>

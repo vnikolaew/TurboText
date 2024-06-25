@@ -23,6 +23,7 @@ const schema = z.object({
    pace_caret_speed: z.union([z.literal(`AVG`), z.literal(`OFF`), z.literal(`PB`), z.literal(`LAST`), z.literal(`DAILY`), z.literal(`CUSTOM`)]),
 
    theme_flip_colors: z.boolean().nullable(),
+   theme  : z.string().nullable(),
    theme_colorful_mode: z.boolean().nullable(),
 
    font_family: z.string().nullable(),

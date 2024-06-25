@@ -8,7 +8,7 @@ export interface PageNavigationLoadingBarProps {
 const PageNavigationLoadingBar = ({}: PageNavigationLoadingBarProps) => {
    return <div className={`!z-30 !h-fit`}>
       <NextTopLoader
-         color={`#d97706`}
+         color={`hsl(var(--accent))`}
          showSpinner={false}
          crawl
          easing={`ease`} zIndex={30}

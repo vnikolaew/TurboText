@@ -1,6 +1,6 @@
 "use server";
 
-import { xprisma } from "@repo/db";
+import { UserConfiguration, xprisma } from "@repo/db";
 import { FONTS_MAP, sfMono } from "@assets/fonts";
 import { FONT_FAMILIES } from "@lib/consts";
 import { auth } from "@auth";
@@ -20,4 +20,17 @@ export async function getUserFontFamily() {
    }
 
    return font;
+}
+
+export async function getUserConfig(): Promise<UserConfiguration | null> {
+   const session = await auth();
+
+   if (!session?.user) {
+      return null;
+   } else {
+      const userConfig = await xprisma.userConfiguration.findFirst({
+         where: { userId: session.user.id },
+      });
+      return userConfig;
+   }
 }

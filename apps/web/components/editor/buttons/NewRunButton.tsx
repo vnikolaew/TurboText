@@ -24,7 +24,7 @@ const NewRunButton = ({}: NewRunButtonProps) => {
                   className={`hover:!bg-transparent group`}
                   variant={`ghost`}
                   size={`icon`}>
-                  <ChevronRight className={`group-hover:!text-neutral-400  transition-colors duration-200`} size={18} />
+                  <ChevronRight className={`group-hover:!text-neutral-400  transition-colors duration-200 !text-main`} size={18} />
                </Button>
             </TooltipTrigger>
             <TooltipContent

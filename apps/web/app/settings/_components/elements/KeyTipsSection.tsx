@@ -27,12 +27,12 @@ const KeyTipsSection = ({}: KeyTipsSectionProps) => {
       <SettingLayout className={``}>
          <div className={`flex flex-col items-start gap-2`}>
             <h2 className={`inline-flex items-center gap-2`}>
-               <CircleHelp className={`text-neutral-500 `} size={20} />
-               <span className={`text-xl text-neutral-500`}>
+               <CircleHelp className={`text-main `} size={20} />
+               <span className={`text-xl text-main`}>
                   Key tips
                </span>
             </h2>
-            <p className={`mt-2 text-base`}>
+            <p className={`mt-2 text-base !text-secondary`}>
                Shows the keybind tips at the bottom of the page.
             </p>
          </div>

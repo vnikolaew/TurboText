@@ -14,7 +14,7 @@ export async function UserExperienceInfo() {
 
    return (
       <div className={`w-full flex items-center gap-4`}>
-         <span className={`text-lg text-neutral-300`}>{level}</span>
+         <span className={`text-lg text-main`}>{level}</span>
          <div className={`flex-1`}>
             <TooltipProvider delayDuration={0}>
                <Tooltip>
@@ -23,7 +23,7 @@ export async function UserExperienceInfo() {
                   </TooltipTrigger>
                   <TooltipContent
                      side={`top`}
-                     className={`bg-black text-white rounded-xl text-sm  !px-4 !py-2`}>
+                     className={`bg-black text-main rounded-xl text-sm  !px-4 !py-2`}>
                      {percentageUntilNextLevel.toFixed(2)}%
                   </TooltipContent>
                </Tooltip>
@@ -34,11 +34,11 @@ export async function UserExperienceInfo() {
             <Tooltip>
                <TooltipTrigger asChild>
                   <span
-                     className={`justify-self-end text-neutral-500 text-sm cursor-pointer`}>{userExperience?.points}/{xpNeededForNextLevel}</span>
+                     className={`justify-self-end text-secondary text-sm cursor-pointer`}>{userExperience?.points}/{xpNeededForNextLevel}</span>
                </TooltipTrigger>
                <TooltipContent
                   side={`top`}
-                  className={`bg-black text-white rounded-xl text-sm  !px-4 !py-2`}>
+                  className={`bg-black text-main rounded-xl text-sm  !px-4 !py-2`}>
                   {xpNeededForNextLevel - userExperience?.points} xp until next level
                </TooltipContent>
             </Tooltip>

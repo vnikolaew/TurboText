@@ -1,5 +1,5 @@
 import { useAtom } from "jotai/index";
-import { fontFamilyAtom } from "@atoms/user";
+import { fontFamilyAtom, hoveredFontFamilyAtom } from "@atoms/user";
 import { useAction } from "next-safe-action/hooks";
 import { updateUserConfiguration } from "@app/settings/actions";
 import { CommandItem } from "@repo/ui";
@@ -8,19 +8,30 @@ import React from "react";
 
 export const FontFamilyOption = ({ fontFamily }: { fontFamily: string }) => {
    const [userFontFamily, setUserFontFamily] = useAtom(fontFamilyAtom);
+   const [hoveredFontFamily, setHoveredFontFamily ] = useAtom(hoveredFontFamilyAtom)
 
    const { execute, status } = useAction(updateUserConfiguration, {
       onSuccess: res => {
          if (res?.data?.success) {
             console.log(res);
-            setUserFontFamily(res.data.userConfig?.font_family);
+            let newFontFamily = res.data.userConfig?.font_family
+
+            setUserFontFamily(newFontFamily);
+            setHoveredFontFamily(newFontFamily)
          }
       },
    });
 
+   function handleHoverFontOption(event: any): void {
+      //@ts-ignore
+      setHoveredFontFamily(fontFamily)
+    }
+
    return (
       <CommandItem
-         value={fontFamily}
+         onMouseEnter={handleHoverFontOption}
+         onMouseLeave={_ => setHoveredFontFamily(null!)}
+         value={`font-family-${fontFamily}`}
          onSelect={_ => execute({ font_family: fontFamily })}
          key={fontFamily} className={`flex items-center gap-6 w-full cursor-pointer`}>
          <div className={`flex items-center gap-1`}>

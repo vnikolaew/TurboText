@@ -53,7 +53,7 @@ const EditorToolbar = ({}: EditorToolbarProps) => {
             exit={{ opacity: 100 }}
             transition={{ duration: .3 }}
             key={`editor-toolbar`} id={`editor-toolbar`}
-            className={`rounded-full bg-neutral-800 !px-4 !py-1 flex items-center gap-2 shadow-md`}>
+            className={`rounded-full bg-secondary-bg !px-4 !py-1 flex items-center gap-2 shadow-md`}>
             <ToggleGroup
                onValueChange={handleToggle}
                type="multiple">
@@ -93,7 +93,7 @@ const EditorToolbar = ({}: EditorToolbarProps) => {
                   setCwModalOpen(true);
                }
             }} title={`Customize`} variant={`ghost`} size={`icon`}>
-               <Wrench className={`group-hover:!text-amber-600`} size={16} />
+               <Wrench className={`group-hover:!text-accent !text-main`} size={16} />
             </Button>
             {typingMode === TypingMode.TIME &&
                <CustomTimeConfigModal setOpen={setTimeModalOpen} open={timeModalOpen} />}

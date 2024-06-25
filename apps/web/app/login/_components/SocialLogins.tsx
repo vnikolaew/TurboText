@@ -12,14 +12,14 @@ const SocialLogins = ({}: SocialLoginsProps) => {
          <Button onClick={_ => signIn(`google`, { callbackUrl: `/` }).then(res => {
             console.log({ res });
          })} title={`Google`}
-                 className={`flex-1 group hover:!bg-neutral-300 transition-colors duration-100`} variant={`secondary`}>
-            <UilGoogle className={`text-white group-hover:!text-black transition-colors duration-100`} />
+                 className={`flex-1 group hover:!bg-neutral-300 transition-colors duration-100 !bg-accent !text-main`} variant={`secondary`}>
+            <UilGoogle className={`text-main group-hover:!text-accent transition-colors duration-100`} />
          </Button>
          <Button onClick={_ => signIn(`github`, {callbackUrl: `/`}).then(res => {
             console.log({ res });
-         })} title={`Github`} className={`flex-1 group hover:!bg-neutral-300 transition-colors duration-100`}
+         })} title={`Github`} className={`flex-1 group hover:!bg-neutral-300 transition-colors duration-100 !bg-accent !text-main`}
                  variant={`secondary`}>
-            <UilGithub className={`text-white group-hover:!text-black transition-colors duration-100`} />
+            <UilGithub className={`text-main group-hover:!text-accent transition-colors duration-100`} />
          </Button>
       </div>
    );

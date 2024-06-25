@@ -65,26 +65,26 @@ const Page = async ({ searchParams }: PageProps) => {
    return (
       <section className={`w-3/4 mx-auto mt-24 flex flex-col items-start gap-4`}>
          <div className={`flex items-center justify-between w-full`}>
-            <h2 className={`text-4xl`}>
+            <h2 className={`text-4xl !text-main`}>
                All-Time {language} Leaderboards
             </h2>
             <div className={`flex items-center gap-4`}>
                <Button asChild variant={`secondary`}
                        className={cn(`rounded-full shadow-md px-8 `,
-                          !daily && `bg-amber-600 hover:!bg-amber-700 !text-black`)}>
+                          !daily && `bg-accent hover:!bg-accent !text-black`)}>
                   <Link href={`/leaderboard`}>
                      All-time
                   </Link>
                </Button>
                <Button asChild variant={`secondary`} className={cn(`rounded-full shadow-md px-8`,
-                  daily && `bg-amber-600 hover:!bg-amber-700 !text-black`)}>
+                  daily && `bg-accent hover:!bg-accent !text-black`)}>
                   <Link href={`/leaderboard?daily=true`}>
                      Daily
                   </Link>
                </Button>
             </div>
          </div>
-         <Separator className={`w-2/3 bg-neutral-700 h-[1px] rounded-md shadow-md`} />
+         <Separator className={`w-2/3 bg-secondary h-[1px] rounded-md shadow-md`} />
          <div className={`flex items-center justify-between w-full`}>
             <div />
             <div>
@@ -93,7 +93,7 @@ const Page = async ({ searchParams }: PageProps) => {
          </div>
          <div className={`mt-8 grid grid-cols-2 w-full gap-4`}>
             <div className={`w-full flex items-center justify-between`}>
-               <span className={`text-2xl`}>Time 15</span>
+               <span className={`text-2xl !text-main`}>Time 15</span>
                <div className={`flex items-center gap-2`}>
                   <Button className={`!bg-black !rounded-xl`} size={`icon`}>
                      <Crown size={18} className={`text-white`} />
@@ -105,7 +105,7 @@ const Page = async ({ searchParams }: PageProps) => {
             </div>
 
             <div className={`w-full flex items-center justify-between`}>
-               <span className={`text-2xl`}>Time 60</span>
+               <span className={`text-2xl !text-main`}>Time 60</span>
                <div className={`flex items-center gap-2`}>
                   <Button className={`!bg-black !rounded-xl`} size={`icon`}>
                      <Crown size={18} className={`text-white`} />
@@ -115,8 +115,8 @@ const Page = async ({ searchParams }: PageProps) => {
                   </Button>
                </div>
             </div>
-            <Separator className={`w-full bg-neutral-700 mx-auto`} />
-            <Separator className={`w-full bg-neutral-700 mx-auto`} />
+            <Separator className={`w-full bg-secondary mx-auto`} />
+            <Separator className={`w-full bg-secondary mx-auto`} />
 
             <LeaderboardTable
                rows={time15Runs.map(mapRow)}

@@ -24,6 +24,7 @@ import { reportUser } from "@app/profile/[userId]/actions";
 import { useBoolean } from "@hooks/useBoolean";
 import { TOASTS } from "@config/toasts";
 import { LoadingSpinner } from "@components/common/LoadingSpinner";
+import { parseAsBoolean, useQueryState } from "nuqs";
 
 export interface ReportUserModalProps extends PropsWithChildren {
    user: Partial<User>;
@@ -43,6 +44,8 @@ interface ReportUserModel {
 
 const ReportUserModal = ({ children, user }: ReportUserModalProps) => {
    const [open, setOpen] = useBoolean();
+   const [reportUserQs, setReportUserQs] = useQueryState(`report-user`, parseAsBoolean.withDefault(false))
+
    const [reportUserModel, setReportUserModel] = useState<ReportUserModel>({
       reason: "",
       comment: "",
@@ -58,7 +61,11 @@ const ReportUserModal = ({ children, user }: ReportUserModalProps) => {
    });
 
    return (
-      <Dialog onOpenChange={setOpen} open={open}>
+      <Dialog onOpenChange={async value => {
+         setOpen(value);
+         if(!value) await setReportUserQs(null)
+         else await setReportUserQs(true)
+      }} open={open}>
          <DialogTrigger>{children}</DialogTrigger>
          <DialogContent className={`!bg-neutral-900`}>
             <DialogHeader>

@@ -41,9 +41,9 @@ const Header = ({}: NavbarProps) => {
                <Link href={`/`} className={`flex items-center gap-3`}>
                   <RocketLogo className={`w-8 h-8 fill-amber-500 shadow-md`} />
                   <span
-                     className={`text-lg !test-gradient drop-shadow-lg !font-semibold ${lexend.className} uppercase`}>{APP_NAME}</span>
+                     className={`text-lg !test-gradient drop-shadow-lg !font-semibold ${lexend.className} uppercase  !text-main`}>{APP_NAME}</span>
                </Link>
-               <Button className={`hover:!bg-transparent text-neutral-400`} variant={`ghost`} asChild>
+               <Button className={`hover:!bg-transparent text-secondary`} variant={`ghost`} asChild>
                   <Link title={`Settings`} href={`/settings`} className={`flex items-center gap-2`}>
                      <Settings size={16} />
                      <span
@@ -52,9 +52,9 @@ const Header = ({}: NavbarProps) => {
                   </span>
                   </Link>
                </Button>
-               <Button className={`hover:!bg-transparent text-neutral-400`} variant={`ghost`} asChild>
+               <Button className={`hover:!bg-transparent text-secondary`} variant={`ghost`} asChild>
                   <Link title={`Leaderboard`} href={`/leaderboard`} className={`flex items-center gap-2`}>
-                     <Crown className={`fill-neutral-300 stroke-neutral-300 `} size={16} />
+                     <Crown className={`fill-secondary stroke-secondary `} size={16} />
                      <span
                         className={`text-base drop-shadow-lg !font-semibold`}>
                      Leaderboard
@@ -73,13 +73,13 @@ const Header = ({}: NavbarProps) => {
                         ) : <UserAvatarDropdown />}
                      </div>
                      <div>
-                        <Bell className={`text-neutral-400 fill-neutral-400 hover:!fill-neutral-300 transition-colors duration-200 hover:!text-neutral-300 cursor-pointer`} size={20} />
+                        <Bell className={`text-secondary fill-secondary  hover:!fill-secondary transition-colors duration-200 hover:!text-neutral-300 cursor-pointer`} size={20} />
                      </div>
                      {userDataLoading ? (
                         <Skeleton className={`h-8 w-32 rounded-lg bg-neutral-700`} />
                      ) : (
                         <Button
-                           className={`px-4 gap-2 rounded-lg !py-2 !h-fit`}
+                           className={`px-4 gap-2 rounded-lg !py-2 !h-fit !text-secondary`}
                            onClick={_ => signOut({ redirect: true, callbackUrl: `/` })} variant={"ghost"}
                         >
                            <LogOut size={14} />

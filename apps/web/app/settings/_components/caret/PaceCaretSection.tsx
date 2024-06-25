@@ -53,12 +53,12 @@ const PaceCaretSection = ({}: PaceCaretSectionProps) => {
       <SettingLayout className={``}>
          <div className={`flex flex-col items-start gap-2`}>
             <h2 className={`inline-flex items-center gap-2`}>
-               <TextCursor className={`text-neutral-500 `} size={20} />
-               <span className={`text-xl text-neutral-500`}>
+               <TextCursor className={`text-main `} size={20} />
+               <span className={`text-xl text-main`}>
                   Pace caret
                </span>
             </h2>
-            <p className={`mt-2 text-base`}>
+            <p className={`mt-2 text-base !text-secondary`}>
                Displays a second caret that moves at constant speed. The 'average' option averages the speed of last 10
                results. The 'daily' option takes the highest speed of the last 24 hours.
             </p>

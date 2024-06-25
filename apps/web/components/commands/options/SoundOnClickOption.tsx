@@ -25,7 +25,7 @@ const SoundOnClickOption = ({ sound }: SoundOnClickOptionProps) => {
 
    return (
       <CommandItem
-         value={sound}
+         value={`sound-on-click-${sound}`}
          onSelect={_ => {
             execute({ sound_click_sound: sound });
          }}

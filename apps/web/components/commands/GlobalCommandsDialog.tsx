@@ -13,16 +13,26 @@ import FlipTestColorsOptions from "@components/commands/options/FlipTestColorsOp
 import CaretStyleOptions from "@components/commands/options/CaretStyleOptions";
 import SmoothCaretOptions from "@components/commands/options/SmoothCaretOptions";
 import PaceCaretStyleOptions from "@components/commands/options/PaceCaretStyleOptions";
+import { useSearchParams } from "next/navigation";
+import BlindModeOptions from "@components/commands/options/BlindModeOptions";
+import DifficultyOptions from "@components/commands/options/DifficultyOptions";
+import {  parseAsString, useQueryState } from "nuqs";
 
 export interface GlobalCommandProps {
 }
 
+const IGNORE_PARAMS = [`contact`, `edit-profile`, `report-user`] as const
+
 const GlobalCommandsDialog = ({}: GlobalCommandProps) => {
    const [open, setOpen] = useBoolean();
-   const [search, setSearch] = useState(``);
+   const [qs, setQs] =  useQueryState(`search`, parseAsString.withDefault(``))
+   const sp = useSearchParams();
 
    useEffect(() => {
-      const down = (e: KeyboardEvent) => {
+      let contactModalOpen = IGNORE_PARAMS.some(p => sp.get(p) === `true`)
+      if(contactModalOpen) return;
+
+      const down = async (e: KeyboardEvent) => {
          if (e.key === "Escape") {
             e.preventDefault();
             e.stopPropagation();
@@ -31,15 +41,17 @@ const GlobalCommandsDialog = ({}: GlobalCommandProps) => {
       };
       document.addEventListener("keydown", down);
       return () => document.removeEventListener("keydown", down);
-   }, []);
+   }, [sp]);
 
    return (
       <CommandDialog open={open} onOpenChange={setOpen}>
          <CommandInput
-            inputMode={`text`} onValueChange={setSearch} value={search} className={`bg-neutral-950 placeholder:!text-amber-400`}
+            id={`global-commands`}
+            inputMode={`text`} onValueChange={setQs} value={qs}
+            className={`bg-neutral-950 placeholder:!text-amber-500 !border-none`}
             placeholder="Search ..." />
          <CommandList className={`bg-neutral-950`}>
-            {!!search?.length && (
+            {!!qs?.length && (
                <Fragment>
                   {LANGUAGES.map((language, index) => (
                      <LanguageOption key={index} language={language} />
@@ -52,8 +64,10 @@ const GlobalCommandsDialog = ({}: GlobalCommandProps) => {
                   ))}
                   <PunctuationOptions />
                   <FlipTestColorsOptions />
+                  <BlindModeOptions />
                   <CaretStyleOptions />
-                  <PaceCaretStyleOptions  />
+                  <DifficultyOptions />
+                  <PaceCaretStyleOptions />
                   <SmoothCaretOptions />
                </Fragment>
             )}

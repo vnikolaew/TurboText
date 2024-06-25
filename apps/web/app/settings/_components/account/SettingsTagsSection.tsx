@@ -20,10 +20,10 @@ const SettingsTagsSection = ({ tags }: SettingsTagsSectionProps) => {
       <SettingLayout className={``}>
          <div className={`flex flex-col items-start gap-2`}>
             <h2 className={`inline-flex items-center gap-2`}>
-               <Tags className={`text-neutral-500`} size={22} />
-               <span className={`text-xl text-neutral-500`}>Tags</span>
+               <Tags className={`text-main`} size={22} />
+               <span className={`text-xl text-main`}>Tags</span>
             </h2>
-            <p className={`mt-2 text-base`}>
+            <p className={`mt-2 text-base text-secondary`}>
                Using tags, you can compare how fast you're typing in different situations. You can see your active
                tags
                above the test words. They will remain active until you deactivate them, or refresh the page.

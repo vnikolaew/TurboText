@@ -177,6 +177,7 @@ model UserConfiguration {
   pace_caret_style CaretStyle      @default(OFF)
   pace_caret_speed PaceCaretSpeed  @default(OFF)
 
+  theme               String  @default("dark")
   theme_flip_colors   Boolean @default(false)
   theme_colorful_mode Boolean @default(false)
 

@@ -13,12 +13,12 @@ const DeleteAccountSection = ({}: DeleteAccountSectionProps) => {
       <SettingLayout className={``}>
          <div className={`flex flex-col items-start gap-2`}>
             <h2 className={`inline-flex items-center gap-2`}>
-               <Trash className={`text-neutral-500 `} size={20} />
-               <span className={`text-xl text-neutral-500`}>
+               <Trash className={`text-main `} size={20} />
+               <span className={`text-xl text-main`}>
                   Delete account
                </span>
             </h2>
-            <p className={`mt-2 text-base`}>
+            <p className={`mt-2 text-base !text-secondary`}>
                Deletes your account and all data connected to it.
             </p>
             <p className={`mt-2 text-base !text-red-700`}>
@@ -27,7 +27,8 @@ const DeleteAccountSection = ({}: DeleteAccountSectionProps) => {
          </div>
          <div className={`flex items-center gap-2 w-full h-full my-auto justify-center flex-wrap`}>
             <DeleteAccountModal>
-               <Button className={`flex-1 bg-red-700 text-black shadow-md`}>
+               <Button
+                  className={`flex-1 !bg-red-700  text-black shadow-md hover:!opacity-90 transition-colors duration-100`}>
                   Delete account
                </Button>
             </DeleteAccountModal>

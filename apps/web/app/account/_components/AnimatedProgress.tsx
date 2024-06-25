@@ -21,7 +21,7 @@ const AnimatedProgress = ({ value, delay }: AnimatedProgressProps) => {
 
    return (
       <Progress
-         className={`w-full !h-2 cursor-pointer`}
+         className={`w-full !h-2 cursor-pointer !bg-accent`}
          value={currentValue} />
    );
 };

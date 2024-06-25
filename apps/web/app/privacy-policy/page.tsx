@@ -21,10 +21,10 @@ const LAST_UPDATED = new Date(2024, 4, 21);
  */
 const Page = ({}: PageProps) => {
    return (
-      <section className={`flex flex-col w-full mt-12 items-center`}>
-         <div className={`flex flex-col items-start gap-2 w-2/5 text-wrap`}>
+      <section className={`flex flex-col w-full my-12 items-center`}>
+         <div className={`flex flex-col items-start gap-2 w-2/5 text-wrap !text-main`}>
             <h2 className={`text-2xl`}>{APP_NAME} Privacy Policy</h2>
-            <h3 className={`text-base text-muted-foreground`}>Last
+            <h3 className={`text-base text-secondary`}>Last
                updated: {moment(LAST_UPDATED).format(`MMMM DD, YYYY`)}</h3>
             <Heading text={`1. Introduction`} />
             <p className={`mt-2`}>
@@ -164,20 +164,20 @@ const Page = ({}: PageProps) => {
                If you have any questions about this Privacy Policy, please contact us:
                <ul className={`list-disc`}>
                   <li className={`ml-4 mt-2`}>
-                     By email: <Link className={`!text-blue-500`} href={`mailto:${LINKS.supportEmail}`}>
+                     By email: <Link className={`!text-accent`} href={`mailto:${LINKS.supportEmail}`}>
                      {LINKS.supportEmail}
                   </Link>
                   </li>
                   <li className={`ml-4 mt-2`}>
                      By visiting this page on our website: {` `}
-                     <Link className={`!text-blue-500`} href={`/contact`}>
+                     <Link className={`!text-accent`} href={`/privacy-policy?contact=true`}>
                         Contact page
                      </Link>
                   </li>
                </ul></p>
          </div>
          <div className={`mt-8 flex items-center justify-end w-2/5`}>
-            <Link className={`inline-flex items-center gap-1`} href={`/`}>Go Home <ArrowRight size={14} /></Link>
+            <Link className={`inline-flex items-center gap-1 !text-main`} href={`/`}>Go Home <ArrowRight size={14} /></Link>
          </div>
       </section>
    );

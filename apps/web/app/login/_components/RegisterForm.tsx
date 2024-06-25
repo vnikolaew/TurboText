@@ -89,8 +89,8 @@ const RegisterForm = ({}: RegisterFormProps) => {
    return (
       <div className={`flex flex-col gap-4 !w-1/3`}>
          <div className={`flex items-center gap-2`}>
-            <UserPlus className={`!text-neutral-500 !stroke-[3px]`} size={18} />
-            <span className={`text-neutral-500 !font-semibold`}>
+            <UserPlus className={`!text-secondary !stroke-[3px]`} size={18} />
+            <span className={`text-secondary !font-semibold`}>
                Register
             </span>
          </div>
@@ -103,7 +103,7 @@ const RegisterForm = ({}: RegisterFormProps) => {
                      <FormItem className={`!mt-4`}>
                         <FormLabel></FormLabel>
                         <FormControl className={`!mt-1`}>
-                           <Input type={`text`} required placeholder="username" {...field} />
+                           <Input className={`bg-secondary-bg !text-main`} type={`text`} required placeholder="username" {...field} />
                         </FormControl>
                         <FormDescription>
                         </FormDescription>
@@ -118,7 +118,7 @@ const RegisterForm = ({}: RegisterFormProps) => {
                      <FormItem className={`!mt-0`}>
                         <FormLabel></FormLabel>
                         <FormControl className={`!mt-1`}>
-                           <Input type={`email`} required placeholder="email" {...field} />
+                           <Input className={`!bg-secondary-bg !text-main`} type={`email`} required placeholder="email" {...field} />
                         </FormControl>
                         <FormDescription>
                         </FormDescription>
@@ -133,7 +133,7 @@ const RegisterForm = ({}: RegisterFormProps) => {
                      <FormItem className={`!mt-0`}>
                         <FormLabel></FormLabel>
                         <FormControl className={`!mt-1`}>
-                           <Input type={`email`} required placeholder="verify email" {...field} />
+                           <Input className={`!bg-secondary-bg !text-main`} type={`email`} required placeholder="verify email" {...field} />
                         </FormControl>
                         <FormDescription>
                         </FormDescription>
@@ -150,7 +150,7 @@ const RegisterForm = ({}: RegisterFormProps) => {
                         <FormLabel htmlFor={`password`}></FormLabel>
                         <FormControl className={`!mt-1`}>
                            <div className={`relative`}>
-                              <Input required type={showPassword ? `text` : `password`}
+                              <Input className={`!bg-secondary-bg !text-main`} required type={showPassword ? `text` : `password`}
                                      placeholder="password" {...field} />
                               <PasswordIcon
                                  onClick={_ => setShowPassword(!showPassword)}
@@ -169,7 +169,7 @@ const RegisterForm = ({}: RegisterFormProps) => {
                         <FormLabel htmlFor={`verifyPassword`}></FormLabel>
                         <FormControl className={`!mt-1`}>
                            <div className={`relative`}>
-                              <Input required type={showPassword ? `text` : `password`}
+                              <Input className={`!bg-secondary-bg !text-main`} required type={showPassword ? `text` : `password`}
                                      placeholder="verify password" {...field} />
                               <PasswordIcon
                                  onClick={_ => setShowPassword(!showPassword)}
@@ -184,7 +184,7 @@ const RegisterForm = ({}: RegisterFormProps) => {
                   disabled={loading}
                   size={`default`}
                   variant={`secondary`}
-                  className={`self-end !px-12 !py-1 rounded-lg !mt-8 shadow-md !w-full flex items-center gap-2`}
+                  className={`self-end !px-12 !py-1 rounded-lg !mt-8 shadow-md !w-full flex items-center gap-2 !bg-accent !text-main`}
                   type="submit">
                   {loading ? <LoadingSpinner /> : (
                      <Fragment>

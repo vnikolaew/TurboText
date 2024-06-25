@@ -12,10 +12,10 @@ const MoreAccountSettingsSection = ({}: MoreAccountSettingsSectionProps) => {
       <SettingLayout className={`mt-8`}>
          <div className={`flex flex-col items-start gap-2`}>
             <h2 className={`inline-flex items-center gap-2`}>
-               <UserRound className={`text-neutral-500`} size={22} />
-               <span className={`text-xl text-neutral-500`}>More account settings</span>
+               <UserRound className={`text-main`} size={22} />
+               <span className={`text-xl text-main`}>More account settings</span>
             </h2>
-            <p className={`mt-2 text-base`}>
+            <p className={`mt-2 text-base !text-secondary`}>
                You can access more account settings (such as changing your name, password, resetting or deleting your
                account) in the danger zone section.
             </p>
@@ -25,7 +25,7 @@ const MoreAccountSettingsSection = ({}: MoreAccountSettingsSectionProps) => {
                onClick={_ => {
                   document.getElementById(`danger`)?.scrollIntoView({ behavior: `smooth` });
                }}
-               variant={`outline`}
+               variant={`destructive`}
                className={`w-full hover:!text-black hover:!bg-neutral-300 transition-colors duration-200 mt-8`}>
                Go to danger zone
             </Button>

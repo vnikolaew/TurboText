@@ -4,6 +4,7 @@ import { atom } from "jotai";
 import { focusAtom } from "jotai-optics";
 import { Session } from "next-auth";
 import { UserExperience } from "@atoms/consts";
+import theme from "tailwindcss/defaultTheme";
 
 export const userDataLoadingAtom = atom(false);
 
@@ -103,7 +104,9 @@ export const colorfulModeAtom = focusAtom<UserConfiguration["theme_colorful_mode
 colorfulModeAtom.debugLabel = `colorfulModeAtom`;
 
 // @ts-ignore
-export const keyTipsAtom = focusAtom<UserConfiguration["elements_show_key_tips"]>(userConfigAtom, optic => optic.prop(`elements_show_key_tips`));
+export const keyTipsAtom = atom<boolean>(get => {
+   return get(userConfigAtom)?.elements_show_key_tips;
+});
 keyTipsAtom.debugLabel = `keyTipsAtom`;
 
 // @ts-ignore
@@ -123,5 +126,14 @@ export const fontFamilyAtom = focusAtom<UserConfiguration["font_family"]>(userCo
 fontFamilyAtom.debugLabel = `fontFamilyAtom`;
 
 // @ts-ignore
+export const hoveredFontFamilyAtom = atom<string>(null!);
+hoveredFontFamilyAtom.debugLabel = `hoveredFontFamilyAtom`;
+
+// @ts-ignore
 export const fontSizeAtom = focusAtom<number>(userConfigAtom, optic => optic?.prop(`font_size`));
 fontSizeAtom.debugLabel = `fontSizeAtom`;
+
+// @ts-ignore
+export const themeAtom = focusAtom<UserConfiguration["theme"]>(userConfigAtom, optic => optic?.prop(`theme`));
+themeAtom.debugLabel = `themeAtom`;
+

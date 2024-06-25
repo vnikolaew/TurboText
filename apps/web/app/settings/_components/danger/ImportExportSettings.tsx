@@ -18,12 +18,12 @@ const ImportExportSettings = ({}: ImportExportSettingsProps) => {
       <SettingLayout className={``}>
          <div className={`flex flex-col items-start gap-2`}>
             <h2 className={`inline-flex items-center gap-2`}>
-               <SlidersHorizontal className={`text-neutral-500 `} size={20} />
-               <span className={`text-xl text-neutral-500`}>
+               <SlidersHorizontal className={`text-main `} size={20} />
+               <span className={`text-xl text-main`}>
                   Import / Export settings
                </span>
             </h2>
-            <p className={`mt-2 text-base`}>
+            <p className={`mt-2 text-base !text-secondary`}>
                Import or export the settings as JSON.
             </p>
          </div>

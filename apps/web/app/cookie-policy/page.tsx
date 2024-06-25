@@ -21,10 +21,10 @@ const LAST_UPDATED = new Date(2024, 4, 21);
  */
 const Page = async ({}: PageProps) => {
    return (
-      <section className={`flex flex-col w-full mt-12 items-center`}>
-         <div className={`flex flex-col items-start gap-2 w-2/5 text-wrap`}>
+      <section className={`flex flex-col w-full my-12 items-center`}>
+         <div className={`flex flex-col items-start gap-2 w-2/5 text-wrap !text-main`}>
             <h2 className={`text-2xl`}>{APP_NAME} Cookie Policy </h2>
-            <h3 className={`text-base text-muted-foreground`}>Last
+            <h3 className={`text-base text-secondary`}>Last
                updated: {moment(LAST_UPDATED).format(`MMMM DD, YYYY`)}</h3>
             <Heading text={`1. Introduction`} />
             <p className={`mt-2`}>
@@ -94,14 +94,14 @@ const Page = async ({}: PageProps) => {
             <Heading text={`8. Where can I get further information?`} />
             <p className={`mt-2`}>
                If you have any questions about our use of cookies or other technologies, please email us
-               at <Link className={`!text-blue-500`} href={`mailto:${LINKS.supportEmail}`}>
+               at <Link className={`!text-accent`} href={`mailto:${LINKS.supportEmail}`}>
                {LINKS.supportEmail}
             </Link> or by post to:
             </p>
             <CompanyDetails />
          </div>
          <div className={`mt-8 flex items-center justify-end w-2/5`}>
-            <Link className={`inline-flex gap-1 items-center`} href={`/`}>Go Home <ArrowRight size={14} /></Link>
+            <Link className={`inline-flex gap-1 items-center !text-main`} href={`/`}>Go Home <ArrowRight size={14} /></Link>
          </div>
       </section>
    );

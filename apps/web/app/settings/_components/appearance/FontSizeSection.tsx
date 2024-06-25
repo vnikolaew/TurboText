@@ -27,18 +27,18 @@ const FontSizeSection = ({}: FontSizeSectionProps) => {
       <SettingLayout className={``}>
          <div className={`flex flex-col items-start gap-2`}>
             <h2 className={`inline-flex items-center gap-2`}>
-               <ALargeSmall className={`text-neutral-500 `} size={20} />
-               <span className={`text-xl text-neutral-500`}>
+               <ALargeSmall className={`text-main `} size={20} />
+               <span className={`text-xl text-main`}>
                Font size
             </span>
             </h2>
-            <p className={`mt-2 text-base`}>
+            <p className={`mt-2 text-base !text-secondary`}>
                Change the font size of the test words.
             </p>
          </div>
          <div className={`flex items-center gap-2 w-full h-full my-auto justify-center`}>
             <Input size={10} onChange={e => setfontSize(e.target.valueAsNumber)} value={fontSize} type={"number"}
-                   className={`w-full`} />
+                   className={`w-full !bg-secondary-bg !text-main`} />
             <Button title={`Save`} variant={`secondary`} onClick={_ => execute({ font_size: fontSize })} className={`rounded-md shadow-md`} size={"icon"}>
                <Save size={14} />
             </Button>

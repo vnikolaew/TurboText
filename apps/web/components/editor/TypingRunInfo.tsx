@@ -32,7 +32,7 @@ const TypingRunInfo = ({ runs }: TypingRunInfoProps) => {
    const { averagePace, averageAccuracy } = getAverages(runs);
 
    return (
-      <div className={`w-full flex items-center justify-center gap-8 text-neutral-400`}>
+      <div className={`w-full flex items-center justify-center gap-8 text-secondary`}>
          <RunInfo>
             <Globe size={18} />
             <span>

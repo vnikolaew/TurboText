@@ -28,8 +28,8 @@ const FontFamilySection = ({}: FontFamilySectionProps) => {
    return (
       <div className={`flex flex-col w-full items-start gap-2`}>
          <div className={`flex items-center gap-2`}>
-            <ALargeSmall className={`text-neutral-500 `} size={20} />
-            <span className={`text-xl text-neutral-500`}>
+            <ALargeSmall className={`text-main `} size={20} />
+            <span className={`text-xl text-main`}>
                Font family
             </span>
          </div>

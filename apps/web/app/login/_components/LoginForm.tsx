@@ -81,16 +81,16 @@ const LoginForm = ({}: LoginFormProps) => {
    return (
       <div className={`flex flex-col gap-4 !w-1/3`}>
          <div className ={`flex items-center gap-2`}>
-            <LogIn className={`!text-neutral-500 !stroke-[3px]`} size={18} />
-            <span className={`text-neutral-500 !font-semibold`}>
+            <LogIn className={`!text-secondary !stroke-[3px]`} size={18} />
+            <span className={`text-secondary !font-semibold`}>
                Login
             </span>
          </div>
          <SocialLogins />
         <div className={`w-full flex items-center gap-3`}>
-           <Separator orientation="horizontal" className={`flex-1 !bg-black !h-[4px] rounded-full`} />
-           <span>or</span>
-           <Separator orientation="horizontal" className={`flex-1 !bg-black !h-[4px] rounded-full`} />
+           <Separator orientation="horizontal" className={`flex-1 !bg-secondary !h-[3px] rounded-full`} />
+           <span className={`text-secondary`}>or</span>
+           <Separator orientation="horizontal" className={`flex-1 !bg-secondary  !h-[3px] rounded-full`} />
         </div>
          <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 flex flex-col !w-full">
@@ -101,7 +101,7 @@ const LoginForm = ({}: LoginFormProps) => {
                      <FormItem className={`!mt-4`}>
                         <FormLabel></FormLabel>
                         <FormControl className={`!mt-1`}>
-                           <Input type={`text`} required placeholder="email" {...field} />
+                           <Input className={`bg-secondary-bg !text-main`} type={`text`} required placeholder="email" {...field} />
                         </FormControl>
                         <FormDescription>
                         </FormDescription>
@@ -117,7 +117,7 @@ const LoginForm = ({}: LoginFormProps) => {
                         <FormLabel htmlFor={`password`}></FormLabel>
                         <FormControl className={`!mt-1`}>
                            <div className={`relative`}>
-                              <Input required type={showPassword ? `text` : `password`}
+                              <Input className={`!bg-secondary-bg !text-main`} required type={showPassword ? `text` : `password`}
                                      placeholder="password" {...field} />
                               <PasswordIcon
                                  onClick={_ => setShowPassword(!showPassword)}
@@ -132,15 +132,15 @@ const LoginForm = ({}: LoginFormProps) => {
                   control={form.control}
                   name="rememberMe"
                   render={({ field }) => (
-                     <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border shadow-md !mt-2">
+                     <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md !border-none !mt-4">
                         <FormControl>
                            <Checkbox
-                              className={`!text-amber-500 data-[state=checked]:bg-transparent !border-none !h-5 !w-5`}
+                              className={`!text-accent data-[state=checked]:bg-main !h-5 !w-5`}
                               checked={field.value}
                               onCheckedChange={field.onChange}
                            />
                         </FormControl>
-                        <div className="space-y-1 leading-none">
+                        <div className="space-y-1 leading-none !text-main">
                            <FormLabel>
                               Remember me
                            </FormLabel>
@@ -152,7 +152,7 @@ const LoginForm = ({}: LoginFormProps) => {
                   disabled={loading}
                   size={`default`}
                   variant={`secondary`}
-                  className={`self-end !px-12 !py-1 rounded-lg !mt-8 shadow-md !w-full flex items-center gap-2`}
+                  className={`self-end !px-12 !py-1 rounded-lg !mt-8 shadow-md !w-full flex items-center gap-2 !text-main !bg-accent`}
                   type="submit">
                   {loading ? <LoadingSpinner /> : (
                      <Fragment>
@@ -161,7 +161,7 @@ const LoginForm = ({}: LoginFormProps) => {
                      </Fragment>
                   )}
                </Button>
-               <Button size={`sm`} className={`text-xs !mx-0 !px-0 !mt-1`} variant={`link`} asChild>
+               <Button size={`sm`} className={`text-xs !mx-0 !px-0 !mt-1 !text-secondary`} variant={`link`} asChild>
                   <Link className={`text-right`} href={`/`}>
                      Forgot your password?
                   </Link>

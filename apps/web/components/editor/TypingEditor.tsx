@@ -110,8 +110,8 @@ const TypingEditor = ({ user }: TypingEditorProps) => {
             )}
          </div>
          <div className={`flex items-center gap-2 w-full justify-center`}>
-            <span className={`mt-4 w-full text-center`}>Total run time: {totalRunTime}ms</span>
-            <span className={`mt-4 w-full text-center`}>Total pause time: {totalPauseTime}ms</span>
+            <span className={`mt-4 w-full text-center !text-main`}>Total run time: {totalRunTime}ms</span>
+            <span className={`mt-4 w-full text-center !text-main`}>Total pause time: {totalPauseTime}ms</span>
          </div>
          <div className={`flex items-center justify-center w-full gap-4`}>
             <RestartButton />

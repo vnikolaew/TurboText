@@ -22,7 +22,7 @@ const EmailNotVerifiedNotification = ({}: EmailNotVerifiedNotificationProps) => 
    }
 
    return (
-      <div className={`w-full mx-auto flex items-center justify-center gap-2`}>
+      <div className={`w-full mx-auto flex items-center justify-center gap-2 !text-main`}>
          <span>
           Your account is not verified - {` `}
          </span>

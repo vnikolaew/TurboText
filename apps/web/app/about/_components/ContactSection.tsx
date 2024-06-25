@@ -9,10 +9,10 @@ export interface ContactSectionProps {
 const ContactSection = ({}: ContactSectionProps) => {
    return (
       <section id={`contact`} className={`text-left flex flex-col items-start gap-4 w-full !mb-12`}>
-         <h2 className={`text-2xl mt-16 text-neutral-500`}>
+         <h2 className={`text-2xl mt-16 text-main`}>
             Contact
          </h2>
-         <p>
+         <p className={`!text-secondary`}>
             If you encounter a bug, have a feature request or just want to contact - here are the different ways you can
             contact us directly.
          </p>
@@ -45,7 +45,7 @@ const ContactLink = ({ icon, text, href }: { icon: ReactNode, text: string, href
          className={`flex-1 h-full`}
          href={href!}>
          <div
-            className={`flex-1 h-full w-full rounded-xl flex items-center justify-center text-2xl gap-4 hover:!bg-neutral-300 hover:!text-neutral-700 transition-colors duration-200 cursor-pointer`}
+            className={`flex-1 h-full w-full rounded-xl flex items-center justify-center text-2xl gap-4 hover:!bg-accent hover:!text-main transition-colors duration-200 cursor-pointer !text-main`}
          >
             {icon}
             {text}

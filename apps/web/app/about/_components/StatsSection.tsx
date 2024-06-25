@@ -7,13 +7,13 @@ export interface StatsSectionProps {
 const StatsSection = ({}: StatsSectionProps) => {
    return (
       <section id={`stats`} className={`text-left flex flex-col items-start gap-4`}>
-         <h2 className={`text-xl mt-16 text-neutral-500 inline-flex items-center gap-2`}>
+         <h2 className={`text-xl mt-16 text-main inline-flex items-center gap-2`}>
             <ListOrdered size={20} />
             <span>
                Stats
             </span>
          </h2>
-         <p>
+         <p className={`!text-secondary`}>
             <ul>
                <li> wpm - total number of characters in the correctly typed words (including spaces), divided by 5 and normalised to 60 seconds. </li>
                {/*<li> raw wpm - calculated just like wpm, but also includes incorrect words. </li>*/}

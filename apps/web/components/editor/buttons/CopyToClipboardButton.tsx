@@ -11,7 +11,7 @@ const CopyToClipboardButton = ({}: CopyToClipboardButtonProps) => {
    const copyScreenshotToClipboard = () => {
       html2canvas(document.getElementById(`editor`)!)
          .then(canvas => {
-            canvas.toBlob(blob => {
+            canvas.toBlob(blob => {ww
                if (blob) {
                   window.navigator?.clipboard.write([
                      new ClipboardItem({
@@ -27,7 +27,7 @@ const CopyToClipboardButton = ({}: CopyToClipboardButtonProps) => {
          <Tooltip>
             <TooltipTrigger asChild>
                <Button onClick={copyScreenshotToClipboard} variant={`ghost`} size={`icon`}>
-                  <Image size={18} />
+                  <Image className={`!text-main`} size={18} />
                </Button>
             </TooltipTrigger>
             <TooltipContent

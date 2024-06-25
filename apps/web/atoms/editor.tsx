@@ -246,6 +246,8 @@ export const onKeyPressAtom = atom(null, (get, set, e: KeyboardEvent<HTMLDivElem
    const charCode = e.key.charCodeAt(0);
    const capsLockSwitch = e.key === `CapsLock`;
 
+   if(key === `Escape`) return;
+
    if (capsLockSwitch) {
       set(capsLockOnAtom, l => !l);
       return;
@@ -345,7 +347,6 @@ export const missedWordsAtom = atom<string[]>((get) => {
                      && l.letter === word[charIndex - start]
                      && l.correct === true);
 
-               console.log(`Latest index for letter ${word[charIndex - start]} of word ${word}: ${i}`);
                return i === -1 ? 1 : 0;
             }));
          return { word, missedChars, range: [start, end] };

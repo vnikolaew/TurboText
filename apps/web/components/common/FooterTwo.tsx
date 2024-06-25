@@ -83,20 +83,20 @@ export const FooterTwo = ({
                <Link href={`/`} className={`inline-flex items-center gap-4`}>
                   {appLogo}
                   <span
-                     className={`font-semibold text-base !test-gradient drop-shadow-lg !font-semibold ${lexend.className} uppercase`}>{appName}</span>
+                     className={`text-base !test-gradient drop-shadow-lg !font-semibold ${lexend.className} uppercase !text-main`}>{appName}</span>
                </Link>
-               <span className={`!mt-2 text-sm font-normal`}>
+               <span className={`!mt-2 text-sm font-normal !text-secondary`}>
                   {appDescription}
                </span>
-               <span className={`!mt-4 text-sm`}>
+               <span className={`!mt-4 text-sm !text-secondary`}>
                   Copyright © {new Date().getFullYear()} - All rights reserved.
                </span>
             </div>
             <div>
-               <h2 className={`uppercase text-muted-foreground text-base`}>{links.title}</h2>
+               <h2 className={`uppercase text-base !text-main`}>{links.title}</h2>
                <div className="mt-4 flex space-y-2 flex-col">
                   {links?.links?.map(({ title, href, icon }, index) => (
-                     <Link className={`hover:underline text-sm w-fit hover:!text-amber-500 transition-colors duration-100 inline-flex items-center gap-2 group`} href={href}>
+                     <Link className={`hover:underline text-sm w-fit hover:!text-accent transition-colors duration-100 inline-flex items-center gap-2 group !text-secondary`} href={href}>
                         {icon}
                         {title}
                      </Link>
@@ -104,10 +104,10 @@ export const FooterTwo = ({
                </div>
             </div>
             <div>
-               <h2 className={`uppercase text-muted-foreground text-lg`}>{legal.title}</h2>
+               <h2 className={`uppercase text-main text-lg`}>{legal.title}</h2>
                <div className="mt-4 flex space-y-2 flex-col">
                   {legal?.links?.map(({ title, href, icon }, index) => (
-                     <Link className={`hover:underline text-sm w-fit hover:!text-amber-500 transition-colors duration-100 inline-flex items-center gap-2 group`} href={href}>
+                     <Link className={`hover:underline text-sm w-fit hover:!text-accent transition-colors duration-100 inline-flex items-center gap-2 group !text-secondary`} href={href}>
                         {icon}
                         {title}
                      </Link>
@@ -115,19 +115,19 @@ export const FooterTwo = ({
                </div>
             </div>
             <div>
-               <h2 className={`uppercase text-muted-foreground text-lg`}>{title}</h2>
+               <h2 className={`uppercase text-muted-foreground text-lg !text-main`}>{title}</h2>
                <div className="mb-8 flex space-x-8 mt-4">
                   <Link title={`Discord`} target="_blank" rel="noreferrer" href={discord}>
                      <span className="sr-only">Discord</span>
-                     <Icons.discord className="h-6 w-6 fill:white text-white hover:!fill-amber-500 hover:!text-amber-500 transition-colors duration-100" />
+                     <Icons.discord className="h-6 w-6 fill:white text-white hover:!fill-accent hover:!text-accent transition-colors duration-100" />
                   </Link>
                   <Link title={`Twitter`} target="_blank" rel="noreferrer" href={twitter}>
                      <span className="sr-only">Twitter</span>
-                     <Icons.twitter className="h-6 w-6 !fill-white text-white hover:!fill-amber-500 hover:!text-amber-500 transition-colors duration-100" />
+                     <Icons.twitter className="h-6 w-6 !fill-white text-white hover:!fill-accent hover:!text-accent transition-colors duration-100" />
                   </Link>
                   <Link title={`LinkedIn`} target="_blank" rel="noreferrer" href={linkedIn}>
                      <span className="sr-only">LinkedIn</span>
-                     <Icons.linkedIn className="h-6 w-6 !fill-white !text-white hover:!fill-amber-500 hover:!text-amber-500 transition-colors duration-100" />
+                     <Icons.linkedIn className="h-6 w-6 !fill-white !text-white hover:!fill-accent hover:!text-accent transition-colors duration-100" />
                   </Link>
                </div>
             </div>

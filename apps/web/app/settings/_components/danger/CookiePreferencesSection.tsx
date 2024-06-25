@@ -14,12 +14,12 @@ const CookiePreferencesSection = ({}: CookiePreferencesSectionProps) => {
       <SettingLayout className={``}>
          <div className={`flex flex-col items-start gap-2`}>
             <h2 className={`inline-flex items-center gap-2`}>
-               <Cookie className={`text-neutral-500 `} size={20} />
-               <span className={`text-xl text-neutral-500`}>
+               <Cookie className={`text-main `} size={20} />
+               <span className={`text-xl text-main`}>
                   Update cookie preferences
                </span>
             </h2>
-            <p className={`mt-2 text-base`}>
+            <p className={`mt-2 text-base !text-secondary`}>
                If you changed your mind about which cookies you consent to, you can change your preferences here.
             </p>
          </div>

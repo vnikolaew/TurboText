@@ -32,12 +32,12 @@ const BlindModeSection = ({}: BlindModeSectionProps) => {
       <SettingLayout className={``}>
          <div className={`flex flex-col items-start gap-2`}>
             <h2 className={`inline-flex items-center gap-2`}>
-               <EyeOff className={`text-neutral-500 `} size={20} />
-               <span className={`text-xl text-neutral-500`}>
+               <EyeOff className={`text-main `} size={20} />
+               <span className={`text-xl text-main`}>
                   Blind mode
                </span>
             </h2>
-            <p className={`mt-2 text-base`}>
+            <p className={`mt-2 text-base !text-secondary`}>
                No errors or incorrect words are highlighted. Helps you to focus on raw speed. If enabled, quick end is recommended.
             </p>
          </div>

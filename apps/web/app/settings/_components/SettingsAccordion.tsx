@@ -33,6 +33,7 @@ import ImportExportSettings from "@app/settings/_components/danger/ImportExportS
 import AutoSaveModeSection from "@app/settings/_components/behaviour/AutoSaveModeSection";
 import FontFamilySection from "@app/settings/_components/appearance/FontFamilySection";
 import FontSizeSection from "./appearance/FontSizeSection";
+import ThemesSection from "./theme/ThemesSection";
 
 export interface SettingsAccordionProps {
    user: User & { tags: Tag[], configuration: UserConfiguration };
@@ -80,6 +81,7 @@ const SettingsAccordion = ({ user }: SettingsAccordionProps) => {
          <SettingsAccordionItem className={`!mt-4`} name={`Theme`} value={`theme`}>
             <FlipTestColors />
             <ColorfulModeSection />
+            <ThemesSection />
          </SettingsAccordionItem>
          <SettingsAccordionItem className={`!mt-4`} name={`Elements`} value={`elements`}>
             <KeyTipsSection />

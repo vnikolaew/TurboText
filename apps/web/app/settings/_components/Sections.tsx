@@ -33,7 +33,7 @@ const Sections = ({}: SectionsProps) => {
                      document.getElementById(section.split(` `).at(0)!)?.scrollIntoView({ behavior: `smooth` });
                   });
             }} key={section}
-                 className={`text-neutral-500 cursor-pointer hover:text-neutral-300 transition-colors duration-200 text-2xl`}>
+                 className={`text-main cursor-pointer hover:!opacity-90 transition-all duration-200 text-2xl`}>
                {section}
             </span>
          ))}

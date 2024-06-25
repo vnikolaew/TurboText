@@ -38,6 +38,7 @@ export interface PageProps {
 const Page = async ({ searchParams }: PageProps) => {
    const user = await getUserWithTypingRuns();
    if (!user) notFound();
+   console.log({ completedWords: user.typingRuns.map(r => r.metadata?.completedWords) });
 
    return (
       <section className={`w-2/3 mx-auto mt-24 flex flex-col items-center gap-4`}>
@@ -47,19 +48,19 @@ const Page = async ({ searchParams }: PageProps) => {
          {user.emailVerified && searchParams?.verified === `true` && (
             <OnAccountVerified />
          )}
-         <div className={`w-full bg-stone-950/70 rounded-lg shadow-lg flex items-center p-6 py-10 gap-8 mt-8 `}>
+         <div className={`w-full bg-secondary-bg rounded-lg shadow-lg flex items-center p-6 py-10 gap-8 mt-8 `}>
             <div className={`flex flex-col items-start gap-2`}>
                <div className={`flex items-center gap-4`}>
                   <UserAvatar className={`w-20 h-20`} imageSrc={user?.image!} />
                   <div className={`flex flex-col items-start gap-2`}>
-                     <h2 className={`text-2xl text-neutral-300 `}>{user?.name}</h2>
+                     <h2 className={`text-2xl text-main `}>{user?.name}</h2>
 
                      <div className={`flex flex-col gap-0`}>
                         <TooltipProvider>
                            <Tooltip>
                               <TooltipTrigger asChild>
                      <span
-                        className={`text-sm text-neutral-500 cursor-pointer`}>
+                        className={`text-sm text-secondary cursor-pointer`}>
                         Joined {moment(user.createdAt).format(`DD MMM YYYY`)}
                      </span>
                               </TooltipTrigger>
@@ -70,7 +71,7 @@ const Page = async ({ searchParams }: PageProps) => {
                               </TooltipContent>
                            </Tooltip>
                         </TooltipProvider>
-                        <span className={`text-sm text-neutral-500`}>
+                        <span className={`text-sm text-secondary`}>
                         Current streak: {user.currentStreak} day{user.currentStreak === 1 ? `` : `s`}
                      </span>
                      </div>
@@ -82,34 +83,34 @@ const Page = async ({ searchParams }: PageProps) => {
                   </Suspense>
                </div>
             </div>
-            <Separator orientation={`vertical`} className={`h-20 w-[4px] rounded-full bg-neutral-700`} />
+            <Separator orientation={`vertical`} className={`h-20 w-[4px] rounded-full bg-secondary`} />
             <div className={`flex-1 h-full grid grid-cols-3`}>
                <div className={`flex flex-col items-start gap-1`}>
-                  <span className={`text-neutral-500 text-sm`}>Tests started</span>
-                  <h2 className={`text-3xl text-white`}>{user.typingRuns.length}</h2>
+                  <span className={`text-secondary text-sm`}>Tests started</span>
+                  <h2 className={`text-3xl text-main`}>{user.typingRuns.length}</h2>
                </div>
                <div className={`flex flex-col items-start gap-1`}>
-                  <span className={`text-neutral-500 text-sm`}>Tests completed</span>
-                  <h2 className={`text-3xl text-white`}>{user.typingRuns.length}</h2>
+                  <span className={`text-secondary text-sm`}>Tests completed</span>
+                  <h2 className={`text-3xl text-main`}>{user.typingRuns.length}</h2>
                </div>
                <div className={`flex flex-col items-start gap-1`}>
-                  <span className={`text-neutral-500 text-sm`}>Time typing</span>
-                  <h2 className={`text-3xl text-white`}>{formatMillisecondsToTime(user.totalTimeTypingMs)}</h2>
+                  <span className={`text-secondary text-sm`}>Time typing</span>
+                  <h2 className={`text-3xl text-main`}>{formatMillisecondsToTime(user.totalTimeTypingMs)}</h2>
                </div>
             </div>
-            <Separator orientation={`vertical`} className={`h-20 w-[4px] rounded-full bg-neutral-700`} />
+            <Separator orientation={`vertical`} className={`h-20 w-[4px] rounded-full bg-secondary`} />
             <AccountLinks user={user} />
          </div>
-         <div className={`w-full bg-stone-950/70 rounded-lg shadow-lg flex items-center p-6 py-10 gap-8 mt-8`}>
+         <div className={`w-full bg-secondary-bg rounded-lg shadow-lg flex items-center p-6 py-10 gap-8 mt-8`}>
             <UserActivitySection typingRuns={user?.typingRuns?.map(run => {
                const { hasFlag, ...rest } = run;
                return rest;
             })} />
          </div>
-         <div className={`w-full bg-stone-950/70 rounded-lg shadow-lg flex items-center p-12 py-10 gap-8 mt-8`}>
+         <div className={`w-full bg-secondary-bg rounded-lg shadow-lg flex items-center p-12 py-10 gap-8 mt-8`}>
             <TypingRunsStatsSection runs={user.typingRuns} />
          </div>
-         <div className={`w-full bg-stone-950/70 rounded-lg shadow-lg flex items-center p-6 py-10 gap-8 mt-8`}>
+         <div className={`w-full bg-secondary-bg rounded-lg shadow-lg flex items-center p-6 py-10 gap-8 mt-8`}>
             <LatestUserRuns user={user} />
          </div>
       </section>

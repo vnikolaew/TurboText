@@ -15,13 +15,13 @@ const LanguageFilter = ({ language }: LanguageFilterProps) => {
       <Select
          onValueChange={l => router.push(`?language=${encodeURIComponent(l)}`)}
       >
-         <SelectTrigger className="w-[300px] !bg-black">
+         <SelectTrigger className="w-[300px] !bg-neutral-900 !text-main">
             <SelectValue placeholder={language} />
          </SelectTrigger>
-         <SelectContent className={`!bg-black !rounded-lg !z-[100]`}>
+         <SelectContent className={`!bg-neutral-900 !rounded-lg !z-[100] `}>
             {Object.values(LANGUAGES_MAP).map((language, index) => (
                <SelectItem
-                  className={`!rounded-md cursor-pointer hover:!bg-neutral-300 transition-colors duration-100 hover:!text-black`}
+                  className={`!rounded-md cursor-pointer hover:!bg-accent hover:!text-main transition-colors duration-100 !text-main`}
                   key={language} value={language}>{language}</SelectItem>
             ))}
          </SelectContent>

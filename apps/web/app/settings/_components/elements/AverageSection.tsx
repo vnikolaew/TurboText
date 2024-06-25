@@ -46,12 +46,12 @@ const AverageSection = ({}: AverageSectionProps) => {
       <SettingLayout className={``}>
          <div className={`flex flex-col items-start gap-2`}>
             <h2 className={`inline-flex items-center gap-2`}>
-               <BarChart3 className={`text-neutral-500 `} size={20} />
-               <span className={`text-xl text-neutral-500`}>
+               <BarChart3 className={`text-main `} size={20} />
+               <span className={`text-xl text-main`}>
                   Average
                </span>
             </h2>
-            <p className={`mt-2 text-base`}>
+            <p className={`mt-2 text-base !text-secondary`}>
                Displays your average speed and/or accuracy over the last 10 tests.
             </p>
          </div>

@@ -34,12 +34,12 @@ const SoundOnClickSection = ({}: SoundOnClickSectionProps) => {
    return (
       <div className={`flex flex-col w-full items-start gap-2`}>
          <div className={`flex items-center gap-2`}>
-            <Volume2 className={`text-neutral-500 `} size={20} />
-            <span className={`text-xl text-neutral-500`}>
+            <Volume2 className={`text-main `} size={20} />
+            <span className={`text-xl text-main`}>
                Play sound on click
             </span>
          </div>
-         <p className={`mt-2 text-base`}>
+         <p className={`mt-2 text-base !text-secondary`}>
             Plays a short sound when you press a key.
          </p>
          <div className={`w-full grid grid-cols-5 gap-4 mt-4`}>

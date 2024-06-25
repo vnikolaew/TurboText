@@ -13,7 +13,7 @@ export interface TypingRunsStatsSectionProps {
 }
 
 const TypingRunsStatsSection = ({ runs }: TypingRunsStatsSectionProps) => {
-   const wordsTyped = sum(runs.map(r => r.wordCount!));
+   const wordsTyped = sum(runs.map(r => r.metadata?.completedWords ?? r.wordCount));
    const timeTyping = sum(runs.map(r => r.totalTimeMilliseconds!))
 
    const highestWpm = runs.sort((a, b) => b.wpm - a.wpm)?.at(0)?.wpm?.toFixed(0);
@@ -31,10 +31,10 @@ const TypingRunsStatsSection = ({ runs }: TypingRunsStatsSectionProps) => {
    return (
       <div className={`flex flex-col items-center gap-4 w-full`}>
          <div className={`flex items-center gap-4 justify-center w-full`}>
-            <span className={`text-base text-neutral-500`}>
+            <span className={`text-base text-secondary`}>
                Estimated words typed
             </span>
-            <span className={`text-6xl text-neutral-300`}>
+            <span className={`text-6xl text-main`}>
                {wordsTyped}
             </span>
          </div>
@@ -61,10 +61,10 @@ const TypingRunsStatsSection = ({ runs }: TypingRunsStatsSectionProps) => {
 const TypingRunStat = ({ label, value }: { label: ReactNode; value: ReactNode }) => {
    return (
       <div className={`flex flex-col items-start gap-2`}>
-         <span className={`text-base text-neutral-500`}>
+         <span className={`text-base text-secondary`}>
          {label}
          </span>
-         <span className={`text-5xl text-neutral-300`}>{value}</span>
+         <span className={`text-5xl text-main`}>{value}</span>
       </div>
    );
 

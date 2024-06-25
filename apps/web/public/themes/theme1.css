@@ -1,0 +1,16 @@
+.theme-1 {
+    --background: 223.6 29.2% 22.2% !important;
+    --accent: 184 100% 27% !important;
+    --main: 195 50% 91% !important;
+    /*--destructive: 195 50% 91% !important;*/
+    --secondary: 215 20.2% 65.1% !important;
+    --secondary-bg:  224 24% 33% !important;
+
+    :root {
+        --background: 223.6 29.2% 22.2% !important;
+        --accent: 184 100% 27% !important;
+        --main: 195 50% 91% !important;
+        --secondary: 215 20.2% 65.1% !important;
+        --secondary-bg:  224 24% 33% !important;
+    }
+}

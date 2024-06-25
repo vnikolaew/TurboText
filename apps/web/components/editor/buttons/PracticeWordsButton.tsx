@@ -34,7 +34,7 @@ const PracticeWordsButton = ({}: PracticeWordsButtonProps) => {
                      className={`hover:!bg-transparent group`}
                      variant={`ghost`}
                      size={`icon`}>
-                     <AlertTriangle className={`group-hover:!text-neutral-400  transition-colors duration-200`}
+                     <AlertTriangle className={`group-hover:!text-neutral-400  transition-colors duration-200 !text-main`}
                                     size={18} />
                   </Button>
                </PracticeWordsModal>

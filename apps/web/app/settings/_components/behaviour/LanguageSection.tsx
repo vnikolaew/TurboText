@@ -44,23 +44,25 @@ const LanguageSection = ({}: LanguageSectionProps) => {
       <SettingLayout className={``}>
          <div className={`flex flex-col items-start gap-2`}>
             <h2 className={`inline-flex items-center gap-2`}>
-               <Languages className={`text-neutral-500 `} size={20} />
-               <span className={`text-xl text-neutral-500`}>
+               <Languages className={`text-main `} size={20} />
+               <span className={`text-xl text-main`}>
                   Language
                </span>
             </h2>
-            <p className={`mt-2 text-base`}>
+            <p className={`mt-2 text-base !text-secondary`}>
                Change the language you want to type in.
             </p>
          </div>
          <div className={`flex items-center gap-2 w-full h-full my-auto justify-center`}>
             <Select onValueChange={handleSelectLanguage}>
-               <SelectTrigger className="w-full">
+               <SelectTrigger className="w-full !bg-neutral-900 !text-main">
                   <SelectValue placeholder={userLanguage} />
                </SelectTrigger>
-               <SelectContent className={`w-full`}>
+               <SelectContent className={`w-full bg-neutral-900`}>
                   {LANGUAGES.map((language, index) => (
-                     <SelectItem className={`w-full`} key={language} value={language}>{language}</SelectItem>
+                     <SelectItem className={`w-full hover:!bg-main hover:!text-neutral-900 !text-main`} key={language} value={language}>
+                        {language}
+                     </SelectItem>
                   ))}
                </SelectContent>
             </Select>
