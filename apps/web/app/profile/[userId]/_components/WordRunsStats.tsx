@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { TypingRun } from "@repo/db";
 import React from "react";
 import { max, mean } from "lodash";
@@ -6,6 +6,7 @@ import { useBoolean } from "@hooks/useBoolean";
 import { motion } from "framer-motion";
 import { cn } from "@lib/utils";
 import moment from "moment/moment";
+import NoRunsLabel from "./NoRunsLabel";
 
 export interface WordRunsStatsProps {
    wordRuns: TypingRun[];
@@ -24,16 +25,16 @@ const WordRunsStats = ({wordRuns}: WordRunsStatsProps) => {
    const {runs25, runs10, runs50, runs100 } = getGroupedRuns(wordRuns);
 
    return (
-      <div className={`w-full flex items-center justify-between`}>
-         <WordRunsStat time={15} runs={runs25} />
-         <WordRunsStat time={30} runs={runs10} />
-         <WordRunsStat time={60} runs={runs50} />
-         <WordRunsStat time={120} runs={runs100  } />
+      <div className={`w-full flex items-center justify-between gap-4`}>
+         <WordRunsStat words={15} runs={runs25} />
+         <WordRunsStat words={30} runs={runs10} />
+         <WordRunsStat words={60} runs={runs50} />
+         <WordRunsStat words={120} runs={runs100  } />
       </div>
    );
 };
 
-const WordRunsStat = ({ runs, time }: { runs: TypingRun[], time: number }) => {
+const WordRunsStat = ({ runs, words }: { runs: TypingRun[], words: number }) => {
    const averageAcc = mean(runs.map(r => r.metadata!.accuracy));
    const averageCon = mean(runs.map(r => r.metadata!.consistency));
    const bestWpm = max(runs.map(r => r.metadata!.wpm));
@@ -42,7 +43,7 @@ const WordRunsStat = ({ runs, time }: { runs: TypingRun[], time: number }) => {
    const [hovered, setHovered] = useBoolean();
 
    if(!runs?.length) {
-      return <div className={`text-muted-foreground`}>No runs yet.</div>
+      return <NoRunsLabel />;
    }
 
    return (
@@ -59,11 +60,12 @@ const WordRunsStat = ({ runs, time }: { runs: TypingRun[], time: number }) => {
                transition={{ duration: .3 }}
                key={`next`}
                className={cn(`flex flex-col items-center justify-between h-full`, !hovered && `hidden`)}>
-               <span>{time} seconds</span>
-               <span>{bestWpm}</span>
-               <span>{averageAcc.toFixed(0)}%</span>
-               <span>{averageCon.toFixed(0)}%</span>
-               <span>{moment(latestRun).format(`DD MMM YYYY`)}</span>
+               <span className={`text-amber-500 text-nowrap text-sm`}>{words} words</span>
+               <span className={`text-neutral-500`}>{bestWpm.toFixed(0)}</span>
+               <span className={`text-neutral-500`}>{averageAcc.toFixed(0)}%</span>
+               <span className={`text-neutral-500`}>{averageCon.toFixed(0)}%</span>
+               <span
+                  className={`text-sm leading-tight text-amber-500 text-center`}>{moment(latestRun).format(`DD MMM YYYY`)}</span>
             </motion.div>
          ) : (
             <motion.div
@@ -73,9 +75,9 @@ const WordRunsStat = ({ runs, time }: { runs: TypingRun[], time: number }) => {
                transition={{ duration: .3 }}
                key={`initial`}
                className={cn(`flex flex-col items-center justify-between h-full`, hovered && `hidden`)}>
-               <span>{time} seconds</span>
-               <span className={`text-2xl`}>{bestWpm?.toFixed(0)}</span>
-               <span className={`text-lg`}>{averageAcc.toFixed(0)}%</span>
+               <span className={`text-amber-500 text-nowrap text-sm`}>{words} words</span>
+               <span className={`text-xl`}>{bestWpm?.toFixed(0)}</span>
+               <span className={`text-lg text-neutral-500`}>{averageAcc.toFixed(0)}%</span>
             </motion.div>
          )}
       </div>

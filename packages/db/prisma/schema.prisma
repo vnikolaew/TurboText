@@ -3,6 +3,14 @@ generator client {
   previewFeatures = ["postgresqlExtensions", "views", "fullTextSearch", "driverAdapters", "relationJoins"]
 }
 
+/// Always after the prisma-client-js generator
+generator json {
+  provider = "prisma-json-types-generator"
+  // namespace = "PrismaJson"
+  // clientOutput = "<finds it automatically>"
+  // (./ -> relative to schema, or an importable path to require() it)
+}
+
 datasource db {
   provider   = "postgresql"
   url        = env("DATABASE_URL")
@@ -15,10 +23,12 @@ model User {
   email         String    @unique
   password      String?
   emailVerified DateTime?
-  metadata      Json?     @default("null") @db.JsonB
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
+
+  /// [UserMetadata]
+  metadata Json?     @default("null") @db.JsonB
+  image    String?
+  accounts Account[]
+  sessions Session[]
 
   createdAt     DateTime           @default(now())
   updatedAt     DateTime           @updatedAt
@@ -92,6 +102,7 @@ model TypingRun {
 
   mode         TypingRunMode
   flags        Int
+  /// [TypingRunMetadata]
   metadata     Json?         @default("null") @db.JsonB
   typedLetters Json          @db.JsonB
 

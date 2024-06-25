@@ -2,7 +2,10 @@
 import {
    Button,
    Dialog,
-   DialogContent, DialogDescription, DialogHeader, DialogTitle,
+   DialogContent,
+   DialogDescription,
+   DialogHeader,
+   DialogTitle,
    DialogTrigger,
    Tooltip,
    TooltipContent,
@@ -12,14 +15,15 @@ import {
 import React, { PropsWithChildren } from "react";
 import { AlertTriangle } from "lucide-react";
 import { useAtomValue } from "jotai";
-import { typingRunAtom, wordRangesAtom, wordsAtom } from "@atoms/editor";
-import { orderBy, sortBy } from "lodash";
+import { missedWordsAtom, slowWordsAtom, typingRunAtom, wordsAtom } from "@atoms/editor";
+import { useSetAtom } from "jotai/index";
+import { restartWithWordsAtom } from "@atoms/actions";
+import { useBoolean } from "@hooks/useBoolean";
 
 export interface PracticeWordsButtonProps {
 }
 
 const PracticeWordsButton = ({}: PracticeWordsButtonProps) => {
-
    return (
       <TooltipProvider>
          <Tooltip>
@@ -34,7 +38,6 @@ const PracticeWordsButton = ({}: PracticeWordsButtonProps) => {
                                     size={18} />
                   </Button>
                </PracticeWordsModal>
-
             </TooltipTrigger>
             <TooltipContent
                side={`bottom`}
@@ -47,34 +50,30 @@ const PracticeWordsButton = ({}: PracticeWordsButtonProps) => {
 };
 
 export const PracticeWordsModal = ({ children }: PropsWithChildren) => {
+   const [open, setOpen] = useBoolean();
    const typingRun = useAtomValue(typingRunAtom);
    const currentWords = useAtomValue(wordsAtom);
-   const wordRanges = useAtomValue(wordRangesAtom);
+   const restart = useSetAtom(restartWithWordsAtom);
+   const missedWords = useAtomValue(missedWordsAtom);
+   const slowWords = useAtomValue(slowWordsAtom);
 
    function handlePracticeMissed() {
+      console.log({ missedWords });
 
+      restart(missedWords);
+      setOpen(false);
    }
 
    function handlePracticeSlow() {
-      const wordTimesToFinish = wordRanges.map(({ word, range: [start, end] }) => {
-         const startIndex = [...typingRun.typedLetters].reverse().findIndex(l => l.charIndex === start);
-         const endIndex = [...typingRun.typedLetters].reverse().findIndex(l => l.charIndex === end);
-
-         return {
-            time: Math.abs((typingRun.typedLetters.at(endIndex)?.timestamp ?? 0) - (typingRun.typedLetters.at(startIndex)?.timestamp || 0)),
-            word,
-         };
-      });
-
-      let slowestWords = sortBy(wordTimesToFinish, (value, index) => -value.time)
-         .slice(0, 7)
-         .map(w => w.word)
-      // TODO: Continue logic ...
+      console.log({ slowWords });
+      restart(slowWords);
+      setOpen(false);
    }
 
    return (
-      <Dialog onOpenChange={_ => {
+      < Dialog open={open} onOpenChange={value => {
          console.log({ typingRun, currentWords });
+         setOpen(value);
       }} modal>
          <DialogTrigger asChild>
             {children}

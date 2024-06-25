@@ -58,3 +58,13 @@ export const restartAtom = atom(
    },
 );
 restartAtom.debugLabel = `restartAtom`;
+
+export const restartWithWordsAtom = atom(
+   null, // it's a convention to pass `null` for the first argument
+   (get, set, words: string[]) => {
+      set(restartAtom);
+      set(wordsCountsAtom, words.length, false);
+      set(wordsAtom, words);
+   },
+);
+restartAtom.debugLabel = `restartAtom`;

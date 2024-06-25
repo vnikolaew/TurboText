@@ -3,9 +3,10 @@ import { TypingRun } from "@repo/db";
 import { max, mean } from "lodash";
 import React from "react";
 import { useBoolean } from "@hooks/useBoolean";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import moment from "moment";
 import { cn } from "@lib/utils";
+import NoRunsLabel from "@app/profile/[userId]/_components/NoRunsLabel";
 
 export interface TimeRunsStatsProps {
    timeRuns: TypingRun[];
@@ -24,7 +25,7 @@ const TimeRunsStats = ({ timeRuns }: TimeRunsStatsProps) => {
    const { runs15, runs30, runs60, runs120 } = getGroupedRuns(timeRuns);
 
    return (
-      <div className={`w-full flex items-center justify-between`}>
+      <div className={`w-full flex items-center justify-between gap-4`}>
          <TimeRunsStat time={15} runs={runs15} />
          <TimeRunsStat time={30} runs={runs30} />
          <TimeRunsStat time={60} runs={runs60} />
@@ -40,8 +41,8 @@ const TimeRunsStat = ({ runs, time }: { runs: TypingRun[], time: number }) => {
    const latestRun = max(runs.map(r => r.createdAt));
    const [hovered, setHovered] = useBoolean();
 
-   if(!runs?.length) {
-      return <div className={`text-muted-foreground`}>No runs yet.</div>
+   if (!runs?.length) {
+      return <NoRunsLabel />;
    }
 
    return (
@@ -58,11 +59,11 @@ const TimeRunsStat = ({ runs, time }: { runs: TypingRun[], time: number }) => {
                transition={{ duration: .3 }}
                key={`next`}
                className={cn(`flex flex-col items-center justify-between h-full`, !hovered && `hidden`)}>
-               <span>{time} seconds</span>
-               <span>{bestWpm}</span>
-               <span>{averageAcc.toFixed(0)}%</span>
-               <span>{averageCon.toFixed(0)}%</span>
-               <span>{moment(latestRun).format(`DD MMM YYYY`)}</span>
+               <span className={`text-amber-500 text-nowrap text-sm`}>{time} seconds</span>
+               <span className={`text-neutral-500`}>{bestWpm.toFixed(0)}</span>
+               <span className={`text-neutral-500`}>{averageAcc.toFixed(0)}%</span>
+               <span className={`text-neutral-500`}>{averageCon.toFixed(0)}%</span>
+               <span className={`text-amber-500 text-center text-sm leading-tight`}>{moment(latestRun).format(`DD MMM YYYY`)}</span>
             </motion.div>
          ) : (
             <motion.div
@@ -72,9 +73,9 @@ const TimeRunsStat = ({ runs, time }: { runs: TypingRun[], time: number }) => {
                transition={{ duration: .3 }}
                key={`initial`}
                className={cn(`flex flex-col items-center justify-between h-full`, hovered && `hidden`)}>
-               <span>{time} seconds</span>
-               <span className={`text-2xl`}>{bestWpm?.toFixed(0)}</span>
-               <span className={`text-lg`}>{averageAcc.toFixed(0)}%</span>
+               <span className={`text-amber-500 text-nowrap text-sm`}>{time} seconds</span>
+               <span className={`text-xl`}>{bestWpm?.toFixed(0)}</span>
+               <span className={`text-lg text-neutral-500`}>{averageAcc.toFixed(0)}%</span>
             </motion.div>
          )}
       </div>

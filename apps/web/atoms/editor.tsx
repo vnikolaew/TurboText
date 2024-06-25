@@ -7,7 +7,7 @@ import { useSetAtom } from "jotai/index";
 import { LocalStorage } from "@lib/local-storage";
 import { TYPING_RUN_LS_KEY } from "@components/editor/TypingEditor";
 import { TypingRun } from "@components/editor/hooks/useSaveLatestUserRun";
-import { maxBy } from "lodash";
+import { maxBy, range, sortBy, sum } from "lodash";
 import { wordsCountsAtom } from "@atoms/words";
 import {
    DEFAULT_WORD_COUNT,
@@ -24,7 +24,7 @@ import { typingFlagsAtom } from "./flags";
 
 const WORDS = generate(DEFAULT_WORD_COUNT) as string[];
 
-export const typingModeAtom = atom<TypingMode>( TypingMode.TIME);
+export const typingModeAtom = atom<TypingMode>(TypingMode.TIME);
 typingModeAtom.debugLabel = `typingModeAtom`;
 
 export const lettersCorrectnessAtom = atom<(boolean | null)[]>(
@@ -36,7 +36,6 @@ lettersCorrectnessAtom.debugLabel = `lettersCorrectnessAtom`;
 
 // @ts-ignore
 export const wordsAtom = atom<string[]>(WORDS, (get, set, words: string[]) => {
-   console.log({ words });
    if (Array.isArray(words)) {
       set(lettersCorrectnessAtom, Array
          .from({ length: words?.reduce((a, b) => a + b.length, 0) })
@@ -139,8 +138,8 @@ typingRunStateAtom.debugLabel = `typingRunStateAtom`;
 export const totalRunTimeAtom = atom<number>(get => {
    const state = get(typingRunStateAtom);
    const start = get(startTimeAtom);
-   const totalPauseTime = get(totalPauseTimeAtom)
-   console.log({ start, totalPauseTime});
+   const totalPauseTime = get(totalPauseTimeAtom);
+   console.log({ start, totalPauseTime });
    return performance.now() - start - totalPauseTime;
    // return sum(get(wordsCompletionTimesAtom).map(w => w.time)) - get(totalPauseTimeAtom)
 });
@@ -154,7 +153,7 @@ export const typingRunSuccessAtom = atom<TypingRunSuccess>((get, _) => {
    const userTestDifficulty: string = get(userTestDifficultyAtom) as unknown as string;
    const wordsCorrectness = get(wordsCorrectnessAtom);
    const lettersCorrectness = get(lettersCorrectnessAtom);
-   const mode = get(typingModeAtom)
+   const mode = get(typingModeAtom);
 
    const charsByIndex = get(charsByIndexAtom);
 
@@ -174,14 +173,14 @@ export const typingRunSuccessAtom = atom<TypingRunSuccess>((get, _) => {
 
    if (runState === TypingRunState.RUNNING) return TypingRunSuccess.INDETERMINATE;
    if (runState === TypingRunState.FINISHED) {
-      if(mode === TypingMode.TIME) return TypingRunSuccess.SUCCESS;
+      if (mode === TypingMode.TIME) return TypingRunSuccess.SUCCESS;
 
       const correct = lettersCorrectness.filter(l => l === true)?.length;
       console.log({ correct, all: charsByIndex?.length, userTestDifficulty });
-      if(userTestDifficulty === `EXPERT` && wordsCorrectness.some(l => l === false)) return TypingRunSuccess.FAILED;
-      if(userTestDifficulty === `MASTER` && lettersCorrectness.some(l => l === false)) return TypingRunSuccess.FAILED;
+      if (userTestDifficulty === `EXPERT` && wordsCorrectness.some(l => l === false)) return TypingRunSuccess.FAILED;
+      if (userTestDifficulty === `MASTER` && lettersCorrectness.some(l => l === false)) return TypingRunSuccess.FAILED;
 
-      return TypingRunSuccess.SUCCESS ;
+      return TypingRunSuccess.SUCCESS;
    }
 
    return TypingRunSuccess.INDETERMINATE;
@@ -238,18 +237,18 @@ export const useTypingRunSuccess = () => {
 
 export const onKeyPressAtom = atom(null, (get, set, e: KeyboardEvent<HTMLDivElement>) => {
    e.preventDefault();
-   e.stopPropagation()
+   e.stopPropagation();
    let { key, ctrlKey: ctrl } = e;
 
 
    if (key === `r` && ctrl) window.location.reload();
 
    const charCode = e.key.charCodeAt(0);
-   const capsLockSwitch = e.key === `CapsLock`
+   const capsLockSwitch = e.key === `CapsLock`;
 
-   if(capsLockSwitch) {
-      set(capsLockOnAtom, l => !l)
-      return
+   if (capsLockSwitch) {
+      set(capsLockOnAtom, l => !l);
+      return;
    }
 
    const startTime = get(startTimeAtom);
@@ -331,3 +330,64 @@ caretCoordinatesAtom.debugLabel = `caretCoordinatesAtom`;
 
 export const capsLockOnAtom = atom(false);
 capsLockOnAtom.debugLabel = `capsLockOnAtom`;
+
+export const missedWordsAtom = atom<string[]>((get) => {
+   const wordRanges = get(wordRangesAtom);
+   const typingRun = get(typingRunAtom);
+
+   const missedWords = wordRanges
+      .map(({ word, range: [start, end] }) => {
+         const missedChars = sum(range(start, end + 1)
+            .map(charIndex => {
+               let i = [...typingRun.typedLetters.toReversed()]
+                  // @ts-ignore
+                  .findIndex(l => l.charIndex === charIndex
+                     && l.letter === word[charIndex - start]
+                     && l.correct === true);
+
+               console.log(`Latest index for letter ${word[charIndex - start]} of word ${word}: ${i}`);
+               return i === -1 ? 1 : 0;
+            }));
+         return { word, missedChars, range: [start, end] };
+      })
+      .filter(w => w.missedChars > 0)
+      .sort((a, b) => b.missedChars - a.missedChars)
+      .slice(0, 3);
+
+   return Array
+      .from({ length: 4 })
+      .flatMap((_, i) => {
+         const last = missedWords.at(-1)?.word;
+         return [...missedWords.slice(0, -1).map(_ => _.word), `${last},`];
+      });
+});
+missedWordsAtom.debugLabel = `missedWordsAtom`;
+
+export const slowWordsAtom = atom<string[]>((get) => {
+   const wordRanges = get(wordRangesAtom);
+   const typingRun = get(typingRunAtom);
+
+   const wordTimesToFinish = wordRanges.map(({ word, range: [start, end] }) => {
+      const startIndex = [...typingRun.typedLetters].reverse().findIndex(l => l.charIndex === start);
+      const endIndex = [...typingRun.typedLetters].reverse().findIndex(l => l.charIndex === end);
+
+      const time = Math.abs((typingRun.typedLetters.at(endIndex)?.timestamp ?? 0) - (typingRun.typedLetters.at(startIndex)?.timestamp || 0));
+      return {
+         time,
+         averageTimeForLetter: (time / word.length),
+         word,
+      };
+   });
+
+   let slowestWords = sortBy(wordTimesToFinish, (value, index) => -value.averageTimeForLetter)
+      .slice(0, 5)
+      .map(w => w);
+
+   return Array
+      .from({ length: 4 })
+      .flatMap((_, i) => {
+         const last = slowestWords.at(-1)!.word;
+         return [...slowestWords.slice(0, -1).map(_ => _.word), `${last},`];
+      });
+});
+slowWordsAtom.debugLabel = `slowWordsAtom`;

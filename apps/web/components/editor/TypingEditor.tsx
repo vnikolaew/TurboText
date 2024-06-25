@@ -27,6 +27,7 @@ import TypingRunInfo from "./TypingRunInfo";
 import { TypingRun, User } from "@repo/db";
 import { useSetAtom } from "jotai/index";
 import PracticeWordsButton from "@components/editor/buttons/PracticeWordsButton";
+import CopyToClipboardButton from "@components/editor/buttons/CopyToClipboardButton";
 
 export interface TypingEditorProps {
    user: User & { typingRuns: TypingRun[] };
@@ -78,6 +79,7 @@ const TypingEditor = ({ user }: TypingEditorProps) => {
       execute(typingRun);
    }
 
+
    return (
       <div className={`flex flex-col items-start gap-8 w-3/4 mx-auto`}>
          {timerState === TypingRunState.FINISHED && (
@@ -115,6 +117,7 @@ const TypingEditor = ({ user }: TypingEditorProps) => {
             <RestartButton />
             <PracticeWordsButton />
             <NewRunButton />
+            <CopyToClipboardButton/>
          </div>
          <AnimatePresence>
             {showSavePrompt &&

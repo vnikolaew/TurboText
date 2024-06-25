@@ -23,8 +23,10 @@ export const generateWordsAtom = atom(null, async (get, set, wc?: number) => {
 generateWordsAtom.debugLabel = `generateWordsAtom`;
 
 // @ts-ignore
-export const wordsCountsAtom = atom<number>( WORDS_COUNTS["10"]!, async (get, set, wordCounts: number) => {
+export const wordsCountsAtom = atom<number>( WORDS_COUNTS["10"]!, async (get, set, wordCounts: number, updateWords = true) => {
    set(wordsCountsAtom, wordCounts);
-   await set(generateWordsAtom, wordCounts);
+   if(updateWords) {
+      await set(generateWordsAtom, wordCounts);
+   }
 });
 wordsCountsAtom.debugLabel = `wordsCountsAtom`;

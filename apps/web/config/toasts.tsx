@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Check, Cookie, X } from "lucide-react";
+import { Check, Cookie, Flag, X } from "lucide-react";
 
 export const TOASTS = {
    FORGOT_PASSWORD: {
@@ -247,6 +247,15 @@ Export successful
          <div className={`flex items-center gap-2`}>
             <X className={`text-red-600`} size={18} />
             <span>Your account has been verified</span>
+         </div>
+      ),
+      className: `text-base font-normal`,
+   },
+   USER_REPORTED_SUCCESS: {
+      message: (
+         <div className={`flex items-center gap-2`}>
+            <Flag className={`text-red-600`} size={18} />
+            <span>User has been successfully reported.</span>
          </div>
       ),
       className: `text-base font-normal`,

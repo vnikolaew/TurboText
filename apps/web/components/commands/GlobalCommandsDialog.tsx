@@ -36,7 +36,7 @@ const GlobalCommandsDialog = ({}: GlobalCommandProps) => {
    return (
       <CommandDialog open={open} onOpenChange={setOpen}>
          <CommandInput
-            inputMode={`text`} onValueChange={setSearch} value={search} className={`bg-neutral-950`}
+            inputMode={`text`} onValueChange={setSearch} value={search} className={`bg-neutral-950 placeholder:!text-amber-400`}
             placeholder="Search ..." />
          <CommandList className={`bg-neutral-950`}>
             {!!search?.length && (

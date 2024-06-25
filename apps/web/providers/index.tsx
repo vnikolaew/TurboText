@@ -1,6 +1,6 @@
 import React, { PropsWithChildren } from "react";
 import SessionProvider from "./SessionProvider";
-import { ThemeProvider } from "./ThemeProvider";
+import { ThemeProvider, THEMES } from "./ThemeProvider";
 import AtomProvider from "@providers/AtomProvider";
 import FontProvider from "@providers/FontProvider";
 
@@ -13,7 +13,7 @@ const Providers = ({ children }: ProvidersProps) => {
             <ThemeProvider
                enableSystem
                disableTransitionOnChange
-               themes={[`light`, `dark`]}
+               themes={THEMES}
                storageKey={crypto.randomUUID()}
                defaultTheme={`dark`}
                attribute={`class`}>

@@ -21,6 +21,7 @@ import WithUserConfig from "@providers/WithUserConfig";
 import { getUserFontFamily } from "@app/_queries";
 import GlobalCommandsDialog from "@components/commands/GlobalCommandsDialog";
 import { WithContactModal } from "@app/_components/modals/ContactUsModal";
+import ShortcutsSection from "@app/_components/ShortcutsSection";
 
 const inter = Inter({ weight: ["400"], subsets: ["latin"], variable: "--font-sans" });
 
@@ -67,6 +68,7 @@ export default async function RootLayout({
             {__IS_PROD__ && <Analytics />}
             <Toaster />
             <WithContactModal />
+            <ShortcutsSection/>
             <AppFooter />
             </body>
          </Providers>

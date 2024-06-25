@@ -16,6 +16,7 @@
     "@repo/db": "workspace:*",
     "@repo/emails": "workspace:*",
     "@repo/ui": "workspace:*",
+    "@slack/web-api": "^7.2.0",
     "@tailwindcss/line-clamp": "^0.4.4",
     "@types/lodash": "^4.17.5",
     "@types/react-csv": "^1.1.10",

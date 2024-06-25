@@ -1,22 +1,15 @@
-import { xprisma } from "@repo/db";
+import { User, xprisma } from "@repo/db";
 import React, { Suspense } from "react";
 import { notFound } from "next/navigation";
 import moment from "moment";
-import {
-   HoverCard, HoverCardContent,
-   HoverCardTrigger,
-   Separator,
-   Tooltip,
-   TooltipContent,
-   TooltipProvider,
-   TooltipTrigger,
-   UserAvatar,
-} from "@repo/ui";
+import { Separator, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, UserAvatar } from "@repo/ui";
 import { UserExperienceInfo } from "@app/account/_components/UserExperienceInfo";
 import { formatMillisecondsToTime } from "@lib/utils";
-import { Globe, Rocket, Twitter } from "lucide-react";
+import { Flag, Globe, Rocket, Twitter } from "lucide-react";
 import TimeRunsStats from "@app/profile/[userId]/_components/TimeRunsStats";
 import WordRunsStats from "@app/profile/[userId]/_components/WordRunsStats";
+import ReportUserModal from "@app/profile/[userId]/_components/ReportUserModal";
+import { pick } from "lodash";
 
 export interface PageProps {
    params: { userId?: string };
@@ -24,7 +17,7 @@ export interface PageProps {
 
 const Page = async ({ params }: PageProps) => {
    console.log({ params });
-   const user = await xprisma.user.findUnique({
+   const user: User = await xprisma.user.findUnique({
       where: { id: decodeURIComponent(params.userId!) },
       include: { typingRuns: true },
    });
@@ -38,8 +31,9 @@ const Page = async ({ params }: PageProps) => {
          return rest;
       },
    );
+   const { verifyPassword, updatePassword, ...rest } = user;
 
-   console.log({ user });
+   console.log({ user, rest });
 
    return (
       <section className={`w-2/3 mx-auto mt-24 flex flex-col items-center gap-4`}>
@@ -50,7 +44,8 @@ const Page = async ({ params }: PageProps) => {
                   <div className={`flex flex-col items-start gap-2`}>
                      <h2 className={`text-2xl text-neutral-300 `}>{user?.name}</h2>
                      {isFirstInLeaderboard && (
-                        <div className={`animate-rainbow-bg rounded-full px-2 py-1 inline-flex items-center gap-2 bg-white text-black shadow-md`}>
+                        <div
+                           className={`animate-rainbow-bg rounded-full px-2 py-1 inline-flex items-center gap-2 bg-white text-black shadow-md`}>
                            <Rocket size={18} />
                            <span>Mythical</span>
                         </div>
@@ -64,9 +59,9 @@ const Page = async ({ params }: PageProps) => {
                               </span>
                               </TooltipTrigger>
                               <TooltipContent
-                                 side={`right`}
+                                 side={`top`}
                                  className={`bg-black text-white rounded-xl text-sm border-neutral-700 !px-4 !py-2`}>
-                                 {moment(user.createdAt).fromNow()}
+                                 {moment(user.createdAt).diff(moment(), `days`)} days ago
                               </TooltipContent>
                            </Tooltip>
                         </TooltipProvider>
@@ -82,27 +77,27 @@ const Page = async ({ params }: PageProps) => {
             <Separator orientation={`vertical`} className={`h-60 w-[4px] rounded-full bg-neutral-700`} />
             <div className={`flex-1 h-full flex flex-col items-start justify-between gap-8`}>
                <div className={`flex flex-col items-start gap-1`}>
-                  <span className={`text-neutral-500 text-sm`}>Tests started</span>
+                  <span className={`text-amber-500 text-sm`}>Tests started</span>
                   <h2 className={`text-3xl text-white`}>{user.typingRuns.length}</h2>
                </div>
                <div className={`flex flex-col items-start gap-1`}>
-                  <span className={`text-neutral-500 text-sm`}>Tests completed</span>
+                  <span className={`text-amber-500 text-sm`}>Tests completed</span>
                   <h2 className={`text-3xl text-white`}>{user.typingRuns.length}</h2>
                </div>
                <div className={`flex flex-col items-start gap-1`}>
-                  <span className={`text-neutral-500 text-sm`}>Time typing</span>
+                  <span className={`text-amber-500 text-sm`}>Time typing</span>
                   <h2 className={`text-3xl text-white`}>{formatMillisecondsToTime(user.totalTimeTypingMs)}</h2>
                </div>
             </div>
             <Separator orientation={`vertical`} className={`h-60 w-[4px] rounded-full bg-neutral-700`} />
             <div className={`flex-1 h-full flex flex-col items-start justify-between gap-8`}>
                <div>
-                  <h2>Bio</h2>
-                  <p>Bio ...</p>
+                  <h2 className={`text-amber-500`}>Bio</h2>
+                  <p>{user.metadata.bio ?? `Empty`}</p>
                </div>
                <div>
-                  <h2>Keyboard</h2>
-                  <p>keyboard ...</p>
+                  <h2 className={`text-amber-500`}>Keyboard</h2>
+                  <p>{user.metadata.keyboard ?? `Unspecified`}</p>
                </div>
             </div>
             <Separator orientation={`vertical`} className={`h-60 w-[4px] rounded-full bg-neutral-700`} />
@@ -130,6 +125,23 @@ const Page = async ({ params }: PageProps) => {
                         side={`top`}
                         className={`bg-black text-white rounded-xl text-sm border-neutral-700 !px-4 !py-2`}>
                         website ...
+                     </TooltipContent>
+                  </Tooltip>
+               </TooltipProvider>
+            </div>
+            <div className={`!h-full p-4`}>
+               <TooltipProvider>
+                  <Tooltip>
+                     <TooltipTrigger asChild>
+                        <ReportUserModal user={pick(rest,[`id`, `name` ])}>
+                           <Flag size={28}
+                                 className={`cursor-pointer stroke-neutral-300 fill-neutral-300 hover:!stroke-amber-600 transition-colors duration-200 hover:!fill-amber-600`} />
+                        </ReportUserModal>
+                     </TooltipTrigger>
+                     <TooltipContent
+                        side={`left`}
+                        className={`bg-black text-white rounded-xl text-sm border-neutral-700 !px-4 !py-2`}>
+                        Report user
                      </TooltipContent>
                   </Tooltip>
                </TooltipProvider>

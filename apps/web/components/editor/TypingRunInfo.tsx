@@ -30,7 +30,6 @@ const TypingRunInfo = ({ runs }: TypingRunInfoProps) => {
    const activeTags = useAtomValue(userActiveTagsAtom);
 
    const { averagePace, averageAccuracy } = getAverages(runs);
-   console.log({ language, difficulty });
 
    return (
       <div className={`w-full flex items-center justify-center gap-8 text-neutral-400`}>

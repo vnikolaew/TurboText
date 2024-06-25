@@ -65,5 +65,6 @@ export const updateUserConfiguration = authorizedAction.schema(schema)
       });
 
       revalidatePath(`/settings`);
+      revalidatePath(`/`);
       return { success: true, userConfig };
    });
