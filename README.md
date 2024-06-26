@@ -4,7 +4,7 @@
   <h1>TurboText</h1>
 </div>
 
-Accelerate Your **Typing Speed**
+Step up your typing game with our interactive platform designed to elevate your keyboard skills. Whether it's for professional growth or personal efficiency, our engaging typing tests will help you type faster, reduce errors, and save valuable time.
 
 <div style="text-align: center">
   <img alt="GitHub License" src="https://img.shields.io/github/license/vnikolaew/TurboText">
