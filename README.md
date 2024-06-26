@@ -22,12 +22,12 @@ Accelerate Your **Typing Speed**
 
 ## Features &colon;rocket&colon;
 
-- TurboText is a platform for enhancing typing skills and ultimately boosting their productivity.
+- **TurboText** is a platform for enhancing typing skills and ultimately boosting their productivity.
 - Typing tests in various modes and tracking progress.
-- Support of multiple languages.
-- Built-in stats.
-- User all-time and daily leaderboards.
-- Customizable experience via configuration.
+- Support of **multiple languages**.
+- Built-in statistics.
+- User all-time and daily **leaderboards**.
+- Customizable experience via **configuration**.
 
 <a id="technologies-used"></a>
 
@@ -57,5 +57,5 @@ terms of the license.
 
 ## Contact &colon;envelope&colon;
 
-If you have any questions, suggestions, or feedback regarding ImageHive, please feel free to reach out to me via e-mail
+If you have any questions, suggestions, or feedback regarding TurboText, please feel free to reach out to me via e-mail
 at <victorio.nikolaev25@gmail.com>.
