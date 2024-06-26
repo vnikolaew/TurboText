@@ -120,7 +120,7 @@ const TypingEditor = ({ user }: TypingEditorProps) => {
             <CopyToClipboardButton/>
          </div>
          <AnimatePresence>
-            {showSavePrompt &&
+            {(showSavePrompt || true) &&
                <SaveTypingRunPrompt
                   loading={isExecuting}
                   onDismiss={() => {

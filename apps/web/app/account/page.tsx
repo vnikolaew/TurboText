@@ -66,7 +66,7 @@ const Page = async ({ searchParams }: PageProps) => {
                               </TooltipTrigger>
                               <TooltipContent
                                  side={`right`}
-                                 className={`bg-black text-white rounded-xl text-sm border-neutral-700 !px-4 !py-2`}>
+                                 className={`bg-secondary text-main rounded-xl text-sm border-none !px-4 !py-2`}>
                                  {moment(user.createdAt).fromNow()}
                               </TooltipContent>
                            </Tooltip>

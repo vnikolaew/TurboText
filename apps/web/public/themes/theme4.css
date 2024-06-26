@@ -1,7 +1,15 @@
 .theme-4 {
-    --background: 195 81% 23% !important;
-    --accent: 50 26% 47%  !important;
-    --main: 236 82% 6% !important;
-    --secondary: 0 18% 90% !important;
-    --secondary-bg: 160 0% 22% !important;
+    --background: 220, 3%, 19% !important;
+    --accent: 56, 73%, 74% !important;
+    --main: 51 32% 54% !important;
+    --secondary: 215 20.2% 65.1% !important;
+    --secondary-bg: 236, 21%, 28% !important;
+
+    :root {
+        --background: 220, 3%, 19% !important;
+        --accent: 56, 73%, 74% !important;
+        --main: 51 32% 54% !important;
+        --secondary: 215 20.2% 65.1% !important;
+        --secondary-bg: 236, 21%, 28% !important;
+    }
 }

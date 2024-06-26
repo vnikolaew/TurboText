@@ -1,0 +1,15 @@
+.frost {
+    --background: 0, 14%, 97% !important;
+    --accent: 213, 47%, 47% !important;
+    --main: 212 64% 19% !important;
+    --secondary: 215 20.2% 65.1% !important;
+    --secondary-bg: 219, 38%, 90% !important;
+
+    :root {
+        --background: 0, 14%, 97% !important;
+        --accent: 213, 47%, 47% !important;
+        --main: 212 64% 19% !important;
+        --secondary: 215 20.2% 65.1% !important;
+        --secondary-bg: 219, 38%, 90% !important;
+    }
+}

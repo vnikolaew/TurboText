@@ -181,23 +181,26 @@ export let xprisma = prisma.$extends({
       typingRun: {
          async getTopWpmToday() {
             const top = await xprisma.$queryRaw<TypingRun[]>`
-               SELECT * FROM "TypingRun"
-               WHERE "createdAt" >= NOW() - INTERVAL '1 day'
-               ORDER BY metadata->>'wpm' DESC 
-               LIMIT 1;
-            `
+                SELECT *
+                FROM "TypingRun"
+                WHERE "createdAt" >= NOW() - INTERVAL '1 day'
+                ORDER BY metadata->>'wpm' DESC
+                    LIMIT 1;
+            `;
 
-            return top?.at(0)
+            return top?.at(0);
          },
          async getTopWpmAllTime() {
             const top = await xprisma.$queryRaw<TypingRun[]>`
-               SELECT * FROM "TypingRun"
-               ORDER BY metadata->>'wpm' DESC 
-               LIMIT 1;
-            `
+                SELECT *
+                FROM "TypingRun"
+                WHERE mode = 'TIME'
+                ORDER BY metadata ->>'wpm' DESC
+                    LIMIT 1;
+            `;
 
             return top?.at(0);
-         }
+         },
       },
       userExperience: {
          getLevelFromXp({ points }: { points: number }) {
@@ -301,7 +304,7 @@ export let xprisma = prisma.$extends({
                      create: {
                         sound_click_sound: null,
                         sound_error_sound: null,
-                        language: `English`
+                        language: `English`,
                      },
                   },
                   experience: {

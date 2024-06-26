@@ -1,5 +1,5 @@
 "use client";
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect } from "react";
 import { useBoolean } from "@hooks/useBoolean";
 import { CommandDialog, CommandInput, CommandList } from "@repo/ui";
 import { LANGUAGES } from "@app/settings/_components/behaviour/LanguageSection";
@@ -16,12 +16,12 @@ import PaceCaretStyleOptions from "@components/commands/options/PaceCaretStyleOp
 import { useSearchParams } from "next/navigation";
 import BlindModeOptions from "@components/commands/options/BlindModeOptions";
 import DifficultyOptions from "@components/commands/options/DifficultyOptions";
-import {  parseAsString, useQueryState } from "nuqs";
+import { parseAsString, useQueryState } from "nuqs";
 
 export interface GlobalCommandProps {
 }
 
-const IGNORE_PARAMS = [`contact`, `edit-profile`, `report-user`] as const
+const IGNORE_PARAMS = [`contact`, `edit-profile`, `report-user`, `import-settings`] as const
 
 const GlobalCommandsDialog = ({}: GlobalCommandProps) => {
    const [open, setOpen] = useBoolean();
@@ -44,13 +44,15 @@ const GlobalCommandsDialog = ({}: GlobalCommandProps) => {
    }, [sp]);
 
    return (
-      <CommandDialog open={open} onOpenChange={setOpen}>
+      <CommandDialog dialogProps={{
+         className: `!bg-secondary`,
+      }} open={open} onOpenChange={setOpen}>
          <CommandInput
             id={`global-commands`}
             inputMode={`text`} onValueChange={setQs} value={qs}
-            className={`bg-neutral-950 placeholder:!text-amber-500 !border-none`}
+            className={`!bg-secondary placeholder:!text-accent !border-none`}
             placeholder="Search ..." />
-         <CommandList className={`bg-neutral-950`}>
+         <CommandList className={`bg-secondary`}>
             {!!qs?.length && (
                <Fragment>
                   {LANGUAGES.map((language, index) => (

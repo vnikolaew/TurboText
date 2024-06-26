@@ -59,11 +59,11 @@ const TimeRunsStat = ({ runs, time }: { runs: TypingRun[], time: number }) => {
                transition={{ duration: .3 }}
                key={`next`}
                className={cn(`flex flex-col items-center justify-between h-full`, !hovered && `hidden`)}>
-               <span className={`text-amber-500 text-nowrap text-sm`}>{time} seconds</span>
-               <span className={`text-neutral-500`}>{bestWpm.toFixed(0)}</span>
-               <span className={`text-neutral-500`}>{averageAcc.toFixed(0)}%</span>
-               <span className={`text-neutral-500`}>{averageCon.toFixed(0)}%</span>
-               <span className={`text-amber-500 text-center text-sm leading-tight`}>{moment(latestRun).format(`DD MMM YYYY`)}</span>
+               <span className={`text-accent text-nowrap text-sm`}>{time} seconds</span>
+               <span className={`text-secondary`}>{bestWpm.toFixed(0)}</span>
+               <span className={`text-secondary`}>{averageAcc.toFixed(0)}%</span>
+               <span className={`text-secondary`}>{averageCon.toFixed(0)}%</span>
+               <span className={`text-accent text-center text-sm leading-tight`}>{moment(latestRun).format(`DD MMM YYYY`)}</span>
             </motion.div>
          ) : (
             <motion.div
@@ -73,9 +73,9 @@ const TimeRunsStat = ({ runs, time }: { runs: TypingRun[], time: number }) => {
                transition={{ duration: .3 }}
                key={`initial`}
                className={cn(`flex flex-col items-center justify-between h-full`, hovered && `hidden`)}>
-               <span className={`text-amber-500 text-nowrap text-sm`}>{time} seconds</span>
+               <span className={`text-accent text-nowrap text-sm`}>{time} seconds</span>
                <span className={`text-xl`}>{bestWpm?.toFixed(0)}</span>
-               <span className={`text-lg text-neutral-500`}>{averageAcc.toFixed(0)}%</span>
+               <span className={`text-lg text-secondary`}>{averageAcc.toFixed(0)}%</span>
             </motion.div>
          )}
       </div>

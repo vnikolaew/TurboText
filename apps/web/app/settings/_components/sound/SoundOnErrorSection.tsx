@@ -47,7 +47,7 @@ const SoundOnErrorSection = ({}: SoundOnErrorSectionProps) => {
                <Button
                   onClick={_ => execute({ sound_error_sound: sound })}
                   className={cn(`!w-full`,
-                     soundOnError === sound && `bg-amber-500`)}
+                     soundOnError === sound && `bg-accent`)}
                   variant={`secondary`} key={sound}>{sound}</Button>
             ))}
          </div>

@@ -23,7 +23,7 @@ export async function UserExperienceInfo() {
                   </TooltipTrigger>
                   <TooltipContent
                      side={`top`}
-                     className={`bg-black text-main rounded-xl text-sm  !px-4 !py-2`}>
+                     className={`!bg-secondary text-main rounded-xl text-sm  !px-4 !py-2`}>
                      {percentageUntilNextLevel.toFixed(2)}%
                   </TooltipContent>
                </Tooltip>
@@ -38,7 +38,7 @@ export async function UserExperienceInfo() {
                </TooltipTrigger>
                <TooltipContent
                   side={`top`}
-                  className={`bg-black text-main rounded-xl text-sm  !px-4 !py-2`}>
+                  className={`!bg-secondary text-main rounded-xl text-sm  !px-4 !py-2 border-none`}>
                   {xpNeededForNextLevel - userExperience?.points} xp until next level
                </TooltipContent>
             </Tooltip>

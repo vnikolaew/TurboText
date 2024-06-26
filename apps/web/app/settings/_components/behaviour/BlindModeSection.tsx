@@ -45,13 +45,13 @@ const BlindModeSection = ({}: BlindModeSectionProps) => {
             <Button
                onClick={_ => handleUpdate(false)}
                className={cn(`flex-1`,
-                  !blindMode && `bg-amber-500`)}
+                  !blindMode && `bg-accent`)}
             >
                Off
             </Button>
             <Button onClick={_ => handleUpdate(true)}
                     className={cn(`flex-1`,
-                       blindMode && `bg-amber-500`)}
+                       blindMode && `bg-accent`)}
             >
                On
             </Button>

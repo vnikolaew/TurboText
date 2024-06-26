@@ -82,7 +82,7 @@ export const LeaderboardTable = ({ caption, rows, showWarning }: LeaderboardTabl
                <TableBody>
                   {!rows?.length && (
                      <TableRow className={`hover:!bg-transparent`}>
-                        <TableCell className={`w-full text-center !text-main`}>
+                        <TableCell className={`w-full text-center !text-secondary`}>
                            There are no runs to show yet.
                         </TableCell>
                      </TableRow>
@@ -92,7 +92,7 @@ export const LeaderboardTable = ({ caption, rows, showWarning }: LeaderboardTabl
             </Table>
          </ScrollArea>
          {showWarning && (
-            <div className={`w-full text-center text-accent text-sm mt-2`}>
+            <div className={`w-full text-center text-accent text-sm mt-2 !font-semibold`}>
                Your account must have 2 hours typed to be placed on the leaderboard.
             </div>
          )}
@@ -124,7 +124,7 @@ const LeaderboardTableRow = ({ row, index }: { row: LeaderboardRow, index: numbe
 
    return (
       <TableRow key={index} className={cn(`grid grid-cols-13 w-full !border-none`,
-         index % 2 === 1 && `bg-neutral-900`)}>
+         index % 2 === 1 && `bg-secondary-bg`)}>
          <TableCell
             className="font-medium text-center inline-flex justify-center items-center col-span-1 !text-main">
             {row.position === 1 ? (

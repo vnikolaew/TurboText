@@ -51,7 +51,7 @@ const SoundOnClickSection = ({}: SoundOnClickSectionProps) => {
                   }}
                   variant={`secondary`}
                   className={cn(`!w-full`,
-                     soundOnClick === sound && `bg-amber-500`)}
+                     soundOnClick === sound && `bg-accent`)}
                   key={sound}>
                   {sound}
                </Button>

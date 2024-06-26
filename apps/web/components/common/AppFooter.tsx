@@ -27,12 +27,12 @@ const AppFooter = async ({}: AppFooterProps) => {
          {
             title: `Terms of Service`,
             href: `/tos`,
-            icon: <ReceiptText size={12} />,
+            icon: <ReceiptText className={``} size={12} />,
          },
          {
             title: `Privacy Policy`,
             href: `/privacy-policy`,
-            icon: <Lock className={`stroke-main group-hover:!stroke-accent transition-colors duration-100`}
+            icon: <Lock className={` group-hover:!stroke-accent transition-colors duration-100`}
                         size={12} />,
          },
          {
@@ -47,7 +47,7 @@ const AppFooter = async ({}: AppFooterProps) => {
       <FooterTwo
          appDescription={APP_DESCRIPTION}
          appLogo={
-            <RocketLogo className={`w-10 h-10 fill-amber-500`} />
+            <RocketLogo className={`w-10 h-10 fill-accent`} />
          }
          appName={APP_NAME}
          links={FOOTER_LINKS}

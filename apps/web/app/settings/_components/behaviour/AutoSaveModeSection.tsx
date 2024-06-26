@@ -40,14 +40,14 @@ const AutoSaveModeSection = ({}: AutoSaveModeSectionProps) => {
             <Button
                onClick={_ => execute({ auto_save_mode: false })}
                className={cn(`flex-1`,
-                  !autoSaveMode && `bg-amber-500`)}
+                  !autoSaveMode && `bg-accent`)}
             >
                Off
             </Button>
             <Button
                onClick={_ => execute({ auto_save_mode: true })}
                className={cn(`flex-1`,
-                  autoSaveMode && `bg-amber-500`)}
+                  autoSaveMode && `bg-accent`)}
             >
                On
             </Button>

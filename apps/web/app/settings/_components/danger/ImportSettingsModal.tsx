@@ -7,6 +7,7 @@ import { z } from "zod";
 import { useAction } from "next-safe-action/hooks";
 import { updateUserConfiguration } from "@app/settings/actions";
 import { TOASTS } from "@config/toasts";
+import { parseAsBoolean, useQueryState } from "nuqs";
 
 export interface ImportSettingsModalProps extends PropsWithChildren {
 }
@@ -39,8 +40,10 @@ const schema = z.object({
 }).partial();
 
 const ImportSettingsModal = ({children}: ImportSettingsModalProps) => {
+   const [importQs, setImportQs] = useQueryState(`import-settings`, parseAsBoolean.withDefault(false))
    const [value, setValue] = useState(``);
    const [open, setOpen] = useBoolean();
+
    const { execute, status, isExecuting } = useAction(updateUserConfiguration, {
       onSuccess: res => {
          if (res.data?.success) {
@@ -69,11 +72,15 @@ const ImportSettingsModal = ({children}: ImportSettingsModalProps) => {
     }
 
    return (
-      <Dialog onOpenChange={setOpen} open={open}>
+      <Dialog onOpenChange={async value => {
+         setOpen(value);
+         if(!value) await setImportQs(null)
+         else await setImportQs(true)
+      }} open={open}>
          <DialogTrigger asChild>
             {children}
          </DialogTrigger>
-         <DialogContent className={`z-[100] !bg-neutral-800`}>
+         <DialogContent className={`z-[100] !bg-secondary-bg`}>
             <DialogHeader>
                <DialogTitle className={`text-2xl`}>
                   Import
@@ -83,9 +90,9 @@ const ImportSettingsModal = ({children}: ImportSettingsModalProps) => {
                <Input
                   onChange={e => setValue(e.target.value)} value={value}
                   placeholder={`...`}
-                  className={`!w-full !text-lg !bg-black focus:!outline-neutral-300`} />
+                  className={`!w-full !text-lg !bg-white focus:!outline-neutral-300 !text-main`} />
             </div>
-            <DialogFooter className={`w-full !mt-2`}>
+            <DialogFooter className={`w-full !mt-4`}>
                <LoadingButton
                   onClick={handleImport}
                   loadingText={`Saving ...`}

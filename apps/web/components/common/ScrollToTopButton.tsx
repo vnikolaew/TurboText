@@ -43,11 +43,11 @@ const ScrollToTopButton = ({}: ScrollToTopButtonProps) => {
                         <MotionButton
                            variant={`secondary`}
                            onClick={scrollToTop}
-                           className={`rounded-full !p-2 fixed bottom-8 right-8 !h-fit opacity-70 !z-[100]`}>
+                           className={`rounded-full !p-2 fixed bottom-8 right-8 !h-fit opacity-70 !z-[100] !bg-secondary-bg !text-main`}>
                            <ChevronUp size={28} />
                         </MotionButton>
                      </TooltipTrigger>
-                     <TooltipContent side={`top`} className={`bg-black text-white rounded-full text-xs`}>
+                     <TooltipContent side={`top`} className={`bg-secondary-bg text-main rounded-full text-xs`}>
                         Scroll to top
                      </TooltipContent>
                   </Tooltip>

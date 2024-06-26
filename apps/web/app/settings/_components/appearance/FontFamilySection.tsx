@@ -41,7 +41,7 @@ const FontFamilySection = ({}: FontFamilySectionProps) => {
                   }}
                   variant={`secondary`}
                   className={cn(`!w-full`,
-                     font === fontFamily && `bg-amber-500`)}
+                     font === fontFamily && `bg-accent`)}
                   key={font}>
                   {font}
                </Button>

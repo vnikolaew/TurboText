@@ -7,8 +7,11 @@ import { type ThemeProviderProps } from "next-themes/dist/types";
 export const THEMES = [
    `light`,
    `dark`,
-   `theme-1`,
-   `theme-2`
+   `nighthawk`,
+   `theme-2`,
+   `theme-3`,
+   `theme-4`,
+   `frost`,
 ]
 
 export function ThemeProvider({ children, ...props }: ThemeProviderProps) {

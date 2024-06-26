@@ -35,11 +35,11 @@ const Header = ({}: NavbarProps) => {
 
    return (
       <header
-         className={`sticky top-0 w-full border-b border-neutral-700 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 !py-3 !z-10`}>
+         className={`sticky top-0 w-full border-b border-secondary-bg bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 !py-3 !z-10`}>
          <div className={`container flex h-14 max-w-screen-2xl items-center !w-3/4 justify-between`}>
             <nav className={`flex flex-1 items-center space-x-4 lg:space-x-6`}>
                <Link href={`/`} className={`flex items-center gap-3`}>
-                  <RocketLogo className={`w-8 h-8 fill-amber-500 shadow-md`} />
+                  <RocketLogo className={`w-8 h-8 fill-accent `} />
                   <span
                      className={`text-lg !test-gradient drop-shadow-lg !font-semibold ${lexend.className} uppercase  !text-main`}>{APP_NAME}</span>
                </Link>
@@ -73,13 +73,13 @@ const Header = ({}: NavbarProps) => {
                         ) : <UserAvatarDropdown />}
                      </div>
                      <div>
-                        <Bell className={`text-secondary fill-secondary  hover:!fill-secondary transition-colors duration-200 hover:!text-neutral-300 cursor-pointer`} size={20} />
+                        <Bell className={`text-secondary fill-secondary  hover:!fill-main transition-colors duration-200 hover:!text-main cursor-pointer hover:!border-main`} size={20} />
                      </div>
                      {userDataLoading ? (
                         <Skeleton className={`h-8 w-32 rounded-lg bg-neutral-700`} />
                      ) : (
                         <Button
-                           className={`px-4 gap-2 rounded-lg !py-2 !h-fit !text-secondary`}
+                           className={`px-4 gap-2 rounded-lg !py-2 !h-fit !text-main`}
                            onClick={_ => signOut({ redirect: true, callbackUrl: `/` })} variant={"ghost"}
                         >
                            <LogOut size={14} />

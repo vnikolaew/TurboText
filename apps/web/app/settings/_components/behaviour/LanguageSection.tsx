@@ -55,12 +55,12 @@ const LanguageSection = ({}: LanguageSectionProps) => {
          </div>
          <div className={`flex items-center gap-2 w-full h-full my-auto justify-center`}>
             <Select onValueChange={handleSelectLanguage}>
-               <SelectTrigger className="w-full !bg-neutral-900 !text-main">
+               <SelectTrigger className="w-full !bg-secondary-bg !text-main">
                   <SelectValue placeholder={userLanguage} />
                </SelectTrigger>
-               <SelectContent className={`w-full bg-neutral-900`}>
+               <SelectContent className={`w-full bg-secondary-bg`}>
                   {LANGUAGES.map((language, index) => (
-                     <SelectItem className={`w-full hover:!bg-main hover:!text-neutral-900 !text-main`} key={language} value={language}>
+                     <SelectItem className={`w-full hover:!bg-accent hover:!text-secondary !text-main`} key={language} value={language}>
                         {language}
                      </SelectItem>
                   ))}

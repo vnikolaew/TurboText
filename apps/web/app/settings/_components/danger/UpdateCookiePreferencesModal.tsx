@@ -56,7 +56,7 @@ const UpdateCookiePreferencesModal = ({ children }: UpdateCookiePreferencesModal
          <DialogTrigger asChild>
             {children}
          </DialogTrigger>
-         <DialogContent className={`z-[100] !bg-neutral-800`}>
+         <DialogContent className={`z-[100] !bg-secondary-bg`}>
             <DialogHeader>
                <DialogTitle className={`text-2xl`}>
                   Update cookie preferences
@@ -98,12 +98,12 @@ const PreferenceSwitch = ({ label, description, onCheckedChange, checked }: Pref
       <div className={`w-full flex items-center justify-between gap-4`}>
          <div className={`flex flex-col gap-1 items-start mt-2`}>
             <h2 className={`text-xl`}>{label}</h2>
-            <p className={`line-clamp-3 text-sm leading-tight text-neutral-500`}>{description}</p>
+            <p className={`line-clamp-3 text-sm leading-tight text-secondary   `}>{description}</p>
          </div>
          <Switch
             checked={checked!}
             onCheckedChange={onCheckedChange}
-            className={`h-6 !bg-amber-500 data-[state=unchecked]:!bg-transparent`} />
+            className={`h-6 !bg-accent data-[state=unchecked]:!bg-transparent`} />
       </div>
    );
 };

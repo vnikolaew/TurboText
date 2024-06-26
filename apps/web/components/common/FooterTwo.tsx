@@ -76,7 +76,7 @@ export const FooterTwo = ({
                              socialLinks: { linkedIn, discord, twitter, title },
                           }: FooterTwoProps) => {
    return (
-      <footer className={`py-2 border-t border-neutral-700 mt-8 dark:bg-transparent`}>
+      <footer className={`py-2 border-t border-secondary-bg mt-8 dark:bg-transparent`}>
          <div className="my-8 grid grid-cols-4 mx-24 gap-8">
             <div
                className="!mb-16 flex flex-col space-y-1 text-base text-muted-foreground items-start text-left h-full justify-center">
@@ -119,15 +119,15 @@ export const FooterTwo = ({
                <div className="mb-8 flex space-x-8 mt-4">
                   <Link title={`Discord`} target="_blank" rel="noreferrer" href={discord}>
                      <span className="sr-only">Discord</span>
-                     <Icons.discord className="h-6 w-6 fill:white text-white hover:!fill-accent hover:!text-accent transition-colors duration-100" />
+                     <Icons.discord className="h-6 w-6 fill:main text-main hover:!fill-accent hover:!text-accent transition-colors duration-100" />
                   </Link>
                   <Link title={`Twitter`} target="_blank" rel="noreferrer" href={twitter}>
                      <span className="sr-only">Twitter</span>
-                     <Icons.twitter className="h-6 w-6 !fill-white text-white hover:!fill-accent hover:!text-accent transition-colors duration-100" />
+                     <Icons.twitter className="h-6 w-6 !fill-main text-main hover:!fill-accent hover:!text-accent transition-colors duration-100" />
                   </Link>
                   <Link title={`LinkedIn`} target="_blank" rel="noreferrer" href={linkedIn}>
                      <span className="sr-only">LinkedIn</span>
-                     <Icons.linkedIn className="h-6 w-6 !fill-white !text-white hover:!fill-accent hover:!text-accent transition-colors duration-100" />
+                     <Icons.linkedIn className="h-6 w-6 !fill-main !text-main hover:!fill-accent hover:!text-accent transition-colors duration-100" />
                   </Link>
                </div>
             </div>

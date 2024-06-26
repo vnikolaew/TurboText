@@ -15,10 +15,9 @@ export interface ThemesSectionProps {
 const THEMES = [
    `dark`,
    `light`,
-   "theme-1",
-   "theme-2",
-   "theme-3",
-   "theme-4",
+   `nighthawk`,
+   ...Array.from({ length: 3 }).map((_, i) => `theme-${i + 2}`),
+   `frost`
 ];
 
 const ThemesSection = ({}: ThemesSectionProps) => {
@@ -53,7 +52,7 @@ const ThemesSection = ({}: ThemesSectionProps) => {
                   }}
                   variant={`secondary`}
                   className={cn(`!w-full`,
-                     newTheme === theme && `bg-amber-500`)}
+                     newTheme === theme && `bg-accent`)}
                   key={newTheme}>
                   {newTheme}
                </Button>

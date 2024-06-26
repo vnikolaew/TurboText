@@ -89,7 +89,7 @@ const LatestRunsTable = ({ runs, tagsById }: LatestRunsTableProps) => {
    return (
       <Fragment>
          <Table className={`!mb-12`}>
-            <TableCaption className={`!text-background !font-semibold !text-base`}>
+            <TableCaption className={`!text-secondary !font-semibold !text-base`}>
                A list of your latest typing runs.
             </TableCaption>
             <TableHeader className={`w-full`}>
@@ -127,7 +127,7 @@ const LatestRunsTable = ({ runs, tagsById }: LatestRunsTableProps) => {
                         <TooltipProvider>
                            <Tooltip>
                               <TooltipTrigger className={`cursor-pointer`} asChild>
-                                 <Tag className={cn(`fill-neutral-500 stroke-transparent`,
+                                 <Tag className={cn(`fill-main stroke-transparent`,
                                     run.tags?.length && `!fill-white`)} size={22} />
                               </TooltipTrigger>
                               <TooltipContent

@@ -59,7 +59,7 @@ const ConfidenceModeSection = ({}: ConfidenceModeSetionProps) => {
                   key={value}
                   onClick={_ => execute({ input_confidence_mode: value })}
                   className={cn(`flex-1`,
-                     confidenceMode === value && `bg-amber-500`)}
+                     confidenceMode === value && `bg-accent`)}
                >{label}</Button>
             ))}
          </div>

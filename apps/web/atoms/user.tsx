@@ -4,7 +4,6 @@ import { atom } from "jotai";
 import { focusAtom } from "jotai-optics";
 import { Session } from "next-auth";
 import { UserExperience } from "@atoms/consts";
-import theme from "tailwindcss/defaultTheme";
 
 export const userDataLoadingAtom = atom(false);
 
@@ -54,7 +53,7 @@ blindModeAtom.debugLabel = `blindModeAtom`;
 // @ts-ignore
 export const userLanguageAtom = atom(get => {
    return get(userConfigAtom)?.language;
-})
+});
 userLanguageAtom.debugLabel = `userLanguageAtom`;
 
 // @ts-ignore
@@ -93,7 +92,7 @@ paceCaretStyleAtom.debugLabel = `paceCaretStyleAtom`;
 
 // @ts-ignore
 export const paceCaretSpeedAtom = focusAtom<UserConfiguration["pace_caret_speed"]>(userConfigAtom, optic => optic.prop(`pace_caret_speed`));
-paceCaretSpeedAtom .debugLabel = `paceCaretSpeedAtom`;
+paceCaretSpeedAtom.debugLabel = `paceCaretSpeedAtom`;
 
 // @ts-ignore
 export const flipColorsAtom = focusAtom<UserConfiguration["theme_flip_colors"]>(userConfigAtom, optic => optic.prop(`theme_flip_colors`));
@@ -125,6 +124,7 @@ averageAtom.debugLabel = `averageAtom`;
 export const fontFamilyAtom = focusAtom<UserConfiguration["font_family"]>(userConfigAtom, optic => optic?.prop(`font_family`));
 fontFamilyAtom.debugLabel = `fontFamilyAtom`;
 
+
 // @ts-ignore
 export const hoveredFontFamilyAtom = atom<string>(null!);
 hoveredFontFamilyAtom.debugLabel = `hoveredFontFamilyAtom`;
@@ -134,6 +134,17 @@ export const fontSizeAtom = focusAtom<number>(userConfigAtom, optic => optic?.pr
 fontSizeAtom.debugLabel = `fontSizeAtom`;
 
 // @ts-ignore
-export const themeAtom = focusAtom<UserConfiguration["theme"]>(userConfigAtom, optic => optic?.prop(`theme`));
-themeAtom.debugLabel = `themeAtom`;
+export const themeAtom = atom(get => {
+   const config = get(userConfigAtom);
+   const ls_value = window?. localStorage?.getItem(`theme`);
 
+   if (config && config?.theme !== ls_value) window?. localStorage?.setItem(`theme`, config?.theme);
+   return config?.theme ?? ls_value;
+}, (get, set, theme: string) => {
+   set(userConfigAtom, { ...get(userConfigAtom), theme });
+   window?.localStorage?.setItem(`theme`, theme);
+});
+themeAtom.onMount = (set) => {
+   set(window?.localStorage?.getItem(`theme`) ?? ``);
+}
+themeAtom.debugLabel = `theme2Atom`;

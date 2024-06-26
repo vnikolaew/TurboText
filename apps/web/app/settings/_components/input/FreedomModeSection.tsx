@@ -41,14 +41,14 @@ const FreedomModeSection = ({}: FreedomModeSectionProps) => {
             <Button
                onClick={_ => execute({ input_freedom_mode: false })}
                className={cn(`flex-1`,
-                  !freedomMode && `bg-amber-500`)}
+                  !freedomMode && `bg-accent`)}
             >
                Off
             </Button>
             <Button
                onClick={_ => execute({ input_freedom_mode: true })}
                className={cn(`flex-1`,
-                  freedomMode && `bg-amber-500`)}
+                  freedomMode && `bg-acent`)}
             >
                On
             </Button>

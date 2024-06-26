@@ -61,7 +61,7 @@ const SmoothCaretSection = ({}: SmoothCaretSectionProps) => {
                   onClick={_ => execute({ caret_smoothness: value })}
                   key={value}
                   className={cn(`flex-1`,
-                  smoothCaret === value && `bg-amber-500`)}
+                  smoothCaret === value && `bg-accent`)}
                >
                   {label}</Button>
             ))}

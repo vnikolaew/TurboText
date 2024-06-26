@@ -29,7 +29,7 @@ const Page = ({}: PageProps) => {
             <h3 className={`text-base text-secondary`}>Last
                updated: {moment(LAST_UPDATED).format(`MMMM DD, YYYY`)}</h3>
             <Heading text={`1. Introduction`} />
-            <p className={`mt-2`}>
+            <p className={`mt-2 `}>
                Welcome to {APP_NAME} ("we," "our," "us"). These Terms of Service ("Terms") govern your use of
                our website {APP_HOST_NAME}.com, services, and products (collectively, the "Services"). By accessing or
                using our Services, you agree to be bound by these Terms. If you do not agree to these Terms, please do
@@ -180,7 +180,7 @@ const Page = ({}: PageProps) => {
 
 const Heading = ({ text }: { text: string }) => {
    return (
-      <h2 className={`mt-4 text-lg font-semibold`}>{text}</h2>
+      <h2 className={`mt-4 text-lg !font-semibold`}>{text}</h2>
    );
 };
 

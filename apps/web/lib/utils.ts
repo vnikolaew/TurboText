@@ -186,3 +186,7 @@ export function exportObjectAsJson(obj: any, filename: string) {
    // Release the Blob URL
    URL.revokeObjectURL(url);
 }
+
+export function scrollToElement(elementId: string) {
+   document.getElementById(elementId)?.scrollIntoView({ behavior: `smooth` });
+}

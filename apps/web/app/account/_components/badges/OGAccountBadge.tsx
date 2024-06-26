@@ -9,7 +9,7 @@ const OgAccountBadge = ({}: OgAccountBadgeProps) => {
    return (
       <span>
                      <Badge
-                        className={`!bg-amber-500 !text-black inline-flex gap-2 items-center text-nowrap shadow-md text-xs`}
+                        className={`!bg-accent !text-main inline-flex gap-2 items-center text-nowrap shadow-md text-xs`}
                         variant={`default`}>
                         <Baby size={14} />
                         <span>

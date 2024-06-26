@@ -9,7 +9,7 @@ export interface SettingButtonProps extends ButtonProps {
 
 const SettingButton = ({ active, children, className, ...props }: SettingButtonProps) => {
    return (
-      <Button className={cn(className, active && `bg-amber-500`)} {...props}>
+      <Button className={cn(className, active && `bg-accent`)} {...props}>
          {children}
       </Button>
    );

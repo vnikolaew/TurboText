@@ -60,12 +60,12 @@ const WordRunsStat = ({ runs, words }: { runs: TypingRun[], words: number }) => 
                transition={{ duration: .3 }}
                key={`next`}
                className={cn(`flex flex-col items-center justify-between h-full`, !hovered && `hidden`)}>
-               <span className={`text-amber-500 text-nowrap text-sm`}>{words} words</span>
-               <span className={`text-neutral-500`}>{bestWpm.toFixed(0)}</span>
-               <span className={`text-neutral-500`}>{averageAcc.toFixed(0)}%</span>
-               <span className={`text-neutral-500`}>{averageCon.toFixed(0)}%</span>
+               <span className={`text-accent text-nowrap text-sm`}>{words} words</span>
+               <span className={`text-secondary`}>{bestWpm.toFixed(0)}</span>
+               <span className={`text-secondary`}>{averageAcc.toFixed(0)}%</span>
+               <span className={`text-secondary`}>{averageCon.toFixed(0)}%</span>
                <span
-                  className={`text-sm leading-tight text-amber-500 text-center`}>{moment(latestRun).format(`DD MMM YYYY`)}</span>
+                  className={`text-sm leading-tight text-accent text-center`}>{moment(latestRun).format(`DD MMM YYYY`)}</span>
             </motion.div>
          ) : (
             <motion.div
@@ -75,9 +75,9 @@ const WordRunsStat = ({ runs, words }: { runs: TypingRun[], words: number }) => 
                transition={{ duration: .3 }}
                key={`initial`}
                className={cn(`flex flex-col items-center justify-between h-full`, hovered && `hidden`)}>
-               <span className={`text-amber-500 text-nowrap text-sm`}>{words} words</span>
+               <span className={`text-accent text-nowrap text-sm`}>{words} words</span>
                <span className={`text-xl`}>{bestWpm?.toFixed(0)}</span>
-               <span className={`text-lg text-neutral-500`}>{averageAcc.toFixed(0)}%</span>
+               <span className={`text-lg text-secondary`}>{averageAcc.toFixed(0)}%</span>
             </motion.div>
          )}
       </div>

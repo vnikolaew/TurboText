@@ -67,7 +67,7 @@ const ReportUserModal = ({ children, user }: ReportUserModalProps) => {
          else await setReportUserQs(true)
       }} open={open}>
          <DialogTrigger>{children}</DialogTrigger>
-         <DialogContent className={`!bg-neutral-900`}>
+         <DialogContent className={`!bg-secondary-bg`}>
             <DialogHeader>
                <DialogTitle>Report a user</DialogTitle>
                <DialogDescription>
@@ -76,11 +76,11 @@ const ReportUserModal = ({ children, user }: ReportUserModalProps) => {
                </DialogDescription>
             </DialogHeader>
             <div className={`flex flex-col gap-2 items-start`}>
-               <h2 className={`!text-amber-500`}>user</h2>
-               <span className={`!text-neutral-300 text-xl`}>{user.name}</span>
+               <h2 className={`!text-accent`}>user</h2>
+               <span className={`!text-main text-xl`}>{user.name}</span>
             </div>
             <div className={`flex flex-col gap-2 items-start mt-4`}>
-               <h2 className={`!text-amber-500`}>reason</h2>
+               <h2 className={`!text-accent`}>reason</h2>
                <Select
                   onValueChange={value => setReportUserModel({ ...reportUserModel, reason: value })}
                   value={reportUserModel.reason}>
@@ -95,11 +95,11 @@ const ReportUserModal = ({ children, user }: ReportUserModalProps) => {
                </Select>
             </div>
             <div className={`flex flex-col gap-2 items-start`}>
-               <h2 className={`!text-amber-500`}>comment</h2>
+               <h2 className={`!text-accent`}>comment</h2>
                <Textarea
                   onChange={e => setReportUserModel({ ...reportUserModel, comment: e.target.value })}
                   value={reportUserModel.comment} rows={3}
-                  className={`!text-neutral-300 !w-full focus:!border-neutral-300`} />
+                  className={`!text-main !w-full focus:!border-main`} />
             </div>
             <GoogleReCaptcha />
             <DialogFooter className={`w-full mt-4`}>
@@ -109,7 +109,7 @@ const ReportUserModal = ({ children, user }: ReportUserModalProps) => {
                      username: user.name!,
                      ...reportUserModel,
                   });
-               }} type={"button"} variant={`outline`} className={`w-full items-center gap-2`}>
+               }} type={"button"} variant={`outline`} className={`w-full items-center gap-2 shadow-md`}>
                   {isExecuting ? (
                      <LoadingSpinner text={`Reporting ...`} />
                   ) : `Report`}

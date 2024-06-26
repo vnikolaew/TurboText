@@ -42,7 +42,7 @@ const PaceCaretStyleSection = ({}: PaceCaretStyleSectionProps) => {
             {CARET_STYLES.map(({ label, value }, index) => (
                <Button title={value} onClick={_ => execute({ pace_caret_style: value })} key={value}
                        className={cn(`flex-1`,
-                          caretStyle === value && `bg-amber-500`)}
+                          caretStyle === value && `bg-accent`)}
                >{label}</Button>
             ))}
          </div>

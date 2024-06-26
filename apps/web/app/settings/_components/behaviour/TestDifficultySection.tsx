@@ -65,7 +65,7 @@ const TestDifficultySection = ({}: TestDifficultySectionProps) => {
                   onClick={_ => handleUpdate(value)}
                   key={value} variant={`default`}
                   className={cn(`w-full shadow-md`,
-                  value === test_difficulty && `bg-amber-500`)}>
+                  value === test_difficulty && `bg-accent`)}>
                   {label}
                </Button>
             ))}

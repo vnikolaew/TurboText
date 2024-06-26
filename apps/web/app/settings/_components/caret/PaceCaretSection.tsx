@@ -68,7 +68,7 @@ const PaceCaretSection = ({}: PaceCaretSectionProps) => {
                <Button
                   onClick={_ => execute({ pace_caret_speed: value })}
                   className={cn(`flex-1 shadow-md`,
-                     paceCaretSpeed === value && `bg-amber-500`)}
+                     paceCaretSpeed === value && `bg-acacent`)}
                   key={value}
                   >{label}</Button>
             ))}

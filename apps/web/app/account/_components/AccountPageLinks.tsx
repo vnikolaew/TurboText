@@ -40,7 +40,7 @@ const AccountPageLinks = ({ user }: AccountLinksProps) => {
                      </TooltipTrigger>
                      <TooltipContent
                         side={`left`}
-                        className={`bg-black text-main rounded-xl text-sm border-neutral-700 !px-4 !py-2`}>
+                        className={`bg-secondary text-main rounded-xl text-sm border-none !px-4 !py-2`}>
                         Edit profile
                      </TooltipContent>
                   </Tooltip>
@@ -54,7 +54,7 @@ const AccountPageLinks = ({ user }: AccountLinksProps) => {
                      </TooltipTrigger>
                      <TooltipContent
                         side={`left`}
-                        className={`bg-black text-main rounded-xl text-sm border-neutral-700 !px-4 !py-2`}>
+                        className={`bg-secondary text-main rounded-xl text-sm border-none !px-4 !py-2`}>
                         Copy public link
                      </TooltipContent>
                   </Tooltip>
