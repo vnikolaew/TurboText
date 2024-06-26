@@ -35,10 +35,10 @@ Step up your typing game with our interactive platform designed to elevate your 
 
 - [Next.js](https://nextjs.org): A React framework for building server-side rendered and statically generated
   applications.
-- [NextAuth](https://next-auth.js.org): For user authentication.
+- [NextAuth](https://next-auth.js.org): An all-in solution for user authentication in NextJS.
 - [Prisma](https://www.prisma.io): Next-generation ORM, it provides a clean and type-safe API for submitting database
   queries.
-- [PostgreSQL](https://www.postgresql.org/):  An effective relational SQL database.
+- [PostgreSQL](https://www.postgresql.org/):  A reliable and effective relational SQL database.
 - [Tailwind CSS](https://tailwindcss.com): A utility-first CSS framework for rapid UI development.
 - [TypeScript](https://www.typescriptlang.org): A typed superset of JavaScript that provides enhanced tooling and
   developer productivity.
