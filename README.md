@@ -7,8 +7,8 @@
 Accelerate Your **Typing Speed**
 
 <div style="text-align: center">
-  <img alt="GitHub License" src="https://img.shields.io/github/license/vnikolaew/intelli-notes">
-  <img alt="Website Status" src="https://img.shields.io/badge/https%3A%2F%2Fintelli-notes-git-main-vnikolaews-projects.vercel.app">
+  <img alt="GitHub License" src="https://img.shields.io/github/license/vnikolaew/TurboText">
+  <img alt="Website Status" src="https://img.shields.io/website?url=https%3A%2F%2Fturbo-text-rho.vercel.app">
 </div>
 
 ## Table of Contents
