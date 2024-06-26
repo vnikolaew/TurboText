@@ -7,12 +7,14 @@ import { flipColorsAtom } from "@atoms/user";
 import { useAction } from "next-safe-action/hooks";
 import { updateUserConfiguration } from "@app/settings/actions";
 import SettingButton from "@app/settings/_components/common/SettingButton";
+import { useIsSignedIn } from "@hooks/useIsSignedIn";
 
 export interface FlipTestColorsProps {
 }
 
 const FlipTestColorsSection = ({}: FlipTestColorsProps) => {
    const [flipColors, setFlipColors] = useAtom(flipColorsAtom);
+   const signedIn = useIsSignedIn();
 
    const { execute, status } = useAction(updateUserConfiguration, {
       onSuccess: res => {
@@ -39,13 +41,13 @@ const FlipTestColorsSection = ({}: FlipTestColorsProps) => {
          </div>
          <div className={`flex items-center gap-2 w-full h-full my-auto justify-center flex-wrap`}>
             <SettingButton
-               onClick={_ => execute({ theme_flip_colors: false })}
+               onClick={_ => signedIn ?  execute({ theme_flip_colors: false }) : setFlipColors(false)}
                className={`flex-1`}
                active={!flipColors}>
                Off
             </SettingButton>
             <SettingButton
-               onClick={_ => execute({ theme_flip_colors: true })}
+               onClick={_ => signedIn ? execute({ theme_flip_colors: true }) : setFlipColors(true)}
                className={`flex-1`}
                active={flipColors}>
                On

@@ -8,6 +8,7 @@ import { paceCaretSpeedAtom } from "@atoms/user";
 import { useAction } from "next-safe-action/hooks";
 import { updateUserConfiguration } from "@app/settings/actions";
 import { cn } from "@lib/utils";
+import { useIsSignedIn } from "@hooks/useIsSignedIn";
 
 export interface PaceCaretSectionProps {
 }
@@ -40,6 +41,7 @@ const PACE_CARET_SPEEDS = [
 
 const PaceCaretSection = ({}: PaceCaretSectionProps) => {
    const [paceCaretSpeed, setPaceCaretSpeed] = useAtom(paceCaretSpeedAtom);
+   const signedIn = useIsSignedIn();
 
    const { execute, status } = useAction(updateUserConfiguration, {
       onSuccess: res => {
@@ -66,11 +68,11 @@ const PaceCaretSection = ({}: PaceCaretSectionProps) => {
          <div className={`flex items-center gap-2 w-full h-full my-auto justify-center flex-wrap`}>
             {PACE_CARET_SPEEDS.map(({ value, label }, index) => (
                <Button
-                  onClick={_ => execute({ pace_caret_speed: value })}
+                  onClick={_ => signedIn ? execute({ pace_caret_speed: value }) : setPaceCaretSpeed(value)}
                   className={cn(`flex-1 shadow-md`,
-                     paceCaretSpeed === value && `bg-acacent`)}
+                     paceCaretSpeed === value && `bg-accent`)}
                   key={value}
-                  >{label}</Button>
+               >{label}</Button>
             ))}
          </div>
       </SettingLayout>

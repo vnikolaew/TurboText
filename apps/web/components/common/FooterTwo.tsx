@@ -115,19 +115,19 @@ export const FooterTwo = ({
                </div>
             </div>
             <div>
-               <h2 className={`uppercase text-muted-foreground text-lg !text-main`}>{title}</h2>
+               <h2 className={`uppercase text-lg !text-main`}>{title}</h2>
                <div className="mb-8 flex space-x-8 mt-4">
                   <Link title={`Discord`} target="_blank" rel="noreferrer" href={discord}>
                      <span className="sr-only">Discord</span>
-                     <Icons.discord className="h-6 w-6 fill:main text-main hover:!fill-accent hover:!text-accent transition-colors duration-100" />
+                     <Icons.discord className="h-6 w-6 fill-secondary text-secondary hover:!fill-accent hover:!text-accent transition-colors duration-100" />
                   </Link>
                   <Link title={`Twitter`} target="_blank" rel="noreferrer" href={twitter}>
                      <span className="sr-only">Twitter</span>
-                     <Icons.twitter className="h-6 w-6 !fill-main text-main hover:!fill-accent hover:!text-accent transition-colors duration-100" />
+                     <Icons.twitter className="h-6 w-6 !fill-secondary text-secondary hover:!fill-accent hover:!text-accent transition-colors duration-100" />
                   </Link>
                   <Link title={`LinkedIn`} target="_blank" rel="noreferrer" href={linkedIn}>
                      <span className="sr-only">LinkedIn</span>
-                     <Icons.linkedIn className="h-6 w-6 !fill-main !text-main hover:!fill-accent hover:!text-accent transition-colors duration-100" />
+                     <Icons.linkedIn className="h-6 w-6 !fill-secondary !text-secondary hover:!fill-accent hover:!text-accent transition-colors duration-100" />
                   </Link>
                </div>
             </div>

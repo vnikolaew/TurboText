@@ -1,6 +1,6 @@
 "use client"
 import React, { PropsWithChildren } from "react";
-import { hoveredFontFamilyAtom } from "@atoms/user";
+import { fontFamilyAtom, hoveredFontFamilyAtom, userConfigAtom } from "@atoms/user";
 import { useAtomValue } from "jotai";
 import { FONTS_MAP } from "@assets/fonts";
 import { FONT_FAMILIES } from "@lib/consts";
@@ -11,8 +11,11 @@ export interface FontProviderProps extends PropsWithChildren {
 
 
 const DynamicFontProvider = ({ children }: FontProviderProps) => {
+   const config = useAtomValue(userConfigAtom)
+
    const hoveredFontFamily = useAtomValue(hoveredFontFamilyAtom)
-   let font = FONTS_MAP[hoveredFontFamily as (typeof FONT_FAMILIES)[number]]
+   const userFont = useAtomValue(fontFamilyAtom)
+   let font = FONTS_MAP[(hoveredFontFamily ?? userFont) as (typeof FONT_FAMILIES)[number]]
 
    return (
       <div className={cn(`font-mono `, font ? font.variable : ``)}>

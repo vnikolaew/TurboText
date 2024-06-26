@@ -34,6 +34,8 @@ import AutoSaveModeSection from "@app/settings/_components/behaviour/AutoSaveMod
 import FontFamilySection from "@app/settings/_components/appearance/FontFamilySection";
 import FontSizeSection from "./appearance/FontSizeSection";
 import ThemesSection from "./theme/ThemesSection";
+import { SignedIn } from "@components/common/Auth";
+import ResetSettingsSection from "@app/settings/_components/danger/ResetSettingsSection";
 
 export interface SettingsAccordionProps {
    user: User & { tags: Tag[], configuration: UserConfiguration };
@@ -43,20 +45,26 @@ const SettingsAccordion = ({ user }: SettingsAccordionProps) => {
    const [sections, setSections] = useQueryState(`sections`, parseAsArrayOf(parseAsString).withDefault([]));
 
    //@ts-ignore
-   useHydrateAtoms([
-      [userConfigAtom, user.configuration],
-      [cookiePreferencesAtom, user.cookiePreferences!],
-   ]);
+   if(user) {
+      useHydrateAtoms([
+         [userConfigAtom, user?.configuration],
+         [cookiePreferencesAtom, user.cookiePreferences!],
+      ]);
 
+   }
    return (
       <Accordion onValueChange={setSections} value={sections} className={`w-full`} type="multiple" collapsible={"true"}>
-         <SettingsAccordionItem name={`Account`} value={`account`}>
-            <SettingsTagsSection tags={user!.tags} />
-            <MoreAccountSettingsSection />
-         </SettingsAccordionItem>
+         <SignedIn>
+            <SettingsAccordionItem name={`Account`} value={`account`}>
+               <SettingsTagsSection tags={user?.tags ?? []} />
+               <MoreAccountSettingsSection />
+            </SettingsAccordionItem>
+         </SignedIn>
          <SettingsAccordionItem className={`!mt-4`} name={`Behaviour`} value={`behaviour`}>
             <TestDifficultySection />
-            <AutoSaveModeSection />
+            <SignedIn>
+               <AutoSaveModeSection />
+            </SignedIn>
             <BlindModeSection />
             <LanguageSection />
          </SettingsAccordionItem>
@@ -92,9 +100,14 @@ const SettingsAccordion = ({ user }: SettingsAccordionProps) => {
          <SettingsAccordionItem className={`!mt-4`} name={`Danger zone`} value={`danger`}>
             <ImportExportSettings/>
             <CookiePreferencesSection />
-            <UpdateUsernameSection />
-            <DeleteAccountSection />
-            <ResetAccountSection />
+            <SignedIn>
+               <UpdateUsernameSection />
+               <DeleteAccountSection />
+            </SignedIn>
+            <ResetSettingsSection />
+            <SignedIn>
+               <ResetAccountSection />
+            </SignedIn>
          </SettingsAccordionItem>
       </Accordion>
    );

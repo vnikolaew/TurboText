@@ -8,12 +8,14 @@ import { blindModeAtom } from "@atoms/user";
 import { useAction } from "next-safe-action/hooks";
 import { updateUserConfiguration } from "@app/settings/actions";
 import { cn } from "@lib/utils";
+import { useIsSignedIn } from "@hooks/useIsSignedIn";
 
 export interface BlindModeSectionProps {
 }
 
 const BlindModeSection = ({}: BlindModeSectionProps) => {
    const [blindMode, setBlindMode] = useAtom(blindModeAtom);
+   const signedIn = useIsSignedIn()
 
    const { execute, status } = useAction(updateUserConfiguration, {
       onSuccess: res => {
@@ -25,7 +27,9 @@ const BlindModeSection = ({}: BlindModeSectionProps) => {
    });
 
    function handleUpdate(value: boolean): void {
-      execute({ blind_mode: value });
+      if(signedIn) {
+         execute({ blind_mode: value });
+      } else setBlindMode(value)
    }
 
    return (

@@ -7,6 +7,7 @@ import { useAtom } from "jotai/index";
 import { userLanguageAtom } from "@atoms/user";
 import { useAction } from "next-safe-action/hooks";
 import { updateUserConfiguration } from "@app/settings/actions";
+import { useIsSignedIn } from "@hooks/useIsSignedIn";
 
 export interface LanguageSectionProps {
 }
@@ -25,6 +26,7 @@ export const LANGUAGES = [
 
 const LanguageSection = ({}: LanguageSectionProps) => {
    const [userLanguage, setUserLanguage] = useAtom(userLanguageAtom);
+   const signedIn = useIsSignedIn()
 
    const { execute, status } = useAction(updateUserConfiguration, {
       onSuccess: res => {
@@ -36,8 +38,9 @@ const LanguageSection = ({}: LanguageSectionProps) => {
    });
 
    function handleSelectLanguage(value: string): void {
-      console.log({ value });
-      execute({ language: value });
+      if(signedIn) {
+         execute({ language: value });
+      } else setUserLanguage(value);
    }
 
    return (

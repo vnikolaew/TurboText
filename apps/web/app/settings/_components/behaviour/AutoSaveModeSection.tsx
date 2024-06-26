@@ -5,14 +5,19 @@ import { Save } from "lucide-react";
 import { Button } from "@repo/ui";
 import { cn } from "@lib/utils";
 import { useAtom } from "jotai/index";
-import { autoSaveModeAtom } from "@atoms/user";
+import { autoSaveModeAtom, userConfigAtom } from "@atoms/user";
 import { useAction } from "next-safe-action/hooks";
 import { updateUserConfiguration } from "@app/settings/actions";
+import { useAtomValue } from "jotai";
+import { useIsSignedIn } from "@hooks/useIsSignedIn";
 
 export interface AutoSaveModeSectionProps {
 }
 
 const AutoSaveModeSection = ({}: AutoSaveModeSectionProps) => {
+   const userConfig = useAtomValue(userConfigAtom)
+   const signedIn = useIsSignedIn()
+
    const [autoSaveMode, setAutoSaveMode] = useAtom(autoSaveModeAtom);
 
    const { execute, status } = useAction(updateUserConfiguration, {
@@ -38,14 +43,14 @@ const AutoSaveModeSection = ({}: AutoSaveModeSectionProps) => {
          </div>
          <div className={`flex items-center gap-2 w-full h-full my-auto`}>
             <Button
-               onClick={_ => execute({ auto_save_mode: false })}
+               onClick={_ => signedIn ? execute({ auto_save_mode: false }) : setAutoSaveMode(false)}
                className={cn(`flex-1`,
                   !autoSaveMode && `bg-accent`)}
             >
                Off
             </Button>
             <Button
-               onClick={_ => execute({ auto_save_mode: true })}
+               onClick={_ => signedIn ? execute({ auto_save_mode: true }) : setAutoSaveMode(true)}
                className={cn(`flex-1`,
                   autoSaveMode && `bg-accent`)}
             >

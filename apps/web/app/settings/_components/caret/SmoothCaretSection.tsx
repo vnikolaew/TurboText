@@ -8,14 +8,15 @@ import { smoothCaretAtom } from "@atoms/user";
 import { useAction } from "next-safe-action/hooks";
 import { updateUserConfiguration } from "@app/settings/actions";
 import { cn } from "@lib/utils";
+import { useIsSignedIn } from "@hooks/useIsSignedIn";
 
 export interface SmoothCaretSectionProps {
 }
 
-const CARET_SMOOTHNESSES = [ {
-      value: `OFF`,
-      label: `Off`,
-   },
+const CARET_SMOOTHNESSES = [{
+   value: `OFF`,
+   label: `Off`,
+},
    {
       value: `SLOW`,
       label: `Slow`,
@@ -28,10 +29,11 @@ const CARET_SMOOTHNESSES = [ {
       value: `FAST`,
       label: `Fast`,
    },
-]
+];
 
 const SmoothCaretSection = ({}: SmoothCaretSectionProps) => {
    const [smoothCaret, setSmoothCaret] = useAtom(smoothCaretAtom);
+   const signedIn = useIsSignedIn();
 
    const { execute, status } = useAction(updateUserConfiguration, {
       onSuccess: res => {
@@ -56,12 +58,12 @@ const SmoothCaretSection = ({}: SmoothCaretSectionProps) => {
             </p>
          </div>
          <div className={`flex items-center gap-2 w-full h-full my-auto justify-center`}>
-            {CARET_SMOOTHNESSES.map(({value, label}, index) => (
+            {CARET_SMOOTHNESSES.map(({ value, label }, index) => (
                <Button
-                  onClick={_ => execute({ caret_smoothness: value })}
+                  onClick={_ => signedIn ? execute({ caret_smoothness: value }) : setSmoothCaret(value)}
                   key={value}
                   className={cn(`flex-1`,
-                  smoothCaret === value && `bg-accent`)}
+                     smoothCaret === value && `bg-accent`)}
                >
                   {label}</Button>
             ))}

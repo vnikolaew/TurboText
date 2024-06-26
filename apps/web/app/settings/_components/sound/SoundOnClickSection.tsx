@@ -10,15 +10,16 @@ import { cn } from "@lib/utils";
 import { playSoundAtom, soundClicksAtom } from "@app/settings/atoms";
 import { useAtomValue } from "jotai";
 import { SOUNDS } from "@lib/sounds";
+import { useIsSignedIn } from "@hooks/useIsSignedIn";
 
 export interface SoundOnClickSectionProps {
 }
 
-
-
 const SoundOnClickSection = ({}: SoundOnClickSectionProps) => {
    const [soundOnClick, setSoundOnClick] = useAtom(soundOnClickAtom);
    const soundClicks = useAtomValue(soundClicksAtom)
+   const signedIn = useIsSignedIn();
+
    const playSound = useSetAtom(playSoundAtom);
 
    const { execute, status } = useAction(updateUserConfiguration, {
@@ -29,7 +30,6 @@ const SoundOnClickSection = ({}: SoundOnClickSectionProps) => {
          }
       },
    });
-   console.log({ sounds: SOUNDS.length, files: soundClicks.length });
 
    return (
       <div className={`flex flex-col w-full items-start gap-2`}>
@@ -47,7 +47,9 @@ const SoundOnClickSection = ({}: SoundOnClickSectionProps) => {
                <Button
                   onClick={async _ => {
                      await playSound(index);
-                     execute({ sound_click_sound: sound });
+                     if(signedIn) {
+                        execute({ sound_click_sound: sound });
+                     } else setSoundOnClick(sound)
                   }}
                   variant={`secondary`}
                   className={cn(`!w-full`,

@@ -2,6 +2,7 @@
 import React from "react";
 import { parseAsArrayOf, parseAsString, useQueryState } from "nuqs";
 import { scrollToElement } from "@lib/utils";
+import { useIsSignedIn } from "@hooks/useIsSignedIn";
 
 export interface SectionsProps {
 }
@@ -20,10 +21,11 @@ const SECTIONS = [
 
 const Sections = ({}: SectionsProps) => {
    const [_, setSections] = useQueryState(`sections`, parseAsArrayOf(parseAsString).withDefault([]));
+   const signedIn = useIsSignedIn();
 
    return (
       <div className={`w-full flex items-center justify-between my-12`}>
-         {SECTIONS.map((section) => (
+         {SECTIONS.slice(signedIn ? 0 : 1).map((section) => (
             <span onClick={() => {
                setSections(s => [...new Set(s.concat(section.split(` `).at(0)!))])
                   .then(() => scrollToElement(section.split(` `).at(0)!));

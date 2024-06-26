@@ -9,12 +9,14 @@ import { useAction } from "next-safe-action/hooks";
 import { updateUserConfiguration } from "@app/settings/actions";
 import { cn } from "@lib/utils";
 import { CARET_STYLES } from "@app/settings/_components/caret/CaretStyleSection";
+import { useIsSignedIn } from "@hooks/useIsSignedIn";
 
 export interface PaceCaretStyleSectionProps {
 }
 
 const PaceCaretStyleSection = ({}: PaceCaretStyleSectionProps) => {
    const [caretStyle, setCaretStyle] = useAtom(paceCaretStyleAtom);
+   const signedIn = useIsSignedIn();
 
    const { execute, status } = useAction(updateUserConfiguration, {
       onSuccess: res => {
@@ -40,7 +42,8 @@ const PaceCaretStyleSection = ({}: PaceCaretStyleSectionProps) => {
          </div>
          <div className={`flex items-center gap-2 w-full h-full my-auto justify-center`}>
             {CARET_STYLES.map(({ label, value }, index) => (
-               <Button title={value} onClick={_ => execute({ pace_caret_style: value })} key={value}
+               <Button title={value}
+                       onClick={_ => signedIn ? execute({ pace_caret_style: value }) : setCaretStyle(value)} key={value}
                        className={cn(`flex-1`,
                           caretStyle === value && `bg-accent`)}
                >{label}</Button>

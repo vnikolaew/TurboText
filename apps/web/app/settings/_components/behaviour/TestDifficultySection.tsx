@@ -8,6 +8,7 @@ import { updateUserConfiguration } from "@app/settings/actions";
 import { useAtom } from "jotai";
 import { userTestDifficultyAtom } from "@atoms/user";
 import { cn } from "@lib/utils";
+import { useIsSignedIn } from "@hooks/useIsSignedIn";
 
 export interface TestDifficultySectionProps {
 }
@@ -29,6 +30,7 @@ const DIFFICULTIES = [
 
 const TestDifficultySection = ({}: TestDifficultySectionProps) => {
    const [test_difficulty, setTestDifficulty] = useAtom(userTestDifficultyAtom)
+   const signedIn = useIsSignedIn()
 
    const { execute, status } = useAction(updateUserConfiguration, {
       onSuccess: res => {
@@ -38,10 +40,13 @@ const TestDifficultySection = ({}: TestDifficultySectionProps) => {
          }
       },
    });
-   console.log({ test_difficulty });
 
    function handleUpdate(value: string): void {
-      execute({ test_difficulty: value });
+      if(signedIn) {
+         execute({ test_difficulty: value });
+      } else {
+         setTestDifficulty(value);
+      }
    }
 
    return (

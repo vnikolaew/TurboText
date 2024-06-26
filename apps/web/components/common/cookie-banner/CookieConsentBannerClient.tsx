@@ -37,7 +37,6 @@ export const CustomizePreferencesModal = ({
       Functionality: cookiePreferences?.[`Functionality`] === true,
       Marketing: cookiePreferences?.[`Marketing`] === true,
    });
-   console.log(`we are here!`);
 
    const { status, isExecuting, execute: handleSavePreferencesAction } = useAction(updateCookiePreferences, {
       onSuccess: res => {

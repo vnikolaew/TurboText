@@ -30,5 +30,16 @@ declare global {
          confidence_mode: string
          test_difficulty: string
       }
+
+      type UserConfigurationMetadata = {
+         customThemes?: {
+            name: string;
+            background: string;
+            accent: string;
+            main: string;
+            secondary: string;
+            "secondary-bg": string;
+         }
+      }
    }
 }

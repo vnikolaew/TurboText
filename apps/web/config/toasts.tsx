@@ -260,6 +260,15 @@ Export successful
       ),
       className: `text-base font-normal`,
    },
+   SETTINGS_RESET_SUCCESS: {
+      message: (
+         <div className={`flex items-center gap-2`}>
+            <Check className={`text-green-600`} size={18} />
+            <span>You successfully reset all your settings.</span>
+         </div>
+      ),
+      className: `text-base font-normal`,
+   },
 } as const;
 
 // export const toast = ({ message, ...config }: ExternalToast & { message: ReactNode }) => sonnerToast(message, config);

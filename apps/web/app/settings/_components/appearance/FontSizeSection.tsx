@@ -7,12 +7,14 @@ import { useAtom } from "jotai/index";
 import { fontSizeAtom } from "@atoms/user";
 import { useAction } from "next-safe-action/hooks";
 import { updateUserConfiguration } from "@app/settings/actions";
+import { useIsSignedIn } from "@hooks/useIsSignedIn";
 
 export interface FontSizeSectionProps {
 }
 
 const FontSizeSection = ({}: FontSizeSectionProps) => {
    const [fontSize, setfontSize] = useAtom(fontSizeAtom);
+   const signedIn = useIsSignedIn();
 
    const { execute, status } = useAction(updateUserConfiguration, {
       onSuccess: res => {
@@ -39,7 +41,9 @@ const FontSizeSection = ({}: FontSizeSectionProps) => {
          <div className={`flex items-center gap-2 w-full h-full my-auto justify-center`}>
             <Input size={10} onChange={e => setfontSize(e.target.valueAsNumber)} value={fontSize} type={"number"}
                    className={`w-full !bg-secondary-bg !text-main`} />
-            <Button title={`Save`} variant={`secondary`} onClick={_ => execute({ font_size: fontSize })} className={`rounded-md shadow-md`} size={"icon"}>
+            <Button title={`Save`} variant={`secondary`}
+                    onClick={_ => signedIn ? execute({ font_size: fontSize }) : setfontSize(fontSize)}
+                    className={`rounded-md shadow-md`} size={"icon"}>
                <Save size={14} />
             </Button>
          </div>

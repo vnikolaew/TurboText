@@ -8,6 +8,7 @@ import { confidenceModeAtom } from "@atoms/user";
 import { useAction } from "next-safe-action/hooks";
 import { updateUserConfiguration } from "@app/settings/actions";
 import { cn } from "@lib/utils";
+import { useIsSignedIn } from "@hooks/useIsSignedIn";
 
 export interface ConfidenceModeSetionProps {
 }
@@ -29,6 +30,7 @@ const CONFIDENCE_MODES = [
 
 const ConfidenceModeSection = ({}: ConfidenceModeSetionProps) => {
    const [confidenceMode, setConfidenceMode] = useAtom(confidenceModeAtom);
+   const signedIn = useIsSignedIn();
 
    const { execute, status } = useAction(updateUserConfiguration, {
       onSuccess: res => {
@@ -57,7 +59,7 @@ const ConfidenceModeSection = ({}: ConfidenceModeSetionProps) => {
             {CONFIDENCE_MODES.map(({ value, label }, index) => (
                <Button
                   key={value}
-                  onClick={_ => execute({ input_confidence_mode: value })}
+                  onClick={_ => signedIn ? execute({ input_confidence_mode: value }) : setConfidenceMode(value)}
                   className={cn(`flex-1`,
                      confidenceMode === value && `bg-accent`)}
                >{label}</Button>

@@ -7,12 +7,14 @@ import { oofWarningtom } from "@atoms/user";
 import { useAction } from "next-safe-action/hooks";
 import { updateUserConfiguration } from "@app/settings/actions";
 import SettingButton from "../common/SettingButton";
+import { useIsSignedIn } from "@hooks/useIsSignedIn";
 
 export interface OutOfFocusWarningProps {
 }
 
 const OutOfFocusWarning = ({}: OutOfFocusWarningProps) => {
    const [oofWarning, setOofWarning] = useAtom(oofWarningtom);
+   const signedIn = useIsSignedIn();
 
    const { execute, status } = useAction(updateUserConfiguration, {
       onSuccess: res => {
@@ -38,12 +40,12 @@ const OutOfFocusWarning = ({}: OutOfFocusWarningProps) => {
          </div>
          <div className={`flex items-center gap-2 w-full h-full my-auto justify-center flex-wrap`}>
             <SettingButton
-               onClick={_ => execute({ elements_show_oof_warning: false })} active={!oofWarning}
+               onClick={_ => signedIn ?  execute({ elements_show_oof_warning: false }) : setOofWarning(false)} active={!oofWarning}
                className={`flex-1`}>
                Hide
             </SettingButton>
             <SettingButton
-               onClick={_ => execute({ elements_show_oof_warning: true })} active={oofWarning}
+               onClick={_ => signedIn ?  execute({ elements_show_oof_warning: true }) : setOofWarning(true)} active={oofWarning}
                className={`flex-1`}>Show</SettingButton>
          </div>
       </SettingLayout>

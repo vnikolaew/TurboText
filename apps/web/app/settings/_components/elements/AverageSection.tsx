@@ -7,6 +7,7 @@ import { averageAtom } from "@atoms/user";
 import { useAction } from "next-safe-action/hooks";
 import { updateUserConfiguration } from "@app/settings/actions";
 import SettingButton from "@app/settings/_components/common/SettingButton";
+import { useIsSignedIn } from "@hooks/useIsSignedIn";
 
 export interface AverageSectionProps {
 }
@@ -32,6 +33,7 @@ const AVERAGE = [
 
 const AverageSection = ({}: AverageSectionProps) => {
    const [average, setAverage] = useAtom(averageAtom);
+   const signedIn = useIsSignedIn();
 
    const { execute, status } = useAction(updateUserConfiguration, {
       onSuccess: res => {
@@ -58,7 +60,9 @@ const AverageSection = ({}: AverageSectionProps) => {
          <div className={`flex items-center gap-2 w-full h-full my-auto justify-center flex-wrap`}>
             {AVERAGE.map(({ name, value }) => (
                <SettingButton
-                  onClick={_ => execute({ elements_show_average: value })} active={average === value}
+                  key={name}
+                  onClick={_ => signedIn ? execute({ elements_show_average: value }) : setAverage(value)}
+                  active={average === value}
                   className={`flex-1`}>{name}</SettingButton>
             ))}
          </div>

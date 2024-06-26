@@ -8,12 +8,14 @@ import { freedomModeAtom } from "@atoms/user";
 import { useAction } from "next-safe-action/hooks";
 import { updateUserConfiguration } from "@app/settings/actions";
 import { cn } from "@lib/utils";
+import { useIsSignedIn } from "@hooks/useIsSignedIn";
 
 export interface FreedomModeSectionProps {
 }
 
 const FreedomModeSection = ({}: FreedomModeSectionProps) => {
    const [freedomMode, setFreedomMode] = useAtom(freedomModeAtom);
+   const signedIn = useIsSignedIn();
 
    const { execute, status } = useAction(updateUserConfiguration, {
       onSuccess: res => {
@@ -39,16 +41,16 @@ const FreedomModeSection = ({}: FreedomModeSectionProps) => {
          </div>
          <div className={`flex items-center gap-2 w-full h-full my-auto justify-center`}>
             <Button
-               onClick={_ => execute({ input_freedom_mode: false })}
+               onClick={_ => signedIn ? execute({ input_freedom_mode: false }) : setFreedomMode(false)}
                className={cn(`flex-1`,
                   !freedomMode && `bg-accent`)}
             >
                Off
             </Button>
             <Button
-               onClick={_ => execute({ input_freedom_mode: true })}
+               onClick={_ => signedIn ? execute({ input_freedom_mode: true }) : setFreedomMode(true)}
                className={cn(`flex-1`,
-                  freedomMode && `bg-acent`)}
+                  freedomMode && `bg-accent`)}
             >
                On
             </Button>

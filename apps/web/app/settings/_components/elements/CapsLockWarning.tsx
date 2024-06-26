@@ -7,12 +7,14 @@ import { capsLockWarningAtom } from "@atoms/user";
 import { useAction } from "next-safe-action/hooks";
 import { updateUserConfiguration } from "@app/settings/actions";
 import SettingButton from "../common/SettingButton";
+import { useIsSignedIn } from "@hooks/useIsSignedIn";
 
 export interface CapsLockWarningProps {
 }
 
 const CapsLockWarning = ({}: CapsLockWarningProps) => {
    const [capsLockWarning, setCapsLockWarning] = useAtom(capsLockWarningAtom);
+   const signedIn = useIsSignedIn();
 
    const { execute, status } = useAction(updateUserConfiguration, {
       onSuccess: res => {
@@ -38,12 +40,12 @@ const CapsLockWarning = ({}: CapsLockWarningProps) => {
          </div>
          <div className={`flex items-center gap-2 w-full h-full my-auto justify-center flex-wrap`}>
             <SettingButton
-               onClick={_ => execute({ elements_show_caps_lock_warning: false })} active={!capsLockWarning}
+               onClick={_ => signedIn ? execute({ elements_show_caps_lock_warning: false }) : setCapsLockWarning(false)} active={!capsLockWarning}
                className={`flex-1`}>
                Hide
             </SettingButton>
             <SettingButton
-               onClick={_ => execute({ elements_show_caps_lock_warning: true })} active={capsLockWarning}
+               onClick={_ => signedIn ?  execute({ elements_show_caps_lock_warning: true }) : setCapsLockWarning(true)} active={capsLockWarning}
                className={`flex-1`}>Show</SettingButton>
          </div>
       </SettingLayout>

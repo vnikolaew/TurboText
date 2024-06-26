@@ -8,6 +8,7 @@ import { fontFamilyAtom } from "@atoms/user";
 import { useAction } from "next-safe-action/hooks";
 import { updateUserConfiguration } from "@app/settings/actions";
 import { FONT_FAMILIES } from "@lib/consts";
+import { useIsSignedIn } from "@hooks/useIsSignedIn";
 
 export interface FontFamilySectionProps {
 }
@@ -15,6 +16,7 @@ export interface FontFamilySectionProps {
 
 const FontFamilySection = ({}: FontFamilySectionProps) => {
    const [fontFamily, setFontFamily] = useAtom(fontFamilyAtom);
+   const signedIn = useIsSignedIn();
 
    const { execute, status } = useAction(updateUserConfiguration, {
       onSuccess: res => {
@@ -37,7 +39,9 @@ const FontFamilySection = ({}: FontFamilySectionProps) => {
             {FONT_FAMILIES.sort((a, b) => a.localeCompare(b)).map((font, index) => (
                <Button
                   onClick={_ => {
-                     execute({ font_family: font });
+                     if(signedIn) {
+                        execute({ font_family: font });
+                     } else setFontFamily(font)
                   }}
                   variant={`secondary`}
                   className={cn(`!w-full`,

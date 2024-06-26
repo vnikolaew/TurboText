@@ -7,12 +7,14 @@ import { keyTipsAtom } from "@atoms/user";
 import { useAction } from "next-safe-action/hooks";
 import { updateUserConfiguration } from "@app/settings/actions";
 import SettingButton from "@app/settings/_components/common/SettingButton";
+import { useIsSignedIn } from "@hooks/useIsSignedIn";
 
 export interface KeyTipsSectionProps {
 }
 
 const KeyTipsSection = ({}: KeyTipsSectionProps) => {
    const [keyTips, setKeyTips] = useAtom(keyTipsAtom);
+   const signedIn = useIsSignedIn();
 
    const { execute, status } = useAction(updateUserConfiguration, {
       onSuccess: res => {
@@ -38,12 +40,12 @@ const KeyTipsSection = ({}: KeyTipsSectionProps) => {
          </div>
          <div className={`flex items-center gap-2 w-full h-full my-auto justify-center flex-wrap`}>
             <SettingButton
-               onClick={_ => execute({ elements_show_key_tips: false })} active={!keyTips}
+               onClick={_ => signedIn ? execute({ elements_show_key_tips: false }) : setKeyTips(false)} active={!keyTips}
                className={`flex-1`}>
                Hide
             </SettingButton>
             <SettingButton
-               onClick={_ => execute({ elements_show_key_tips: true })} active={keyTips}
+               onClick={_ => signedIn ?  execute({ elements_show_key_tips: true }) : setKeyTips(true)} active={keyTips}
                className={`flex-1`}>Show</SettingButton>
          </div>
       </SettingLayout>

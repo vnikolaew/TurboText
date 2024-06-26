@@ -1,0 +1,16 @@
+.onyx {
+    --background: 0 0% 6% !important;
+    --accent: 172 100% 25% !important;
+    /*--main: 182 98% 42% !important;*/
+    --main: 98 96% 44% !important;
+    --secondary: 215 20.2% 65.1% !important;
+    --secondary-bg: 219 29% 19% !important;
+
+    :root {
+        --background: 0 0% 6% !important;
+        --accent: 172 100% 25% !important;
+        --main: 182 98% 42% !important;
+        --secondary: 215 20.2% 65.1% !important;
+        --secondary-bg: 219 29% 19% !important;
+    }
+}

@@ -1,0 +1,19 @@
+.sandstone {
+    --background: 40 8% 93% !important;
+    --main: 20 8% 22% !important;
+    --accent: 25 35% 60% !important;
+    --secondary: 53 7% 42% !important;
+    --secondary-bg: 40 8% 99% !important;
+
+    :root {
+        --background: 40 8% 93% !important;
+        --main: 20 8% 22% !important;
+        --accent: 25 35% 81% !important;
+        --secondary: 53 7% 42% !important;
+        --secondary-bg: 40 8% 99% !important;
+    }
+}
+/* hsl(40, 8%, 93%) */
+/* hsl(25, 35%, 81%)) */
+/* hsl(53, 7%, 42%) */
+/* hsl(20, 8%, 22%)  */

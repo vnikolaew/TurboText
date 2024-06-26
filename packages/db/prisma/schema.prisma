@@ -191,6 +191,7 @@ model UserConfiguration {
 
   language String @default("English")
 
+  /// [UserConfigurationMetadata]
   metadata  Json?    @default("null") @db.JsonB
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

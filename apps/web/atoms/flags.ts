@@ -22,8 +22,6 @@ export const toggleNumbersAtom = atom(null, (get, set) => {
             return newWords;
          });
       } else {
-         console.log(`we are here ...`);
-         console.log(`Words are:`, get(wordsAtom));
 
          set(wordsAtom, w => {
             const newWords = [...w];

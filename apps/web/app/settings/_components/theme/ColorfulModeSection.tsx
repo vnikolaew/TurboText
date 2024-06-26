@@ -7,11 +7,13 @@ import { colorfulModeAtom } from "@atoms/user";
 import { useAction } from "next-safe-action/hooks";
 import { updateUserConfiguration } from "@app/settings/actions";
 import SettingButton from "@app/settings/_components/common/SettingButton";
+import { useIsSignedIn } from "@hooks/useIsSignedIn";
 
 export interface ColorfulModeSectionProps {
 }
 
 const ColorfulModeSection = ({}: ColorfulModeSectionProps) => {
+   const signedIn = useIsSignedIn();
    const [colorfulMode, setColorfulMode] = useAtom(colorfulModeAtom);
 
    const { execute, status } = useAction(updateUserConfiguration, {
@@ -39,12 +41,12 @@ const ColorfulModeSection = ({}: ColorfulModeSectionProps) => {
          </div>
          <div className={`flex items-center gap-2 w-full h-full my-auto justify-center flex-wrap`}>
             <SettingButton
-               onClick={_ => execute({ theme_colorful_mode: false })} active={!colorfulMode}
+               onClick={_ => signedIn ?  execute({ theme_colorful_mode: false }) : setColorfulMode(false)} active={!colorfulMode}
                className={`flex-1`}>
                Off
             </SettingButton>
             <SettingButton
-               onClick={_ => execute({ theme_colorful_mode: true })} active={colorfulMode}
+               onClick={_ => signedIn ?  execute({ theme_colorful_mode: true }) : setColorfulMode(true)} active={colorfulMode}
                className={`flex-1`}>On</SettingButton>
          </div>
       </SettingLayout>
