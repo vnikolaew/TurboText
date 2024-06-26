@@ -90,7 +90,7 @@ export const updateCookiePreferences = authorizedAction.schema(cookiePreferences
    const user = await xprisma.user.findUnique({
       where: { id: userId },
    });
-   if (!user) return { success: false };
+   if (!user) return { success: false,  error: `User not found` };
 
    await xprisma.user.update({
       where: {

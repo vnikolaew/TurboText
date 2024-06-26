@@ -17,7 +17,7 @@ const THEME_ACCENT_COLORS = {
    'light': 'blue',
    'dark': 'hsl(38 92% 50%)',
    'nighthawk': 'hsl(184 100% 27%)',
-   'theme-2': 'hsl(22 100% 51%)',
+   'obsidian': 'hsl(22 100% 51%)',
    'theme-3': 'hsl(172 100% 25%)',
    'theme-4': 'hsl(56 73% 74%)',
    'frost': 'hsl(213 47% 47%)',
@@ -34,7 +34,7 @@ export default async function Icon() {
             userId: session.user?.id,
          },
       });
-      fill = THEME_ACCENT_COLORS[userConfig?.theme || 'theme-1'];
+      fill = THEME_ACCENT_COLORS[userConfig?.theme || 'dark'];
    }
 
    return new ImageResponse(

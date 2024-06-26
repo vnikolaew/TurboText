@@ -1,8 +1,9 @@
 @import "../public/themes/nighthawk.css";
-@import "../public/themes/theme2.css";
-@import "../public/themes/theme3.css";
-@import "../public/themes/theme4.css";
+@import "../public/themes/obsidian.css";
+@import "../public/themes/onyx.css";
+@import "../public/themes/slate.css";
 @import "../public/themes/frost.css";
+@import "../public/themes/sandstone.css";
 @import "../public/themes/dark.css";
 
 @tailwind base;

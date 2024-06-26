@@ -190,3 +190,85 @@ export function exportObjectAsJson(obj: any, filename: string) {
 export function scrollToElement(elementId: string) {
    document.getElementById(elementId)?.scrollIntoView({ behavior: `smooth` });
 }
+
+export function hslToHex(hslString: string) {
+   if (!hslString?.length) return ``;
+
+   const [h, s, l] = hslString.match(/\d+/g)?.map(Number);
+
+   // Convert HSL to RGB first
+   const normalizedL = l / 100;
+   const a = s * Math.min(normalizedL, 1 - normalizedL) / 100;
+   const f = (n: number) => {
+      const k = (n + h / 30) % 12;
+      const color = normalizedL - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+      return Math.round(255 * color);
+   };
+   const r = f(0);
+   const g = f(8);
+   const b = f(4);
+
+   // Convert RGB to HEX
+   const toHex = (n: number) => n.toString(16).padStart(2, "0");
+   return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+}
+
+export function injectCSSClass(className: string, variables: Record<string, string>) {
+   const styleSheet = document.styleSheets[0];
+
+   // Construct the CSS variable definitions
+   const cssVariables = Object.entries(variables).map(([key, value]) => `--${key}: ${value} !important;`).join(" ");
+
+   // Construct the CSS rule
+   const cssRule = `.${className} { ${cssVariables} :root { ${cssVariables} } } `;
+
+   console.log({ cssRule });
+   // Insert the rule into the stylesheet
+   styleSheet!.insertRule(cssRule, styleSheet!.cssRules.length);
+}
+
+export function hexToHsl(hex: string) {
+   // Remove the leading '#' if it is present
+   hex = hex.replace(/^#/, "");
+
+   // Parse the hex values
+   let r = parseInt(hex.substring(0, 2), 16);
+   let g = parseInt(hex.substring(2, 4), 16);
+   let b = parseInt(hex.substring(4, 6), 16);
+
+   // Convert RGB to a range of 0-1
+   r /= 255;
+   g /= 255;
+   b /= 255;
+
+   // Find the maximum and minimum values of R, G and B
+   let max = Math.max(r, g, b);
+   let min = Math.min(r, g, b);
+   let h, s, l = (max + min) / 2;
+
+   if (max === min) {
+      h = s = 0; // Achromatic
+   } else {
+      let d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      switch (max) {
+         case r:
+            h = (g - b) / d + (g < b ? 6 : 0);
+            break;
+         case g:
+            h = (b - r) / d + 2;
+            break;
+         case b:
+            h = (r - g) / d + 4;
+            break;
+      }
+      h /= 6;
+   }
+
+   // Convert to degrees
+   h = Math.round(h * 360);
+   s = Math.round(s * 100);
+   l = Math.round(l * 100);
+
+   return `${h} ${s}% ${l}%`;
+}
