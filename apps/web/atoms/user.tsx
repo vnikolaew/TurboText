@@ -4,6 +4,7 @@ import { atom } from "jotai";
 import { focusAtom } from "jotai-optics";
 import { Session } from "next-auth";
 import { UserExperience } from "@atoms/consts";
+import { atomWithStorage } from "jotai/utils";
 
 export const userDataLoadingAtom = atom(false);
 
@@ -28,7 +29,7 @@ export const updateUserXpAtom = atom(null, (get, set, xp: UserExperience) => {
 export const userActiveTagsAtom = atom<string[]>([]);
 userActiveTagsAtom.debugLabel = `userActiveTagsAtom`;
 
-export const userConfigAtom = atom<UserConfiguration>(null!);
+export const userConfigAtom = atomWithStorage<UserConfiguration>("user-configuration", null!);
 userConfigAtom.debugLabel = `userConfigAtom`;
 
 export interface CookiePreferences {
@@ -43,7 +44,10 @@ export const cookiePreferencesAtom = atom<CookiePreferences>({});
 cookiePreferencesAtom.debugLabel = `cookiePreferencesAtom`;
 
 // @ts-ignore
-export const userTestDifficultyAtom = focusAtom<UserConfiguration["test_difficulty"]>(userConfigAtom, optic => optic?.prop(`test_difficulty`));
+export const userTestDifficultyAtom = atom(get => get(userConfigAtom)?.test_difficulty, (get, set, test_difficulty: string) => set(userConfigAtom, {
+   ...get(userConfigAtom),
+   test_difficulty,
+}));
 userTestDifficultyAtom.debugLabel = `userTestDifficultyAtom`;
 
 // @ts-ignore
@@ -53,7 +57,8 @@ blindModeAtom.debugLabel = `blindModeAtom`;
 // @ts-ignore
 export const userLanguageAtom = atom(get => {
    return get(userConfigAtom)?.language;
-});
+}, (get, set, language: string) => set(userConfigAtom, { ...get(userConfigAtom), language }));
+
 userLanguageAtom.debugLabel = `userLanguageAtom`;
 
 // @ts-ignore
@@ -103,9 +108,8 @@ export const colorfulModeAtom = focusAtom<UserConfiguration["theme_colorful_mode
 colorfulModeAtom.debugLabel = `colorfulModeAtom`;
 
 // @ts-ignore
-export const keyTipsAtom = atom<boolean>(get => {
-   return get(userConfigAtom)?.elements_show_key_tips;
-});
+export const keyTipsAtom = atom<boolean>(get => get(userConfigAtom)?.elements_show_key_tips,
+   (get, set, value: boolean) => set(userConfigAtom, { ...get(userConfigAtom), elements_show_key_tips: value }));
 keyTipsAtom.debugLabel = `keyTipsAtom`;
 
 // @ts-ignore
@@ -121,7 +125,11 @@ export const averageAtom = focusAtom<UserConfiguration["elements_show_average"]>
 averageAtom.debugLabel = `averageAtom`;
 
 // @ts-ignore
-export const fontFamilyAtom = focusAtom<UserConfiguration["font_family"]>(userConfigAtom, optic => optic?.prop(`font_family`));
+export const fontFamilyAtom =
+   atom(get => get(userConfigAtom)?.font_family, (get, set, font: string) => set(userConfigAtom, {
+      ...get(userConfigAtom),
+      font_family: font,
+   }));
 fontFamilyAtom.debugLabel = `fontFamilyAtom`;
 
 
@@ -136,15 +144,28 @@ fontSizeAtom.debugLabel = `fontSizeAtom`;
 // @ts-ignore
 export const themeAtom = atom(get => {
    const config = get(userConfigAtom);
-   const ls_value = window?. localStorage?.getItem(`theme`);
+   const ls_value = window?.localStorage?.getItem(`theme`);
 
-   if (config && config?.theme !== ls_value) window?. localStorage?.setItem(`theme`, config?.theme);
+   if (config && config?.theme !== ls_value) window?.localStorage?.setItem(`theme`, config?.theme ?? `dark`);
    return config?.theme ?? ls_value;
 }, (get, set, theme: string) => {
    set(userConfigAtom, { ...get(userConfigAtom), theme });
    window?.localStorage?.setItem(`theme`, theme);
 });
-themeAtom.onMount = (set) => {
-   set(window?.localStorage?.getItem(`theme`) ?? ``);
-}
-themeAtom.debugLabel = `theme2Atom`;
+// themeAtom.onMount = (set) => {
+//    set(window?.localStorage?.getItem(`theme`) ?? ``);
+// };
+themeAtom.debugLabel = `themeAtom`;
+
+
+// @ts-ignore
+export const customThemesAtom =
+   atom<Record<string, string>[]>(get => get(userConfigAtom)?.metadata?.customThemes ?? [], (get, set, themes: any[]) => set(userConfigAtom, {
+      ...get(userConfigAtom),
+      metadata: {
+         ...(get(userConfigAtom)?.metadata ?? {}),
+         customThemes: themes,
+      },
+   }));
+fontFamilyAtom.debugLabel = `fontFamilyAtom`;
+

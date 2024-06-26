@@ -33,15 +33,14 @@ const COOKIE_PREFS_CATEGORIES = [
 
 const UpdateCookiePreferencesModal = ({ children }: UpdateCookiePreferencesModalProps) => {
    const [cookiePreferences, setCookiePreferences] = useAtom(cookiePreferencesAtom);
-   const [value, setValue] = useState(``);
    const [open, setOpen] = useBoolean();
-   const { execute, status, isExecuting } = useAction(updateCookiePreferences, {
+   const { execute, isExecuting } = useAction(updateCookiePreferences, {
       onSuccess: async res => {
          if (res.data?.success) {
             console.log(res);
             toast(TOASTS.CHANGE_COOKIE_PREFERENCES_SUCCESS);
          } else {
-            toast(TOASTS.EDIT_USERNAME_FAILURE(res.error));
+            toast(TOASTS.EDIT_USERNAME_FAILURE(res.data?.error ?? ``));
          }
          setOpen(false);
       },
@@ -58,7 +57,7 @@ const UpdateCookiePreferencesModal = ({ children }: UpdateCookiePreferencesModal
          </DialogTrigger>
          <DialogContent className={`z-[100] !bg-secondary-bg`}>
             <DialogHeader>
-               <DialogTitle className={`text-2xl`}>
+               <DialogTitle className={`text-2xl text-accent`}>
                   Update cookie preferences
                </DialogTitle>
             </DialogHeader>
@@ -73,7 +72,7 @@ const UpdateCookiePreferencesModal = ({ children }: UpdateCookiePreferencesModal
                      checked={cookiePreferences[label]!} description={description} label={label} />
                ))}
             </div>
-            <DialogFooter className={`w-full !mt-2`}>
+            <DialogFooter className={`w-full !mt-8`}>
                <LoadingButton
                   onClick={handleChangePrefs}
                   loadingText={`Saving ...`}
@@ -97,8 +96,8 @@ const PreferenceSwitch = ({ label, description, onCheckedChange, checked }: Pref
    return (
       <div className={`w-full flex items-center justify-between gap-4`}>
          <div className={`flex flex-col gap-1 items-start mt-2`}>
-            <h2 className={`text-xl`}>{label}</h2>
-            <p className={`line-clamp-3 text-sm leading-tight text-secondary   `}>{description}</p>
+            <h2 className={`text-xl text-main`}>{label}</h2>
+            <p className={`line-clamp-3 text-sm leading-tight text-secondary`}>{description}</p>
          </div>
          <Switch
             checked={checked!}

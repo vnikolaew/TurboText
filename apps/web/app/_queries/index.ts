@@ -1,6 +1,6 @@
 "use server";
 
-import { UserConfiguration, xprisma } from "@repo/db";
+import { UserConfiguration, UserExperience, xprisma, User } from "@repo/db";
 import { FONTS_MAP, sfMono } from "@assets/fonts";
 import { FONT_FAMILIES } from "@lib/consts";
 import { auth } from "@auth";
@@ -33,4 +33,44 @@ export async function getUserConfig(): Promise<UserConfiguration | null> {
       });
       return userConfig;
    }
+}
+
+export async function getUserInfo(): Promise<User & {
+   configuration: UserConfiguration,
+   experience: UserExperience
+} | null> {
+   const session = await auth();
+
+   let user;
+   if (!session?.user) user = null;
+   else {
+      let dbUser = await xprisma.user.findUnique({
+         where: { id: session?.user?.id ?? `` },
+         include: {
+            tags: {
+               select: {
+                  id: true, name: true,
+               },
+            },
+            experience: {
+               select: {
+                  id: true, points: true, level: true,
+               },
+            },
+            configuration: true,
+            typingRuns: {
+               select: {
+                  id: true, typedLetters: true, mode: true, metadata: true, totalTimeMilliseconds: true,
+               },
+            },
+         },
+      });
+      if (!dbUser) user = null;
+      else {
+         const { updatePassword, verifyPassword, ...rest } = dbUser;
+         user = rest;
+      }
+   }
+
+   return user;
 }

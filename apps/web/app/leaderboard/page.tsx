@@ -52,7 +52,7 @@ const Page = async ({ searchParams }: PageProps) => {
 
    const session = await auth();
    const user = await xprisma.user.findUnique({
-      where: { id: session?.user?.id },
+      where: { id: session?.user?.id ?? `` },
       include: {
          typingRuns: true,
       },

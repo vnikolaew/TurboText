@@ -37,8 +37,12 @@ const Page = async ({}: PageProps) => {
       include: { tags: true, configuration: true },
    });
 
-   if (!user) notFound();
-   const { updatePassword, verifyPassword, ...rest } = user;
+   // if (!user) notFound();
+   let rest = null;
+   if(user) {
+      const { updatePassword, verifyPassword, ...rest } = user;
+   }
+
 
    return (
       <section className={`w-3/4 mx-auto my-24 flex flex-col items-center gap-4`}>

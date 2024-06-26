@@ -3,6 +3,7 @@
 import { lettersCorrectnessAtom, typingModeAtom, typingRunStateAtom, wordsAtom } from "@atoms/editor";
 import { generate } from "random-words";
 import {
+   cookiePreferencesAtom,
    prevUserXpAtom,
    userActiveTagsAtom,
    userAtom,
@@ -18,15 +19,17 @@ import { DEFAULT_WORD_COUNT, TypingMode, TypingRunState, WORDS_COUNTS } from "@a
 import { wordsCountsAtom } from "@atoms/words";
 import { typingFlagsAtom } from "@atoms/flags";
 import { useAtom } from "jotai";
+import { injectCSSClass } from "@lib/utils";
 
 export function useHydrateAllAtoms(user?: User & { configuration: UserConfiguration }) {
    const WORDS = useRef(generate(DEFAULT_WORD_COUNT) as string[]);
    const [userConfig, setUserConfig] = useAtom(userConfigAtom);
 
-   console.log({ user });
    useEffect(() => {
       if (!!userConfig) {
-         setUserConfig(user?.configuration ?? {
+         const ls_value = JSON.parse(localStorage.getItem(`user-configuration`) ?? `{}`);
+         console.log({ ls_value });
+         setUserConfig({
             test_difficulty: "NORMAL",
             elements_show_oof_warning: false,
             elements_show_key_tips: false,
@@ -36,13 +39,34 @@ export function useHydrateAllAtoms(user?: User & { configuration: UserConfigurat
             theme_flip_colors: false,
             pace_caret_style: `OFF`,
             caret_style: `NORMAL`,
+            ...ls_value,
+            ...userConfig,
+            ...(user?.configuration ?? {}),
          });
       }
    }, []);
 
+   const ls_value = typeof global?.window !== `undefined` ? JSON.parse(window?.localStorage.getItem(`user-configuration`) ?? `{}`) : {};
+
+   let newUserConfig: Partial<UserConfiguration> = {
+      test_difficulty: "NORMAL",
+      elements_show_oof_warning: false,
+      elements_show_key_tips: false,
+      elements_show_caps_lock_warning: true,
+      elements_show_average: false,
+      theme_colorful_mode: false,
+      theme_flip_colors: false,
+      pace_caret_style: `OFF`,
+      caret_style: `NORMAL`,
+      ...ls_value,
+      ...userConfig,
+      ...(user?.configuration ?? {}),
+   };
+
    //@ts-ignore
    useHydrateAtoms([
       [wordsAtom, WORDS.current],
+      [cookiePreferencesAtom, user?.cookiePreferences ?? {}],
       [userDataLoadingAtom, false],
       [userXpAtom, { points: user?.experience?.points ?? 0, level: user?.experience?.level ?? 0 }],
       [prevUserXpAtom, { points: user?.experience?.points ?? 0, level: user?.experience?.level ?? 0 }],
@@ -56,16 +80,15 @@ export function useHydrateAllAtoms(user?: User & { configuration: UserConfigurat
       [wordsCountsAtom, WORDS_COUNTS["10"]],
       [typingFlagsAtom, 0],
       [userActiveTagsAtom, (user?.tags! as Tag[])?.map(t => t.name)],
-      [userConfigAtom, user?.configuration ?? {
-         test_difficulty: "NORMAL",
-         elements_show_oof_warning: false,
-         elements_show_key_tips: false,
-         elements_show_caps_lock_warning: true,
-         elements_show_average: false,
-         theme_colorful_mode: false,
-         theme_flip_colors: false,
-         pace_caret_style: `OFF`,
-         caret_style: `NORMAL`,
-      }],
+      [userConfigAtom, newUserConfig],
    ] as const);
+
+   const userCustomThemes = user?.configuration.metadata?.customThemes ?? [];
+   if (Array.isArray(userCustomThemes) && userCustomThemes.length) {
+      console.log(` we are here: `, { userCustomThemes });
+      userCustomThemes.forEach(t => {
+         const { name, ...vars } = t;
+         injectCSSClass(name, vars);
+      });
+   }
 }
