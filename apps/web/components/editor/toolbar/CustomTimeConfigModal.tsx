@@ -2,7 +2,7 @@
 import React, { PropsWithChildren, useMemo, useState } from "react";
 import { Button, Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, Input } from "@repo/ui";
 import { useAtom } from "jotai/index";
-import {  timeAtom } from "@atoms/timer";
+import { timeAtom } from "@atoms/timer";
 
 function parseTimeframe(timeframe: string) {
    // Regular expression to match the components
@@ -40,7 +40,7 @@ export const Kbd = ({ children }: PropsWithChildren) => {
 
 const CustomTimeConfigModal = ({ setOpen, open }: CustomTimeConfigModalProps) => {
    const [value, setValue] = useState(``);
-   const [time, setTime] = useAtom(timeAtom);
+   const [, setTime] = useAtom(timeAtom);
    const [timeframe, setTimeframe] = useState<Timeframe>({
       hours: 0,
       minutes: 0,
@@ -63,9 +63,9 @@ const CustomTimeConfigModal = ({ setOpen, open }: CustomTimeConfigModalProps) =>
    return (
       <Dialog onOpenChange={setOpen} open={open}>
          <DialogTrigger></DialogTrigger>
-         <DialogContent className={`z-[100] !bg-neutral-800`}>
+         <DialogContent className={`z-[100] !bg-secondary-bg`}>
             <DialogHeader>
-               <DialogTitle className={`text-2xl`}>
+               <DialogTitle className={`text-2xl text-accent`}>
                   Test duration
                </DialogTitle>
             </DialogHeader>
@@ -80,13 +80,13 @@ const CustomTimeConfigModal = ({ setOpen, open }: CustomTimeConfigModalProps) =>
                   }}
                   value={value}
                   className={`w-full border-neutral-500 rounded-full`} />
-               <p className={`text-sm mt-2 text-neutral-400`}>
+               <p className={`text-sm mt-2 text-secondary`}>
                   You can use "h" for hours and "m" for minutes, for example "1h30m".
                </p>
 
-               <p className={`text-sm mt-4 text-neutral-400`}>
+               <p className={`text-sm mt-4 text-secondary`}>
                   You can start an infinite test by inputting 0. Then, to stop the test, use the Bail Out feature
-                  ( <Kbd>esc</Kbd>
+                  ( <Kbd>esc</Kbd>{` `}
                   or <Kbd>ctrl/cmd</Kbd> + <Kbd>shift</Kbd> + <Kbd>p</Kbd> &gt; Bail Out)
                </p>
             </ div>

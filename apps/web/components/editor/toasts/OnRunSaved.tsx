@@ -18,8 +18,8 @@ const OnRunSaved = ({}: OnRunSavedProps) => {
    } = useXpGainProgressBar();
    const { left, top } = useXpProgressToastCoords();
 
-   return showProgressAnimation && <div style={{ top, left }}
-                                        className={`bg-neutral-700/30 text-amber-600 backdrop-blur-sm p-2 rounded-md absolute !z-[100] text-sm flex flex-col items-start gap-2 w-[200px]`}>
+   return (showProgressAnimation  || true) && <div style={{ top, left }}
+                                        className={`bg-secondary-bg text-accent backdrop-blur-sm p-2 rounded-md absolute !z-[100] text-sm flex flex-col items-start gap-2 w-[200px]`}>
       <div className={`w-full items-center gap-1 flex flex-col p-1`}>
          <div className={`w-full items-center flex justify-between`}>
             <span>{currentLevel}</span>
@@ -40,8 +40,8 @@ const OnRunSaved = ({}: OnRunSavedProps) => {
                      animate={{ opacity: 100 }}
                      exit={{ opacity: 0 }}
                      key={`xp-gained`}
-                     className={`text-amber-600 drop-shadow-md flex items-center gap-1`}>
-                     <RocketIcon className="h-3 w-3 stroke-amber-600 shadow-lg" />
+                     className={`text-accent drop-shadow-md flex items-center gap-1`}>
+                     <RocketIcon className="h-3 w-3 stroke-accent shadow-lg" />
                      <span>
                         +{xpGained}XP
                      </span>

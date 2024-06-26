@@ -1,81 +1,61 @@
-# Turborepo starter
+<div style="text-align: center">
+  <img src="./apps/web/public/rocket-logo.png" width="60" alt="intelli-notes-logo">
+  <br/>
+  <h1>TurboText</h1>
+</div>
 
-This is an official starter Turborepo.
+Accelerate Your **Typing Speed**
 
-## Using this example
+<div style="text-align: center">
+  <img alt="GitHub License" src="https://img.shields.io/github/license/vnikolaew/intelli-notes">
+  <img alt="Website Status" src="https://img.shields.io/badge/https%3A%2F%2Fintelli-notes-git-main-vnikolaews-projects.vercel.app">
+</div>
 
-Run the following command:
+## Table of Contents
 
-```sh
-npx create-turbo@latest
-```
+- [:rocket:  Features](#features)
+- [:hammer_and_wrench:  Technologies Used](#technologies-used)
+- [:lock:  License](#license)
+- [:envelope:  Contact](#contact)
 
-## What's inside?
+<a id="features"></a>
 
-This Turborepo includes the following packages/apps:
+## Features &colon;rocket&colon;
 
-### Apps and Packages
+- TurboText is a platform for enhancing typing skills and ultimately boosting their productivity.
+- Typing tests in various modes and tracking progress.
+- Support of multiple languages.
+- Built-in stats.
+- User all-time and daily leaderboards.
+- Customizable experience via configuration.
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+<a id="technologies-used"></a>
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+## Technologies Used &colon;hammer_and_wrench&colon;
 
-### Utilities
+- [Next.js](https://nextjs.org): A React framework for building server-side rendered and statically generated
+  applications.
+- [NextAuth](https://next-auth.js.org): For user authentication.
+- [Prisma](https://www.prisma.io): Next-generation ORM, it provides a clean and type-safe API for submitting database
+  queries.
+- [PostgreSQL](https://www.postgresql.org/):  An effective relational SQL database.
+- [Tailwind CSS](https://tailwindcss.com): A utility-first CSS framework for rapid UI development.
+- [TypeScript](https://www.typescriptlang.org): A typed superset of JavaScript that provides enhanced tooling and
+  developer productivity.
+- [Jotai](https://jotai.org/): A primitive and flexible state management solution for React using atoms.
 
-This Turborepo has some additional tools already setup for you:
+<a id="contribution"></a>
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+## License &colon;lock&colon;
 
-### Build
+<a id="license"></a>
 
-To build all apps and packages, run the following command:
+The TurboText project is licensed under the MIT License. Feel free to use, modify, and distribute the code as per the
+terms of the license.
 
-```
-cd my-turborepo
-pnpm build
-```
+<a id="contact"></a>
 
-### Develop
+## Contact &colon;envelope&colon;
 
-To develop all apps and packages, run the following command:
-
-```
-cd my-turborepo
-pnpm dev
-```
-
-### Remote Caching
-
-Turborepo can use a technique known as [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup), then enter the following commands:
-
-```
-cd my-turborepo
-npx turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-npx turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks)
-- [Caching](https://turbo.build/repo/docs/core-concepts/caching)
-- [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching)
-- [Filtering](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
-- [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
-- [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)
+If you have any questions, suggestions, or feedback regarding ImageHive, please feel free to reach out to me via e-mail
+at <victorio.nikolaev25@gmail.com>.

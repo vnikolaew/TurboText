@@ -33,7 +33,7 @@ const FocusLostWarning = ({ onClick }: FocusLostWarningProps) => {
 
                onClick?.();
             }}
-            className={`text-neutral-300 flex items-center gap-2 !z-[100]`}>
+            className={`text-main flex items-center gap-2 !z-[100]`}>
             <MousePointer size={18} />
             <span className={`text-sm`}>
                        Click here or press any key to focus

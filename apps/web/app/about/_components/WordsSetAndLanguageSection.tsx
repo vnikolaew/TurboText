@@ -1,5 +1,6 @@
 import React from "react";
 import { BarChartHorizontal } from "lucide-react";
+import Link from "next/link";
 
 export interface WordsSetAndLanguageSectionProps {
 }
@@ -14,8 +15,8 @@ const WordsSetAndLanguageSection = ({}: WordsSetAndLanguageSectionProps) => {
             </span>
          </h2>
          <p className={`!text-secondary`}>
-            By default, this website uses the most common 20000 words in the English language to generate its tests. You
-            can always change the language entirely.
+            This website uses the most common 20000 words in the English language to generate its tests. However, you
+            can always change the language from your <Link className={`text-accent`} href={`/settings`}>settings</Link>.
          </p>
       </section>
    );

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import React from "react";
 import { LINKS } from "@config/site";
-import { Bug, Info } from "lucide-react";
+import { Bug } from "lucide-react";
 
 export interface BugReportFeatureRequestSectionProps {
 }
@@ -16,11 +16,11 @@ const BugReportFeatureRequestSection = ({}: BugReportFeatureRequestSectionProps)
             </span>
          </h2>
          <p className={`text-secondary`}>
-            If you encounter a bug or you have a feature request - you can join our
-            <Link className={`text-blue-500 ml-1`} href={LINKS.discord}>
+            If you encounter a bug or you have a feature request - you can join our{` `}
+            <Link className={`text-accent ml-1`} href={LINKS.discord}>
                Discord server
-            </Link>, send us an email, a direct
-            message on Twitter or create an issue on GitHub.
+            </Link>, send us an email or a direct
+            message on Twitter.
          </p>
          <p className={`text-secondary`}>
             Test yourself in various modes, track your progress and improve your speed.

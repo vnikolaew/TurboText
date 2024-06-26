@@ -15,11 +15,15 @@ import { useSetAtom } from "jotai/index";
 import { generateWordsAtom, wordsCountsAtom } from "@atoms/words";
 import { DEFAULT_WORD_COUNT, TypingFlags, TypingMode, TypingRunState } from "@atoms/consts";
 import { toggleNumbersAtom, togglePunctuationAtom, typingFlagsAtom } from "@atoms/flags";
+import { parseAsBoolean, useQueryState } from "nuqs";
 
 export interface EditorToolbarProps {
 }
 
 const EditorToolbar = ({}: EditorToolbarProps) => {
+   const [customTimeQs, setCustomTimeQs] = useQueryState(`custom-time`, parseAsBoolean.withDefault(false));
+   const [customWordsQs, setCustomWordsQs] = useQueryState(`custom-words`, parseAsBoolean.withDefault(false));
+
    const typingFlags = useAtomValue(typingFlagsAtom);
    const togglePunctuation = useSetAtom(togglePunctuationAtom);
    const toggleNumbers = useSetAtom(toggleNumbersAtom)
@@ -86,10 +90,12 @@ const EditorToolbar = ({}: EditorToolbarProps) => {
             <Separator className={`h-4 bg-neutral-500 w-[1px]`} />
             {typingMode === TypingMode.TIME && <TimeSelect />}
             {typingMode === TypingMode.WORDS && <WordsSelect />}
-            <Button className={`rounded-full hover:!bg-neutral-800 group`} onClick={_ => {
+            <Button className={`rounded-full hover:!bg-neutral-800 group`} onClick={async _ => {
                if (typingMode === TypingMode.TIME) {
+                  await setCustomTimeQs(true)
                   setTimeModalOpen(true);
                } else if (typingMode === TypingMode.WORDS) {
+                  await setCustomWordsQs(true)
                   setCwModalOpen(true);
                }
             }} title={`Customize`} variant={`ghost`} size={`icon`}>

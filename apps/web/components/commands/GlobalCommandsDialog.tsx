@@ -21,7 +21,7 @@ import { parseAsString, useQueryState } from "nuqs";
 export interface GlobalCommandProps {
 }
 
-const IGNORE_PARAMS = [`contact`, `edit-profile`, `report-user`, `import-settings`] as const
+const IGNORE_PARAMS = [`contact`, `edit-profile`, `report-user`, `import-settings`, `custom-words`, `custom-time`] as const
 
 const GlobalCommandsDialog = ({}: GlobalCommandProps) => {
    const [open, setOpen] = useBoolean();

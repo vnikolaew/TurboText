@@ -10,6 +10,8 @@ import DeleteTagModal from "@app/settings/_components/account/DeleteTagModal";
 import { useAction } from "next-safe-action/hooks";
 import { toggleTagActive } from "@app/settings/_components/account/actions";
 import { cn } from "@lib/utils";
+import { useSetAtom } from "jotai/index";
+import { userActiveTagsAtom } from "@atoms/user";
 
 export interface SettingsTagsSectionProps {
    tags: TTag[];
@@ -43,11 +45,13 @@ const SettingsTagsSection = ({ tags }: SettingsTagsSectionProps) => {
 };
 
 const Tag = ({ tag }: { tag: TTag }) => {
+   const setActiveTags = useSetAtom(userActiveTagsAtom)
+
    const { execute, status } = useAction(toggleTagActive, {
       onSuccess: res => {
          if (res.data?.success) {
             console.log(res);
-         } else {
+            setActiveTags(t => t.filter(t => t !== tag.name))
          }
       },
    });

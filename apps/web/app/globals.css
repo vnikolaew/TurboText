@@ -5,6 +5,7 @@
 @import "../public/themes/frost.css";
 @import "../public/themes/sandstone.css";
 @import "../public/themes/dark.css";
+@import "../public/themes/light.css";
 
 @tailwind base;
 @tailwind components;

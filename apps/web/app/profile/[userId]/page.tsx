@@ -4,13 +4,14 @@ import { notFound } from "next/navigation";
 import moment from "moment";
 import { Separator, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, UserAvatar } from "@repo/ui";
 import { UserExperienceInfo } from "@app/account/_components/UserExperienceInfo";
-import { formatMillisecondsToTime } from "@lib/utils";
+import { formatMillisecondsToTime, isValidUrl } from "@lib/utils";
 import { Flag, Globe, Twitter } from "lucide-react";
 import TimeRunsStats from "@app/profile/[userId]/_components/TimeRunsStats";
 import WordRunsStats from "@app/profile/[userId]/_components/WordRunsStats";
 import ReportUserModal from "@app/profile/[userId]/_components/ReportUserModal";
 import { pick } from "lodash";
 import MythicalBadge from "@app/profile/[userId]/_components/MythicalBadge";
+import Link from "next/link";
 
 export interface PageProps {
    params: { userId?: string };
@@ -102,8 +103,15 @@ const Page = async ({ params }: PageProps) => {
                <TooltipProvider>
                   <Tooltip>
                      <TooltipTrigger asChild>
-                        <Twitter size={32}
-                                 className={`cursor-pointer stroke-secondary fill-secondary hover:!fill-accent hover:!stroke-accent transition-colors duration-200`} />
+                        {user.metadata?.twitter ? (
+                           <Link href={`www.twitter.com/${encodeURIComponent(user.metadata?.twitter)}`}>
+                              <Twitter size={32}
+                                       className={`cursor-pointer stroke-secondary fill-secondary hover:!fill-accent hover:!stroke-accent transition-colors duration-200`} />
+                           </Link>
+                        ) : (
+                           <Twitter size={32}
+                                    className={`cursor-pointer stroke-secondary fill-secondary hover:!fill-accent hover:!stroke-accent transition-colors duration-200`} />
+                        )}
                      </TooltipTrigger>
                      <TooltipContent
                         side={`top`}
@@ -115,8 +123,15 @@ const Page = async ({ params }: PageProps) => {
                <TooltipProvider>
                   <Tooltip>
                      <TooltipTrigger asChild>
-                        <Globe size={32}
-                               className={`cursor-pointer stroke-secondary  hover:!stroke-accent transition-colors duration-200`} />
+                        {user.metadata?.website && isValidUrl(user.metadata.website) ? (
+                           <Link href={`${encodeURIComponent(user.metadata?.website)}`}>
+                              <Globe size={32}
+                                     className={`cursor-pointer stroke-secondary  hover:!stroke-accent transition-colors duration-200`} />
+                           </Link>
+                        ) : (
+                           <Globe size={32}
+                                  className={`cursor-pointer stroke-secondary hover:!stroke-accent transition-colors duration-200`} />
+                        )}
                      </TooltipTrigger>
                      <TooltipContent
                         side={`top`}
