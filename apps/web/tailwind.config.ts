@@ -96,12 +96,21 @@ const config: Config = {
                from: { height: "var(--radix-accordion-content-height)" },
                to: { height: "0" },
             },
+            meteor: {
+               "0%": { transform: "rotate(215deg) translateX(0)", opacity: '100%' },
+               "70%": { opacity: '100%' },
+               "100%": {
+                  transform: "rotate(215deg) translateX(-500px)",
+                  opacity: '0%',
+               },
+            },
          },
          animation: {
             "rainbow-bg": "rainbow-bg 10s linear infinite",
             "accordion-down": "accordion-down 0.2s ease-out",
             "accordion-up": "accordion-up 0.2s ease-out",
             "alert": "animate-alert 2s ease-out alternate infinite",
+            meteor: "meteor 5s linear infinite",
          },
       },
    },

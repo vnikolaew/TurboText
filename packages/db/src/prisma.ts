@@ -23,40 +23,21 @@ export let xprisma = prisma.$extends({
    result: {
       typingRun: {
          consistency: {
-            needs: { typedLetters: true },
-            compute({ typedLetters }) {
-               const res = typedLetterInfoSchema.safeParse({ typedLetters });
-               if (!res.success) return 0.00;
-
-               const typedLettersGrouped = Object.entries(groupBy(
-                  res.data.typedLetters,
-                  l => Math.floor(l!.timestamp / 1000)))
-                  .map(([k, v]) => v.length);
-
-               const rawPerSecond = typedLettersGrouped.map((count) =>
-                  Math.round((count / 5) * 60),
-               );
-
-               const stddev = stdDev(rawPerSecond);
-               const avg = mean(rawPerSecond);
-               return roundTo2(kogasa(stddev / avg));
+            needs: { metadata: true, id: true },
+            compute({ metadata }) {
+               return Number(metadata?.consistency ?? 0);
             },
          },
          accuracy: {
-            needs: { typedLetters: true, mode: true, totalTimeMilliseconds: true, wordCount: true },
-            compute({ typedLetters, mode, totalTimeMilliseconds, wordCount }) {
-               const res = typedLetterInfoSchema.safeParse({ typedLetters });
-               if (!res.success) return 0.00;
-
-               return res.data.typedLetters?.filter(l => l.correct === true)?.length
-                  / res.data.typedLetters?.filter(l => l !== null)?.length * 100;
+            needs: { typedLetters: true, mode: true, totalTimeMilliseconds: true, wordCount: true, metadata: true },
+            compute({ typedLetters, mode, totalTimeMilliseconds, wordCount, metadata }) {
+               return Number(metadata?.accuracy ?? 0);
             },
          },
          wpm: {
             needs: { mode: true, totalTimeMilliseconds: true, wordCount: true, metadata: true },
             compute({ mode, totalTimeMilliseconds, wordCount, metadata }) {
-               const wc = mode === `TIME` ? (metadata?.completedWords ?? 40) : wordCount!;
-               return (wc / (totalTimeMilliseconds / 1000)) * 60;
+               return Number(metadata?.wpm ?? 0);
             },
          },
          hasFlag: {

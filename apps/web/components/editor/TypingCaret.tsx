@@ -2,6 +2,7 @@
 import React, { CSSProperties, Fragment, useMemo } from "react";
 import { useAtomValue } from "jotai";
 import { caretStyleAtom, smoothCaretAtom } from "@atoms/user";
+import { cn } from "@lib/utils";
 
 export interface TypingCaretProps {
    coords: {
@@ -37,7 +38,7 @@ const TypingCaret = ({ coords: { top, left } }: TypingCaretProps) => {
 
    if (caretStyle === `OFF`) return <Fragment />;
 
-   return <div style={{ top, left, ...caretTransitionStyle, }} className={caretCn} />;
+   return <div style={{ top, left, ...caretTransitionStyle, }} className={cn(caretCn, `flex items-center justify-center text-xs`)} />
 };
 
 export default TypingCaret;

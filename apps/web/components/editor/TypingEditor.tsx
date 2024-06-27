@@ -1,10 +1,10 @@
 "use client";
-import React, { Fragment, useMemo } from "react";
+import React, { Fragment, useEffect, useMemo } from "react";
 import { useTimer } from "@components/editor/hooks/useTimer";
 import {
    totalRunTimeAtom,
    typedLettersAtom,
-   typingRunAtom,
+   typingRunAtom, typingRunStateAtom,
    useTypingRunSuccess,
 } from "@atoms/editor";
 import { useAtomValue } from "jotai";
@@ -44,6 +44,7 @@ const TypingEditor = ({ user }: TypingEditorProps) => {
    const totalRunTime = useAtomValue(totalRunTimeAtom);
    const totalPauseTime = useAtomValue(totalPauseTimeAtom);
    const typingRun = useAtomValue(typingRunAtom);
+   const autoSave = useAtomValue(autoSaveModeAtom) as boolean
    const setUserXp = useSetAtom(updateUserXpAtom);
 
    useTypingRunSuccess();
@@ -73,6 +74,13 @@ const TypingEditor = ({ user }: TypingEditorProps) => {
       LocalStorage.setItem(TYPING_RUN_LS_KEY, typingRun);
    });
 
+   const state = useAtomValue(typingRunStateAtom)
+   useEffect(() => {
+      if(state === TypingRunState.FINISHED && autoSave) {
+         execute(typingRun)
+      }
+   }, [state, autoSave])
+
    const autoSaveMode = useAtomValue(autoSaveModeAtom);
    const showSavePrompt = useMemo(() =>
          timerState === TypingRunState.FINISHED,
@@ -81,7 +89,6 @@ const TypingEditor = ({ user }: TypingEditorProps) => {
    function handleSaveTypingRun(): void {
       execute(typingRun);
    }
-
 
    return (
       <div className={`flex flex-col items-center gap-8 w-3/4 mx-auto`}>

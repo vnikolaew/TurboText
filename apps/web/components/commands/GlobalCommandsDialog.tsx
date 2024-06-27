@@ -1,6 +1,5 @@
 "use client";
 import React, { Fragment, useEffect } from "react";
-import { useBoolean } from "@hooks/useBoolean";
 import { CommandDialog, CommandInput, CommandList } from "@repo/ui";
 import { LANGUAGES } from "@app/settings/_components/behaviour/LanguageSection";
 import { FONTS_MAP } from "@assets/fonts";
@@ -18,23 +17,28 @@ import BlindModeOptions from "@components/commands/options/BlindModeOptions";
 import DifficultyOptions from "@components/commands/options/DifficultyOptions";
 import { parseAsString, useQueryState } from "nuqs";
 import ThemeOptions from "@components/commands/options/ThemeOptions";
+import { atom } from "jotai";
+import { useAtom } from "jotai/index";
 
 export interface GlobalCommandProps {
 }
 
-const IGNORE_PARAMS = [`contact`, `edit-profile`, `report-user`, `import-settings`, `custom-words`, `custom-time`, `add-tag-modal`, `update-cookie-preferences`, `practice-words`] as const
+const IGNORE_PARAMS = [`contact`, `edit-profile`, `report-user`, `import-settings`, `custom-words`, `custom-time`, `add-tag-modal`, `update-cookie-preferences`, `practice-words`] as const;
+
+export const commandsDialogOpen = atom(false);
+commandsDialogOpen.debugLabel = `commandsDialogOpen`;
 
 const GlobalCommandsDialog = ({}: GlobalCommandProps) => {
-   const [open, setOpen] = useBoolean();
-   const [qs, setQs] =  useQueryState(`search`, parseAsString.withDefault(``))
+   const [open, setOpen] = useAtom(commandsDialogOpen);
+   const [qs, setQs] = useQueryState(`search`, parseAsString.withDefault(``));
    const sp = useSearchParams();
 
    useEffect(() => {
-      let contactModalOpen = IGNORE_PARAMS.some(p => sp.get(p) === `true`)
-      if(contactModalOpen) return;
+      let contactModalOpen = IGNORE_PARAMS.some(p => sp.get(p) === `true`);
+      if (contactModalOpen) return;
 
       const down = async (e: KeyboardEvent) => {
-         if(e.code === `Space`) {
+         if (e.code === `Space`) {
             e.preventDefault();
          }
          if (e.key === "Escape") {
@@ -48,7 +52,7 @@ const GlobalCommandsDialog = ({}: GlobalCommandProps) => {
    }, [sp]);
 
    return (
-      <CommandDialog dialogProps={{ className: `!bg-secondary`, }} open={open} onOpenChange={setOpen}>
+      <CommandDialog dialogProps={{ className: `!bg-secondary` }} open={open} onOpenChange={setOpen}>
          <CommandInput
             id={`global-commands`}
             inputMode={`text`} onValueChange={setQs} value={qs}

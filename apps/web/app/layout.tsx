@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 
 import "./globals.css";
 import { cn } from "@lib/utils";
@@ -11,7 +10,7 @@ import AppFooter from "@components/common/AppFooter";
 import React, { Suspense } from "react";
 import CookieConsentBanner from "@components/common/cookie-banner/CookieConsentBanner";
 import ScrollToTopButton from "@components/common/ScrollToTopButton";
-import { Toaster } from "@repo/ui";
+import { Meteors, Particles, Toaster } from "@repo/ui";
 import LoadingBar from "@components/common/LoadingBar";
 import WithTransition from "@components/common/WithTransition";
 import { THEMES, __IS_PROD__ } from "@lib/consts";
@@ -49,6 +48,7 @@ export default async function RootLayout({
    const theme = THEMES.includes(user?.configuration?.theme ?? ``) ? user?.configuration.theme : `dark`;
    console.log({ config: user?.configuration, theme });
 
+   // @ts-ignore
    return (
       <html className={theme} style={{ colorScheme: `dark` }} suppressHydrationWarning lang="en">
       <Providers>

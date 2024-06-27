@@ -4,7 +4,7 @@
 import { authorizedAction } from "@lib/actions";
 import { xprisma } from "@repo/db";
 import { z } from "zod";
-import { revalidate } from "@app/page";
+import { revalidate } from "@app/(test)/page";
 import { revalidatePath } from "next/cache";
 
 const schema = z.object({

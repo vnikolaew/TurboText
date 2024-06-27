@@ -34,7 +34,6 @@ export default async function Icon() {
       });
       fill = THEME_ACCENT_COLORS[userConfig?.theme || 'dark'];
    }
-   console.log({ fill});
 
    return new ImageResponse(
       (

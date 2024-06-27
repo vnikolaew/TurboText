@@ -3,7 +3,7 @@ import React, { Fragment, useEffect, useRef } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
 import {
    caretCoordinatesAtom,
-   currentCharIndexAtom,
+   currentCharIndexAtom, lettersCorrectnessAtom,
    onKeyPressAtom,
    typingRunStateAtom,
    wordsAtom,
@@ -14,9 +14,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import TypingLetters from "@components/editor/TypingLetters";
 import { TypingRunState } from "@atoms/consts";
 import { pauseAtom } from "@atoms/timer";
-import { playSoundAtom } from "@app/settings/atoms";
-import { soundOnClickAtom } from "@atoms/user";
-import { SOUNDS } from "@lib/sounds";
+import { playClickSoundAtom, playErrorSoundAtom } from "@app/settings/atoms";
 import TypingCaret from "@components/editor/TypingCaret";
 import FocusLostWarning from "@components/editor/warnings/FocusLostWarning";
 import PaceTypingCaret from "./PaceTypingCaret";
@@ -29,13 +27,15 @@ const TypingInput = ({}: TypingInputProps) => {
    const { top, left } = useAtomValue(caretCoordinatesAtom);
    const onKeyDown = useSetAtom(onKeyPressAtom);
    const editorRef = useRef<HTMLDivElement>();
-   const playSound = useSetAtom(playSoundAtom);
-   const userSoundOnClick = useAtomValue(soundOnClickAtom) as string;
+
+   const playClickSound = useSetAtom(playClickSoundAtom);
+   const playErrorSound = useSetAtom(playErrorSoundAtom)
 
    useEffect(() => editorRef?.current?.focus(), []);
 
    const timerState = useAtomValue(typingRunStateAtom);
    const currentCharIndex = useAtomValue(currentCharIndexAtom);
+   const letterCorrectness = useAtomValue(lettersCorrectnessAtom)
    const words = useAtomValue(wordsAtom);
    const [showFocusLost, setShowFocusLost] = useBoolean();
 
@@ -51,6 +51,12 @@ const TypingInput = ({}: TypingInputProps) => {
       return () => window.removeEventListener(`keydown`, handler);
 
    }, [showFocusLost]);
+
+   useEffect(() => {
+      if(letterCorrectness[currentCharIndex] === false) {
+         playErrorSound()
+      }
+   }, [currentCharIndex, letterCorrectness])
 
    return (
       <Fragment>
@@ -85,10 +91,7 @@ const TypingInput = ({}: TypingInputProps) => {
                onKeyDown={async e => {
                   if (timerState === TypingRunState.FINISHED) return null;
 
-                  const soundIndex = SOUNDS.findIndex(sound => sound === userSoundOnClick);
-                  if (soundIndex > -1) {
-                     await playSound(soundIndex);
-                  }
+                  playClickSound()
                   onKeyDown(e);
                }}>
                {top !== 0 && left !== 0 && (

@@ -1,6 +1,6 @@
 import { atom, useAtomValue } from "jotai";
 import { generate } from "random-words";
-import { userTestDifficultyAtom } from "@atoms/user";
+import { confidenceModeAtom, freedomModeAtom, userTestDifficultyAtom } from "@atoms/user";
 import { startAtom, stopAtom, timeAtom, totalPauseTimeAtom } from "@atoms/timer";
 import { useEffect } from "react";
 import { useSetAtom } from "jotai/index";
@@ -19,12 +19,13 @@ import {
    WordRange,
 } from "@atoms/consts";
 import { typingFlagsAtom } from "./flags";
+import { atomWithStorage } from "jotai/utils";
 
 // EDITOR
 
 const WORDS = generate(DEFAULT_WORD_COUNT) as string[];
 
-export const typingModeAtom = atom<TypingMode>(TypingMode.TIME);
+export const typingModeAtom = atomWithStorage<TypingMode>(`mode`, TypingMode.TIME);
 typingModeAtom.debugLabel = `typingModeAtom`;
 
 export const lettersCorrectnessAtom = atom<(boolean | null)[]>(
@@ -191,7 +192,7 @@ export const typingRunAtom = atom<TypingRun>(get => {
    const mode = get(typingModeAtom);
    const flags = get(typingFlagsAtom);
    const totalRunTime = get(totalRunTimeAtom);
-   const wordCompletionsTimesTotal = sum(get(wordsCompletionTimesAtom).map(w => w.time))
+   const wordCompletionsTimesTotal = sum(get(wordsCompletionTimesAtom).map(w => w.time));
 
    const completedWords = get(completedWordsAtom)?.length;
 
@@ -258,10 +259,24 @@ export const onKeyPressAtom = atom(null, (get, set, e: KeyboardEvent<HTMLDivElem
    const currentCharIndex = get(currentCharIndexAtom);
    const wordRangesByEnds = get(wordRangesByEndsAtom);
 
+   const freedomMode = get(freedomModeAtom) as unknown as boolean;
+   const confidenceMode = get(confidenceModeAtom) as unknown as ("OFF" | "ON" | "MAX");
+
    if (e.key === `Shift` || (e.ctrlKey && e.key === `Control`)) return;
    if (e.key === `Shift`) return;
 
    if (e.key === `Backspace`) {
+      if(confidenceMode === 'MAX') return
+
+      if (freedomMode || confidenceMode === "ON") {
+         // Check if user is pressing backspace on previous word:
+         const isBackspacingOnPreviousWord = [...wordRangesByEnds.keys()]
+            .some(x => x === currentCharIndex);
+
+         // Do an early exit:
+         if (isBackspacingOnPreviousWord) return;
+      }
+
       set(currentCharIndexAtom, c => Math.max(-1, c - 1));
 
       set(typedLettersAtom, l => [...l, {
@@ -295,10 +310,6 @@ export const onKeyPressAtom = atom(null, (get, set, e: KeyboardEvent<HTMLDivElem
       });
 
       // Determine if we are at the end of a word
-      const endOfWord = wordRangesByEnds.has(currentCharIndex + 1);
-      if (endOfWord) {
-         const [start, end] = wordRangesByEnds.get(currentCharIndex + 1)!;
-      }
 
       set(typedLettersAtom, l => [...l,
          currentCharIndex + 1 === 0 ?

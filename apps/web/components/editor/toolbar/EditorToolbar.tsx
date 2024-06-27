@@ -21,8 +21,8 @@ export interface EditorToolbarProps {
 }
 
 const EditorToolbar = ({}: EditorToolbarProps) => {
-   const [customTimeQs, setCustomTimeQs] = useQueryState(`custom-time`, parseAsBoolean.withDefault(false));
-   const [customWordsQs, setCustomWordsQs] = useQueryState(`custom-words`, parseAsBoolean.withDefault(false));
+   const [, setCustomTimeQs] = useQueryState(`custom-time`, parseAsBoolean.withDefault(false));
+   const [, setCustomWordsQs] = useQueryState(`custom-words`, parseAsBoolean.withDefault(false));
 
    const typingFlags = useAtomValue(typingFlagsAtom);
    const togglePunctuation = useSetAtom(togglePunctuationAtom);

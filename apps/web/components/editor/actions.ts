@@ -93,7 +93,6 @@ export const saveTypingRun = authorizedAction
                totalTimeMilliseconds: totalRunTime,
             },
          });
-      console.log({ run });
 
          let userXp = await updateUserXp(wpm, accuracy, userId!);
          const topWpmAllTime = (await xprisma.typingRun.getTopWpmAllTime())?.metadata?.wpm;
@@ -169,7 +168,6 @@ function getRunWpm(totalTimeMilliseconds: number, typedLetters: TypedLetterInfo[
             return typedLetters.toReversed().find(l => l.charIndex === i)?.correct ? 1 : 0;
          }) : [0]);
       }));
-   console.log({ correctWordChars, totalTimeMilliseconds });
 
    return correctWordChars * (60 / (totalTimeMilliseconds / 1000)) / 5;
 }
