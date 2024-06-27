@@ -1,10 +1,18 @@
 "use client";
 import React, { useMemo } from "react";
 import { useAtomValue } from "jotai";
-import { toggleWordsAtom, typedLettersAtom, wordRangesAtom, wordsAtom, wordsCompletionTimesAtom } from "@atoms/editor";
+import {
+   lettersCorrectnessAtom,
+   toggleWordsAtom,
+   typedLettersAtom,
+   wordRangesAtom,
+   wordsAtom,
+   wordsCompletionTimesAtom,
+} from "@atoms/editor";
 import { range } from "lodash";
 import { cn } from "@lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
+import { TypedLetterInfo } from "@atoms/consts";
 
 export interface ToggleWordsProps {
 }
@@ -22,15 +30,15 @@ const ToggleWords = ({}: ToggleWordsProps) => {
                layout
                initial={{
                   opacity: 0,
-                  height: 0
+                  height: 0,
                }}
                exit={{
                   opacity: 0,
-                  height: 0
+                  height: 0,
                }}
                animate={{
                   opacity: 100,
-                  height: `100%`
+                  height: `100%`,
                }}
                transition={{ duration: .2 }}
                key={`words`} className={`text-main flex items-center gap-1 w-full`}>
@@ -45,6 +53,8 @@ const ToggleWords = ({}: ToggleWordsProps) => {
 
 const Word = ({ word, index, start, end }: { word: string, index: number, start: number, end: number }) => {
    const typedLetters = useAtomValue(typedLettersAtom);
+   const letterCorrectness = useAtomValue(lettersCorrectnessAtom)
+
    const wordCompletionTimes = useAtomValue(wordsCompletionTimesAtom);
    const wpm = useMemo(() => {
       const time = wordCompletionTimes
@@ -57,11 +67,8 @@ const Word = ({ word, index, start, end }: { word: string, index: number, start:
 
    const isWordErrored = useMemo(() =>
          range(start, end + 1)
-            .map((i) => {
-               const letter = typedLetters.toReversed().find(l => l.charIndex === i);
-               if (!letter) return true;
-               return letter.correct;
-            }).some(x => x === false),
+            .map((i) => letterCorrectness[i] === true)
+            .some(x => !x),
       [start, end, typedLetters]);
 
    return (
@@ -70,24 +77,24 @@ const Word = ({ word, index, start, end }: { word: string, index: number, start:
          key={`word-${index}-${word}`}
       >
          <div
-            className={cn(`flex items-center gap-0.5 relative`)}>
+            className={cn(`flex items-center gap-1 relative`)}>
             {isWordErrored && (
                <div className={`absolute bottom-0 w-full left-0 h-0.5 bg-red-700`} />
             )}
-            {range(start, end + 1).map((i) => {
-               const letter = typedLetters.toReversed().find(l => l.charIndex === i);
-               if (!letter) return null;
-
-               return (
-                  <span className={cn(`text-sm`, letter.correct ? `text-white` : `text-red-700`)}
-                        key={`word-${i}}`}>
+            {range(start, end + 1)
+               .map(i => typedLetters.toReversed().find(l => l.charIndex === i) as TypedLetterInfo)
+               .map((letter, i) => {
+                  return !letter ? null : (
+                     <span className={cn(`text-sm`, letterCorrectness[letter.charIndex] ? `text-white` : `text-red-700`)}
+                           key={`word-${i}}`}>
                   {letter.letter}
                </span>
-               );
-            })}
+                  );
+
+               })}
          </div>
          <span
-            className={`text-sm !text-secondary invisible group-hover:!visible`}>{Math.round(wpm).toFixed(0)} wpm</span>
+            className={`text-xs !text-secondary invisible group-hover:!visible`}>{Math.round(wpm).toFixed(0)} wpm</span>
       </div>
    );
 

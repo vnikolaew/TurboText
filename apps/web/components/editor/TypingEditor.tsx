@@ -1,7 +1,12 @@
 "use client";
 import React, { Fragment, useMemo } from "react";
 import { useTimer } from "@components/editor/hooks/useTimer";
-import { totalRunTimeAtom, typedLettersAtom, typingRunAtom, useTypingRunSuccess } from "@atoms/editor";
+import {
+   totalRunTimeAtom,
+   typedLettersAtom,
+   typingRunAtom,
+   useTypingRunSuccess,
+} from "@atoms/editor";
 import { useAtomValue } from "jotai";
 import TypingRunSummary from "@components/editor/TypingRunSummary";
 import Confetti from "react-confetti";
@@ -79,7 +84,7 @@ const TypingEditor = ({ user }: TypingEditorProps) => {
 
 
    return (
-      <div className={`flex flex-col items-start gap-8 w-3/4 mx-auto`}>
+      <div className={`flex flex-col items-center gap-8 w-3/4 mx-auto`}>
          {timerState === TypingRunState.FINISHED && (
             <Confetti
                className={`w-1/5 h-full`}

@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useRef } from "react";
 import { useAtom, useAtomValue } from "jotai";
 import { completedWordsAtom, typingModeAtom, typingRunStateAtom } from "@atoms/editor";
-import { currentTimestampAtom, pauseAtom, resumeAtom, startAtom, timerIntervalAtom } from "@atoms/timer";
+import { currentTimestampAtom, pauseAtom, resumeAtom, startAtom } from "@atoms/timer";
 import { useSetAtom } from "jotai/index";
 import { wordsCountsAtom } from "@atoms/words";
 import { TypingMode, TypingRunState } from "@atoms/consts";
@@ -16,7 +16,6 @@ export function useTimer(onFinish?: () => void) {
    const [timerState, setTimerState] = useAtom(typingRunStateAtom);
 
    const intervalId = useRef<NodeJS.Timeout>(null!);
-   const timerIntervalId = useAtom(timerIntervalAtom);
 
    const startAction = useSetAtom(startAtom);
    const pauseAction = useSetAtom(pauseAtom);
@@ -29,14 +28,9 @@ export function useTimer(onFinish?: () => void) {
    }, [intervalId, onFinish, setTimerState]);
 
    useEffect(() => {
-      if (timerState === TypingRunState.FINISHED) console.log(`Finished!`);
-   }, [timerState]);
-
-   useEffect(() => {
       if (typingMode !== TypingMode.WORDS) return;
 
       if (completedWords.length >= wordCounts) {
-         console.log(`Finished!`);
          handleFinish();
       }
    }, [completedWords, typingMode, wordCounts, timerState]);

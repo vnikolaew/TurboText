@@ -5,8 +5,8 @@ import { sleep } from "@lib/utils";
 import { Tag, TypingRunMode, xprisma } from "@repo/db";
 import { z } from "zod";
 import { kogasa, mean, roundTo2, stdDev } from "@lib/numbers";
-import { groupBy } from "lodash";
-import { TypedLetterInfo } from "@atoms/consts";
+import { groupBy, range, sum } from "lodash";
+import { TypedLetterInfo, WordRange } from "@atoms/consts";
 
 const schema = z.object({
    typedLetters: z.array(z.object({
@@ -19,6 +19,11 @@ const schema = z.object({
    time: z.number().nullable(),
    totalRunTime: z.number(),
    completedWords: z.number(),
+   wordRanges: z.array(z.object({
+      word: z.string(),
+      range: z.tuple([z.number(), z.number()]),
+   })),
+   wordCorrectness: z.array(z.boolean().nullable()),
    wordCounts: z.number().nullable(),
    mode: z.union([z.literal(TypingRunMode.TIME), z.literal(TypingRunMode.WORDS)]),
    flags: z.number().min(0).nullable(),
@@ -41,8 +46,10 @@ export const saveTypingRun = authorizedAction
                         time,
                         totalRunTime,
                         wordCounts,
+                        wordCorrectness,
                         mode,
                         completedWords,
+                        wordRanges,
                         flags,
                         metadata,
                      }, ctx: { userId },
@@ -58,7 +65,7 @@ export const saveTypingRun = authorizedAction
             consistency,
             accuracy,
             isPersonalBest,
-         } = await getRunStats(typedLetters, totalRunTime, mode === `TIME` ? completedWords! : wordCounts!, userId);
+         } = await getRunStats(typedLetters, totalRunTime, mode === `TIME` ? completedWords! : wordCounts!, wordCorrectness, wordRanges, userId!);
 
          const { language, test_difficulty, blind_mode, input_confidence_mode } = userConfig;
 
@@ -86,6 +93,7 @@ export const saveTypingRun = authorizedAction
                totalTimeMilliseconds: totalRunTime,
             },
          });
+      console.log({ run });
 
          let userXp = await updateUserXp(wpm, accuracy, userId!);
          const topWpmAllTime = (await xprisma.typingRun.getTopWpmAllTime())?.metadata?.wpm;
@@ -132,10 +140,12 @@ async function updateUserXp(wpm: number, accuracy: number, userId: string) {
    return userXp;
 }
 
-async function getRunStats(typedLetters: TypedLetterInfo[], totalTimeMilliseconds: number, completedWords: number, userId: string) {
-   const wpm = getRunWpm(totalTimeMilliseconds, completedWords);
-   const consistency = getRunConsistency(typedLetters);
-   const accuracy = getRunAccuracy(typedLetters);
+async function getRunStats(typedLetters: TypedLetterInfo[], totalTimeMilliseconds: number, completedWords: number, wordCompleteness: (boolean | null)[], wordRanges: WordRange[], userId: string) {
+   const [wpm, consistency, accuracy] = [
+      getRunWpm(totalTimeMilliseconds, typedLetters, wordCompleteness, wordRanges),
+      getRunConsistency(typedLetters),
+      getRunAccuracy(typedLetters)
+   ];
 
    const userBestWpm = await xprisma.user.getUserPersonalBestWpm({ userId });
    const isPersonalBest = wpm > userBestWpm;
@@ -143,10 +153,31 @@ async function getRunStats(typedLetters: TypedLetterInfo[], totalTimeMillisecond
    return { wpm, consistency, accuracy, isPersonalBest } as const;
 }
 
-function getRunWpm(totalTimeMilliseconds: number, completedWords: number) {
-   return (completedWords / (totalTimeMilliseconds / 1000)) * 60;
+/**
+ * Get the typing run's WPM (words per minute).
+ * @param totalTimeMilliseconds Total time of the run in milliseconds
+ * @param typedLetters All typed letters
+ * @param wordCompleteness The completeness of each word
+ * @param wordRanges The ranges of each word in terms of character indices.
+ */
+function getRunWpm(totalTimeMilliseconds: number, typedLetters: TypedLetterInfo[], wordCompleteness: (boolean | null)[], wordRanges: WordRange[]) {
+   const correctWordChars = sum(range(0, wordCompleteness.length)
+      .map(index => {
+         const { range: [start, end] } = wordRanges[index]!;
+
+         return sum(wordCompleteness[index] ? range(start, end + 1).map(i => {
+            return typedLetters.toReversed().find(l => l.charIndex === i)?.correct ? 1 : 0;
+         }) : [0]);
+      }));
+   console.log({ correctWordChars, totalTimeMilliseconds });
+
+   return correctWordChars * (60 / (totalTimeMilliseconds / 1000)) / 5;
 }
 
+/**
+ * Get the typing run's consistency.
+ * @param typedLetters All typed letters.
+ */
 function getRunConsistency(typedLetters: TypedLetterInfo[]) {
    const typedLettersGrouped = Object.entries(groupBy(
       typedLetters,
@@ -162,6 +193,10 @@ function getRunConsistency(typedLetters: TypedLetterInfo[]) {
    return roundTo2(kogasa(stddev / avg));
 }
 
+/**
+ * Get the typing run's accuracy in terms of correct letters.
+ * @param typedLetters All typed letters.
+ */
 function getRunAccuracy(typedLetters: TypedLetterInfo[]) {
    return typedLetters?.filter(l => l.correct === true)?.length
       / typedLetters?.filter(l => l !== null)?.length * 100;

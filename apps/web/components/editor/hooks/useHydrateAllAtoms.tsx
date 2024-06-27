@@ -28,7 +28,6 @@ export function useHydrateAllAtoms(user?: User & { configuration: UserConfigurat
    useEffect(() => {
       if (!!userConfig) {
          const ls_value = JSON.parse(localStorage.getItem(`user-configuration`) ?? `{}`);
-         console.log({ ls_value });
          setUserConfig({
             test_difficulty: "NORMAL",
             elements_show_oof_warning: false,

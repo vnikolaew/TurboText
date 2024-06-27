@@ -34,6 +34,9 @@ const GlobalCommandsDialog = ({}: GlobalCommandProps) => {
       if(contactModalOpen) return;
 
       const down = async (e: KeyboardEvent) => {
+         if(e.code === `Space`) {
+            e.preventDefault();
+         }
          if (e.key === "Escape") {
             e.preventDefault();
             e.stopPropagation();

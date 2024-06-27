@@ -78,13 +78,14 @@ currentCharIndexAtom.debugLabel = `currentCharIndexAtom`;
 
 export const wordsCorrectnessAtom = atom<(boolean | null)[]>(
    (get) => {
-      const currIndex = get(currentCharIndexAtom);
+      const state = get(typingRunStateAtom);
+      const currIndex = state === TypingRunState.FINISHED ? get(lettersCorrectnessAtom).length : get(currentCharIndexAtom);
       const wordRanges = get(wordRangesAtom);
       const lettersCorrectness = get(lettersCorrectnessAtom).slice(0, currIndex);
 
       return wordRanges
          .filter(({ range: [, end] }) => end <= currIndex)
-         .map(({ range: [start, end] }) => lettersCorrectness.slice(start, end + 1).every(Boolean));
+         .map(({ range: [start, end] }) => lettersCorrectness.slice(start, end + 1).every(x => x === true));
    },
 );
 wordsCorrectnessAtom.debugLabel = `wordsCorrectnessAtom`;
@@ -136,10 +137,8 @@ export const typingRunStateAtom = atom<TypingRunState>(TypingRunState.STOPPED);
 typingRunStateAtom.debugLabel = `typingRunStateAtom`;
 
 export const totalRunTimeAtom = atom<number>(get => {
-   const state = get(typingRunStateAtom);
    const start = get(startTimeAtom);
    const totalPauseTime = get(totalPauseTimeAtom);
-   console.log({ start, totalPauseTime });
    return performance.now() - start - totalPauseTime;
    // return sum(get(wordsCompletionTimesAtom).map(w => w.time)) - get(totalPauseTimeAtom)
 });
@@ -154,8 +153,6 @@ export const typingRunSuccessAtom = atom<TypingRunSuccess>((get, _) => {
    const wordsCorrectness = get(wordsCorrectnessAtom);
    const lettersCorrectness = get(lettersCorrectnessAtom);
    const mode = get(typingModeAtom);
-
-   const charsByIndex = get(charsByIndexAtom);
 
    if (userTestDifficulty === `MASTER` && lettersCorrectness.some(x => x === false)) {
       console.log(`Test failed. Level: ${userTestDifficulty}`);
@@ -175,8 +172,6 @@ export const typingRunSuccessAtom = atom<TypingRunSuccess>((get, _) => {
    if (runState === TypingRunState.FINISHED) {
       if (mode === TypingMode.TIME) return TypingRunSuccess.SUCCESS;
 
-      const correct = lettersCorrectness.filter(l => l === true)?.length;
-      console.log({ correct, all: charsByIndex?.length, userTestDifficulty });
       if (userTestDifficulty === `EXPERT` && wordsCorrectness.some(l => l === false)) return TypingRunSuccess.FAILED;
       if (userTestDifficulty === `MASTER` && lettersCorrectness.some(l => l === false)) return TypingRunSuccess.FAILED;
 
@@ -191,19 +186,25 @@ export const typingRunAtom = atom<TypingRun>(get => {
    const typedLetters = get(typedLettersAtom);
    const time = get(timeAtom);
    const wordCounts = get(wordsCountsAtom);
+   const wordCorrectness = get(wordsCorrectnessAtom);
+   const wordRanges = get(wordRangesAtom);
    const mode = get(typingModeAtom);
    const flags = get(typingFlagsAtom);
    const totalRunTime = get(totalRunTimeAtom);
+   const wordCompletionsTimesTotal = sum(get(wordsCompletionTimesAtom).map(w => w.time))
+
    const completedWords = get(completedWordsAtom)?.length;
 
    return {
-      totalRunTime,
+      totalRunTime: totalRunTime === 0 ? wordCompletionsTimesTotal : totalRunTime,
       typedLetters,
       time: mode === TypingMode.TIME ? time : null,
       wordCounts: mode === TypingMode.WORDS ? wordCounts : null,
       completedWords,
       flags,
+      wordRanges,
       mode,
+      wordCorrectness,
       metadata: {},
    };
 }, (get, set, value: TypingRun | null) => {
@@ -220,9 +221,7 @@ export const useTypingRunSuccess = () => {
 
    useEffect(() => {
       if (success === TypingRunSuccess.FAILED) {
-         console.log(`Test failed!`);
          setCurrentCharIndex(-1);
-         // setStartTime(0);
          setState(TypingRunState.FINISHED);
          stop();
 
@@ -238,6 +237,7 @@ export const useTypingRunSuccess = () => {
 export const onKeyPressAtom = atom(null, (get, set, e: KeyboardEvent<HTMLDivElement>) => {
    e.preventDefault();
    e.stopPropagation();
+   e.cancelBubble = true;
    let { key, ctrlKey: ctrl } = e;
 
 
@@ -246,7 +246,7 @@ export const onKeyPressAtom = atom(null, (get, set, e: KeyboardEvent<HTMLDivElem
    const charCode = e.key.charCodeAt(0);
    const capsLockSwitch = e.key === `CapsLock`;
 
-   if(key === `Escape`) return;
+   if (key === `Escape`) return;
 
    if (capsLockSwitch) {
       set(capsLockOnAtom, l => !l);
@@ -256,7 +256,6 @@ export const onKeyPressAtom = atom(null, (get, set, e: KeyboardEvent<HTMLDivElem
    const startTime = get(startTimeAtom);
    const charsByIndex = get(charsByIndexAtom);
    const currentCharIndex = get(currentCharIndexAtom);
-   const lettersCorrectness = get(lettersCorrectnessAtom);
    const wordRangesByEnds = get(wordRangesByEndsAtom);
 
    if (e.key === `Shift` || (e.ctrlKey && e.key === `Control`)) return;
@@ -286,7 +285,6 @@ export const onKeyPressAtom = atom(null, (get, set, e: KeyboardEvent<HTMLDivElem
 
       if (currentCharIndex + 1 === 0) set(startAtom);
 
-      console.log({ charCode, char: charsByIndex[currentCharIndex + 1] });
       const correct = charCode === charsByIndex[currentCharIndex + 1]?.charCodeAt(0);
 
       // Set letter correctness
@@ -300,9 +298,6 @@ export const onKeyPressAtom = atom(null, (get, set, e: KeyboardEvent<HTMLDivElem
       const endOfWord = wordRangesByEnds.has(currentCharIndex + 1);
       if (endOfWord) {
          const [start, end] = wordRangesByEnds.get(currentCharIndex + 1)!;
-
-         const areAllLettersCorrect = lettersCorrectness.slice(start, end).every(Boolean) && correct;
-         console.log({ areAllLettersCorrect });
       }
 
       set(typedLettersAtom, l => [...l,

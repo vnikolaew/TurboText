@@ -1,14 +1,17 @@
 import { atom } from "jotai/index";
-import { groupBy } from "lodash";
+import { groupBy, sum } from "lodash";
 import { kogasa, mean, roundTo2, stdDev } from "@lib/numbers";
 import {
-   completedWordsAtom,
+   currentCharIndexAtom,
+   lettersCorrectnessAtom,
    totalRunTimeAtom,
    typedLettersAtom,
-   typingModeAtom,
+   typingRunStateAtom,
+   wordRangesAtom,
+   wordsCompletionTimesAtom,
+   wordsCorrectnessAtom,
 } from "@atoms/editor";
-import { wordsCountsAtom } from "@atoms/words";
-import { TypingMode } from "@atoms/consts";
+import { TypingRunState } from "@atoms/consts";
 
 export const consistencyScoreAtom = atom<number>((get) => {
    const typedLettersGrouped = Object.entries(groupBy(
@@ -20,19 +23,46 @@ export const consistencyScoreAtom = atom<number>((get) => {
       Math.round((count / 5) * 60),
    );
 
-   const stddev = stdDev(rawPerSecond);
-   const avg = mean(rawPerSecond);
+   const [stddev, avg] = [stdDev(rawPerSecond), mean(rawPerSecond)];
    return roundTo2(kogasa(stddev / avg));
 });
 consistencyScoreAtom.debugLabel = `consistencyScoreAtom`;
 
-export const wpmAtom = atom<number>(get => {
-   const mode = get(typingModeAtom);
-   const wordCount = get(wordsCountsAtom);
-   const totalRunTime = get(totalRunTimeAtom);
-   const completedWords = get(completedWordsAtom);
+export const correctWordCharsAtom = atom<number>(get => {
+   const wordRanges = get(wordRangesAtom);
+   const wordCorrectness = get(wordsCorrectnessAtom);
+   const letterCorrectness = get(lettersCorrectnessAtom);
+   const state = get(typingRunStateAtom);
+   const currCharIndex = state === TypingRunState.FINISHED ? get(lettersCorrectnessAtom).length : get(currentCharIndexAtom);
 
-   return (mode === TypingMode.TIME ? completedWords.length : wordCount) / (totalRunTime / 1_000) * 60;
+   const correctWordChars = sum(wordRanges
+      .filter(({ range: [, end] }) => end <= currCharIndex)
+      .map(({ range: [start, end] }, i) =>
+         wordCorrectness[i] === false
+            ? 0
+            : letterCorrectness.slice(start, end + 1).filter(Boolean)?.length ?? 0));
+
+   return correctWordChars;
+});
+correctWordCharsAtom.debugLabel = `correctWordChars`;
+
+export const wpmAtom = atom<number>(get => {
+   const wordCompletionTimes = get(wordsCompletionTimesAtom);
+   const totalTime = get(totalRunTimeAtom);
+   const correctWordChars = get(correctWordCharsAtom);
+
+   const time = totalTime === 0 ? sum(
+      wordCompletionTimes.map(t => t.time)) : totalTime;
+
+   return correctWordChars * (60 / (time / 1000)) / 5;
+
 });
 wpmAtom.debugLabel = `wpmAtom`;
 
+
+
+export const correctWordsAtom = atom<number>(get => {
+   const wordCorrectness = get(wordsCorrectnessAtom);
+   return wordCorrectness.filter(x =>  x === true).length;
+});
+correctWordsAtom.debugLabel = `correctWordsAtom`;
