@@ -1,5 +1,5 @@
 "use client";
-import React, { PropsWithChildren, useState } from "react";
+import React, { PropsWithChildren } from "react";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, Switch, toast } from "@repo/ui";
 import { useBoolean } from "@hooks/useBoolean";
 import LoadingButton from "@components/common/LoadingButton";
@@ -8,6 +8,7 @@ import { TOASTS } from "@config/toasts";
 import { updateCookiePreferences } from "@components/common/actions";
 import { useAtom } from "jotai/index";
 import { cookiePreferencesAtom } from "@atoms/user";
+import { parseAsBoolean, useQueryState } from "nuqs";
 
 export interface UpdateCookiePreferencesModalProps extends PropsWithChildren {
 }
@@ -34,6 +35,8 @@ const COOKIE_PREFS_CATEGORIES = [
 const UpdateCookiePreferencesModal = ({ children }: UpdateCookiePreferencesModalProps) => {
    const [cookiePreferences, setCookiePreferences] = useAtom(cookiePreferencesAtom);
    const [open, setOpen] = useBoolean();
+   const [, setUpdateCookiePrefModal] = useQueryState(`update-cookie-preferences`, parseAsBoolean.withDefault(false));
+
    const { execute, isExecuting } = useAction(updateCookiePreferences, {
       onSuccess: async res => {
          if (res.data?.success) {
@@ -51,7 +54,11 @@ const UpdateCookiePreferencesModal = ({ children }: UpdateCookiePreferencesModal
    }
 
    return (
-      <Dialog onOpenChange={setOpen} open={open}>
+      <Dialog onOpenChange={async value => {
+         if(value) await setUpdateCookiePrefModal(true);
+         else await setUpdateCookiePrefModal(null)
+         setOpen(value);
+      }} open={open}>
          <DialogTrigger asChild>
             {children}
          </DialogTrigger>

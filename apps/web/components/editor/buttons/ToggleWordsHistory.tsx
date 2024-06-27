@@ -1,40 +1,39 @@
 "use client";
 import React from "react";
-import { useSetAtom } from "jotai/index";
 import { Button, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@repo/ui";
-import { ChevronRight } from "lucide-react";
-import { newTestAtom } from "@atoms/actions";
+import { BarChartHorizontal } from "lucide-react";
+import { useAtom } from "jotai/index";
+import { toggleWordsAtom } from "@atoms/editor";
 
-export interface NewRunButtonProps {
+export interface ToggleWordsHistoryProps {
 }
 
-const NewRunButton = ({}: NewRunButtonProps) => {
-   const newTest = useSetAtom(newTestAtom);
 
-   async function handleNewTest() {
-      await newTest();
-   }
+const ToggleWordsHistory = ({}: ToggleWordsHistoryProps) => {
+   const [toggleWords, setToggleWords] = useAtom(toggleWordsAtom);
+
+   const handleToggleWordsHistory = () => setToggleWords(!toggleWords)
 
    return (
       <TooltipProvider>
          <Tooltip>
             <TooltipTrigger asChild>
                <Button
-                  onClick={handleNewTest}
+                  onClick={handleToggleWordsHistory}
                   className={`hover:!bg-transparent group`}
                   variant={`ghost`}
                   size={`icon`}>
-                  <ChevronRight className={`group-hover:!text-neutral-400  transition-colors duration-200 !text-main`} size={18} />
+                  <BarChartHorizontal className={`group-hover:!text-neutral-400  transition-colors duration-200 !text-main`} size={18} />
                </Button>
             </TooltipTrigger>
             <TooltipContent
                side={`bottom`}
                className={`bg-black text-white rounded-xl text-sm border-neutral-700 !px-4 !py-2`}>
-               New test
+               Toggle words history
             </TooltipContent>
          </Tooltip>
       </TooltipProvider>
    );
 };
 
-export default NewRunButton;
+export default ToggleWordsHistory;

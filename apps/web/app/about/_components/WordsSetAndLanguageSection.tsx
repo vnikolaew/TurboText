@@ -15,7 +15,7 @@ const WordsSetAndLanguageSection = ({}: WordsSetAndLanguageSectionProps) => {
             </span>
          </h2>
          <p className={`!text-secondary`}>
-            This website uses the most common 20000 words in the English language to generate its tests. However, you
+            This website uses the most common <b>20000</b> words in the English language to generate its tests. However, you
             can always change the language from your <Link className={`text-accent`} href={`/settings`}>settings</Link>.
          </p>
       </section>

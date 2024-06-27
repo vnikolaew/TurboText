@@ -6,13 +6,16 @@ import { addTag } from "@app/settings/_components/account/actions";
 import { TOASTS } from "@config/toasts";
 import LoadingButton from "@components/common/LoadingButton";
 import { useBoolean } from "@hooks/useBoolean";
+import { parseAsBoolean, useQueryState } from "nuqs";
 
 export interface AddTagModalProps extends PropsWithChildren {
 }
 
 const AddTagModal = ({ children }: AddTagModalProps) => {
    const [value, setValue] = useState(``);
-   const [ open, setOpen] = useBoolean()
+   const [open, setOpen] = useBoolean();
+   const [, setAddTagModalQs] = useQueryState(`add-tag-modal`, parseAsBoolean.withDefault(false));
+
    const { execute, status, isExecuting } = useAction(addTag, {
       onSuccess: res => {
          if (res.data?.success) {
@@ -21,7 +24,7 @@ const AddTagModal = ({ children }: AddTagModalProps) => {
          } else {
             toast(TOASTS.ADD_NEW_TAG_FAILURE(res.error));
          }
-         setOpen(false)
+         setOpen(false);
       },
    });
 
@@ -30,7 +33,11 @@ const AddTagModal = ({ children }: AddTagModalProps) => {
    };
 
    return (
-      <Dialog onOpenChange={setOpen} open={open}>
+      <Dialog onOpenChange={async value => {
+         if(value) await setAddTagModalQs(true);
+         else await setAddTagModalQs(null)
+         setOpen(value);
+      }} open={open}>
          <DialogTrigger asChild>
             {children}
          </DialogTrigger>

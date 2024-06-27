@@ -96,6 +96,10 @@ body {
     color: hsl(var(--foreground));
     background: hsl(var(--background));
     font-synthesis: none;
+    -webkit-transition: 0.2s;
+    -moz-transition: 0.2s;
+    -o-transition: 0.2s;
+    transition: 0.2s;
 }
 
 ::-moz-selection { /* Code for Firefox */
@@ -113,7 +117,8 @@ body {
 }
 
 @keyframes rainbow-bg {
-    0% { background-color: red !important;
+    0% {
+        background-color: red !important;
     }
     14% {
         background-color: orange !important;

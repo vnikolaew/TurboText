@@ -126,7 +126,7 @@ export const wordsCompletionTimesAtom = atom((get) => {
       ?.map(({ range: [start, end], word }) => {
          const time = lettersReversed.find(l => l.charIndex === end)?.timestamp!
             - lettersReversed.find(l => l.charIndex === start)?.timestamp!;
-         return { word, time };
+         return { word, time, range: [start, end] };
       });
 });
 wordsCompletionTimesAtom.debugLabel = `wordsCompletionTimesAtom`;
@@ -392,3 +392,6 @@ export const slowWordsAtom = atom<string[]>((get) => {
       });
 });
 slowWordsAtom.debugLabel = `slowWordsAtom`;
+
+export const toggleWordsAtom = atom(false);
+toggleWordsAtom.debugLabel = `toggleWordsAtom`;

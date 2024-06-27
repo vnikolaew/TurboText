@@ -17,11 +17,12 @@ import { useSearchParams } from "next/navigation";
 import BlindModeOptions from "@components/commands/options/BlindModeOptions";
 import DifficultyOptions from "@components/commands/options/DifficultyOptions";
 import { parseAsString, useQueryState } from "nuqs";
+import ThemeOptions from "@components/commands/options/ThemeOptions";
 
 export interface GlobalCommandProps {
 }
 
-const IGNORE_PARAMS = [`contact`, `edit-profile`, `report-user`, `import-settings`, `custom-words`, `custom-time`] as const
+const IGNORE_PARAMS = [`contact`, `edit-profile`, `report-user`, `import-settings`, `custom-words`, `custom-time`, `add-tag-modal`, `update-cookie-preferences`, `practice-words`] as const
 
 const GlobalCommandsDialog = ({}: GlobalCommandProps) => {
    const [open, setOpen] = useBoolean();
@@ -44,9 +45,7 @@ const GlobalCommandsDialog = ({}: GlobalCommandProps) => {
    }, [sp]);
 
    return (
-      <CommandDialog dialogProps={{
-         className: `!bg-secondary`,
-      }} open={open} onOpenChange={setOpen}>
+      <CommandDialog dialogProps={{ className: `!bg-secondary`, }} open={open} onOpenChange={setOpen}>
          <CommandInput
             id={`global-commands`}
             inputMode={`text`} onValueChange={setQs} value={qs}
@@ -69,6 +68,7 @@ const GlobalCommandsDialog = ({}: GlobalCommandProps) => {
                   <BlindModeOptions />
                   <CaretStyleOptions />
                   <DifficultyOptions />
+                  <ThemeOptions />
                   <PaceCaretStyleOptions />
                   <SmoothCaretOptions />
                </Fragment>

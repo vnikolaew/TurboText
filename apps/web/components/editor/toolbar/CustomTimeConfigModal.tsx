@@ -1,6 +1,6 @@
 "use client";
 import React, { PropsWithChildren, useMemo, useState } from "react";
-import { Button, Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, Input } from "@repo/ui";
+import { Button, Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, Input } from "@repo/ui";
 import { useAtom } from "jotai/index";
 import { timeAtom } from "@atoms/timer";
 
@@ -40,6 +40,8 @@ export const Kbd = ({ children }: PropsWithChildren) => {
 
 const CustomTimeConfigModal = ({ setOpen, open }: CustomTimeConfigModalProps) => {
    const [value, setValue] = useState(``);
+   const [error, setError] = useState(``);
+
    const [, setTime] = useAtom(timeAtom);
    const [timeframe, setTimeframe] = useState<Timeframe>({
       hours: 0,
@@ -62,10 +64,9 @@ const CustomTimeConfigModal = ({ setOpen, open }: CustomTimeConfigModalProps) =>
 
    return (
       <Dialog onOpenChange={setOpen} open={open}>
-         <DialogTrigger></DialogTrigger>
          <DialogContent className={`z-[100] !bg-secondary-bg`}>
             <DialogHeader>
-               <DialogTitle className={`text-2xl text-accent`}>
+               <DialogTitle className={`text-2xl !text-accent`}>
                   Test duration
                </DialogTitle>
             </DialogHeader>
@@ -79,7 +80,10 @@ const CustomTimeConfigModal = ({ setOpen, open }: CustomTimeConfigModalProps) =>
                      setTimeframe(parseTimeframe(e.target.value));
                   }}
                   value={value}
-                  className={`w-full border-neutral-500 rounded-full`} />
+                  className={`w-full border-neutral-500 rounded-full !text-main`} />
+               {error && (
+                  <span className={`text-red-500 text-sm`}>{error}</span>
+               )}
                <p className={`text-sm mt-2 text-secondary`}>
                   You can use "h" for hours and "m" for minutes, for example "1h30m".
                </p>
@@ -92,9 +96,11 @@ const CustomTimeConfigModal = ({ setOpen, open }: CustomTimeConfigModalProps) =>
             </ div>
             <DialogFooter className={`mt-4`}>
                <Button onClick={_ => {
-                  if (Number.isNaN(Number(value))) console.log(`Input is not a number`);
-                  setTime(Number(value));
-                  setOpen(false);
+                  if (Number.isNaN(Number(value))) setError(`Input is not a number`);
+                  else {
+                     setTime(Number(value));
+                     setOpen(false);
+                  }
                }} variant={`default`} className={`w-full`}>OK</Button>
             </DialogFooter>
          </DialogContent>

@@ -27,7 +27,7 @@ const DeleteAccountModal = ({ children }: DeleteAccountModalProps) => {
    const [open, setOpen] = useBoolean();
 
    const router = useRouter();
-   const { execute, status, isExecuting } = useAction(deleteAccount, {
+   const { execute, isExecuting } = useAction(deleteAccount, {
       onSuccess: res => {
          if (res.data?.success) {
             console.log(res);
@@ -41,7 +41,7 @@ const DeleteAccountModal = ({ children }: DeleteAccountModalProps) => {
       },
    });
 
-   function handleDelete(event: MouseEvent): void {
+   function handleDelete(event: any): void {
       execute({});
    }
 

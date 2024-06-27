@@ -3,8 +3,6 @@ import { ImageResponse } from "next/og";
 import { xprisma } from "@repo/db";
 import RocketLogo from "@components/icons/RocketLogo";
 
-// Route segment config
-// export const runtime = "edge";
 
 export const size = {
    width: 32,
@@ -36,6 +34,7 @@ export default async function Icon() {
       });
       fill = THEME_ACCENT_COLORS[userConfig?.theme || 'dark'];
    }
+   console.log({ fill});
 
    return new ImageResponse(
       (

@@ -32,9 +32,8 @@ export const TOASTS = {
       description: `You've successfully saved your cookies preferences.`,
       className: ``,
       classNames: {
-         title: `text-lg`, description: `text-md`,
-      }, icon: <Cookie className={`text-orange-800`} size={16} />,
-      duration: 10_000,
+         title: `text-lg text-main`, description: `text-md text-secondary`,
+      }, icon: <Cookie className={`text-accent`} size={16} />, duration: 10_000,
    },
    ACCEPT_COOKIE_CONSENT_SUCCESS: {
       message: `Cookies accepted.`,

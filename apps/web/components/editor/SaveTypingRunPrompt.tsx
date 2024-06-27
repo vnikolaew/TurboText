@@ -11,21 +11,23 @@ export interface SaveTypingRunPromptProps {
 }
 
 const MotionAlert = motion(Alert);
+const MotionAlertDesc = motion(AlertDescription);
 
 const SaveTypingRunPrompt = ({ onSave, onDismiss, loading }: SaveTypingRunPromptProps) => {
    return (
-      <MotionAlert
-         initial={{ opacity: 0 }}
-         animate={{ opacity: 1 }}
-         transition={{ duration: .3 }}
-         exit={{ opacity: 0 }}
-         key={`alert`} className={`flex !items-center animate-alert gap-4 !border-secondary`}>
+      <Alert
+         key={`alert`} className={`flex !items-center gap-4 !border-none`}>
          <div>
             <RocketIcon className="h-6 w-6 text-accent" />
          </div>
-         <AlertDescription className={`text-base !text-main`}>
+         <MotionAlertDesc
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: .3 }}
+            exit={{ opacity: 0 }}
+            className={`text-base !text-main animate-alert`}>
             Would you like to save your typing run?
-         </AlertDescription>
+         </MotionAlertDesc>
          <div className={`flex-1 flex justify-end items-center gap-4`}>
             <Button
                disabled={loading}
@@ -38,7 +40,7 @@ const SaveTypingRunPrompt = ({ onSave, onDismiss, loading }: SaveTypingRunPrompt
                No
             </Button>
          </div>
-      </MotionAlert>
+      </Alert>
    );
 };
 

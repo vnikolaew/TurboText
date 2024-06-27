@@ -19,7 +19,7 @@ const StatsSection = ({}: StatsSectionProps) => {
                {/*<li> raw wpm - calculated just like wpm, but also includes incorrect words. </li>*/}
                <li> <b className={`text-accent`}>acc</b> - percentage of correctly pressed keys.</li>
                {/*<li> char - correct characters / incorrect characters. Calculated after the test has ended. </li>*/}
-               <li> <b className={`text-accent`}>consistency</b> - based on the variance of your raw wpm. Closer to 100% is better. Calculated using the coefficient of variation of raw wpm and mapped onto a scale from 0 to 100. </li>
+               <li> <b className={`text-accent`}>consistency</b> - based on the variance of your wpm. Closer to 100% is better. Calculated using the coefficient of variation of raw wpm and mapped onto a scale from 0 to 100. </li>
             </ul>
          </p>
       </section>

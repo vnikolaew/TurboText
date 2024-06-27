@@ -44,6 +44,7 @@
     "react-csv": "^2.2.2",
     "react-dom": "18.3.1",
     "react-hook-form": "^7.52.0",
+    "react-share": "^5.1.0",
     "react-tooltip": "^5.26.4",
     "tailwind-merge": "^2.3.0",
     "zod": "^3.23.8"

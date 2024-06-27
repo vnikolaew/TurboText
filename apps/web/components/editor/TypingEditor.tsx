@@ -5,7 +5,6 @@ import { totalRunTimeAtom, typedLettersAtom, typingRunAtom, useTypingRunSuccess 
 import { useAtomValue } from "jotai";
 import TypingRunSummary from "@components/editor/TypingRunSummary";
 import Confetti from "react-confetti";
-import RestartButton from "@components/editor/buttons/RestartButton";
 import TypingInput from "@components/editor/TypingInput";
 import { LocalStorage } from "@lib/local-storage";
 import { Button, toast } from "@repo/ui";
@@ -15,7 +14,6 @@ import { AnimatePresence } from "framer-motion";
 import { TOASTS } from "@config/toasts";
 import SaveTypingRunPrompt from "@components/editor/SaveTypingRunPrompt";
 import { autoSaveModeAtom, updateUserXpAtom } from "@atoms/user";
-import NewRunButton from "@components/editor/buttons/NewRunButton";
 import { SignedOut } from "@components/common/Auth";
 import { signIn } from "next-auth/react";
 import { TypingRunState } from "@atoms/consts";
@@ -26,8 +24,8 @@ import CapsLockWarning from "@components/editor/warnings/CapsLockWarning";
 import TypingRunInfo from "./TypingRunInfo";
 import { TypingRun, User } from "@repo/db";
 import { useSetAtom } from "jotai/index";
-import PracticeWordsButton from "@components/editor/buttons/PracticeWordsButton";
-import CopyToClipboardButton from "@components/editor/buttons/CopyToClipboardButton";
+import ToggleWords from "@components/editor/ToggleWords";
+import EditorButtons from "@components/editor/buttons";
 
 export interface TypingEditorProps {
    user: User & { typingRuns: TypingRun[] };
@@ -72,7 +70,7 @@ const TypingEditor = ({ user }: TypingEditorProps) => {
 
    const autoSaveMode = useAtomValue(autoSaveModeAtom);
    const showSavePrompt = useMemo(() =>
-         timerState === TypingRunState.FINISHED ,
+         timerState === TypingRunState.FINISHED,
       [timerState, result, autoSaveMode]);
 
    function handleSaveTypingRun(): void {
@@ -113,18 +111,13 @@ const TypingEditor = ({ user }: TypingEditorProps) => {
             <span className={`mt-4 w-full text-center !text-main`}>Total run time: {totalRunTime}ms</span>
             <span className={`mt-4 w-full text-center !text-main`}>Total pause time: {totalPauseTime}ms</span>
          </div>
-         <div className={`flex items-center justify-center w-full gap-4`}>
-            <RestartButton />
-            <PracticeWordsButton />
-            <NewRunButton />
-            <CopyToClipboardButton/>
-         </div>
+         <ToggleWords />
+         <EditorButtons />
          <AnimatePresence>
             {(showSavePrompt || true) &&
                <SaveTypingRunPrompt
                   loading={isExecuting}
                   onDismiss={() => {
-                     // setTypingRun(null!);
                      LocalStorage.removeItem(TYPING_RUN_LS_KEY);
                   }}
                   onSave={handleSaveTypingRun} />

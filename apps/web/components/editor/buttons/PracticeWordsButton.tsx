@@ -13,12 +13,13 @@ import {
    TooltipTrigger,
 } from "@repo/ui";
 import React, { PropsWithChildren } from "react";
-import { AlertTriangle } from "lucide-react";
 import { useAtomValue } from "jotai";
 import { missedWordsAtom, slowWordsAtom, typingRunAtom, wordsAtom } from "@atoms/editor";
 import { useSetAtom } from "jotai/index";
 import { restartWithWordsAtom } from "@atoms/actions";
 import { useBoolean } from "@hooks/useBoolean";
+import { parseAsBoolean, useQueryState } from "nuqs";
+import { Footprints } from "lucide-react";
 
 export interface PracticeWordsButtonProps {
 }
@@ -34,7 +35,7 @@ const PracticeWordsButton = ({}: PracticeWordsButtonProps) => {
                      className={`hover:!bg-transparent group`}
                      variant={`ghost`}
                      size={`icon`}>
-                     <AlertTriangle className={`group-hover:!text-neutral-400  transition-colors duration-200 !text-main`}
+                     <Footprints className={`group-hover:!text-neutral-400  transition-colors duration-200 !text-main`}
                                     size={18} />
                   </Button>
                </PracticeWordsModal>
@@ -51,6 +52,8 @@ const PracticeWordsButton = ({}: PracticeWordsButtonProps) => {
 
 export const PracticeWordsModal = ({ children }: PropsWithChildren) => {
    const [open, setOpen] = useBoolean();
+   const [, setPracticeWordsQs] = useQueryState(`practice-words`, parseAsBoolean.withDefault(false))
+
    const typingRun = useAtomValue(typingRunAtom);
    const currentWords = useAtomValue(wordsAtom);
    const restart = useSetAtom(restartWithWordsAtom);
@@ -71,7 +74,9 @@ export const PracticeWordsModal = ({ children }: PropsWithChildren) => {
    }
 
    return (
-      < Dialog open={open} onOpenChange={value => {
+      < Dialog open={open} onOpenChange={async value => {
+         if(!value) await setPracticeWordsQs(null)
+         else await setPracticeWordsQs(true)
          console.log({ typingRun, currentWords });
          setOpen(value);
       }} modal>

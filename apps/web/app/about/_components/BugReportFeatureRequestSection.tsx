@@ -20,7 +20,7 @@ const BugReportFeatureRequestSection = ({}: BugReportFeatureRequestSectionProps)
             <Link className={`text-accent ml-1`} href={LINKS.discord}>
                Discord server
             </Link>, send us an email or a direct
-            message on Twitter.
+            message on <Link className={`text-accent ml-1`} href={LINKS.twitter}>Twitter</Link>.
          </p>
          <p className={`text-secondary`}>
             Test yourself in various modes, track your progress and improve your speed.
