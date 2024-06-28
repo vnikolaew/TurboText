@@ -11,14 +11,14 @@ export interface TypingRunInfoCellProps {
 const TypingRunInfoCell = ({ run }: TypingRunInfoCellProps) => {
    return (
       <div className={`flex items-center gap-1`}>
-         <IconWithTooltip text={run.metadata?.language ?? `English`}>
+         <IconWithTooltip text={run.metadata?.language ?? `english`}>
             <Globe size={20} />
          </IconWithTooltip>
-         <IconWithTooltip text={run.metadata?.test_difficulty ?? `NORMAL`}>
+         <IconWithTooltip text={run.metadata?.test_difficulty?.toLowerCase() ?? `normal`}>
             <Star size={20} />
          </IconWithTooltip>
-         {run.metadata?.blind_mode && (
-            <IconWithTooltip text={`Blind mode`}>
+         {run.blindMode && (
+            <IconWithTooltip text={`blind mode`}>
                <EyeOff size={20} />
             </IconWithTooltip>
          )}

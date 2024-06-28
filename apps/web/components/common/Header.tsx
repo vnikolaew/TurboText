@@ -11,6 +11,7 @@ import RocketLogo from "@components/icons/RocketLogo";
 import { Lexend_Deca } from "next/font/google";
 import { useAtomValue } from "jotai";
 import { userDataLoadingAtom } from "@atoms/user";
+import UserNotificationsButton from "./UserNotificationsButton";
 
 const lexend = Lexend_Deca({
    weight: ["400"],
@@ -72,9 +73,7 @@ const Header = ({}: NavbarProps) => {
                            <Skeleton className={`h-12 w-12 rounded-full bg-neutral-700`} />
                         ) : <UserAvatarDropdown />}
                      </div>
-                     <div>
-                        <Bell className={`text-secondary fill-secondary  hover:!fill-main transition-colors duration-200 hover:!text-main cursor-pointer hover:!border-main`} size={20} />
-                     </div>
+                   <UserNotificationsButton />
                      {userDataLoading ? (
                         <Skeleton className={`h-8 w-32 rounded-lg bg-neutral-700`} />
                      ) : (

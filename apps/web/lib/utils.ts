@@ -284,3 +284,27 @@ export function hexToHsl(hex: string) {
 
    return `${h} ${s}% ${l}%`;
 }
+
+export function normalizeURL(url: string) {
+   // Remove leading and trailing whitespace
+   url = url.trim();
+
+   // Add "https://" if the URL does not start with "http://" or "https://"
+   if (!/^https?:\/\//i.test(url)) {
+      url = "https://" + url;
+   }
+
+   // Ensure the URL is lowercased (optional, depending on use case)
+   url = url.toLowerCase();
+
+   // Validate the URL (optional, to ensure it's a valid URL format)
+   try {
+      new URL(url);
+   } catch (e) {
+      console.error("Invalid URL provided:", url);
+      return null;
+   }
+
+   return url;
+}
+

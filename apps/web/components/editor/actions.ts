@@ -62,6 +62,7 @@ export const saveTypingRun = authorizedAction
 
          const {
             wpm,
+            rawWpm,
             consistency,
             accuracy,
             isPersonalBest,
@@ -81,6 +82,7 @@ export const saveTypingRun = authorizedAction
                   completedWords,
                   isPersonalBest,
                   wpm,
+                  rawWpm,
                   consistency,
                   accuracy,
                },
@@ -140,8 +142,9 @@ async function updateUserXp(wpm: number, accuracy: number, userId: string) {
 }
 
 async function getRunStats(typedLetters: TypedLetterInfo[], totalTimeMilliseconds: number, completedWords: number, wordCompleteness: (boolean | null)[], wordRanges: WordRange[], userId: string) {
-   const [wpm, consistency, accuracy] = [
+   const [wpm, rawWpm, consistency, accuracy] = [
       getRunWpm(totalTimeMilliseconds, typedLetters, wordCompleteness, wordRanges),
+      getRunRawWpm(totalTimeMilliseconds, typedLetters),
       getRunConsistency(typedLetters),
       getRunAccuracy(typedLetters)
    ];
@@ -149,7 +152,7 @@ async function getRunStats(typedLetters: TypedLetterInfo[], totalTimeMillisecond
    const userBestWpm = await xprisma.user.getUserPersonalBestWpm({ userId });
    const isPersonalBest = wpm > userBestWpm;
 
-   return { wpm, consistency, accuracy, isPersonalBest } as const;
+   return { wpm, consistency, accuracy, isPersonalBest, rawWpm } as const;
 }
 
 /**
@@ -170,6 +173,15 @@ function getRunWpm(totalTimeMilliseconds: number, typedLetters: TypedLetterInfo[
       }));
 
    return correctWordChars * (60 / (totalTimeMilliseconds / 1000)) / 5;
+}
+
+/**
+* Get the typing run's WPM (words per minute).
+* @param totalTimeMilliseconds Total time of the run in milliseconds
+* @param typedLetters All typed letters
+*/
+function getRunRawWpm(totalTimeMilliseconds: number, typedLetters: TypedLetterInfo[]) {
+    return (typedLetters.length) * (60 / (totalTimeMilliseconds / 1000)) / 5;
 }
 
 /**

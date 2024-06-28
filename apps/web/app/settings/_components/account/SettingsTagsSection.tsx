@@ -51,7 +51,7 @@ const Tag = ({ tag }: { tag: TTag }) => {
       onSuccess: res => {
          if (res.data?.success) {
             console.log(res);
-            setActiveTags(t => t.filter(t => t !== tag.name))
+            setActiveTags(t => t.some(x => x ===  tag.name) ?  t.filter(t => t !== tag.name) : [...t, tag.name])
          }
       },
    });
@@ -61,7 +61,7 @@ const Tag = ({ tag }: { tag: TTag }) => {
       <div className={`w-full flex items-center gap-1`}>
          <Button
             onClick={handeToggleTagActive}
-            variant={`outline`}
+            variant={`secondary`}
             className={cn(
                `flex-1 hover:!text-black hover:!bg-neutral-300 transition-colors duration-200`,
                tag.metadata?.active === true && `!bg-white !text-black`
@@ -69,14 +69,14 @@ const Tag = ({ tag }: { tag: TTag }) => {
             {tag.name}
          </Button>
          <Button size={`icon`}
-                 variant={`outline`}
+                 variant={`secondary`}
                  className={`flex-1 hover:!text-black hover:!bg-neutral-300 transition-colors duration-200`}
          >
             <Crown size={20} />
          </Button>
          <EditTagModal tag={tag}>
             <Button size={`icon`}
-                    variant={`outline`}
+                    variant={`secondary`}
                     className={`flex-1 hover:!text-black hover:!bg-neutral-300 transition-colors duration-200`}
             >
                <Pencil size={20} />
@@ -84,7 +84,7 @@ const Tag = ({ tag }: { tag: TTag }) => {
          </EditTagModal>
          <DeleteTagModal tag={tag}>
             <Button size={`icon`}
-                    variant={`outline`}
+                    variant={`secondary`}
                     className={`flex-1 hover:!text-black hover:!bg-neutral-300 transition-colors duration-200`}
             >
                <Trash size={20} />

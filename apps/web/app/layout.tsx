@@ -5,7 +5,6 @@ import { cn } from "@lib/utils";
 import Providers from "@providers";
 import Header from "@components/common/Header";
 import { APP_DESCRIPTION, APP_KEYWORDS, APP_NAME, AUTHOR, AUTHOR_WEBSITE } from "@config/site";
-import appLogo from "@/public/logo.jpg";
 import AppFooter from "@components/common/AppFooter";
 import React, { Suspense } from "react";
 import CookieConsentBanner from "@components/common/cookie-banner/CookieConsentBanner";
@@ -21,21 +20,54 @@ import { WithContactModal } from "@app/_components/modals/ContactUsModal";
 import ShortcutsSection from "@app/_components/ShortcutsSection";
 import DynamicFontProvider from "@providers/DynamicFontProvider";
 import WithInitialState from "@components/editor/WithInitialState";
+import { auth } from "@auth";
+import { xprisma } from "@repo/db";
+import fs from "node:fs";
+import path from "node:path";
+import * as process from "node:process";
 
-export const metadata: Metadata = {
-   title: `${APP_NAME} | ${APP_DESCRIPTION}`,
-   description: APP_DESCRIPTION,
-   authors: [{
-      url: AUTHOR_WEBSITE,
-      name: AUTHOR,
-   }],
-   applicationName: APP_NAME,
-   icons: appLogo.src,
-   keywords: APP_KEYWORDS,
-   category: `notes`,
-   creator: AUTHOR,
-   referrer: `no-referrer`,
-};
+const THEME_ACCENT_COLORS = {
+   'light': 'blue',
+   'dark': 'hsl(38 92% 50%)',
+   'nighthawk': 'hsl(184 100% 27%)',
+   'obsidian': 'hsl(22 100% 51%)',
+   'onyx': 'hsl(172 100% 25%)',
+   'slate': 'hsl(56 73% 74%)',
+   'frost': 'hsl(213 47% 47%)',
+} as const
+
+export async function generateMetadata() {
+   const session = await auth();
+
+   let theme;
+   if (session) {
+      let userConfig = await xprisma.userConfiguration.findFirst({
+         where: {
+            userId: session.user?.id,
+         },
+      });
+      theme = userConfig?.theme || "dark";
+   }
+
+   const faviconFile = fs.existsSync(path.join(process.cwd(), `public`, `app-logos`, `${theme}.png`)) ? `/app-logos/${theme}.png` : `/app-logos/dark.png`;
+
+   const metadata: Metadata = {
+      title: `${APP_NAME} | ${APP_DESCRIPTION}`,
+      description: APP_DESCRIPTION,
+      authors: [{
+         url: AUTHOR_WEBSITE,
+         name: AUTHOR,
+      }],
+      applicationName: APP_NAME,
+      icons: [faviconFile],
+      keywords: APP_KEYWORDS,
+      category: `notes`,
+      creator: AUTHOR,
+      referrer: `no-referrer`,
+   };
+
+   return metadata;
+}
 
 export default async function RootLayout({
                                             children,

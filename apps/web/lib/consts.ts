@@ -61,8 +61,6 @@ export const DEFAULT_USER_SETTINGS: Partial<UserConfiguration> = {
    "theme_flip_colors": false,
    "pace_caret_style": "CURSOR",
    "caret_style": "CURSOR",
-   // "id": "clxn1gsrc0001b6uyp0pc21no",
-   // "userId": "clxn1gsr70000b6uyahrjhb5o",
    "blind_mode": false,
    "auto_save_mode": false,
    "input_freedom_mode": false,

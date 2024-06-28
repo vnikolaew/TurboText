@@ -20,6 +20,10 @@ const TypingRunsStatsSection = ({ runs }: TypingRunsStatsSectionProps) => {
    const averageWpm = sum(runs.map(r => r.wpm as number)) / runs.length;
    const averageWpmLast10 = sum(runs.slice(0, 10).map(r => r.wpm as number)) / runs.length;
 
+   const highestRawWpm = runs.sort((a, b) => b.rawWpm - a.rawWpm )?.at(0)?.rawWpm ?.toFixed(0);
+   const averageRawWpm = sum(runs.map(r => r.rawWpm as number)) / runs.length;
+   const averageRawWpmLast10 = sum(runs.slice(0, 10).map(r => r.rawWpm  as number)) / runs.length;
+
    const highestAcc = runs.sort((a, b) => b.accuracy - a.accuracy)?.at(0)?.accuracy?.toFixed(0);
    const averageAcc = sum(runs.map(r => r.accuracy as number)) / runs.length;
    const averageAccLast10 = sum(runs.slice(0, 10).map(r => r.accuracy as number)) / runs.length;
@@ -45,6 +49,10 @@ const TypingRunsStatsSection = ({ runs }: TypingRunsStatsSectionProps) => {
             <TypingRunStat label={`highest wpm`} value={highestWpm} />
             <TypingRunStat label={`average wpm`} value={averageWpm.toFixed(0)} />
             <TypingRunStat label={`average wpm (last 10 tests)`} value={averageWpmLast10.toFixed(0)} />
+
+            <TypingRunStat label={`highest raw wpm`} value={highestRawWpm} />
+            <TypingRunStat label={`average raw wpm`} value={averageRawWpm.toFixed(0)} />
+            <TypingRunStat label={`average raw wpm (last 10 tests)`} value={averageRawWpmLast10.toFixed(0)} />
 
             <TypingRunStat label={`highest accuracy`} value={`${highestAcc}%`} />
             <TypingRunStat label={`average accuracy`} value={`${averageAcc.toFixed(0)}%`} />

@@ -5,7 +5,6 @@ import SettingsAccordion from "@app/settings/_components/SettingsAccordion";
 import Sections from "./_components/Sections";
 import type { Metadata } from "next";
 import { APP_DESCRIPTION, APP_NAME, AUTHOR, AUTHOR_WEBSITE } from "@config/site";
-import appLogo from "@public/logo.jpg";
 import WithInitialState from "@app/settings/_components/common/WithInitialState";
 import { getClickSoundsFiles } from "./_queries";
 
@@ -22,7 +21,7 @@ export const metadata: Metadata = {
       name: AUTHOR,
    }],
    applicationName: APP_NAME,
-   icons: appLogo.src,
+   // icons: appLogo.src,
    keywords: [`speed`, `typing`, `speed-typing`, `test`, `web`, `keyboard`],
    category: `notes`,
    creator: AUTHOR,
@@ -39,7 +38,8 @@ const Page = async ({}: PageProps) => {
    // if (!user) notFound();
    let rest = null;
    if(user) {
-      const { updatePassword, verifyPassword, ...rest } = user;
+      const { updatePassword, verifyPassword, ...rest_ } = user;
+      rest = rest_
    }
 
    return (

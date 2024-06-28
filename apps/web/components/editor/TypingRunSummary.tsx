@@ -12,7 +12,7 @@ import {
 import { SignedOut } from "@components/common/Auth";
 import { signIn } from "next-auth/react";
 import { timeAtom } from "@atoms/timer";
-import { consistencyScoreAtom, correctWordCharsAtom, correctWordsAtom, wpmAtom } from "@atoms/stats";
+import { consistencyScoreAtom, correctWordCharsAtom, correctWordsAtom, rawWpmAtom, wpmAtom } from "@atoms/stats";
 import { sum } from "lodash";
 
 export interface TypingEditorStatisticsProps {
@@ -34,6 +34,7 @@ const TypingRunSummary = ({}: TypingEditorStatisticsProps) => {
    const letterCorrectness = useAtomValue(lettersCorrectnessAtom);
 
    const wpm = useAtomValue(wpmAtom)
+   const rawWpm = useAtomValue(rawWpmAtom)
    const success = useAtomValue(typingRunSuccessAtom)
 
    return (
@@ -46,6 +47,7 @@ const TypingRunSummary = ({}: TypingEditorStatisticsProps) => {
             <div>Correct letters: {letterCorrectness.filter(x => x === true).length}</div>
             <Separator className={`h-4 w[2px]`} orientation={`vertical`} />
             <div>WPM: {wpm.toFixed(0)}</div>
+            <div>Raw WPM: {rawWpm.toFixed(0)}</div>
             <div>Correct word chars: {correctWordCharacters.toFixed(0)}</div>
             <div>Total chars: {totalWordCharacters.toFixed(0)}</div>
             <Separator className={`h-4 w[2px]`} orientation={`vertical`} />

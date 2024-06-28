@@ -21,6 +21,7 @@ import moment from "moment";
 import TypingRunInfoCell from "@app/account/_components/TypingRunInfoCell";
 import { atom, useAtomValue } from "jotai";
 import { useAtom } from "jotai/index";
+import { TypedLetterFlags, TypedLetterInfo } from "@atoms/consts";
 
 export interface LatestRunsTableProps {
    runs: TypingRun[],
@@ -42,7 +43,7 @@ interface TableRun {
    createdAt: Date;
 }
 
-const tableSortAtom = atom<{ key: keyof TableRun; desc: boolean }>({
+const tableSortAtom = atom<{ key: keyof RunNormalized; desc: boolean }>({
    key: `createdAt`,
    desc: true,
 });
@@ -50,8 +51,14 @@ const tableSortAtom = atom<{ key: keyof TableRun; desc: boolean }>({
 function mapRun(run: TypingRun, tagsById: Record<string, TTag[]>) {
    return {
       ...run,
+      correct: (run.typedLetters as TypedLetterInfo[]).filter(t => t.correct).length,
+      incorrect: (run.typedLetters as TypedLetterInfo[]).filter(t => t.correct === false).length,
+      extra: (run.typedLetters as TypedLetterInfo[]).filter(t => t.flags === TypedLetterFlags.EXTRA).length,
+      blindMode: run.metadata?.blind_mode ?? false,
       wpm: run.wpm,
       wpmString: run.wpm.toFixed(2),
+      rawWpm: run.metadata?.rawWpm,
+      rawWpmString: run.metadata?.rawWpm?.toFixed(2),
       consistency: run.consistency,
       consistencyString: run.consistency.toFixed(2),
       accuracy: run.accuracy,
@@ -85,7 +92,7 @@ const LatestRunsTable = ({ runs, tagsById }: LatestRunsTableProps) => {
 
    const runsNormalized = runs?.slice(0, pagingCursor)
       .map(r => mapRun(r, tagsById))
-      .sort((a, b) => sortRuns(a,b, tableSort));
+      .sort((a, b) => sortRuns(a, b, tableSort));
 
    console.log({ runsNormalized });
 
@@ -100,10 +107,25 @@ const LatestRunsTable = ({ runs, tagsById }: LatestRunsTableProps) => {
                   <TableRow className={`text-sm w-full !text-secondary`}>
                      <TableHead className="w-[100px]"></TableHead>
                      <SortableTableHead column={`wpm`} />
-                     <TableHead className="text-left">raw</TableHead>
+                     <SortableTableHead title={`raw`} column={`rawWpm`} />
                      <SortableTableHead column={`accuracy`} />
                      <SortableTableHead column={`consistency`} />
-                     <TableHead className="text-left">chars</TableHead>
+                     <TableHead className="text-left">
+                        <TooltipProvider>
+                           <Tooltip>
+                              <TooltipTrigger asChild>
+                                 <span className={`cursor-pointer`}>
+                                    chars
+                                 </span>
+                              </TooltipTrigger>
+                              <TooltipContent
+                                 side={`top`}
+                                 className={`bg-black text-white rounded-xl text-sm border-neutral-700 !px-4 !py-2`}>
+                                 correct/incorrect/extra/missed
+                              </TooltipContent>
+                           </Tooltip>
+                        </TooltipProvider>
+                     </TableHead>
                      <TableHead className="text-left">mode</TableHead>
                      <TableHead className="text-left">info</TableHead>
                      <TableHead className="text-left">tags</TableHead>
@@ -119,10 +141,10 @@ const LatestRunsTable = ({ runs, tagsById }: LatestRunsTableProps) => {
                            )}
                         </TableCell>
                         <TableCell className={`text-left`}>{run.wpmString}</TableCell>
-                        <TableCell className={`text-left`}>-</TableCell>
+                        <TableCell className={`text-left`}>{run.rawWpmString}</TableCell>
                         <TableCell className="text-left">{`${run.accuracyString}%`}</TableCell>
                         <TableCell className="text-left">{`${run.consistencyString}%`}</TableCell>
-                        <TableCell className={`text-left`}></TableCell>
+                        <TableCell className={`text-left`}>{run.correct}/{run.incorrect}/{run.extra}/0</TableCell>
                         <TableCell className={`text-left`}>{run.modeNormalized?.toLowerCase()}</TableCell>
                         <TableCell className={`text-left`}>
                            <TypingRunInfoCell run={run} />
@@ -132,7 +154,7 @@ const LatestRunsTable = ({ runs, tagsById }: LatestRunsTableProps) => {
                               <Tooltip>
                                  <TooltipTrigger className={`cursor-pointer`} asChild>
                                     <Tag className={cn(`fill-main stroke-transparent`,
-                                       run.tags?.length && `!fill-white`)} size={22} />
+                                       run.tags?.length && `!fill-secondary`)} size={22} />
                                  </TooltipTrigger>
                                  <TooltipContent
                                     side={`top`}
@@ -161,10 +183,10 @@ const LatestRunsTable = ({ runs, tagsById }: LatestRunsTableProps) => {
    );
 };
 
-const SortableTableHead = ({ column, title }: { column: keyof TableRun, title?: string }) => {
+const SortableTableHead = ({ column, title }: { column: keyof RunNormalized, title?: string }) => {
    const [tableSort, setTableSort] = useAtom(tableSortAtom);
 
-   const handleChangeSort = useCallback((key: keyof TableRun) => {
+   const handleChangeSort = useCallback((key: keyof RunNormalized) => {
       setTableSort(ts => ({
          key,
          desc: ts.key === key ? !ts.desc : false,

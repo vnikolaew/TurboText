@@ -74,6 +74,9 @@ wordRangesByEndsAtom.debugLabel = `wordRangesByEndsAtom`;
 export const startTimeAtom = atom<number>(0);
 startTimeAtom.debugLabel = `startTimeAtom`;
 
+export const endTimeAtom = atom<number>(0);
+endTimeAtom.debugLabel = `endTimeAtom`;
+
 export const currentCharIndexAtom = atom<number>(-1);
 currentCharIndexAtom.debugLabel = `currentCharIndexAtom`;
 
@@ -140,11 +143,11 @@ typingRunStateAtom.debugLabel = `typingRunStateAtom`;
 export const totalRunTimeAtom = atom<number>(get => {
    const start = get(startTimeAtom);
    const totalPauseTime = get(totalPauseTimeAtom);
-   return performance.now() - start - totalPauseTime;
-   // return sum(get(wordsCompletionTimesAtom).map(w => w.time)) - get(totalPauseTimeAtom)
+   const endTime = get(endTimeAtom);
+
+   return (endTime === 0 ? performance.now() : endTime) - start - totalPauseTime;
 });
 totalRunTimeAtom.debugLabel = `totalRunTimeAtom`;
-
 
 // @ts-ignore
 export const typingRunSuccessAtom = atom<TypingRunSuccess>((get, _) => {
@@ -235,6 +238,9 @@ export const useTypingRunSuccess = () => {
    }, [success, typingRun]);
 };
 
+const lastLetterIsSpaceAtom = atom(false);
+lastLetterIsSpaceAtom.debugLabel = `lastLetterIsSpaceAtom`;
+
 export const onKeyPressAtom = atom(null, (get, set, e: KeyboardEvent<HTMLDivElement>) => {
    e.preventDefault();
    e.stopPropagation();
@@ -261,6 +267,7 @@ export const onKeyPressAtom = atom(null, (get, set, e: KeyboardEvent<HTMLDivElem
    const charsByIndex = get(charsByIndexAtom);
    const currentCharIndex = get(currentCharIndexAtom);
    const wordRangesByEnds = get(wordRangesByEndsAtom);
+   const lastLetterIsSpace = get(lastLetterIsSpaceAtom);
 
    const freedomMode = get(freedomModeAtom) as unknown as boolean;
    const confidenceMode = get(confidenceModeAtom) as unknown as ("OFF" | "ON" | "MAX");
@@ -268,7 +275,7 @@ export const onKeyPressAtom = atom(null, (get, set, e: KeyboardEvent<HTMLDivElem
    if (e.key === `Shift` || (e.ctrlKey && e.key === `Control`)) return;
 
    if (e.key === `Backspace`) {
-      if(confidenceMode === 'MAX') return
+      if (confidenceMode === "MAX") return;
 
       if (freedomMode || confidenceMode === "ON") {
          // Check if user is pressing backspace on previous word:
@@ -300,20 +307,30 @@ export const onKeyPressAtom = atom(null, (get, set, e: KeyboardEvent<HTMLDivElem
    if (charCode >= 32 && charCode <= "z".charCodeAt(0)) {
       // Determine if we are at the end of a word
       // TODO: Handle Space logic ...
-      if(wordRangesByEnds.has(currentCharIndex)) {
-         console.log(`Hitting the end of word ...`);
-         if(e.code !== `Space`) {
-            console.log(e.key, e.code);
-            console.log(`Incorrect character typed`);
-            return
+      if (wordRangesByEnds.has(currentCharIndex)) {
+         if (e.code === `Space`) {
+            set(lastLetterIsSpaceAtom, true);
+            return;
          } else {
-            set(currentCharIndexAtom, c => c + 1);
-            return
+            // Check if last typed letter is a space:
+            if (lastLetterIsSpace) {
+               set(lastLetterIsSpaceAtom, false);
+            } else {
+               console.log(`Current incorrect letter (extra) is: ${e.key}`);
+               set(typedLettersAtom, l => [...l, {
+                  correct: false,
+                  timestamp: performance.now() - startTime,
+                  letter: e.key,
+                  flags: TypedLetterFlags.EXTRA,
+                  charIndex: currentCharIndex!,
+               }]);
+               return;
+            }
+            ;
          }
       }
 
       set(currentCharIndexAtom, c => c + 1);
-
       if (currentCharIndex + 1 === 0) set(startAtom);
 
       const correct = charCode === charsByIndex[currentCharIndex + 1]?.charCodeAt(0);

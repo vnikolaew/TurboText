@@ -61,6 +61,18 @@ wpmAtom.debugLabel = `wpmAtom`;
 
 
 
+export const rawWpmAtom = atom<number>(get => {
+   const wordCompletionTimes = get(wordsCompletionTimesAtom);
+   const totalTime = get(totalRunTimeAtom);
+   const totalLetters = get(typedLettersAtom).length;
+
+   const time = totalTime === 0 ? sum(
+      wordCompletionTimes.map(t => t.time)) : totalTime;
+
+   return (totalLetters * (60 / (time / 1000))) / 5;
+});
+rawWpmAtom.debugLabel = `rawWpmAtom`;
+
 export const correctWordsAtom = atom<number>(get => {
    const wordCorrectness = get(wordsCorrectnessAtom);
    return wordCorrectness.filter(x =>  x === true).length;

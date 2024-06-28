@@ -2,6 +2,7 @@
 import React, { Fragment, useEffect, useMemo } from "react";
 import { useTimer } from "@components/editor/hooks/useTimer";
 import {
+   endTimeAtom,
    totalRunTimeAtom,
    typedLettersAtom,
    typingRunAtom, typingRunStateAtom,
@@ -44,8 +45,9 @@ const TypingEditor = ({ user }: TypingEditorProps) => {
    const totalRunTime = useAtomValue(totalRunTimeAtom);
    const totalPauseTime = useAtomValue(totalPauseTimeAtom);
    const typingRun = useAtomValue(typingRunAtom);
-   const autoSave = useAtomValue(autoSaveModeAtom) as boolean
+   const autoSave = useAtomValue(autoSaveModeAtom) as boolean;
    const setUserXp = useSetAtom(updateUserXpAtom);
+   const setEnd = useSetAtom(endTimeAtom);
 
    useTypingRunSuccess();
    useSaveLatestUserRun();
@@ -71,15 +73,16 @@ const TypingEditor = ({ user }: TypingEditorProps) => {
 
    const { timerState } = useTimer(() => {
       console.log(typedLetters?.sort((a, b) => a.charIndex - b.charIndex));
+      setEnd(performance.now())
       LocalStorage.setItem(TYPING_RUN_LS_KEY, typingRun);
    });
 
-   const state = useAtomValue(typingRunStateAtom)
+   const state = useAtomValue(typingRunStateAtom);
    useEffect(() => {
-      if(state === TypingRunState.FINISHED && autoSave) {
-         execute(typingRun)
+      if (state === TypingRunState.FINISHED && autoSave) {
+         execute(typingRun);
       }
-   }, [state, autoSave])
+   }, [state, autoSave]);
 
    const autoSaveMode = useAtomValue(autoSaveModeAtom);
    const showSavePrompt = useMemo(() =>

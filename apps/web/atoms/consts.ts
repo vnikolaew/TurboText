@@ -32,7 +32,8 @@ export enum TypingFlags {
 
 export enum TypedLetterFlags {
    INSERTED = 1,
-   DELETED = 2
+   DELETED = 2,
+   EXTRA = 3,
 }
 
 export enum TypingRunSuccess {

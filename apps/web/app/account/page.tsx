@@ -9,7 +9,6 @@ import { formatMillisecondsToTime } from "@lib/utils";
 import LatestUserRuns from "@app/account/_components/LatestUserRuns";
 import type { Metadata } from "next";
 import { APP_DESCRIPTION, APP_NAME, AUTHOR, AUTHOR_WEBSITE } from "@config/site";
-import appLogo from "@public/logo.jpg";
 import { getUserWithTypingRuns } from "@app/account/_queries";
 import TypingRunsStatsSection from "@app/account/_components/TypingRunsStatsSection";
 import { UserExperienceInfo } from "@app/account/_components/UserExperienceInfo";
@@ -23,7 +22,7 @@ export const metadata: Metadata = {
       name: AUTHOR,
    }],
    applicationName: APP_NAME,
-   icons: appLogo.src,
+   // icons: appLogo.src,
    keywords: [`speed`, `typing`, `speed-typing`, `test`, `web`, `keyboard`],
    category: `notes`,
    creator: AUTHOR,

@@ -38,6 +38,12 @@ export let xprisma = prisma.$extends({
                return Number(metadata?.wpm ?? 0);
             },
          },
+         rawWpm: {
+            needs: {  metadata: true },
+            compute({  metadata }) {
+               return Number(metadata?.rawWpm ?? 0);
+            },
+         },
          hasFlag: {
             needs: { flags: true },
             compute({ flags }) {

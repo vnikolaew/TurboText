@@ -32,6 +32,7 @@ declare global {
 
       type TypingRunMetadata = {
          wpm: number
+         rawWpm: number
          tags: any[]
          accuracy: number
          language: string

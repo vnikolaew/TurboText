@@ -22,7 +22,7 @@ const AddTagModal = ({ children }: AddTagModalProps) => {
             console.log(res);
             toast(TOASTS.ADD_NEW_TAG_SUCCESS);
          } else {
-            toast(TOASTS.ADD_NEW_TAG_FAILURE(res.error));
+            toast(TOASTS.ADD_NEW_TAG_FAILURE(res.data.error!));
          }
          setOpen(false);
       },
@@ -41,14 +41,14 @@ const AddTagModal = ({ children }: AddTagModalProps) => {
          <DialogTrigger asChild>
             {children}
          </DialogTrigger>
-         <DialogContent className={`z-[100] !bg-neutral-800`}>
+         <DialogContent className={`z-[100] !bg-secondary-bg`}>
             <DialogHeader>
-               <DialogTitle className={`text-2xl`}>Add new tag</DialogTitle>
+               <DialogTitle className={`text-2xl !text-main`}>Add new tag</DialogTitle>
             </DialogHeader>
             <div className={`w-full`}>
                <Input
                   onChange={e => setValue(e.target.value)} value={value}
-                  className={`!w-full !text-lg !bg-black focus:!outline-neutral-300`} />
+                  className={`!w-full !text-lg !bg-secondary focus:!outline-neutral-300 !text-main`} />
             </div>
             <DialogFooter className={`w-full !mt-2`}>
                <LoadingButton onClick={handleAddTag} loadingText={`Adding ...`} loading={isExecuting}>

@@ -1,6 +1,6 @@
 "use server";
 
-import { xprisma } from "@repo/db";
+import { TypingRun, xprisma } from "@repo/db";
 import moment from "moment/moment";
 import { TypingMode } from "@atoms/consts";
 import { auth } from "@auth";
@@ -27,12 +27,12 @@ function mapRow(run: TypingRun, index: number): LeaderboardRow {
       wpm: run.wpm.toFixed(2),
       accuracy: run.accuracy.toFixed(2),
       consistency: run.consistency.toFixed(2),
-      raw: run.raw?.toFixed(2),
+      raw: run.rawWpm?.toFixed(2),
       metadata: {},
    };
 }
 
-export async function getLeaderboard(searchParams: string) {
+export async function getLeaderboard(searchParams: { daily?: string, language?: string }) {
    const { daily, language } = getSearchParamsNormalized(searchParams);
 
    const qualifiedUserIds = await xprisma.typingRun.groupBy({

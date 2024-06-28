@@ -1,5 +1,5 @@
 import { atom } from "jotai/index";
-import { startTimeAtom, typingModeAtom, typingRunStateAtom } from "@atoms/editor";
+import { endTimeAtom, startTimeAtom, typingModeAtom, typingRunStateAtom } from "@atoms/editor";
 import { TypingMode, TypingRunState } from "@atoms/consts";
 
 export const TIMES = {
@@ -131,5 +131,6 @@ export const stopAtom = atom(null, (get, set) => {
    set(timerIntervalAtom, null!);
    set(currentTimestampAtom, time);
    set(typingRunStateAtom, TypingRunState.FINISHED);
+   set(endTimeAtom, performance.now())
 });
 stopAtom.debugLabel = `stopAtom`;

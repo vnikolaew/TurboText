@@ -9,7 +9,7 @@ import {
    startAtom,
    timerAtom,
    timerIntervalAtom,
-} from "@app/%5Ftimer/atoms";
+} from "@app/(dev)/%5Ftimer/atoms";
 import { useSetAtom } from "jotai/index";
 import { Button } from "@repo/ui";
 

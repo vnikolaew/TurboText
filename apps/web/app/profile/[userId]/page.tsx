@@ -4,8 +4,8 @@ import { notFound } from "next/navigation";
 import moment from "moment";
 import { Separator, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, UserAvatar } from "@repo/ui";
 import { UserExperienceInfo } from "@app/account/_components/UserExperienceInfo";
-import { formatMillisecondsToTime, isValidUrl } from "@lib/utils";
-import { Flag, Globe, Twitter } from "lucide-react";
+import { formatMillisecondsToTime, isValidUrl, normalizeURL } from "@lib/utils";
+import { Flag, Github, Globe, Twitter } from "lucide-react";
 import TimeRunsStats from "@app/profile/[userId]/_components/TimeRunsStats";
 import WordRunsStats from "@app/profile/[userId]/_components/WordRunsStats";
 import ReportUserModal from "@app/profile/[userId]/_components/ReportUserModal";
@@ -16,6 +16,7 @@ import Link from "next/link";
 export interface PageProps {
    params: { userId?: string };
 }
+
 
 const Page = async ({ params }: PageProps) => {
    console.log({ params });
@@ -103,8 +104,30 @@ const Page = async ({ params }: PageProps) => {
                <TooltipProvider>
                   <Tooltip>
                      <TooltipTrigger asChild>
+                        {user.metadata?.github ? (
+                           <Link target={"_blank"}
+                                 href={`https://www.github.com/${encodeURIComponent(user.metadata?.github)}`}>
+                              <Github size={32}
+                                      className={`cursor-pointer stroke-secondary fill-secondary hover:!fill-accent hover:!stroke-accent transition-colors duration-200`} />
+                           </Link>
+                        ) : (
+                           <Github size={32}
+                                   className={`cursor-pointer stroke-secondary fill-secondary hover:!fill-accent hover:!stroke-accent transition-colors duration-200`} />
+                        )}
+                     </TooltipTrigger>
+                     <TooltipContent
+                        side={`top`}
+                        className={`bg-secondary-bg text-main rounded-xl text-sm border-none !px-4 !py-2`}>
+                        {user.metadata?.github ?? `Unspecified`}
+                     </TooltipContent>
+                  </Tooltip>
+               </TooltipProvider>
+               <TooltipProvider>
+                  <Tooltip>
+                     <TooltipTrigger asChild>
                         {user.metadata?.twitter ? (
-                           <Link href={`www.twitter.com/${encodeURIComponent(user.metadata?.twitter)}`}>
+                           <Link target={`_blank`}
+                                 href={`https://www.twitter.com/${encodeURIComponent(user.metadata?.twitter)}`}>
                               <Twitter size={32}
                                        className={`cursor-pointer stroke-secondary fill-secondary hover:!fill-accent hover:!stroke-accent transition-colors duration-200`} />
                            </Link>
@@ -124,7 +147,9 @@ const Page = async ({ params }: PageProps) => {
                   <Tooltip>
                      <TooltipTrigger asChild>
                         {user.metadata?.website && isValidUrl(user.metadata.website) ? (
-                           <Link href={`${encodeURIComponent(user.metadata?.website)}`}>
+                           <Link
+                              target={`_blank`}
+                              href={`${normalizeURL(encodeURIComponent(user.metadata?.website))}`}>
                               <Globe size={32}
                                      className={`cursor-pointer stroke-secondary  hover:!stroke-accent transition-colors duration-200`} />
                            </Link>
