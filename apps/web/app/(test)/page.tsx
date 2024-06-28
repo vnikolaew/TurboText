@@ -1,15 +1,13 @@
-import WithUserLoading from "@app/_components/WithUserLoading";
 import WithInitialState from "@components/editor/WithInitialState";
 import WithTransition from "@components/common/WithTransition";
 import SignInButton from "@components/buttons/SignInButton";
-import { auth } from "@auth";
 import { ServerSignedOut } from "@components/common/Auth.server";
 import EditorToolbar from "@components/editor/toolbar/EditorToolbar";
 import PressKeyLabel from "@components/editor/PressKeyLabel";
-import { xprisma } from "@repo/db";
 import TypingEditor from "@components/editor/TypingEditor";
 import OnRunFailed from "@components/editor/toasts/OnRunFailed";
 import OnRunSaved from "@components/editor/toasts/OnRunSaved";
+import { getUser } from "@app/(test)/_queries";
 
 interface HomeProps {
 }
@@ -19,41 +17,9 @@ export const dynamic = `force-dynamic`;
 export const revalidate = 10;
 
 export default async function Home({ }: HomeProps) {
-   const session = await auth();
+   let user = await getUser();
 
-   let user;
-   if (!session?.user) user = null;
-   else {
-      let dbUser = await xprisma.user.findUnique({
-         where: { id: session?.user?.id ?? `` },
-         include: {
-            tags: {
-               select: {
-                  id: true, name: true,
-               },
-            },
-            experience: {
-               select: {
-                  id: true, points: true, level: true,
-               },
-            },
-            configuration: true, typingRuns: {
-               select: {
-                  id: true, typedLetters: true, mode: true, metadata: true, totalTimeMilliseconds: true,
-               },
-            },
-         },
-      });
-      if (!dbUser) user = null;
-      else {
-         const { updatePassword, verifyPassword, ...rest } = dbUser;
-         user = rest;
-      }
-   }
-
-   const authenticated = !!session?.user;
-
-   const main = (
+   return (
       <WithTransition
          key={`home`}
          initial={{ opacity: 100 }}
@@ -74,12 +40,4 @@ export default async function Home({ }: HomeProps) {
          </ServerSignedOut>
       </WithTransition>
    );
-
-   return main;
-
-   return authenticated ? (
-      <WithUserLoading>
-         {main}
-      </WithUserLoading>
-   ) : main;
 }

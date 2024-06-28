@@ -3,8 +3,38 @@
 import { xprisma } from "@repo/db";
 import moment from "moment/moment";
 import { TypingMode } from "@atoms/consts";
+import { auth } from "@auth";
+import { LeaderboardRow } from "@app/leaderboard/_components/LeaderboardTable";
 
-export async function getLeaderboard({ daily, language }: { daily?: boolean, language?: string }) {
+function getSearchParamsNormalized(searchParams: { daily?: string, language?: string }) {
+   const daily = searchParams?.daily === `true`;
+   const language = searchParams?.language ?? `English`;
+
+   return { daily, language } as const;
+}
+
+function mapRow(run: TypingRun, index: number): LeaderboardRow {
+   return {
+      position: index + 1,
+      date: run.createdAt,
+      user: {
+         id: run.user.id,
+         image: run.user.image,
+         level: run.user.experience?.level,
+         name: run.user.name,
+         og: run.user.metadata?.ogAccount ?? false,
+      },
+      wpm: run.wpm.toFixed(2),
+      accuracy: run.accuracy.toFixed(2),
+      consistency: run.consistency.toFixed(2),
+      raw: run.raw?.toFixed(2),
+      metadata: {},
+   };
+}
+
+export async function getLeaderboard(searchParams: string) {
+   const { daily, language } = getSearchParamsNormalized(searchParams);
+
    const qualifiedUserIds = await xprisma.typingRun.groupBy({
       by: [`userId`],
       _sum: {
@@ -48,11 +78,26 @@ export async function getLeaderboard({ daily, language }: { daily?: boolean, lan
 
    const time15Runs = runs
       .filter(r => r.mode === TypingMode.TIME && r.time === 15)
-      .sort((a, b) => b.wpm - a.wpm);
+      .sort((a, b) => b.wpm - a.wpm)
+      .map(mapRow);
 
    const time60Runs = runs
       .filter(r => r.mode === TypingMode.TIME && r.time === 60)
-      .sort((a, b) => b.wpm - a.wpm);
+      .sort((a, b) => b.wpm - a.wpm)
+      .map(mapRow);
 
-   return { time15Runs, time60Runs, qualifiedUserIds };
+   return { time15Runs, time60Runs, qualifiedUserIds, daily, language };
+}
+
+export async function showUserWarning() {
+   const session = await auth();
+   const user = await xprisma.user.findUnique({
+      where: { id: session?.user?.id ?? `` },
+      include: {
+         typingRuns: true,
+      },
+   });
+   const showWarning = user?.totalTimeTypingMs < (1000 * 60 * 2 * 60);
+
+   return showWarning;
 }

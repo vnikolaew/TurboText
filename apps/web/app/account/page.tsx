@@ -54,7 +54,6 @@ const Page = async ({ searchParams }: PageProps) => {
                   <UserAvatar className={`w-20 h-20`} imageSrc={user?.image!} />
                   <div className={`flex flex-col items-start gap-2`}>
                      <h2 className={`text-2xl text-main `}>{user?.name}</h2>
-
                      <div className={`flex flex-col gap-0`}>
                         <TooltipProvider>
                            <Tooltip>

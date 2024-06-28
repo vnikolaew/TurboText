@@ -3,7 +3,8 @@ import React, { Fragment, useEffect, useRef } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
 import {
    caretCoordinatesAtom,
-   currentCharIndexAtom, lettersCorrectnessAtom,
+   currentCharIndexAtom,
+   lettersCorrectnessAtom,
    onKeyPressAtom,
    typingRunStateAtom,
    wordsAtom,
@@ -71,7 +72,6 @@ const TypingInput = ({}: TypingInputProps) => {
                   if (!toolbar?.contains(e.relatedTarget)) {
                      return setTimeout(() => {
                         if (timerState === TypingRunState.RUNNING) {
-                           console.log(`Pausing`);
                            pause();
                         }
                         setShowFocusLost(true);

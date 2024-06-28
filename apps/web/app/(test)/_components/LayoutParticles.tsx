@@ -1,17 +1,13 @@
 "use client";
 import { Particles } from "@repo/ui";
 import React from "react";
-import { useAtomValue } from "jotai/index";
-import { themeAtom } from "@atoms/user";
-import { hslToHex } from "@lib/utils";
-import { getThemeVariable } from "@app/settings/_components/theme/_components/ThemeButton";
+import { useThemeVariable } from "@hooks/useThemeVariable";
 
 export interface LayoutParticlesProps {
 }
 
 const LayoutParticles = ({}: LayoutParticlesProps) => {
-   const theme = useAtomValue(themeAtom);
-   const color = hslToHex(getThemeVariable(theme, `--accent`));
+   const color = useThemeVariable(`--accent`);
 
    return (
       <Particles

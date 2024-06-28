@@ -18,7 +18,6 @@ export function usePaceCaret({ top, left }: { top: number; left: number }) {
       const paceCaretSpeedAbsolute = wordElementsWidth / (wordCount / 50 * 60);
 
       intervalRef.current = setInterval(() => {
-         console.log({ ...paceCaretCoords, elementsEnd: endLeft });
          setPaceCaretCoords(c => ({ ...c, left: c.left + (paceCaretSpeedAbsolute / 10) }));
       }, 100);
 

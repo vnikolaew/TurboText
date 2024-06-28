@@ -2,8 +2,6 @@ import { Prisma, PrismaClient, Tag, TypingRun, User } from "@prisma/client";
 import { InternalArgs } from "@prisma/client/runtime/library";
 import bcrypt from "bcryptjs";
 import { typedLetterInfoSchema } from "./utils";
-import { groupBy } from "lodash";
-import { kogasa, mean, roundTo2, stdDev } from "./numbers";
 
 export const __IS_DEV__ = process.env.NODE_ENV === `development`;
 

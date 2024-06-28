@@ -27,7 +27,6 @@ const FocusLostWarning = ({ onClick }: FocusLostWarningProps) => {
             onKeyDown={console.log}
             onClick={_ => {
                if (timerState === TypingRunState.PAUSED) {
-                  console.log(`Resuming`);
                   resume();
                }
 

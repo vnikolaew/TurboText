@@ -111,13 +111,11 @@ const Page = async ({}: PageProps) => {
  * Company details for the cookie policy page.
  */
 const CompanyDetails = () => (
-            <Fragment><b className={`mt-4`}>{APP_NAME}</b><p>{COMPANY_DETAILS.streetAddress}</p><p>{COMPANY_DETAILS.city}, {COMPANY_DETAILS.zipCode}</p><p>{COMPANY_DETAILS.country}</p></Fragment>
+   <Fragment><b className={`mt-4`}>{APP_NAME}</b><p>{COMPANY_DETAILS.streetAddress}</p><p>{COMPANY_DETAILS.city}, {COMPANY_DETAILS.zipCode}</p><p>{COMPANY_DETAILS.country}</p></Fragment>
 )
 
 const Heading = ({ text }: { text: string }) => {
-   return (
-      <h2 className={`mt-4 text-lg font-semibold`}>{text}</h2>
-   );
+   return <h2 className={`mt-4 text-lg font-semibold`}>{text}</h2>;
 };
 
 export default Page;

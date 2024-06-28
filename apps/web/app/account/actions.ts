@@ -4,19 +4,7 @@
 import { authorizedAction } from "@lib/actions";
 import { xprisma } from "@repo/db";
 import { z } from "zod";
-import { revalidate } from "@app/(test)/page";
 import { revalidatePath } from "next/cache";
-
-const schema = z.object({
-   runs: z.array(z.object({})),
-});
-
-export const exportRuns = authorizedAction.schema(schema).action(async (
-   { parsedInput: { runs }, ctx: { userId } },
-) => {
-   return { success: true };
-});
-
 
 const editProfileSchema = z.object({
    bio: z.string().nullable(),

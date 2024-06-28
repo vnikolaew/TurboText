@@ -36,16 +36,20 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>
 
+const INITIAL_VALUES: FormValues = {
+   username: ``,
+   email: ``,
+   verifyEmail: ``,
+   password: ``,
+   verifyPassword: ``,
+}
+
 const RegisterForm = ({}: RegisterFormProps) => {
    const router = useRouter();
    const form = useForm<FormValues>({
       resolver: zodResolver(formSchema),
       defaultValues: {
-         username: "",
-         email: ``,
-         verifyEmail: ``,
-         password: ``,
-         verifyPassword: ``,
+         ...INITIAL_VALUES
       },
    });
    const [showPassword, setShowPassword] = useState(false);

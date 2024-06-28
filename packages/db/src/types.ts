@@ -18,6 +18,18 @@ declare global {
          "cookie-preferences": CookiePreferences
       }
 
+      type TagMetadata = {
+         active?: boolean
+      }
+
+      type TypedLetters = {
+         flags: number
+         letter: string
+         correct?: boolean
+         charIndex: number
+         timestamp: number
+      }[]
+
       type TypingRunMetadata = {
          wpm: number
          tags: any[]

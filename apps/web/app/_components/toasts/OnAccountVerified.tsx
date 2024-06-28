@@ -12,9 +12,7 @@ export interface OnAccountVerifiedProps {
 
 const OnAccountVerified = ({}: OnAccountVerifiedProps) => {
    const [show, setShow] = useBoolean(true);
-   useEffect(() => {
-      toast(TOASTS.ACCOUNT_VERIFIED);
-   }, []);
+   useEffect(() => toast(TOASTS.ACCOUNT_VERIFIED), []);
    const router = useRouter()
 
    return (

@@ -239,16 +239,19 @@ export const onKeyPressAtom = atom(null, (get, set, e: KeyboardEvent<HTMLDivElem
    e.preventDefault();
    e.stopPropagation();
    e.cancelBubble = true;
+
    let { key, ctrlKey: ctrl } = e;
 
-
+   // Window refresh
    if (key === `r` && ctrl) window.location.reload();
 
    const charCode = e.key.charCodeAt(0);
    const capsLockSwitch = e.key === `CapsLock`;
 
+   // Escape
    if (key === `Escape`) return;
 
+   // Caps lock
    if (capsLockSwitch) {
       set(capsLockOnAtom, l => !l);
       return;
@@ -263,7 +266,6 @@ export const onKeyPressAtom = atom(null, (get, set, e: KeyboardEvent<HTMLDivElem
    const confidenceMode = get(confidenceModeAtom) as unknown as ("OFF" | "ON" | "MAX");
 
    if (e.key === `Shift` || (e.ctrlKey && e.key === `Control`)) return;
-   if (e.key === `Shift`) return;
 
    if (e.key === `Backspace`) {
       if(confidenceMode === 'MAX') return
@@ -295,7 +297,21 @@ export const onKeyPressAtom = atom(null, (get, set, e: KeyboardEvent<HTMLDivElem
       return;
    }
 
-   if (charCode >= "!".charCodeAt(0) && charCode <= "z".charCodeAt(0)) {
+   if (charCode >= 32 && charCode <= "z".charCodeAt(0)) {
+      // Determine if we are at the end of a word
+      // TODO: Handle Space logic ...
+      if(wordRangesByEnds.has(currentCharIndex)) {
+         console.log(`Hitting the end of word ...`);
+         if(e.code !== `Space`) {
+            console.log(e.key, e.code);
+            console.log(`Incorrect character typed`);
+            return
+         } else {
+            set(currentCharIndexAtom, c => c + 1);
+            return
+         }
+      }
+
       set(currentCharIndexAtom, c => c + 1);
 
       if (currentCharIndex + 1 === 0) set(startAtom);
@@ -308,8 +324,6 @@ export const onKeyPressAtom = atom(null, (get, set, e: KeyboardEvent<HTMLDivElem
          wc2[currentCharIndex + 1] = correct;
          return wc2;
       });
-
-      // Determine if we are at the end of a word
 
       set(typedLettersAtom, l => [...l,
          currentCharIndex + 1 === 0 ?

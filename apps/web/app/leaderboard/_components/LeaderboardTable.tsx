@@ -55,7 +55,7 @@ export const LeaderboardTable = ({ caption, rows, showWarning }: LeaderboardTabl
             <div className={`grid w-full grid-cols-13 sticky top-0 !py-1 !z-[100] backdrop-blur`}>
                <div className={`col-span-1 text-secondary text-center`}>#</div>
                <div className={`col-span-6 text-left !text-main`}>name</div>
-               <div className={`col-span-2 text-right flex flex-col text-sm`}>
+               <div className={`col-span-2 text-right flex flex-col text-xs`}>
                      <span className={`text-main `}>
                       wpm
                      </span>
@@ -63,11 +63,11 @@ export const LeaderboardTable = ({ caption, rows, showWarning }: LeaderboardTabl
                         accuracy
                       </span>
                </div>
-               <div className={`col-span-2 text-right flex flex-col text-sm`}>
+               <div className={`col-span-2 text-right flex flex-col text-xs`}>
                      <span className={`text-main`}>
                      raw
                      </span>
-                  <span className={`text-secondary`}>
+                  <span className={`text-secondary text-xs`}>
                         consistency
                       </span>
                </div>
@@ -179,17 +179,17 @@ const LeaderboardTableRow = ({ row, index }: { row: LeaderboardRow, index: numbe
                {row.user.og && index > 0 && <OgAccountBadge />}
             </div>
          </TableCell>
-         <TableCell className={`col-span-2 text-right flex flex-col justify-end !px-0`}>
+         <TableCell className={`col-span-2 text-right flex flex-col justify-end !px-0 !text-xs`}>
             <span className={`!text-main`}>{row.wpm}</span>
             <span className={`text-secondary`}>{row.accuracy}%</span>
          </TableCell>
-         <TableCell className={`col-span-2 text-right flex flex-col justify-end !px-0`}>
+         <TableCell className={`col-span-2 text-right flex flex-col justify-end !px-0 !text-xs`}>
             <span className={`!text-main`}>{row.raw}</span>
             <span  className={`text-secondary`}>{row.consistency}%</span>
          </TableCell>
-         <TableCell className="col-span-2 text-right flex flex-col justify-end !pr-4">
+         <TableCell className="col-span-2 text-right flex flex-col justify-end !pr-4 !text-xs">
             <span className={`text-nowrap !text-main`}>{moment(row.date).format(`DD MMM YYYY`)}</span>
-            <span className={`text-secondary`}>
+            <span className={`text-secondary text-right`}>
                {moment(row.date).format(`HH:mm`)}
             </span>
          </TableCell>

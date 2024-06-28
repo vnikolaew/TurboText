@@ -1,17 +1,12 @@
 import { TypingRun } from "@repo/db";
 import React from "react";
-import { formatMilliseconds } from "@lib/utils";
 
 export interface AppGlobalStatsSectionProps {
-   runs: TypingRun[]
+   amount: number;
+   unit: string;
 }
 
-const AppGlobalStatsSection = ({runs}: AppGlobalStatsSectionProps) => {
-
-   const [amount, unit] = formatMilliseconds(runs
-      .map(r => r.typedLettersInfo?.typedLetters?.at(-1)?.timestamp as number)
-      .reduce((a, b) => a + b, 0))?.split(` `);
-
+const AppGlobalStatsSection = ({ unit, amount }: AppGlobalStatsSectionProps) => {
    return (
       <section id={`global-stats`} className={`w-full grid grid-cols-3 gap-4 mt-12`}>
          <div className={`flex flex-col items-center`}>

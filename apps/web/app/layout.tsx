@@ -4,16 +4,16 @@ import "./globals.css";
 import { cn } from "@lib/utils";
 import Providers from "@providers";
 import Header from "@components/common/Header";
-import { APP_DESCRIPTION, APP_NAME, AUTHOR, AUTHOR_WEBSITE } from "@config/site";
+import { APP_DESCRIPTION, APP_KEYWORDS, APP_NAME, AUTHOR, AUTHOR_WEBSITE } from "@config/site";
 import appLogo from "@/public/logo.jpg";
 import AppFooter from "@components/common/AppFooter";
 import React, { Suspense } from "react";
 import CookieConsentBanner from "@components/common/cookie-banner/CookieConsentBanner";
 import ScrollToTopButton from "@components/common/ScrollToTopButton";
-import { Meteors, Particles, Toaster } from "@repo/ui";
+import { Toaster } from "@repo/ui";
 import LoadingBar from "@components/common/LoadingBar";
 import WithTransition from "@components/common/WithTransition";
-import { THEMES, __IS_PROD__ } from "@lib/consts";
+import { __IS_PROD__, THEMES } from "@lib/consts";
 import { Analytics } from "@vercel/analytics/react";
 import { getUserFontFamily, getUserInfo } from "@app/_queries";
 import GlobalCommandsDialog from "@components/commands/GlobalCommandsDialog";
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
    }],
    applicationName: APP_NAME,
    icons: appLogo.src,
-   keywords: [`speed`, `typing`, `speed-typing`, `test`, `web`, `keyboard`],
+   keywords: APP_KEYWORDS,
    category: `notes`,
    creator: AUTHOR,
    referrer: `no-referrer`,

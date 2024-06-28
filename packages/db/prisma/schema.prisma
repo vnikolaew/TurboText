@@ -81,11 +81,13 @@ model VerificationToken {
 }
 
 model Tag {
-  id       String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  userId   String
-  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  name     String
-  metadata Json?  @default("null") @db.JsonB
+  id     String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name   String
+
+  /// [TagMetadata]
+  metadata Json? @default("null") @db.JsonB
 
   createdAt           DateTime @default(now())
   updatedAt           DateTime @updatedAt
@@ -100,11 +102,13 @@ model TypingRun {
   wordCount             Int?
   totalTimeMilliseconds Int
 
-  mode         TypingRunMode
-  flags        Int
+  mode     TypingRunMode
+  flags    Int
   /// [TypingRunMetadata]
-  metadata     Json?         @default("null") @db.JsonB
-  typedLetters Json          @db.JsonB
+  metadata Json?         @default("null") @db.JsonB
+
+  /// [TypedLetters]
+  typedLetters Json @db.JsonB
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
