@@ -62,7 +62,7 @@ const UserActivitySection = ({ typingRuns }: UserActivitySectionProps) => {
    const [showTooltip, setShowTooltip] = useBoolean(false);
 
    return (
-      <div className={`h-[200px] z-[30] w-full flex items-center justify-center mt-12`}>
+      <section id={`activity`} className={`h-[200px] z-[30] w-full flex items-center justify-center mt-12`}>
          <div className={`w-1/2 text-secondary`}>
             {showTooltip && (
                <ActivityTooltip top={top} left={left} count={count} date={date} />
@@ -104,7 +104,7 @@ const UserActivitySection = ({ typingRuns }: UserActivitySectionProps) => {
                }
             />
          </div>
-      </div>
+      </section>
    );
 };
 

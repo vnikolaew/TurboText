@@ -33,7 +33,7 @@ const TypingRunsStatsSection = ({ runs }: TypingRunsStatsSectionProps) => {
    const averageConsistencyLast10 = sum(runs.slice(0, 10).map(r => r.consistency as number)) / runs.length;
 
    return (
-      <div className={`flex flex-col items-center gap-4 w-full`}>
+      <section id={`stats`} className={`flex flex-col items-center gap-4 w-full`}>
          <div className={`flex items-center gap-4 justify-center w-full`}>
             <span className={`text-base text-secondary`}>
                Estimated words typed
@@ -62,7 +62,7 @@ const TypingRunsStatsSection = ({ runs }: TypingRunsStatsSectionProps) => {
             <TypingRunStat label={`average consistency`} value={`${averageConsistency.toFixed(0)}%`} />
             <TypingRunStat label={`average consistency (last 10 tests)`} value={`${averageConsistencyLast10.toFixed(0)}%`} />
          </div>
-      </div>
+      </section>
    );
 };
 

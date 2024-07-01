@@ -35,7 +35,7 @@ export type ChallengeDetails = UsersChallenge & {
 
 
 export function useTypingGame(gameId: string) {
-   const [challengeDetails, setChallengeDetails] = useAtom(challengeDetailsAtom)
+   const [, setChallengeDetails] = useAtom(challengeDetailsAtom)
    const session = useSession();
    const typingState = useAtomValue(typingRunStateAtom);
 

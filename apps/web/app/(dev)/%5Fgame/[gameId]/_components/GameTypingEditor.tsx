@@ -17,7 +17,6 @@ import TypeRunState from "@components/editor/TypeRunState";
 import TypingInput from "@components/editor/TypingInput";
 import TypingRunInfo from "@components/editor/TypingRunInfo";
 import ToggleWords from "@components/editor/ToggleWords";
-import EditorButtons from "@components/editor/buttons";
 import { AnimatePresence } from "framer-motion";
 import SaveTypingRunPrompt from "@components/editor/SaveTypingRunPrompt";
 import { SignedOut } from "@components/common/Auth";
@@ -25,6 +24,9 @@ import { signIn } from "next-auth/react";
 import TypingRunSummary from "@components/editor/TypingRunSummary";
 import GameEndConfetti from "@app/(dev)/%5Fgame/[gameId]/_components/GameEndConfetti";
 import { finishChallenge } from "@app/(dev)/%5Fgame/[gameId]/actions";
+import RestartButton from "@components/editor/buttons/RestartButton";
+import ToggleWordsHistory from "@components/editor/buttons/ToggleWordsHistory";
+import CopyToClipboardButton from "@components/editor/buttons/CopyToClipboardButton";
 
 export interface GameTypingEditorProps {
    user: User;
@@ -105,7 +107,11 @@ const GameTypingEditor = ({ user, gameId }: GameTypingEditorProps) => {
          <span className={`mt-4 w-full text-center !text-main`}>Total pause time: {totalPauseTime}ms</span>
       </div>
       <ToggleWords />
-      <EditorButtons />
+      <div className={`flex items-center justify-center w-full gap-4`}>
+         <RestartButton />
+         <ToggleWordsHistory />
+         <CopyToClipboardButton />
+      </div>
       <AnimatePresence>
          {(showSavePrompt || true) &&
             <SaveTypingRunPrompt

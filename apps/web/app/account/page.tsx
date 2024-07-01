@@ -14,6 +14,8 @@ import TypingRunsStatsSection from "@app/account/_components/TypingRunsStatsSect
 import { UserExperienceInfo } from "@app/account/_components/UserExperienceInfo";
 import OnAccountVerified from "@app/_components/toasts/OnAccountVerified";
 import LatestUserChallenges from "@app/account/_components/challenges/LatestUserChallenges";
+import PageLinks from "./_components/PageLinks";
+import { UsersChallengeState } from "@repo/db";
 
 export const metadata: Metadata = {
    title: `Account | ${APP_NAME}`,
@@ -39,8 +41,6 @@ const Page = async ({ searchParams }: PageProps) => {
    const user = await getUserWithTypingRuns();
    if (!user) notFound();
 
-   console.log({ completedWords: user.typingRuns.map(r => r.metadata?.completedWords) });
-
    return (
       <section className={`w-2/3 mx-auto mt-24 flex flex-col items-center gap-4`}>
          {!user.emailVerified && (
@@ -49,7 +49,8 @@ const Page = async ({ searchParams }: PageProps) => {
          {user.emailVerified && searchParams?.verified === `true` && (
             <OnAccountVerified />
          )}
-         <div className={`w-full bg-secondary-bg rounded-lg shadow-lg flex items-center p-6 py-10 gap-8 mt-8 `}>
+         <PageLinks />
+         <div className={`w-full bg-secondary-bg rounded-lg shadow-lg flex items-center p-6 py-10 gap-8 mt-4 `}>
             <div className={`flex flex-col items-start gap-2`}>
                <div className={`flex items-center gap-4`}>
                   <UserAvatar className={`w-20 h-20`} imageSrc={user?.image!} />
@@ -85,13 +86,26 @@ const Page = async ({ searchParams }: PageProps) => {
             </div>
             <Separator orientation={`vertical`} className={`h-20 w-[4px] rounded-full bg-secondary`} />
             <div className={`flex-1 h-full grid grid-cols-3`}>
-               <div className={`flex flex-col items-start gap-1`}>
-                  <span className={`text-secondary text-sm`}>Tests started</span>
-                  <h2 className={`text-3xl text-main`}>{user.typingRuns.length}</h2>
+               <div className={`flex flex-col items-start gap-4`}>
+                  <div className={`flex flex-col items-start gap-1`}>
+                     <span className={`text-secondary text-sm`}>Tests started</span>
+                     <h2 className={`text-3xl text-main`}>{user.typingRuns.length}</h2>
+                  </div>
+                  <div className={`flex flex-col items-start gap-1`}>
+                     <span className={`text-secondary text-sm`}>Challenges started</span>
+                     <h2 className={`text-3xl text-main`}>{[...user.challenges_one, ...user.challenges_two].length}</h2>
+                  </div>
                </div>
-               <div className={`flex flex-col items-start gap-1`}>
-                  <span className={`text-secondary text-sm`}>Tests completed</span>
-                  <h2 className={`text-3xl text-main`}>{user.typingRuns.length}</h2>
+               <div className={`flex flex-col items-start gap-4`}>
+                  <div className={`flex flex-col items-start gap-1`}>
+                     <span className={`text-secondary text-sm`}>Tests completed</span>
+                     <h2 className={`text-3xl text-main`}>{user.typingRuns.length}</h2>
+                  </div>
+                  <div className={`flex flex-col items-start gap-1`}>
+                     <span className={`text-secondary text-sm`}>Challenges completed</span>
+                     <h2
+                        className={`text-3xl text-main`}>{[...user.challenges_one, ...user.challenges_two].filter(c => c.state === UsersChallengeState.Finished).length}</h2>
+                  </div>
                </div>
                <div className={`flex flex-col items-start gap-1`}>
                   <span className={`text-secondary text-sm`}>Time typing</span>

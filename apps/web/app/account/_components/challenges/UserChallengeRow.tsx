@@ -5,29 +5,22 @@ import { TableCell, TableRow, UserAvatar } from "@repo/ui";
 import moment from "moment";
 import { cn } from "@lib/utils";
 import Link from "next/link";
+import { getChallengeInfo } from "@app/account/_components/challenges/LatestUserChallenges";
 
 export interface UserChallengeRowProps {
    challenge: UsersChallenge & { userOne: User; userTwo: User, userOneRun: TypingRun, userTwoRun: TypingRun };
    userId: string;
 }
 
-function getChallengeInfo(challenge: UsersChallenge, userId: string) {
-   const opponent = challenge.userOneId === userId ? challenge.userTwo : challenge.userOne;
-
-   const isWin = challenge.userOneId === userId
-      ? (challenge.userOneRun?.metadata.completedWords > challenge.userTwoRun?.metadata.completedWords)
-      : (challenge.userTwoRun?.metadata.completedWords > challenge.userOneRun?.metadata.completedWords);
-
-   const { myCompletedWords, opponentCompletedWords } = {
-      myCompletedWords: challenge.userOneId === userId ? challenge.userOneRun?.metadata.completedWords : challenge.userTwoRun?.metadata.completedWords,
-      opponentCompletedWords: challenge.userOneId === userId ? challenge.userTwoRun?.metadata.completedWords : challenge.userOneRun?.metadata.completedWords,
-   };
-
-   return { opponent, isWin, myCompletedWords, opponentCompletedWords };
+export enum ChallengeOutcome {
+   WIN = "win",
+   LOSE = "lose",
+   DRAW = "draw",
 }
 
+
 const UserChallengeRow = ({ challenge, userId }: UserChallengeRowProps) => {
-   const { opponentCompletedWords, myCompletedWords, opponent, isWin } = getChallengeInfo(challenge, userId);
+   const { opponentCompletedWords, myCompletedWords, opponent, outcome } = getChallengeInfo(challenge, userId);
 
    return (
       <TableRow className={`text-sm w-full !text-main `} key={challenge.id}>
@@ -36,7 +29,11 @@ const UserChallengeRow = ({ challenge, userId }: UserChallengeRowProps) => {
          </TableCell>
          <TableCell className="font-medium text-base !w-fit text-center">
             <span
-               className={cn(`!w-fit text-center`, isWin ? `text-green-500` : `text-red-500`)}>{isWin ? `VICTORY` : `DEFEAT`}</span>
+               className={cn(`!w-fit text-center`,
+                  outcome === ChallengeOutcome.WIN && `text-green-500`,
+                  outcome === ChallengeOutcome.DRAW && `text-amber-500`,
+                  outcome === ChallengeOutcome.LOSE && `text-red-500`,
+               )}>{outcome === ChallengeOutcome.WIN ? `VICTORY` : outcome === ChallengeOutcome.LOSE ? `DEFEAT` : `DRAW`}</span>
          </TableCell>
          <TableCell className="font-medium !w-fit text-wrap text-center text-lg">
             {myCompletedWords ?? `?`}

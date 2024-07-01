@@ -148,7 +148,7 @@ export function useTypingChallenge() {
          console.log({ res });
          setMatchLoading(false)
       }
-   }, [session.status, channel.state]);
+   }, [session.status, channel.state, matchParams]);
 
    return { currentMatch, accept, decline, channel, messages, match, matchLoading };
 }

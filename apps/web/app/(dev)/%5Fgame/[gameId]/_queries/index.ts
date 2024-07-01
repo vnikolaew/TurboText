@@ -15,12 +15,12 @@ export async function getGameUsers(userIds: string[], userId: undefined | string
 
    const { updatePassword: x, verifyPassword: y, ...restOne } = userOne;
    const { updatePassword: _, verifyPassword: __, ...restTwo } = userTwo;
-   restOne.typingRuns = restOne.typingRuns.map(({hasFlag, ...rest}) => {
+   restOne.typingRuns = restOne.typingRuns.map(({ hasFlag, ...rest }) => {
       return rest;
-   })
-   restTwo.typingRuns = restTwo.typingRuns.map(({hasFlag, ...rest}) => {
+   });
+   restTwo.typingRuns = restTwo.typingRuns.map(({ hasFlag, ...rest }) => {
       return rest;
-   })
+   });
 
    return {
       userOne: restOne.id === userId ? restOne : restTwo,
@@ -34,15 +34,21 @@ export async function getGameUsers(userIds: string[], userId: undefined | string
  */
 export async function getChallengeWinner(challenge: ChallengeDetails) {
    const winnerId = challenge.userOneRun?.metadata.completedWords
-   > challenge.userTwoRun?.metadata.comppletedWods
-      ? challenge.userOneId : challenge.userTwoId;
+   > challenge.userTwoRun?.metadata.completedWords
+      ? challenge.userOneId : (challenge.userOneRun?.metadata.completedWords === challenge.userTwoRun?.metadata.completedWords ? null : challenge.userTwoId);
 
    const winnerCompletedWords = challenge.userOneRun?.metadata.completedWords
-   > challenge.userTwoRun?.metadata.comppletedWods
+   > challenge.userTwoRun?.metadata.completedWords
       ? challenge.userOneRun.metadata?.completedWords
       : challenge.userTwoRun.metadata?.completedWords;
 
-   const winner = await xprisma.user.findUnique({ where: { id: winnerId } });
+   const winner = winnerId ? await xprisma.user.findUnique({ where: { id: winnerId } }) : null;
 
-   return { winnerId, winnerCompletedWords, winner };
+   return {
+      winnerId,
+      winnerCompletedWords,
+      winner,
+      userOneWords: challenge.userOneRun?.metadata?.completedWords,
+      userTwoWords: challenge.userTwoRun?.metadata?.completedWords,
+   };
 }

@@ -15,7 +15,6 @@ const AblyProvider = ({ children }: AblyProviderProps) => {
    const prevPathname = usePrevious(pathname);
 
    useEffect(() => {
-      console.log(`Pathname change: `, { pathname, prevPathname });
       (async () => {
          if (prevPathname === `/_chat`) {
             // Handle removal of user from matching queue:
@@ -23,7 +22,6 @@ const AblyProvider = ({ children }: AblyProviderProps) => {
                method: `DELETE`,
                credentials: `include`,
             }).then(r => r.json());
-            console.log({ res });
          }
       })()
    }, [pathname]);

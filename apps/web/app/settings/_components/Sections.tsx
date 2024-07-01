@@ -30,7 +30,7 @@ const Sections = ({}: SectionsProps) => {
                setSections(s => [...new Set(s.concat(section.split(` `).at(0)!))])
                   .then(() => scrollToElement(section.split(` `).at(0)!));
             }} key={section}
-                  className={`text-main cursor-pointer hover:!opacity-90 transition-all duration-200 text-2xl`}>
+                  className={`text-main cursor-pointer hover:!opacity-90 transition-all duration-200 text-2xl p-2 !px-4 rounded-xl bg-transparent hover:!bg-secondary-bg`}>
                {section}
             </span>
          ))}

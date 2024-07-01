@@ -30,7 +30,7 @@ const Page = async ({ params: { gameId } }: PageProps) => {
    }
 
    if (challenge?.state === UsersChallengeState.Finished) {
-      const { winner, winnerCompletedWords } = await getChallengeWinner(challenge);
+      const { winner, winnerCompletedWords, userOneWords, userTwoWords } = await getChallengeWinner(challenge);
 
       return (
          <section className={`w-2/3 mx-auto my-24 flex flex-col items-center gap-4`}>
@@ -39,7 +39,7 @@ const Page = async ({ params: { gameId } }: PageProps) => {
                <p className={`text-lg text-secondary`}>
                   Current state is <b className={`font-semibold text-accent`}>{challenge?.state}</b>.
                </p>
-               {winner && (
+               {winner ? (
                   <div className={`flex flex-col items-center gap-2`}>
                   <span>
                      Winner ({winnerCompletedWords} completed words):
@@ -48,7 +48,13 @@ const Page = async ({ params: { gameId } }: PageProps) => {
                         <UserAvatar imageSrc={winner.image} />
                         <Link className={`text-secondary`} href={`/profile/${winner.id}`}>{winner.name}</Link>
                      </div>
-                  </div>)}
+                  </div>) : (
+                  <div>
+                    <span className={`text-amber-600`}>
+                        DRAW
+                     </span> {` `}
+                     ({userOneWords}vs{userTwoWords} words)</div>
+               )}
             </div>
          </section>
       );
