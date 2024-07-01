@@ -1,6 +1,6 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalEnv": ["ABLY_API_KEY", "NEXT_PUBLIC_ABLY_API_KEY"],
+  "globalEnv": ["ABLY_API_KEY", "NEXT_PUBLIC_ABLY_API_KEY", "DATABASE_URL"],
   "tasks": {
     "db:generate": {
       "cache": false
