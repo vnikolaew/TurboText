@@ -6,13 +6,14 @@ import AccountLinks from "@app/account/_components/AccountPageLinks";
 import EmailNotVerifiedNotification from "@app/account/_components/EmailNotVerifiedNotification";
 import UserActivitySection from "@app/account/_components/UserActivitySection";
 import { formatMillisecondsToTime } from "@lib/utils";
-import LatestUserRuns from "@app/account/_components/LatestUserRuns";
+import LatestUserRuns from "@app/account/_components/runs/LatestUserRuns";
 import type { Metadata } from "next";
 import { APP_DESCRIPTION, APP_NAME, AUTHOR, AUTHOR_WEBSITE } from "@config/site";
 import { getUserWithTypingRuns } from "@app/account/_queries";
 import TypingRunsStatsSection from "@app/account/_components/TypingRunsStatsSection";
 import { UserExperienceInfo } from "@app/account/_components/UserExperienceInfo";
 import OnAccountVerified from "@app/_components/toasts/OnAccountVerified";
+import LatestUserChallenges from "@app/account/_components/challenges/LatestUserChallenges";
 
 export const metadata: Metadata = {
    title: `Account | ${APP_NAME}`,
@@ -37,6 +38,7 @@ export interface PageProps {
 const Page = async ({ searchParams }: PageProps) => {
    const user = await getUserWithTypingRuns();
    if (!user) notFound();
+
    console.log({ completedWords: user.typingRuns.map(r => r.metadata?.completedWords) });
 
    return (
@@ -110,6 +112,9 @@ const Page = async ({ searchParams }: PageProps) => {
          </div>
          <div className={`w-full bg-secondary-bg rounded-lg shadow-lg flex items-center p-6 py-10 gap-8 mt-8`}>
             <LatestUserRuns user={user} />
+         </div>
+         <div className={`w-full bg-secondary-bg rounded-lg shadow-lg flex items-center p-6 py-10 gap-8 mt-8`}>
+            <LatestUserChallenges user={user} />
          </div>
       </section>
    );

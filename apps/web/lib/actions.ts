@@ -15,7 +15,7 @@ export const authorizedAction = createSafeActionClient({
    const session = await auth();
    if (!session || !session.user) throw new AuthError(`Unauthorized.`);
 
-   return await next({ ctx: { userId: session?.user?.id } });
+   return await next({ ctx: { userId: session?.user?.id! } });
 });
 
 /**

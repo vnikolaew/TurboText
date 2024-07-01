@@ -10,14 +10,12 @@ import {
    wordsAtom,
 } from "@atoms/editor";
 import { calculateSHA256, cn } from "@lib/utils";
-import { useBoolean } from "@hooks/useBoolean";
 import { AnimatePresence, motion } from "framer-motion";
 import TypingLetters from "@components/editor/TypingLetters";
 import { TypingRunState } from "@atoms/consts";
 import { pauseAtom } from "@atoms/timer";
 import { playClickSoundAtom, playErrorSoundAtom } from "@app/settings/atoms";
 import TypingCaret from "@components/editor/TypingCaret";
-import FocusLostWarning from "@components/editor/warnings/FocusLostWarning";
 import PaceTypingCaret from "./PaceTypingCaret";
 
 export interface TypingInputProps {
@@ -38,20 +36,6 @@ const TypingInput = ({}: TypingInputProps) => {
    const currentCharIndex = useAtomValue(currentCharIndexAtom);
    const letterCorrectness = useAtomValue(lettersCorrectnessAtom)
    const words = useAtomValue(wordsAtom);
-   const [showFocusLost, setShowFocusLost] = useBoolean();
-
-   useEffect(() => {
-      const handler = () => {
-         if (showFocusLost) {
-            setShowFocusLost(false);
-            editorRef.current?.focus();
-         }
-      };
-
-      window.addEventListener(`keydown`, handler);
-      return () => window.removeEventListener(`keydown`, handler);
-
-   }, [showFocusLost]);
 
    useEffect(() => {
       if(letterCorrectness[currentCharIndex] === false) {
@@ -74,7 +58,6 @@ const TypingInput = ({}: TypingInputProps) => {
                         if (timerState === TypingRunState.RUNNING) {
                            pause();
                         }
-                        setShowFocusLost(true);
                      }, 1000);
                   }
                }}
@@ -84,8 +67,7 @@ const TypingInput = ({}: TypingInputProps) => {
                key={calculateSHA256(words.join(`,`))}
                id={`editor-words`}
                ref={editorRef}
-               className={cn(`bg-transparent flex w-full items-center gap-2 text-wrap break-normal !py-2 cursor-default focus:!outline-none flex-wrap mt-8 `,
-                  showFocusLost && `backdrop-blur-md`)}
+               className={cn(`bg-transparent flex w-full items-center gap-2 text-wrap break-normal !py-2 cursor-default focus:!outline-none flex-wrap mt-8 `)}
                tabIndex={0}
                autoFocus
                onKeyDown={async e => {
@@ -100,9 +82,6 @@ const TypingInput = ({}: TypingInputProps) => {
                {top !== 0 && left !== 0 && currentCharIndex >= 1 && (
                   <PaceTypingCaret coords={{ top, left }} />
                )}
-               <AnimatePresence>
-                  {showFocusLost && <FocusLostWarning onClick={() => setShowFocusLost(false)} />}
-               </AnimatePresence>
                <TypingLetters />
             </motion.div>
          </AnimatePresence>

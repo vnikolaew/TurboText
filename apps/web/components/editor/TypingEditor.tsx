@@ -5,20 +5,18 @@ import {
    endTimeAtom,
    totalRunTimeAtom,
    typedLettersAtom,
-   typingRunAtom, typingRunStateAtom,
+   typingRunAtom,
+   typingRunStateAtom,
    useTypingRunSuccess,
 } from "@atoms/editor";
 import { useAtomValue } from "jotai";
-import TypingRunSummary from "@components/editor/TypingRunSummary";
 import Confetti from "react-confetti";
-import TypingInput from "@components/editor/TypingInput";
 import { LocalStorage } from "@lib/local-storage";
 import { Button, toast } from "@repo/ui";
 import { useAction } from "next-safe-action/hooks";
 import { saveTypingRun } from "@components/editor/actions";
 import { AnimatePresence } from "framer-motion";
 import { TOASTS } from "@config/toasts";
-import SaveTypingRunPrompt from "@components/editor/SaveTypingRunPrompt";
 import { autoSaveModeAtom, updateUserXpAtom } from "@atoms/user";
 import { SignedOut } from "@components/common/Auth";
 import { signIn } from "next-auth/react";
@@ -30,8 +28,9 @@ import CapsLockWarning from "@components/editor/warnings/CapsLockWarning";
 import TypingRunInfo from "./TypingRunInfo";
 import { TypingRun, User } from "@repo/db";
 import { useSetAtom } from "jotai/index";
-import ToggleWords from "@components/editor/ToggleWords";
 import EditorButtons from "@components/editor/buttons";
+import { SaveTypingRunPrompt, ToggleWords, TypingInput, TypingRunSummary } from "@components/editor";
+
 
 export interface TypingEditorProps {
    user: User & { typingRuns: TypingRun[] };
@@ -73,7 +72,7 @@ const TypingEditor = ({ user }: TypingEditorProps) => {
 
    const { timerState } = useTimer(() => {
       console.log(typedLetters?.sort((a, b) => a.charIndex - b.charIndex));
-      setEnd(performance.now())
+      setEnd(performance.now());
       LocalStorage.setItem(TYPING_RUN_LS_KEY, typingRun);
    });
 

@@ -3,7 +3,7 @@ import { Provider } from "jotai";
 import React, { PropsWithChildren } from "react";
 import { DevTools } from "jotai-devtools";
 import "jotai-devtools/styles.css";
-import { __IS_DEV__ } from "@lib/consts";
+import DevOnly from "@components/common/DevOnly";
 
 export interface AtomProviderProps extends PropsWithChildren {
 }
@@ -12,7 +12,9 @@ const AtomProvider = ({ children }: AtomProviderProps) => {
    return (
       <Provider>
          {children}
-         {__IS_DEV__ && <DevTools />}
+         <DevOnly>
+            <DevTools />
+         </DevOnly>
       </Provider>
    );
 };

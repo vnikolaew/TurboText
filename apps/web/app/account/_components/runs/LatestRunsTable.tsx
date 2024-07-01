@@ -1,7 +1,8 @@
 "use client";
 import React, { Fragment, useCallback, useState } from "react";
 import {
-   Button, ScrollArea,
+   Button,
+   ScrollArea,
    Table,
    TableBody,
    TableCaption,
@@ -18,7 +19,7 @@ import { Tag as TTag, TypingRun } from "@repo/db";
 import { ChevronDown, ChevronUp, Crown, Tag } from "lucide-react";
 import { cn } from "@lib/utils";
 import moment from "moment";
-import TypingRunInfoCell from "@app/account/_components/TypingRunInfoCell";
+import TypingRunInfoCell from "@app/account/_components/runs/TypingRunInfoCell";
 import { atom, useAtomValue } from "jotai";
 import { useAtom } from "jotai/index";
 import { TypedLetterFlags, TypedLetterInfo } from "@atoms/consts";
@@ -135,17 +136,17 @@ const LatestRunsTable = ({ runs, tagsById }: LatestRunsTableProps) => {
                <TableBody className={`w-full max-h-[1000px] !overflow-y-scroll`}>
                   {runsNormalized.map((run, index) => (
                      <TableRow className={`text-sm w-full !text-main`} key={run.id}>
-                        <TableCell className="font-medium">
+                        <TableCell className="font-medium !w-fit">
                            {run.metadata?.isPersonalBest && (
                               <Crown className={`fill-neutral-300`} size={20} />
                            )}
                         </TableCell>
-                        <TableCell className={`text-left`}>{run.wpmString}</TableCell>
-                        <TableCell className={`text-left`}>{run.rawWpmString}</TableCell>
-                        <TableCell className="text-left">{`${run.accuracyString}%`}</TableCell>
-                        <TableCell className="text-left">{`${run.consistencyString}%`}</TableCell>
-                        <TableCell className={`text-left`}>{run.correct}/{run.incorrect}/{run.extra}/0</TableCell>
-                        <TableCell className={`text-left`}>{run.modeNormalized?.toLowerCase()}</TableCell>
+                        <TableCell className={`text-left !w-fit`}>{run.wpmString}</TableCell>
+                        <TableCell className={`text-left !w-fit`}>{run.rawWpmString}</TableCell>
+                        <TableCell className="text-left !w-fit">{`${run.accuracyString}%`}</TableCell>
+                        <TableCell className="text-left !w-fit">{`${run.consistencyString}%`}</TableCell>
+                        <TableCell className={`text-left !w-fit`}>{run.correct}/{run.incorrect}/{run.extra}/0</TableCell>
+                        <TableCell className={`text-left !w-fit`}>{run.modeNormalized?.toLowerCase()}</TableCell>
                         <TableCell className={`text-left`}>
                            <TypingRunInfoCell run={run} />
                         </TableCell>
@@ -183,7 +184,7 @@ const LatestRunsTable = ({ runs, tagsById }: LatestRunsTableProps) => {
    );
 };
 
-const SortableTableHead = ({ column, title }: { column: keyof RunNormalized, title?: string }) => {
+export const SortableTableHead = ({ column, title }: { column: keyof RunNormalized, title?: string }) => {
    const [tableSort, setTableSort] = useAtom(tableSortAtom);
 
    const handleChangeSort = useCallback((key: keyof RunNormalized) => {
@@ -196,7 +197,7 @@ const SortableTableHead = ({ column, title }: { column: keyof RunNormalized, tit
    return (
       <TableHead
          onClick={_ => handleChangeSort(column)}
-         className="text-left cursor-pointer inline-flex items-center gap-1">
+         className="text-left cursor-pointer inline-flex items-center gap-1 !w-fit">
          {title ?? column}
          {tableSort.key === column && !tableSort.desc && (
             <ChevronUp size={18} />

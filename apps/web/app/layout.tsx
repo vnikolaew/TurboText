@@ -12,7 +12,7 @@ import ScrollToTopButton from "@components/common/ScrollToTopButton";
 import { Toaster } from "@repo/ui";
 import LoadingBar from "@components/common/LoadingBar";
 import WithTransition from "@components/common/WithTransition";
-import { __IS_PROD__, THEMES } from "@lib/consts";
+import { THEMES } from "@lib/consts";
 import { Analytics } from "@vercel/analytics/react";
 import { getUserFontFamily, getUserInfo } from "@app/_queries";
 import GlobalCommandsDialog from "@components/commands/GlobalCommandsDialog";
@@ -25,16 +25,7 @@ import { xprisma } from "@repo/db";
 import fs from "node:fs";
 import path from "node:path";
 import * as process from "node:process";
-
-const THEME_ACCENT_COLORS = {
-   'light': 'blue',
-   'dark': 'hsl(38 92% 50%)',
-   'nighthawk': 'hsl(184 100% 27%)',
-   'obsidian': 'hsl(22 100% 51%)',
-   'onyx': 'hsl(172 100% 25%)',
-   'slate': 'hsl(56 73% 74%)',
-   'frost': 'hsl(213 47% 47%)',
-} as const
+import ProductionOnly from "@components/common/ProductionOnly";
 
 export async function generateMetadata() {
    const session = await auth();
@@ -85,8 +76,8 @@ export default async function RootLayout({
       <html className={theme} style={{ colorScheme: `dark` }} suppressHydrationWarning lang="en">
       <Providers>
          <body className={cn(`min-h-screen bg-background font-mono antialiased`, font!.variable)}>
-         <WithInitialState user={user} />
          <DynamicFontProvider>
+            <WithInitialState user={user} />
             <LoadingBar />
             <Header />
             <GlobalCommandsDialog />
@@ -99,7 +90,9 @@ export default async function RootLayout({
             <Suspense fallback={`...`}>
                <CookieConsentBanner />
             </Suspense>
-            {__IS_PROD__ && <Analytics />}
+            <ProductionOnly>
+               <Analytics />
+            </ProductionOnly>
             <Toaster />
             <WithContactModal />
             <ShortcutsSection />

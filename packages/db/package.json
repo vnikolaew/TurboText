@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@prisma/adapter-pg": "latest",
-    "@prisma/client": "^5.15.0",
+    "@prisma/client": "^5.16.1",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "lodash": "^4.17.21",
@@ -26,7 +26,7 @@
     "@types/bcrypt": "^5.0.2",
     "@types/bcryptjs": "^2.4.6",
     "@types/lodash": "^4.17.5",
-    "prisma": "latest",
+    "prisma": "^5.16.1",
     "tsup": "^8.1.0"
   }
 }

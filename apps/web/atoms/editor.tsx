@@ -231,7 +231,6 @@ export const useTypingRunSuccess = () => {
 
          // Save to local storage:
          console.log({ typingRun });
-
          LocalStorage.setItem(TYPING_RUN_LS_KEY, typingRun);
       }
 

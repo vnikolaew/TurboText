@@ -3,7 +3,7 @@ import Link from "next/link";
 import React, { ReactNode } from "react";
 import { signOut } from "next-auth/react";
 import { SignedIn, SignedOut } from "./Auth";
-import { Bell, Crown, LogIn, LogOut, Settings } from "lucide-react";
+import { Crown, LogIn, LogOut, Settings, Swords } from "lucide-react";
 import { APP_NAME } from "@config/site";
 import UserAvatarDropdown from "@/components/common/UserAvatarDropdown";
 import { Button, Skeleton } from "@repo/ui";
@@ -59,6 +59,15 @@ const Header = ({}: NavbarProps) => {
                      <span
                         className={`text-base drop-shadow-lg !font-semibold`}>
                      Leaderboard
+                  </span>
+                  </Link>
+               </Button>
+               <Button className={`hover:!bg-transparent text-secondary`} variant={`ghost`} asChild>
+                  <Link title={`Leaderboard`} href={`/_lobby`} className={`flex items-center gap-2`}>
+                     <Swords className={`fill-secondary stroke-secondary `} size={16} />
+                     <span
+                        className={`text-base drop-shadow-lg !font-semibold`}>
+                     Challenge
                   </span>
                   </Link>
                </Button>

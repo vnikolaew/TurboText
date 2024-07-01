@@ -6,7 +6,6 @@ import {
    toggleWordsAtom,
    typedLettersAtom,
    wordRangesAtom,
-   wordsAtom,
    wordsCompletionTimesAtom,
 } from "@atoms/editor";
 import { range } from "lodash";
@@ -19,9 +18,7 @@ export interface ToggleWordsProps {
 
 const ToggleWords = ({}: ToggleWordsProps) => {
    const toggleWords = useAtomValue(toggleWordsAtom);
-
    const wordRanges = useAtomValue(wordRangesAtom);
-   const words = useAtomValue(wordsAtom);
 
    return (
       <AnimatePresence>

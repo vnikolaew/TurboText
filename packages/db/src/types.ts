@@ -30,6 +30,15 @@ declare global {
          timestamp: number
       }[]
 
+
+      type UsersChallengeMatchMetadata = {
+         language: string; time: number, difficulty: string,
+      }
+
+      type UsersChallengeMetadata = UsersChallengeMatchMetadata & {
+         words?: string[]
+      }
+
       type TypingRunMetadata = {
          wpm: number
          rawWpm: number

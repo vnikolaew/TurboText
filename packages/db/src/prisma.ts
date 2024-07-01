@@ -19,6 +19,17 @@ export let prisma = globalForPrisma.prisma ?? new PrismaClient({
 
 export let xprisma = prisma.$extends({
    result: {
+      // usersChallenge: {
+      //    winnerId: {
+      //       needs: { userOneRunId: true, userTwoRunId: true, userOneId: true, userTwoId: true, userOneRun: true },
+      //       compute({ userOneId, userOneRunId, userTwoId, userTwoRunId, }) {
+      //          const winnerId = challenge.userOneRun?.metadata.completedWords
+      //          > challenge.userTwoRun?.metadata.comppletedWods
+      //             ? challenge.userOneId : challenge.userTwoId;
+      //
+      //       },
+      //    },
+      // }
       typingRun: {
          consistency: {
             needs: { metadata: true, id: true },
@@ -27,14 +38,14 @@ export let xprisma = prisma.$extends({
             },
          },
          accuracy: {
-            needs: { typedLetters: true, mode: true, totalTimeMilliseconds: true, wordCount: true, metadata: true },
-            compute({ typedLetters, mode, totalTimeMilliseconds, wordCount, metadata }) {
+            needs: { metadata: true },
+            compute({ metadata }) {
                return Number(metadata?.accuracy ?? 0);
             },
          },
          wpm: {
-            needs: { mode: true, totalTimeMilliseconds: true, wordCount: true, metadata: true },
-            compute({ mode, totalTimeMilliseconds, wordCount, metadata }) {
+            needs: { metadata: true },
+            compute({ metadata }) {
                return Number(metadata?.wpm ?? 0);
             },
          },

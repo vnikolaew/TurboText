@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { PropsWithChildren } from "react";
 import SessionProvider from "./SessionProvider";
 import { ThemeProvider } from "./ThemeProvider";
@@ -7,6 +7,7 @@ import FontProvider from "@providers/DynamicFontProvider";
 import { useAtomValue } from "jotai";
 import { themeAtom } from "@atoms/user";
 import { THEMES } from "@lib/consts";
+import AblyProvider from "./AblyProvider";
 
 interface ProvidersProps extends PropsWithChildren {
 }
@@ -23,11 +24,13 @@ const Providers = ({ children }: ProvidersProps) => {
                storageKey={crypto.randomUUID()}
                defaultTheme={theme ?? `dark`}
                attribute={`class`}>
-               <AtomProvider>
-                  <FontProvider>
-                     {children}
-                  </FontProvider>
-               </AtomProvider>
+               <AblyProvider>
+                  <AtomProvider>
+                     <FontProvider>
+                        {children}
+                     </FontProvider>
+                  </AtomProvider>
+               </AblyProvider>
             </ThemeProvider>
          </SessionProvider>
    );

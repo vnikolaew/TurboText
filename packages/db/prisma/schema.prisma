@@ -36,6 +36,12 @@ model User {
   tags          Tag[]
   configuration UserConfiguration?
   experience    UserExperience?
+
+  challenge_matches_one UsersChallengeMatch[] @relation("userOne")
+  challenge_matches_two UsersChallengeMatch[] @relation("userTwo")
+
+  challenges_one UsersChallenge[] @relation("userOne")
+  challenges_two UsersChallenge[] @relation("userTwo")
 }
 
 model Account {
@@ -94,6 +100,66 @@ model Tag {
   userConfigurationId String?
 }
 
+enum UsersChallengeState {
+  Pending
+  Playing
+  Finished
+  Stopped
+}
+
+enum UsersChallengeMatchState {
+  Pending
+  HalfAccepted
+  Accepted
+  Rejected
+  Started
+}
+
+model UsersChallenge {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  userOneId String
+  userOne   User   @relation("userOne", fields: [userOneId], references: [id], onDelete: Cascade)
+
+  userTwoId String
+  userTwo   User   @relation("userTwo", fields: [userTwoId], references: [id], onDelete: Cascade)
+
+  userOneRunId String?    @db.Uuid
+  userOneRun   TypingRun? @relation("userOneRun", fields: [userOneRunId], references: [id], onDelete: Cascade)
+
+  userTwoRunId String?    @db.Uuid
+  userTwoRun   TypingRun? @relation("userTwoRun", fields: [userTwoRunId], references: [id], onDelete: Cascade)
+
+  matchId String              @db.Uuid
+  match   UsersChallengeMatch @relation(fields: [matchId], references: [id], onDelete: Cascade)
+
+  /// [UsersChallengeMetadata]
+  metadata Json?               @default("null") @db.JsonB
+  state    UsersChallengeState @default(Pending)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model UsersChallengeMatch {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  userOneId String
+  userOne   User   @relation("userOne", fields: [userOneId], references: [id], onDelete: Cascade)
+
+  userTwoId String
+  userTwo   User   @relation("userTwo", fields: [userTwoId], references: [id], onDelete: Cascade)
+
+  /// [UsersChallengeMatchMetadata]
+  metadata Json?                    @default("null") @db.JsonB
+  state    UsersChallengeMatchState @default(Pending)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  challenges UsersChallenge[]
+}
+
 model TypingRun {
   id                    String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   userId                String
@@ -112,6 +178,9 @@ model TypingRun {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  challanges_one UsersChallenge[] @relation("userOneRun")
+  challenges_two UsersChallenge[] @relation("userTwoRun")
 }
 
 enum TypingRunMode {

@@ -1,5 +1,5 @@
 "use server";
-import { Tag, TypingRun, User, xprisma } from "@repo/db";
+import { Tag, TypingRun, User, UsersChallenge, xprisma } from "@repo/db";
 
 import { groupBy } from "lodash";
 import { auth } from "@auth";
@@ -24,6 +24,18 @@ export async function getUniqueRunTags(user: User & { typingRuns: TypingRun[] })
    return tagsById;
 }
 
+function removeFunctions(challenges: UsersChallenge[]) {
+   return challenges?.map(c => {
+      const { updatePassword: _, verifyPassword: __, ...rest } = c.userOne;
+      c.userOne = rest;
+
+      const { updatePassword: _x, verifyPassword: __x, ...rest2 } = c.userTwo;
+      c.userTwo = rest2;
+
+      return c;
+   });
+}
+
 /**
  * Get user with their typing runs.
  */
@@ -39,11 +51,36 @@ export async function getUserWithTypingRuns() {
                createdAt: `desc`,
             },
          },
+         challenges_one: {
+            include: {
+               userOne: true, userTwo: true,
+               userOneRun: {
+                  select: { id: true, userId: true, metadata: true },
+               },
+               userTwoRun: {
+                  select: { id: true, userId: true, metadata: true },
+               },
+            },
+         },
+         challenges_two: {
+            include: {
+               userOne: true, userTwo: true,
+               userOneRun: {
+                  select: { id: true, userId: true, metadata: true },
+               },
+               userTwoRun: {
+                  select: { id: true, userId: true, metadata: true },
+               },
+            },
+         },
       },
    });
    if (!user) return null;
 
-   const {updatePassword, verifyPassword, ...rest} = user;
+   const { updatePassword, verifyPassword, ...rest } = user;
+   user.challenges_one = removeFunctions(user.challenges_one);
+   user.challenges_two = removeFunctions(user.challenges_two);
+
    rest.typingRuns = rest.typingRuns.map(run => {
          const { hasFlag, ...rest } = run;
          return rest;
@@ -54,6 +91,9 @@ export async function getUserWithTypingRuns() {
 
 const EXPONENT = 1.2;
 
+/**
+ * Retrieve user experience info.
+ */
 export async function getUserExperienceInfo() {
    const session = await auth();
    const userExperience = await xprisma.userExperience.findFirst({
@@ -68,3 +108,13 @@ export async function getUserExperienceInfo() {
 
    return { xpNeededForCurrentLevel, xpNeededForNextLevel, percentageUntilNextLevel, level, userExperience };
 }
+
+export async function getUserChallengesDetails(user: User & {
+   challenges_one: UsersChallenge[],
+   challenges_two: UsersChallenge[]
+}) {
+   const challenges = [...user.challenges_one, user.challenges_two]
+      .sort((a, b) => b.createdAt - a.createdAt);
+
+}
+

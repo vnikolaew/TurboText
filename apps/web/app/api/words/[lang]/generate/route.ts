@@ -9,6 +9,31 @@ const SUPPORTED_LANGUAGE_CODES = fs.readdirSync(
    .map(f => f.name.split(`.`)[0])
    .concat(`en`);
 
+export async function generateWords(lang: string, limit?: number) {
+   limit ??= 20;
+
+   if (!SUPPORTED_LANGUAGE_CODES.includes(lang)) {
+      throw new Error(`Unsupported language code: ${lang.toUpperCase()}`);
+   }
+
+   const fileString = fs.readFileSync(path.join(process.cwd(), `languages`, `${lang}.json`));
+   const words = Object.entries(JSON.parse(fileString as unknown as string));
+   const size = words.length;
+
+   const used = new Set<string>();
+   const index = lang === `en` ? 0 : 1;
+
+   // Now pick random words
+   while (used.size < limit) {
+      const word = words[Math.floor(Math.random() * size)]![index] as string;
+      if (!!word.length && !used.has(word)) {
+         used.add(word.split(`,`).at(0)!);
+      }
+   }
+
+   return { words: [...used] };
+}
+
 export async function GET(req: NextRequest, ctx: { params: { lang: string } }) {
    const response = await safeExecute<{ words: string[] }>(async () => {
       const limitString = req.nextUrl.searchParams.get(`limit`);
@@ -16,30 +41,7 @@ export async function GET(req: NextRequest, ctx: { params: { lang: string } }) {
          ? Number(limitString)
          : 20;
 
-      if (!SUPPORTED_LANGUAGE_CODES.includes(ctx.params.lang)) {
-         throw new Error(`Unsupported language code: ${ctx.params.lang.toUpperCase()}`);
-      }
-
-      const fileString = fs.readFileSync(
-         path.join(process.cwd(), `languages`,
-         `${ctx.params.lang}.json`));
-
-      const words = Object.entries(JSON.parse(fileString as unknown as string));
-      const size = words.length;
-
-      const used = new Set<string>();
-
-      const index = ctx.params.lang === `en` ? 0 : 1;
-
-      // Now pick random words
-      while (used.size < limit) {
-         const word = words[Math.floor(Math.random() * size)]![index] as string;
-         if (!!word.length && !used.has(word)) {
-            used.add(word.split(`,`).at(0)!);
-         }
-      }
-
-      return { words: [...used] }
+      return await generateWords(ctx.params.lang, limit);
    });
 
    return response.success
