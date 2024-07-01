@@ -2,13 +2,13 @@
 import React from "react";
 import { Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@repo/ui";
 import { useSetAtom } from "jotai/index";
-import { UserDifficulty, userSelectedDifficultyAtom } from "../_atoms";
+import { UserDifficulty, userSelectedDifficultyAtom } from "../../_atoms";
 import { cn } from "@lib/utils";
 
 export interface UserGameDifficultySelectProps {
 }
 
-const UserGameDifficultySelect = ({}: UserGameDifficultySelectProps) => {
+export const UserGameDifficultySelect = ({}: UserGameDifficultySelectProps) => {
    const setUserDifficulty = useSetAtom(userSelectedDifficultyAtom)
 
    return (
@@ -36,5 +36,3 @@ const UserGameDifficultySelect = ({}: UserGameDifficultySelectProps) => {
       </div>
    );
 };
-
-export default UserGameDifficultySelect;

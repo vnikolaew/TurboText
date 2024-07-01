@@ -8,7 +8,7 @@ import { TIMES } from "@atoms/timer";
 export interface UserGameTimeSelectProps {
 }
 
-const UserGameTimeSelect = ({}: UserGameTimeSelectProps) => {
+export const UserGameTimeSelect = ({}: UserGameTimeSelectProps) => {
    const setUserTime = useSetAtom(userSelectedTimeAtom)
 
    return (
@@ -31,5 +31,3 @@ const UserGameTimeSelect = ({}: UserGameTimeSelectProps) => {
       </div>
    );
 };
-
-export default UserGameTimeSelect;

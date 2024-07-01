@@ -7,10 +7,10 @@ import { useAction } from "next-safe-action/hooks";
 import { acceptChallenge, rejectChallenge } from "@app/(dev)/%5Flobby/actions";
 import Ably from "ably";
 import { useRouter } from "next/navigation";
-import { useAtomValue } from "jotai";
+import { atom, useAtomValue } from "jotai";
 import { matchParamsAtom } from "@app/(dev)/%5Flobby/_atoms";
 import { useBoolean } from "@hooks/useBoolean";
-import { useSetAtom } from "jotai/index";
+import { useAtom, useSetAtom } from "jotai/index";
 import { wordsAtom } from "@atoms/editor";
 
 export interface CurrentUserMatch {
@@ -40,19 +40,22 @@ export enum EventType {
 
 export const EVENT_NAME = `client-global-chat-message`;
 
+export const currentUserMatchAtom = atom<CurrentUserMatch>({
+   userOneAccepted: false,
+   userTwoAccepted: false,
+   matchedUserId: null!,
+   state: ChallengeState.Initial,
+   matchId: null!,
+});
+currentUserMatchAtom.debugLabel = `currentUserMatchAtom`;
+
 export function useTypingChallenge() {
    const session = useSession();
    const [messages, setMessages] = useState<Ably.Message[]>([]);
    const router = useRouter();
    const matchParams = useAtomValue(matchParamsAtom);
 
-   const [currentMatch, setCurrentMatch] = useState<CurrentUserMatch>({
-      userOneAccepted: false,
-      userTwoAccepted: false,
-      matchedUserId: null!,
-      state: ChallengeState.Initial,
-      matchId: null!,
-   }!);
+   const [currentMatch, setCurrentMatch] = useAtom<CurrentUserMatch>(currentUserMatchAtom);
    const { channel, publish } = useChannel(CHANEL_NAME, async (message) => {
       setMessages((prev) => [...prev, message]);
       if (message.data?.type === EventType.Match) {
@@ -65,7 +68,6 @@ export function useTypingChallenge() {
             state: ChallengeState.Found,
             userOneAccepted: false,
             userTwoAccepted: false,
-
          });
       }
 
@@ -109,15 +111,15 @@ export function useTypingChallenge() {
          router.push(`/_game/${gameId}`);
       }
    });
-   const setWords = useSetAtom(wordsAtom)
+   const setWords = useSetAtom(wordsAtom);
 
    const { execute: accept, isExecuting: accepting } = useAction(acceptChallenge, {
       onSuccess: res => {
          if (res.data?.success) {
             console.log(res.data);
-            if(res.data.challenge?.metadata?.words?.length) {
+            if (res.data.challenge?.metadata?.words?.length) {
                console.log(`Updating words to: `, { words: res.data.challenge.metadata.words });
-               setWords(res.data.challenge.metadata.words)
+               setWords(res.data.challenge.metadata.words);
             }
          }
       },
@@ -130,12 +132,12 @@ export function useTypingChallenge() {
       },
    });
 
-   const [matchLoading, setMatchLoading] = useBoolean()
+   const [matchLoading, setMatchLoading] = useBoolean();
 
    const match = useCallback(async () => {
       if (session.status === `authenticated` && channel.state === `attached`) {
-         setMatchLoading(true)
-         setCurrentMatch(m => ({ ...m, state: ChallengeState.Pending }))
+         setMatchLoading(true);
+         setCurrentMatch(m => ({ ...m, state: ChallengeState.Pending }));
 
          const res = await fetch(`/api/challenge`, {
             method: `POST`,
@@ -146,7 +148,7 @@ export function useTypingChallenge() {
             },
          }).then(res => res.json());
          console.log({ res });
-         setMatchLoading(false)
+         setMatchLoading(false);
       }
    }, [session.status, channel.state, matchParams]);
 

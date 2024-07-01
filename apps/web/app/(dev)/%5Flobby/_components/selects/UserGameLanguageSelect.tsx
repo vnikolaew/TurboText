@@ -8,7 +8,7 @@ import { userSelectedLanguageAtom } from "@app/(dev)/%5Flobby/_atoms";
 export interface UserGameLanguageSelectProps {
 }
 
-const UserGameLanguageSelect = ({}: UserGameLanguageSelectProps) => {
+export const UserGameLanguageSelect = ({}: UserGameLanguageSelectProps) => {
    const setUserLanguage = useSetAtom(userSelectedLanguageAtom)
 
    return (
@@ -31,5 +31,3 @@ const UserGameLanguageSelect = ({}: UserGameLanguageSelectProps) => {
       </div>
    );
 };
-
-export default UserGameLanguageSelect;

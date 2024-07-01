@@ -3,12 +3,16 @@ import React from "react";
 import { Button, Separator } from "@repo/ui";
 import { useSession } from "next-auth/react";
 import { ChallengeState, useTypingChallenge } from "@app/(dev)/%5Flobby/hooks/useTypingChallenge";
-import { Swords } from "lucide-react";
-import UserGameLanguageSelect from "@app/(dev)/%5Flobby/_components/UserGameLanguageSelect";
-import UserGameTimeSelect from "@app/(dev)/%5Flobby/_components/UserGameTimeSelect";
-import UserGameDifficultySelect from "@app/(dev)/%5Flobby/_components/UserGameDifficultySelect";
 import LoadingButton from "@components/common/LoadingButton";
-import { useBoolean } from "@hooks/useBoolean";
+import PageHeader from "./_components/PageHeader";
+import {
+   UserGameDifficultySelect,
+   UserGameLanguageSelect,
+   UserGameTimeSelect,
+} from "@app/(dev)/%5Flobby/_components/selects";
+import ChallengeMatchModal from "@app/(dev)/%5Flobby/_components/ChallengeMatchModal";
+import { useAtom } from "jotai/index";
+import { UserAcceptState, userAcceptStateAtom } from "@app/(dev)/%5Flobby/_atoms";
 
 export interface PageProps {
 }
@@ -16,49 +20,40 @@ export interface PageProps {
 
 const Page = ({}: PageProps) => {
    const session = useSession();
-   const [accepted, setAccepted] = useBoolean();
-   const [declined, setDeclined] = useBoolean();
+   const [userAcceptState, setUserAcceptState] = useAtom(userAcceptStateAtom);
    const { currentMatch, accept, decline, match, matchLoading } = useTypingChallenge();
 
    async function handleAcceptChallenge() {
-      if (accepted) return;
+      if (userAcceptState === UserAcceptState.Accepted) return;
       accept({
          matchId: currentMatch?.matchId,
          matchedUserId: currentMatch?.matchedUserId!,
          userId: session.data?.user?.id!,
       });
-      setAccepted(true);
-      setDeclined(false)
+      setUserAcceptState(UserAcceptState.Accepted);
    }
 
    async function handleRejectChallenge() {
-      if (declined) return;
+      if (userAcceptState === UserAcceptState.Declined) return;
       decline({
          matchId: currentMatch?.matchId,
          matchedUserId: currentMatch?.matchedUserId!,
          userId: session.data?.user?.id!,
       });
-      setDeclined(true);
-      setAccepted(false)
+      setUserAcceptState(UserAcceptState.Declined);
    }
 
    return (
       <section className={`w-3/4 mx-auto my-24 flex flex-col items-center gap-4`}>
-         {/*{currentMatch.state === ChallengeState.Pending &&*/}
-         {/*   <span className={`animate-pulse`}>Searching for an opponent...</span>}*/}
-         <div className={`w-full items-center flex gap-4`}>
-            <Swords className={`text-accent`} size={24} />
-            <h2 className={`text-xl`}>Find an opponent to test your skills against</h2>
-         </div>
+         <PageHeader />
          <Separator className={`w-full`} />
 
-         {/* User selects for: language, time, wpm (relative) */}
          <div className={`mt-8 flex flex-col items-start gap-8`}>
             <UserGameLanguageSelect />
             <UserGameTimeSelect />
             <UserGameDifficultySelect />
             <div className={`mt-4 self-end`}>
-               <LoadingButton loadingText={`Finding opponent...`} onClick={_ => match()} loading={matchLoading}>
+               <LoadingButton loadingText={`Searching for opponents...`} onClick={_ => match()} loading={matchLoading}>
                   Find an opponent
                </LoadingButton>
             </div>
@@ -76,8 +71,11 @@ const Page = ({}: PageProps) => {
                )}
             </div>
          )}
-         <span className={`text-green-500`}>Accepted: {String(accepted)}</span>
-         <span className={`text-red-500`}>Declined: {String(declined)}</span>
+         <ChallengeMatchModal
+            onReject={handleRejectChallenge}
+            onAccept={handleAcceptChallenge}
+            match={currentMatch}
+            open={true} />
          {!!currentMatch?.matchId && (
             <pre className={`text-xs`}>{JSON.stringify(currentMatch, null, 2)}</pre>
          )}
