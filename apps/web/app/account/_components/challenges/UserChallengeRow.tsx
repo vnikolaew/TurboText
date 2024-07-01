@@ -27,14 +27,14 @@ function getChallengeInfo(challenge: UsersChallenge, userId: string) {
 }
 
 const UserChallengeRow = ({ challenge, userId }: UserChallengeRowProps) => {
-   const {opponentCompletedWords, myCompletedWords, opponent, isWin} = getChallengeInfo(challenge, userId)
+   const { opponentCompletedWords, myCompletedWords, opponent, isWin } = getChallengeInfo(challenge, userId);
 
    return (
       <TableRow className={`text-sm w-full !text-main `} key={challenge.id}>
          <TableCell className="font-medium !w-fit">
             <Swords className={`text-accent`} size={20} />
          </TableCell>
-         <TableCell className="font-medium text-lg !w-fit text-center">
+         <TableCell className="font-medium text-base !w-fit text-center">
             <span
                className={cn(`!w-fit text-center`, isWin ? `text-green-500` : `text-red-500`)}>{isWin ? `VICTORY` : `DEFEAT`}</span>
          </TableCell>
@@ -67,10 +67,14 @@ const UserChallengeRow = ({ challenge, userId }: UserChallengeRowProps) => {
          <TableCell className="font-medium flex items-center gap-1 text-center">
             <Timer size={18} /> {challenge.metadata?.time}s
          </TableCell>
-         <TableCell className="font-medium text-secondary text-nowrap">
-            {moment(challenge.createdAt).format(`DD MMM YYYY`)}
+         <TableCell className="font-medium text-secondary text-nowrap text-right">
+            <span className={`text-main`}>
+               {moment(challenge.createdAt).format(`DD MMM YYYY`)}
+            </span>
             <br />
-            {moment(challenge.createdAt).format(`HH:mm`)}
+            <span className={`text-secondary`}>
+               {moment(challenge.createdAt).format(`HH:mm`)}
+            </span>
          </TableCell>
       </TableRow>
    );

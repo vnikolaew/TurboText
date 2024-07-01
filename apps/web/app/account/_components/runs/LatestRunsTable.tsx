@@ -101,7 +101,7 @@ const LatestRunsTable = ({ runs, tagsById }: LatestRunsTableProps) => {
       <Fragment>
          <ScrollArea className={``}>
             <Table className={`!mb-12 !overflow-y-scroll`}>
-               <TableCaption className={`!text-secondary !font-semibold !text-base`}>
+               <TableCaption className={`!text-secondary !font-semibold !text-sm`}>
                   A list of your latest typing runs.
                </TableCaption>
                <TableHeader className={`w-full`}>
@@ -165,7 +165,7 @@ const LatestRunsTable = ({ runs, tagsById }: LatestRunsTableProps) => {
                               </Tooltip>
                            </TooltipProvider>
                         </TableCell>
-                        <TableCell className="text-left">
+                        <TableCell className="text-right">
                            {run.dateFormatted}
                         </TableCell>
                      </TableRow>

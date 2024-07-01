@@ -20,19 +20,19 @@ const LatestUserChallenges = ({ user }: LatestUserChallengesProps) => {
          </div>
          <ScrollArea className={`w-full`}>
             <Table className={`!mb-12 !overflow-y-scroll !w-full`}>
-               <TableCaption className={`!text-secondary !font-semibold !text-base`}>
+               <TableCaption className={`!text-secondary !font-semibold !text-sm`}>
                   A list of your latest typing challenges.
                </TableCaption>
                <TableHeader className={`w-full`}>
                   <TableRow className={`text-sm w-full !text-secondary`}>
                      <TableHead className="w-fit"></TableHead>
                      <TableHead className="w-fit"></TableHead>
-                     <TableHead className="">Completed words</TableHead>
-                     <TableHead className="text-center">VS</TableHead>
-                     <TableHead className="">Language</TableHead>
-                     <TableHead className="">Difficulty</TableHead>
-                     <TableHead className="">Time</TableHead>
-                     <TableHead className="">Date</TableHead>
+                     <TableHead className="">completed words</TableHead>
+                     <TableHead className="text-center">vs</TableHead>
+                     <TableHead className="">language</TableHead>
+                     <TableHead className="">difficulty</TableHead>
+                     <TableHead className="">time</TableHead>
+                     <TableHead className="">date</TableHead>
                   </TableRow>
                </TableHeader>
                <TableBody className={`w-full max-h-[1000px] !overflow-y-scroll`}>
