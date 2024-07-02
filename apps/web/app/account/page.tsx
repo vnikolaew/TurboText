@@ -127,7 +127,7 @@ const Page = async ({ searchParams }: PageProps) => {
          <div className={`w-full bg-secondary-bg rounded-lg shadow-lg flex items-center p-6 py-10 gap-8 mt-8`}>
             <LatestUserRuns user={user} />
          </div>
-         <div className={`w-full bg-secondary-bg rounded-lg shadow-lg flex items-center p-6 py-10 gap-8 mt-8`}>
+         <div className={`w-full bg-secondary-bg rounded-lg shadow-lg flex items-center p-6 py-10 gap-8 my-8`}>
             <LatestUserChallenges user={user} />
          </div>
       </section>

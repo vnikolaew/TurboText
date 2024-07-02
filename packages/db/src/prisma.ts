@@ -1,7 +1,7 @@
 import { Prisma, PrismaClient, Tag, TypingRun, User } from "@prisma/client";
 import { InternalArgs } from "@prisma/client/runtime/library";
 import bcrypt from "bcryptjs";
-import { typedLetterInfoSchema } from "./utils";
+import { getUserLabel, typedLetterInfoSchema } from "./utils";
 
 export const __IS_DEV__ = process.env.NODE_ENV === `development`;
 
@@ -30,6 +30,14 @@ export let xprisma = prisma.$extends({
       //       },
       //    },
       // }
+      userExperience: {
+         label: {
+            needs: { level: true },
+            compute({ level }) {
+               return getUserLabel(level)
+            },
+         },
+      },
       typingRun: {
          consistency: {
             needs: { metadata: true, id: true },

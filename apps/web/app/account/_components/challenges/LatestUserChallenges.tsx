@@ -1,13 +1,12 @@
 "use client";
 import React, { Fragment } from "react";
 import { User, UsersChallenge } from "@repo/db";
-import { ScrollArea, Table, TableBody, TableCaption, TableHead, TableHeader, TableRow } from "@repo/ui";
-import UserChallengeRow, { ChallengeOutcome } from "@app/account/_components/challenges/UserChallengeRow";
+import { ChallengeOutcome } from "@app/account/_components/challenges/UserChallengeRow";
 import ExportChallengesButton from "@app/account/_components/challenges/ExportChallengesButton";
-import { SortableTableHead } from "@app/account/_components/common/SortableTableHead";
 import { atom, useAtomValue } from "jotai/index";
 import { sortRuns } from "../runs/LatestRunsTable";
 import moment from "moment/moment";
+import LatestUserChallengesTable from "@app/account/_components/challenges/LatestUserChallengesTable";
 
 export interface LatestUserChallengesProps {
    user: User & { challenges_one: UsersChallenge[], challenges_two: UsersChallenge[] };
@@ -38,7 +37,7 @@ export function getChallengeInfo(challenge: UsersChallenge, userId: string) {
 
 
 function mapChallenge(challenge: UsersChallenge, userId: string) {
-   const { opponentCompletedWords, myCompletedWords, opponent, outcome } = getChallengeInfo(challenge, userId);
+   const { opponentCompletedWords, myCompletedWords, outcome } = getChallengeInfo(challenge, userId);
 
    return {
       ...challenge,
@@ -77,33 +76,11 @@ const LatestUserChallenges = ({ user }: LatestUserChallengesProps) => {
          <div className={`flex justify-end`}>
             <ExportChallengesButton challenges={challenges} />
          </div>
-         <ScrollArea className={`w-full`}>
-            <Table className={`!mb-12 !overflow-y-scroll !w-full`}>
-               <TableCaption className={`!text-secondary !font-semibold !text-sm`}>
-                  A list of your latest typing challenges.
-               </TableCaption>
-               <TableHeader className={`w-full`}>
-                  <TableRow className={`text-sm w-full !text-secondary`}>
-                     <TableHead className="w-fit"></TableHead>
-                     <SortableTableHead
-                        column={`outcome`} sort={challengesTableSortAtom}
-                        className="w-fit"></SortableTableHead>
-                     <TableHead className="text-center">completed words</TableHead>
-                     <TableHead className="text-center">vs</TableHead>
-                     <SortableTableHead column={`language`} sort={challengesTableSortAtom} className="">language</SortableTableHead>
-                     <SortableTableHead sort={challengesTableSortAtom} column={`difficulty`} className="">difficulty</SortableTableHead>
-                     <SortableTableHead column={`time`} sort={challengesTableSortAtom} className="">time</SortableTableHead>
-                     <SortableTableHead sort={challengesTableSortAtom} className={`text-right`} title={`date`}
-                                        column={`createdAt`} />
-                  </TableRow>
-               </TableHeader>
-               <TableBody className={`w-full max-h-[1000px] !overflow-y-scroll`}>
-                  {challenges.map((challenge, index) => (
-                     <UserChallengeRow key={challenge!.id} challenge={challenge} userId={user.id} />
-                  ))}
-               </TableBody>
-            </Table>
-         </ScrollArea>
+         {/*<ScrollArea className={`w-full min-h-[300px]`}>*/}
+            <LatestUserChallengesTable
+               challenges={challenges}
+               user={user} />
+         {/*</ScrollArea>*/}
       </section>
    );
 };

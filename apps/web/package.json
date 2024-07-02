@@ -12,6 +12,7 @@
     "@auth/prisma-adapter": "^2.2.0",
     "@hookform/resolvers": "^3.6.0",
     "@iconscout/react-unicons": "^2.0.2",
+    "@next/third-parties": "^14.2.4",
     "@prisma/client": "^5.15.0",
     "@repo/db": "workspace:*",
     "@repo/emails": "workspace:*",

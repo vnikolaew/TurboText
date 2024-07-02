@@ -26,6 +26,7 @@ import fs from "node:fs";
 import path from "node:path";
 import * as process from "node:process";
 import ProductionOnly from "@components/common/ProductionOnly";
+import { GoogleTagManager } from "@next/third-parties/google";
 
 export async function generateMetadata() {
    const session = await auth();
@@ -76,6 +77,7 @@ export default async function RootLayout({
       <html className={theme} style={{ colorScheme: `dark` }} suppressHydrationWarning lang="en">
       <Providers>
          <body className={cn(`min-h-screen bg-background font-mono antialiased`, font!.variable)}>
+         <GoogleTagManager gtmId={`GTM-W2XLDZS8`}  />
          <DynamicFontProvider>
             <WithInitialState user={user} />
             <LoadingBar />

@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useMemo, useState } from "react";
-import { ChallengeState, CurrentUserMatch, currentUserMatchAtom } from "@app/(dev)/%5Flobby/hooks/useTypingChallenge";
+import { ChallengeState, currentUserMatchAtom } from "@app/(dev)/%5Flobby/hooks/useTypingChallenge";
 import {
    Button,
    Dialog,
@@ -8,7 +8,8 @@ import {
    DialogFooter,
    DialogHeader,
    DialogTitle,
-   Progress, Skeleton,
+   Progress,
+   Skeleton,
    UserAvatar,
 } from "@repo/ui";
 import { User } from "@repo/db";
@@ -16,20 +17,20 @@ import { useBoolean } from "@hooks/useBoolean";
 import { useAtom } from "jotai/index";
 import { UserAcceptState, userAcceptStateAtom } from "@app/(dev)/%5Flobby/_atoms";
 import { useAtomValue } from "jotai";
+import { getUserDetails } from "@app/(dev)/%5Flobby/_queries";
 
 export interface ChallengeMatchModalProps {
-   match: CurrentUserMatch;
    open: boolean;
    onAccept: () => void | Promise<void>;
    onReject: () => void | Promise<void>;
 }
 
 
-const ChallengeMatchModal = ({ match, open, onAccept, onReject }: ChallengeMatchModalProps) => {
+const ChallengeMatchModal = ({ open, onAccept, onReject }: ChallengeMatchModalProps) => {
    const [opponentDetails, setOpponentDetails] = useState<User>();
    const [userLoading, setUserLoading] = useBoolean();
    const [currentMatch, setCurrentMatch] = useAtom(currentUserMatchAtom);
-   const userAcceptState = useAtomValue(userAcceptStateAtom)
+   const userAcceptState = useAtomValue(userAcceptStateAtom);
 
    const percentageUntilNextLevel = useMemo(() => {
       if (!opponentDetails) return 0;
@@ -43,25 +44,27 @@ const ChallengeMatchModal = ({ match, open, onAccept, onReject }: ChallengeMatch
          / (xpNeededForNextLevel - xpNeededForCurrentLevel) * 100;
    }, [opponentDetails]);
 
-   match = {
-      "matchedUserId": "clxn1gsr70000b6uyahrjhb5o",
-      "matchId": "52b7caf6-14b3-49f0-bf94-95762159a483",
-      "state": ChallengeState.Found,
-      "userOneAccepted": false,
-      "userTwoAccepted": false,
-   };
+   useEffect(() => {
+      if (!currentMatch.matchedUserId) {
+         setCurrentMatch({
+            "matchedUserId": "cly13xu5o0000vpgulhtyguwb",
+            "matchId": "52b7caf6-14b3-49f0-bf94-95762159a483",
+            "state": ChallengeState.Found,
+            "userOneAccepted": false,
+            "userTwoAccepted": false,
+         });
+      }
+   }, []);
 
    useEffect(() => {
       (async () => {
          setUserLoading(true);
-         const res = await fetch(`/api/user/${match?.matchedUserId}/details`, {
-            credentials: `include`,
-         }).then(r => r.json());
-         if (res.success) setOpponentDetails(res.user);
+         const user = await getUserDetails(currentMatch.matchedUserId);
+         if (user) setOpponentDetails(user);
          setUserLoading(false);
       })();
 
-   }, [match?.matchedUserId]);
+   }, [currentMatch?.matchedUserId]);
 
    return (
       <Dialog modal open={open}>
@@ -87,7 +90,7 @@ const ChallengeMatchModal = ({ match, open, onAccept, onReject }: ChallengeMatch
                      </div>
                   </div>
                )}
-               {match?.userTwoAccepted && (
+               {currentMatch?.userTwoAccepted && (
                   <div>{opponentDetails?.name} accepted the challenge.</div>
                )}
 

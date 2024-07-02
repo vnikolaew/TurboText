@@ -1,17 +1,17 @@
-import { User, xprisma } from "@repo/db";
 import React, { Suspense } from "react";
-import { notFound } from "next/navigation";
-import moment from "moment";
 import { Separator, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, UserAvatar } from "@repo/ui";
 import { UserExperienceInfo } from "@app/account/_components/UserExperienceInfo";
-import { formatMillisecondsToTime, isValidUrl, normalizeURL } from "@lib/utils";
-import { Flag, Github, Globe, Twitter } from "lucide-react";
+import { formatMillisecondsToTime } from "@lib/utils";
 import TimeRunsStats from "@app/profile/[userId]/_components/TimeRunsStats";
 import WordRunsStats from "@app/profile/[userId]/_components/WordRunsStats";
-import ReportUserModal from "@app/profile/[userId]/_components/ReportUserModal";
-import { pick } from "lodash";
 import MythicalBadge from "@app/profile/[userId]/_components/MythicalBadge";
-import Link from "next/link";
+import { getUserInfo } from "@app/profile/[userId]/_queries";
+import moment from "moment";
+import UserWebsite from "@app/profile/[userId]/_components/links/UserWebsite";
+import UserTwitter from "@app/profile/[userId]/_components/links/UserTwitter";
+import UserGithub from "@app/profile/[userId]/_components/links/UserGithub";
+import ReportUserButton from "@app/profile/[userId]/_components/ReportUserButton";
+import UserChallengesRecord from "@app/profile/[userId]/_components/UserChallengesRecord";
 
 export interface PageProps {
    params: { userId?: string };
@@ -19,26 +19,7 @@ export interface PageProps {
 
 
 const Page = async ({ params }: PageProps) => {
-   console.log({ params });
-   const user: User = await xprisma.user.findUnique({
-      where: { id: decodeURIComponent(params.userId!) },
-      include: { typingRuns: true },
-   });
-   if (!user) notFound();
-
-   const topRun = (await xprisma.typingRun.getTopWpmAllTime());
-   const isFirstInLeaderboard = topRun?.userId === user.id;
-
-   console.log({ isFirstInLeaderboard, topRun });
-
-   user.typingRuns = user.typingRuns.map(run => {
-         const { hasFlag, ...rest } = run;
-         return rest;
-      },
-   );
-   const { verifyPassword, updatePassword, ...rest } = user;
-
-   console.log({ user, rest });
+   const { user, isFirstInLeaderboard, wins, losses, draws } = await getUserInfo(params.userId!);
 
    return (
       <section className={`w-2/3 mx-auto mt-24 flex flex-col items-center gap-4`}>
@@ -59,8 +40,8 @@ const Page = async ({ params }: PageProps) => {
                               </TooltipTrigger>
                               <TooltipContent
                                  side={`top`}
-                                 className={`bg-secondary text-main rounded-xl text-sm border-none !px-4 !py-2`}>
-                                 {moment(user.createdAt).diff(moment(), `days`)} days ago
+                                 className={`bg-secondary-bg text-main rounded-xl text-sm border-none !px-4 !py-2`}>
+                                 {moment(moment()).diff(moment(user.createdAt), `days`)} days ago
                               </TooltipContent>
                            </Tooltip>
                         </TooltipProvider>
@@ -72,6 +53,7 @@ const Page = async ({ params }: PageProps) => {
                      <UserExperienceInfo />
                   </Suspense>
                </div>
+               <UserChallengesRecord record={{ wins, losses, draws }} />
             </div>
             <Separator orientation={`vertical`} className={`h-60 w-[4px] rounded-full bg-secondary`} />
             <div className={`flex-1 h-full flex flex-col items-start justify-between gap-8`}>
@@ -101,87 +83,12 @@ const Page = async ({ params }: PageProps) => {
             </div>
             <Separator orientation={`vertical`} className={`h-60 w-[4px] rounded-full bg-secondary`} />
             <div className={`flex-1 h-full flex flex-col items-start justify-between gap-8`}>
-               <TooltipProvider>
-                  <Tooltip>
-                     <TooltipTrigger asChild>
-                        {user.metadata?.github ? (
-                           <Link target={"_blank"}
-                                 href={`https://www.github.com/${encodeURIComponent(user.metadata?.github)}`}>
-                              <Github size={32}
-                                      className={`cursor-pointer stroke-secondary fill-secondary hover:!fill-accent hover:!stroke-accent transition-colors duration-200`} />
-                           </Link>
-                        ) : (
-                           <Github size={32}
-                                   className={`cursor-pointer stroke-secondary fill-secondary hover:!fill-accent hover:!stroke-accent transition-colors duration-200`} />
-                        )}
-                     </TooltipTrigger>
-                     <TooltipContent
-                        side={`top`}
-                        className={`bg-secondary-bg text-main rounded-xl text-sm border-none !px-4 !py-2`}>
-                        {user.metadata?.github ?? `Unspecified`}
-                     </TooltipContent>
-                  </Tooltip>
-               </TooltipProvider>
-               <TooltipProvider>
-                  <Tooltip>
-                     <TooltipTrigger asChild>
-                        {user.metadata?.twitter ? (
-                           <Link target={`_blank`}
-                                 href={`https://www.twitter.com/${encodeURIComponent(user.metadata?.twitter)}`}>
-                              <Twitter size={32}
-                                       className={`cursor-pointer stroke-secondary fill-secondary hover:!fill-accent hover:!stroke-accent transition-colors duration-200`} />
-                           </Link>
-                        ) : (
-                           <Twitter size={32}
-                                    className={`cursor-pointer stroke-secondary fill-secondary hover:!fill-accent hover:!stroke-accent transition-colors duration-200`} />
-                        )}
-                     </TooltipTrigger>
-                     <TooltipContent
-                        side={`top`}
-                        className={`bg-secondary-bg text-main rounded-xl text-sm border-none !px-4 !py-2`}>
-                        {user.metadata?.twitter ?? `Unspecified`}
-                     </TooltipContent>
-                  </Tooltip>
-               </TooltipProvider>
-               <TooltipProvider>
-                  <Tooltip>
-                     <TooltipTrigger asChild>
-                        {user.metadata?.website && isValidUrl(user.metadata.website) ? (
-                           <Link
-                              target={`_blank`}
-                              href={`${normalizeURL(encodeURIComponent(user.metadata?.website))}`}>
-                              <Globe size={32}
-                                     className={`cursor-pointer stroke-secondary  hover:!stroke-accent transition-colors duration-200`} />
-                           </Link>
-                        ) : (
-                           <Globe size={32}
-                                  className={`cursor-pointer stroke-secondary hover:!stroke-accent transition-colors duration-200`} />
-                        )}
-                     </TooltipTrigger>
-                     <TooltipContent
-                        side={`top`}
-                        className={`bg-secondary-bg text-main rounded-xl text-sm border-none !px-4 !py-2`}>
-                        {user.metadata?.website ?? `No website`}
-                     </TooltipContent>
-                  </Tooltip>
-               </TooltipProvider>
+               <UserGithub github={user.metadata?.github} />
+               <UserTwitter twitter={user.metadata?.twitter} />
+               <UserWebsite website={user.metadata?.website} />
             </div>
             <div className={`!h-full p-4`}>
-               <TooltipProvider>
-                  <Tooltip>
-                     <TooltipTrigger>
-                        <ReportUserModal user={pick(rest, [`id`, `name`])}>
-                           <Flag size={28}
-                                 className={`cursor-pointer stroke-secondary fill-secondary hover:!stroke-accent transition-colors duration-200 hover:!fill-accent`} />
-                        </ReportUserModal>
-                     </TooltipTrigger>
-                     <TooltipContent
-                        side={`left`}
-                        className={`bg-secondary-bg text-main rounded-xl text-sm border-none !px-4 !py-2`}>
-                        Report user
-                     </TooltipContent>
-                  </Tooltip>
-               </TooltipProvider>
+               <ReportUserButton user={user} />
             </div>
          </div>
          <div className={`w-full rounded-lg flex items-center gap-8 my-8`}>

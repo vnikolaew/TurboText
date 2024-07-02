@@ -21,6 +21,16 @@ function getGroupedRuns(runs: TypingRun[]) {
    return { runs15, runs30, runs60, runs120 };
 }
 
+export function getRunsStats(runs: TypingRun[]) {
+   const averageAcc = mean(runs.map(r => r.metadata!.accuracy));
+   const averageCon = mean(runs.map(r => r.metadata!.consistency));
+   const bestWpm = max(runs.map(r => r.metadata!.wpm));
+   const bestRawWpm = max(runs.map(r => r.metadata!.rawWpm));
+   const latestRun = max(runs.map(r => r.createdAt));
+
+   return { averageAcc, averageCon, bestWpm, latestRun, bestRawWpm };
+}
+
 const TimeRunsStats = ({ timeRuns }: TimeRunsStatsProps) => {
    const { runs15, runs30, runs60, runs120 } = getGroupedRuns(timeRuns);
 
@@ -35,14 +45,11 @@ const TimeRunsStats = ({ timeRuns }: TimeRunsStatsProps) => {
 };
 
 const TimeRunsStat = ({ runs, time }: { runs: TypingRun[], time: number }) => {
-   const averageAcc = mean(runs.map(r => r.metadata!.accuracy));
-   const averageCon = mean(runs.map(r => r.metadata!.consistency));
-   const bestWpm = max(runs.map(r => r.metadata!.wpm));
-   const latestRun = max(runs.map(r => r.createdAt));
+   const { latestRun, averageAcc, averageCon, bestWpm, bestRawWpm } = getRunsStats(runs);
    const [hovered, setHovered] = useBoolean();
 
    if (!runs?.length) {
-      return <NoRunsLabel />;
+      return <NoRunsLabel time={time} />;
    }
 
    return (
@@ -60,10 +67,12 @@ const TimeRunsStat = ({ runs, time }: { runs: TypingRun[], time: number }) => {
                key={`next`}
                className={cn(`flex flex-col items-center justify-between h-full`, !hovered && `hidden`)}>
                <span className={`text-accent text-nowrap text-sm`}>{time} seconds</span>
-               <span className={`text-secondary`}>{bestWpm.toFixed(0)}</span>
-               <span className={`text-secondary`}>{averageAcc.toFixed(0)}%</span>
-               <span className={`text-secondary`}>{averageCon.toFixed(0)}%</span>
-               <span className={`text-accent text-center text-sm leading-tight`}>{moment(latestRun).format(`DD MMM YYYY`)}</span>
+               <span className={`text-secondary text-xs`}>{bestWpm.toFixed(0)} wpm</span>
+               <span className={`text-secondary text-xs`}>{bestRawWpm.toFixed(0)} raw</span>
+               <span className={`text-secondary text-xs`}>{averageAcc.toFixed(0)}% acc</span>
+               <span className={`text-secondary text-xs`}>{averageCon.toFixed(0)}% con</span>
+               <span
+                  className={`text-accent text-center text-sm leading-tight`}>{moment(latestRun).format(`DD MMM YYYY`)}</span>
             </motion.div>
          ) : (
             <motion.div

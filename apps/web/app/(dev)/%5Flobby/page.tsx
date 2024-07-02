@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useMemo } from "react";
 import { Button, Separator } from "@repo/ui";
 import { useSession } from "next-auth/react";
 import { ChallengeState, useTypingChallenge } from "@app/(dev)/%5Flobby/hooks/useTypingChallenge";
@@ -43,6 +43,11 @@ const Page = ({}: PageProps) => {
       setUserAcceptState(UserAcceptState.Declined);
    }
 
+   const showMatchModal = useMemo(() =>
+      currentMatch.state === ChallengeState.Found
+      || currentMatch.state === ChallengeState.Accepted
+      || currentMatch.state === ChallengeState.HalfAccepted, [currentMatch?.state]);
+
    return (
       <section className={`w-3/4 mx-auto my-24 flex flex-col items-center gap-4`}>
          <PageHeader />
@@ -71,11 +76,12 @@ const Page = ({}: PageProps) => {
                )}
             </div>
          )}
-         <ChallengeMatchModal
-            onReject={handleRejectChallenge}
-            onAccept={handleAcceptChallenge}
-            match={currentMatch}
-            open={true} />
+         {showMatchModal && (
+            <ChallengeMatchModal
+               onReject={handleRejectChallenge}
+               onAccept={handleAcceptChallenge}
+               open={true} />
+         )}
          {!!currentMatch?.matchId && (
             <pre className={`text-xs`}>{JSON.stringify(currentMatch, null, 2)}</pre>
          )}

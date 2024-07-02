@@ -8,7 +8,7 @@ export interface PageLinksProps {
 
 const PageLinks = ({}: PageLinksProps) => {
    return (
-      <div className={`flex items-center gap-8`}>
+      <div className={`flex items-center gap-8 mt-8`}>
          <PageLink Icon={Activity} href={`activity`} label={`Activity`} />
          <PageLink Icon={AreaChart} href={`stats`} label={`Stats`} />
          <PageLink Icon={Play} href={`runs`} label={`Runs`} />
