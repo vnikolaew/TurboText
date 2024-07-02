@@ -53,6 +53,14 @@ declare global {
          test_difficulty: string
       }
 
+      type UserNotificationPayload = {
+         timestamp?: number;
+         fromUserId: string;
+         fromUserImage?: string;
+         fromUserName?: string;
+         type?: string;
+      }
+
       type UserConfigurationMetadata = {
          customThemes?: {
             name: string;

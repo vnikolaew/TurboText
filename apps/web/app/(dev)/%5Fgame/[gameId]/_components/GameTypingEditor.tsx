@@ -113,7 +113,7 @@ const GameTypingEditor = ({ user, gameId }: GameTypingEditorProps) => {
          <CopyToClipboardButton />
       </div>
       <AnimatePresence>
-         {(showSavePrompt || true) &&
+         {(showSavePrompt) &&
             <SaveTypingRunPrompt
                loading={isExecuting}
                onDismiss={() => LocalStorage.removeItem(TYPING_RUN_LS_KEY)}

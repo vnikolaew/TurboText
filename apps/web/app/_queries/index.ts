@@ -47,6 +47,9 @@ export async function getUserInfo(): Promise<User & {
       let dbUser = await xprisma.user.findUnique({
          where: { id: session?.user?.id ?? `` },
          include: {
+            notifications: {
+               where: { read: false },
+            },
             tags: {
                select: {
                   id: true, name: true,

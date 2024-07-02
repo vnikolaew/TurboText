@@ -14,7 +14,18 @@ export async function UserExperienceInfo() {
 
    return (
       <div className={`w-full flex items-center gap-4`}>
-         <span className={`text-lg text-main`}>{level}</span>
+         <TooltipProvider delayDuration={0}>
+            <Tooltip>
+               <TooltipTrigger asChild>
+                  <span className={`text-lg text-main`}>{level}</span>
+               </TooltipTrigger>
+               <TooltipContent
+                  side={`top`}
+                  className={`!bg-secondary text-white rounded-xl text-sm  !px-4 !py-2`}>
+                  {userExperience.label}
+               </TooltipContent>
+            </Tooltip>
+         </TooltipProvider>
          <div className={`flex-1`}>
             <TooltipProvider delayDuration={0}>
                <Tooltip>
@@ -23,7 +34,7 @@ export async function UserExperienceInfo() {
                   </TooltipTrigger>
                   <TooltipContent
                      side={`top`}
-                     className={`!bg-secondary text-main rounded-xl text-sm  !px-4 !py-2`}>
+                     className={`!bg-secondary text-white rounded-xl text-sm  !px-4 !py-2`}>
                      {percentageUntilNextLevel.toFixed(2)}%
                   </TooltipContent>
                </Tooltip>

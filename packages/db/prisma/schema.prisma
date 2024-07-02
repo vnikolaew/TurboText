@@ -40,8 +40,9 @@ model User {
   challenge_matches_one UsersChallengeMatch[] @relation("userOne")
   challenge_matches_two UsersChallengeMatch[] @relation("userTwo")
 
-  challenges_one UsersChallenge[] @relation("userOne")
-  challenges_two UsersChallenge[] @relation("userTwo")
+  challenges_one UsersChallenge[]   @relation("userOne")
+  challenges_two UsersChallenge[]   @relation("userTwo")
+  notifications  UserNotification[]
 }
 
 model Account {
@@ -265,6 +266,21 @@ model UserConfiguration {
   language String @default("English")
 
   /// [UserConfigurationMetadata]
+  metadata  Json?    @default("null") @db.JsonB
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model UserNotification {
+  id     String @id @default(cuid())
+  userId String
+
+  /// [UserNotificationPayload]
+  payload Json?   @default("null") @db.JsonB
+  read    Boolean @default(false)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   metadata  Json?    @default("null") @db.JsonB
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

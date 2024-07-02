@@ -10,7 +10,7 @@ export interface UserSearchRowProps {
 
 const UserSearchRow = ({ user }: UserSearchRowProps) => {
    return (
-      <Link className={`w-full`} key={user.id} href={`/profile/${user.id}`}>
+      <Link  className={`w-full`} key={user.id} href={`/profile/${user.id}`}>
          <div
             className={`flex items-center gap-2 hover:!bg-secondary p-1 !px-2 rounded-md transition-all duration-200 !w-full`}
             key={user.id}>
@@ -25,11 +25,13 @@ const UserSearchRow = ({ user }: UserSearchRowProps) => {
                className={`rounded-md p-1 !px-2 transition-all duration-200 cursor-pointer flex items-center text-nowrap`}>
                {user.name}
             </span>
-            <Badge
-               variant={`secondary`}
-               className={`text-xs !self-end !my-0 !mb-0.5`}>
-               {user.experience!.label}
-            </Badge>
+           <div className={`flex-1 flex items-center justify-end`}>
+              <Badge
+                 variant={`secondary`}
+                 className={`text-xs !justify-self-end !my-0 !mb-0.5`}>
+                 {user.experience!.label}
+              </Badge>
+           </div>
          </div>
       </Link>
    );

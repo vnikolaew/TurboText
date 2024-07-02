@@ -10,7 +10,6 @@ export interface SaveTypingRunPromptProps {
    onDismiss?: () => void;
 }
 
-const MotionAlert = motion(Alert);
 const MotionAlertDesc = motion(AlertDescription);
 
 const SaveTypingRunPrompt = ({ onSave, onDismiss, loading }: SaveTypingRunPromptProps) => {

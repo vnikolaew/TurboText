@@ -3,7 +3,7 @@
 import { lettersCorrectnessAtom, typingModeAtom, typingRunStateAtom, wordsAtom } from "@atoms/editor";
 import { generate } from "random-words";
 import {
-   cookiePreferencesAtom,
+   cookiePreferencesAtom, globalUserNotificationsAtom,
    prevUserXpAtom,
    userActiveTagsAtom,
    userAtom,
@@ -13,7 +13,7 @@ import {
 } from "@atoms/user";
 import { useEffect, useRef } from "react";
 import { currentTimestampAtom, TIMES } from "@atoms/timer";
-import { Tag, User, UserConfiguration } from "@repo/db";
+import { Tag, User, UserConfiguration, UserNotification } from "@repo/db";
 import { useHydrateAtoms } from "jotai/utils";
 import { DEFAULT_WORD_COUNT, TypingMode, TypingRunState, WORDS_COUNTS } from "@atoms/consts";
 import { wordsCountsAtom } from "@atoms/words";
@@ -21,7 +21,7 @@ import { typingFlagsAtom } from "@atoms/flags";
 import { useAtom } from "jotai";
 import { injectCSSClass } from "@lib/utils";
 
-export function useHydrateAllAtoms(user?: User & { configuration: UserConfiguration }) {
+export function useHydrateAllAtoms(user?: User & { configuration: UserConfiguration, notifications: UserNotification[] }) {
    const WORDS = useRef(generate(DEFAULT_WORD_COUNT) as string[]);
    const [userConfig, setUserConfig] = useAtom(userConfigAtom);
 
@@ -65,6 +65,11 @@ export function useHydrateAllAtoms(user?: User & { configuration: UserConfigurat
    //@ts-ignore
    useHydrateAtoms([
       [wordsAtom, WORDS.current],
+      [globalUserNotificationsAtom, user?.notifications?.map(n => ({
+         id: n.id,
+         timestamp: new Date(n.createdAt),
+         payload: n.payload
+      })) ?? []],
       [cookiePreferencesAtom, user?.cookiePreferences ?? {}],
       [userDataLoadingAtom, false],
       [userXpAtom, { points: user?.experience?.points ?? 0, level: user?.experience?.level ?? 0 }],

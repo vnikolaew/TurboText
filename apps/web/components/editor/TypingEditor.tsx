@@ -128,7 +128,7 @@ const TypingEditor = ({ user }: TypingEditorProps) => {
          <ToggleWords />
          <EditorButtons />
          <AnimatePresence>
-            {(showSavePrompt || true) &&
+            {(showSavePrompt) &&
                <SaveTypingRunPrompt
                   loading={isExecuting}
                   onDismiss={() => {

@@ -16,6 +16,8 @@ import OnAccountVerified from "@app/_components/toasts/OnAccountVerified";
 import LatestUserChallenges from "@app/account/_components/challenges/LatestUserChallenges";
 import PageLinks from "./_components/PageLinks";
 import { UsersChallengeState } from "@repo/db";
+import UserChallengesRecord from "@app/profile/[userId]/_components/UserChallengesRecord";
+import { getUserChallengesRecord } from "@app/profile/[userId]/_queries";
 
 export const metadata: Metadata = {
    title: `Account | ${APP_NAME}`,
@@ -40,6 +42,8 @@ export interface PageProps {
 const Page = async ({ searchParams }: PageProps) => {
    const user = await getUserWithTypingRuns();
    if (!user) notFound();
+
+   let { wins, draws, losses } = await getUserChallengesRecord(user);
 
    return (
       <section className={`w-2/3 mx-auto mt-24 flex flex-col items-center gap-4`}>
@@ -83,8 +87,9 @@ const Page = async ({ searchParams }: PageProps) => {
                      <UserExperienceInfo />
                   </Suspense>
                </div>
+               <UserChallengesRecord withChallenge={false} record={{ wins, losses, draws }} />
             </div>
-            <Separator orientation={`vertical`} className={`h-20 w-[4px] rounded-full bg-secondary`} />
+            <Separator orientation={`vertical`} className={`h-24 w-[4px] rounded-full bg-secondary`} />
             <div className={`flex-1 h-full grid grid-cols-3`}>
                <div className={`flex flex-col items-start gap-4`}>
                   <div className={`flex flex-col items-start gap-1`}>
@@ -112,7 +117,7 @@ const Page = async ({ searchParams }: PageProps) => {
                   <h2 className={`text-3xl text-main`}>{formatMillisecondsToTime(user.totalTimeTypingMs)}</h2>
                </div>
             </div>
-            <Separator orientation={`vertical`} className={`h-20 w-[4px] rounded-full bg-secondary`} />
+            <Separator orientation={`vertical`} className={`h-24 w-[4px] rounded-full bg-secondary`} />
             <AccountLinks user={user} />
          </div>
          <div className={`w-full bg-secondary-bg rounded-lg shadow-lg flex items-center p-6 py-10 gap-8 mt-8`}>

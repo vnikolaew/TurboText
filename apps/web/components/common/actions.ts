@@ -7,6 +7,7 @@ import { z } from "zod";
 import { auth } from "@/auth";
 import { cookies } from "next/headers";
 import { USER_LOCALE_COOKIE_NAME } from "@/lib/consts";
+import crypto from "crypto";
 
 export interface CookiePreferences {
    Necessary: boolean,
@@ -210,5 +211,49 @@ export const changeUserLanguage = publicAction.schema(changeLanguageSchema)
          httpOnly: true,
       });
 
+      return { success: true };
+   });
+
+
+
+
+const saveNotificationSchema = z.object({
+   payload: z.record(z.string(), z.any()),
+   id: z.string().nullable()
+});
+
+/**
+ * A public action for saving a user notification.
+ */
+export const saveUserNotification = authorizedAction
+   .schema(saveNotificationSchema)
+   .action(async ({ ctx: { userId }, parsedInput: { id, payload } }) => {
+      await sleep(1000);
+
+      let notification = await xprisma.userNotification.create({
+         data: {
+            id: id ?? crypto.randomUUID()  ,
+            payload,
+            read: false,
+            userId
+         }
+      })
+      return { success: true, notification };
+   });
+
+/**
+ * A public action for saving a user notification.
+ */
+export const markAllNotificationsRead = authorizedAction
+   .schema(z.any())
+   .action(async ({ ctx: { userId }, parsedInput: {} }) => {
+      await sleep(1000);
+
+      await xprisma.userNotification.updateMany({
+         where: { userId },
+         data: {
+            read: true,
+         }
+      })
       return { success: true };
    });

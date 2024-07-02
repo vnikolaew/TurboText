@@ -50,19 +50,18 @@ const Header = ({}: NavbarProps) => {
                      <span className={`text-secondary text-xs text-nowrap`}>Accelerate your typing speed</span>
                   </div>
                </Link>
-               <Button className={`hover:!bg-transparent text-secondary !ml-8`} variant={`ghost`} asChild>
-                  <Link title={`Settings`} href={`/settings`} className={`flex items-center gap-2`}>
-                     <Settings size={16} />
-                  </Link>
+               <Button className={`hover:!bg-transparent group text-secondary !ml-8`} variant={`ghost`} asChild>
+                  <Link title={`Settings`} href={`/settings`} className={`flex items-center gap-2 `}>
+                     <Settings className={`group-hover:!text-accent transition-colors duration-200`} size={16} /> </Link>
                </Button>
-               <Button className={`hover:!bg-transparent text-secondary`} variant={`ghost`} asChild>
+               <Button className={`hover:!bg-transparent text-secondary group`} variant={`ghost`} asChild>
                   <Link title={`Leaderboard`} href={`/leaderboard`} className={`flex items-center gap-2`}>
-                     <Crown className={`fill-secondary stroke-secondary `} size={16} />
+                     <Crown className={`fill-secondary stroke-secondary group-hover:!fill-accent group-hover:!stroke-accent`} size={16} />
                   </Link>
                </Button>
-               <Button className={`hover:!bg-transparent text-secondary`} variant={`ghost`} asChild>
+               <Button className={`hover:!bg-transparent text-secondary group`} variant={`ghost`} asChild>
                   <Link title={`Leaderboard`} href={`/_lobby`} className={`flex items-center gap-2`}>
-                     <Swords className={`fill-secondary stroke-secondary `} size={16} />
+                     <Swords className={`fill-secondary stroke-secondary group-hover:!fill-accent group-hover:!stroke-accent`} size={16} />
                   </Link>
                </Button>
             </nav>

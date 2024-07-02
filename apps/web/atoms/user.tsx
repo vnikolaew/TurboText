@@ -152,9 +152,6 @@ export const themeAtom = atom(get => {
    set(userConfigAtom, { ...get(userConfigAtom), theme });
    window?.localStorage?.setItem(`theme`, theme);
 });
-// themeAtom.onMount = (set) => {
-//    set(window?.localStorage?.getItem(`theme`) ?? ``);
-// };
 themeAtom.debugLabel = `themeAtom`;
 
 
@@ -169,3 +166,12 @@ export const customThemesAtom =
    }));
 fontFamilyAtom.debugLabel = `fontFamilyAtom`;
 
+export interface UserNotification {
+   id: string;
+   timestamp: Date | string;
+   payload: any;
+}
+
+// @ts-ignore
+export const globalUserNotificationsAtom = atom<UserNotification[]>([]);
+globalUserNotificationsAtom.debugLabel = `globalUserNotificationsAtom`;
