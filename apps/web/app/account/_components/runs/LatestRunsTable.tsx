@@ -62,7 +62,7 @@ function mapRun(run: TypingRun, tagsById: Record<string, TTag[]>) {
       tags: tagsById[run.metadata?.tags?.[0]]?.map(t => t.name)?.join(`, `) ?? `no tags`,
       dateFormatted: <div className={`flex flex-col items-start gap-0`}>
          <span>{moment(run.createdAt).format(`DD MMM YYYY`)}</span>
-         <span>{moment(run.createdAt).format(`HH:mm`)}</span>
+         <span className={`text-secondary`}>{moment(run.createdAt).format(`HH:mm`)}</span>
       </div>,
    } as const;
 }

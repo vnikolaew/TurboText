@@ -1,7 +1,10 @@
 import React, { ReactNode } from "react";
 import Link from "next/link";
-import { Github } from "lucide-react";
+import { Github, Palette } from "lucide-react";
 import { Lexend_Deca } from "next/font/google";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@repo/ui";
+import { useSetAtom } from "jotai";
+import { commandsDialogOpen } from "@components/commands/GlobalCommandsDialog";
 
 const lexend = Lexend_Deca({
    weight: ["400"],
@@ -16,6 +19,7 @@ export interface LinkInfo {
 
 export interface FooterTwoProps {
    appLogo: ReactNode;
+   theme?: string;
    links: {
       title: string;
       links: LinkInfo[]
@@ -72,9 +76,12 @@ export const FooterTwo = ({
                              appLogo,
                              appDescription,
                              legal, links,
+                             theme,
                              appName,
                              socialLinks: { linkedIn, discord, twitter, title },
                           }: FooterTwoProps) => {
+   const setCommandDialog = useSetAtom(commandsDialogOpen)
+
    return (
       <footer className={`py-2 border-t border-secondary-bg mt-8 dark:bg-transparent`}>
          <div className="my-8 grid grid-cols-4 mx-24 gap-8">
@@ -96,7 +103,9 @@ export const FooterTwo = ({
                <h2 className={`uppercase text-base !text-main`}>{links.title}</h2>
                <div className="mt-4 flex space-y-2 flex-col">
                   {links?.links?.map(({ title, href, icon }, index) => (
-                     <Link className={`hover:underline text-sm w-fit hover:!text-accent transition-colors duration-100 inline-flex items-center gap-2 group !text-secondary`} href={href}>
+                     <Link
+                        className={`hover:underline text-sm w-fit hover:!text-accent transition-colors duration-100 inline-flex items-center gap-2 group !text-secondary`}
+                        href={href}>
                         {icon}
                         {title}
                      </Link>
@@ -107,7 +116,9 @@ export const FooterTwo = ({
                <h2 className={`uppercase text-main text-lg`}>{legal.title}</h2>
                <div className="mt-4 flex space-y-2 flex-col">
                   {legal?.links?.map(({ title, href, icon }, index) => (
-                     <Link className={`hover:underline text-sm w-fit hover:!text-accent transition-colors duration-100 inline-flex items-center gap-2 group !text-secondary`} href={href}>
+                     <Link
+                        className={`hover:underline text-sm w-fit hover:!text-accent transition-colors duration-100 inline-flex items-center gap-2 group !text-secondary`}
+                        href={href}>
                         {icon}
                         {title}
                      </Link>
@@ -119,17 +130,35 @@ export const FooterTwo = ({
                <div className="mb-8 flex space-x-8 mt-4">
                   <Link title={`Discord`} target="_blank" rel="noreferrer" href={discord}>
                      <span className="sr-only">Discord</span>
-                     <Icons.discord className="h-6 w-6 fill-secondary text-secondary hover:!fill-accent hover:!text-accent transition-colors duration-100" />
+                     <Icons.discord
+                        className="h-6 w-6 fill-secondary text-secondary hover:!fill-accent hover:!text-accent transition-colors duration-100" />
                   </Link>
                   <Link title={`Twitter`} target="_blank" rel="noreferrer" href={twitter}>
                      <span className="sr-only">Twitter</span>
-                     <Icons.twitter className="h-6 w-6 !fill-secondary text-secondary hover:!fill-accent hover:!text-accent transition-colors duration-100" />
+                     <Icons.twitter
+                        className="h-6 w-6 !fill-secondary text-secondary hover:!fill-accent hover:!text-accent transition-colors duration-100" />
                   </Link>
                   <Link title={`LinkedIn`} target="_blank" rel="noreferrer" href={linkedIn}>
                      <span className="sr-only">LinkedIn</span>
-                     <Icons.linkedIn className="h-6 w-6 !fill-secondary !text-secondary hover:!fill-accent hover:!text-accent transition-colors duration-100" />
+                     <Icons.linkedIn
+                        className="h-6 w-6 !fill-secondary !text-secondary hover:!fill-accent hover:!text-accent transition-colors duration-100" />
                   </Link>
                </div>
+               <TooltipProvider>
+                  <Tooltip>
+                     <TooltipTrigger asChild>
+                        <span onClick={_ => setCommandDialog(true)} className={`text-secondary hover:!opacity-80 transition-all duration-200 cursor-pointer inline-flex gap-2 items-center`}>
+                           <Palette size={14}/>
+                           {theme}
+                        </span>
+                     </TooltipTrigger>
+                     <TooltipContent
+                        side={`left`}
+                        className={`bg-black text-white rounded-xl text-sm border-neutral-700 !px-4 !py-2`}>
+                        Currently using {theme} theme
+                     </TooltipContent>
+                  </Tooltip>
+               </TooltipProvider>
             </div>
          </div>
       </footer>
