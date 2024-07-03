@@ -7,9 +7,8 @@ import { soundOnClickAtom } from "@atoms/user";
 import { useAction } from "next-safe-action/hooks";
 import { updateUserConfiguration } from "@app/settings/actions";
 import { cn } from "@lib/utils";
-import { playSoundAtom, soundClicksAtom } from "@app/settings/atoms";
-import { useAtomValue } from "jotai";
-import { SOUNDS } from "@lib/sounds";
+import { playSoundAtom } from "@app/settings/atoms";
+import { SOUNDS } from "@lib/consts";
 import { useIsSignedIn } from "@hooks/useIsSignedIn";
 
 export interface SoundOnClickSectionProps {
@@ -17,12 +16,11 @@ export interface SoundOnClickSectionProps {
 
 const SoundOnClickSection = ({}: SoundOnClickSectionProps) => {
    const [soundOnClick, setSoundOnClick] = useAtom(soundOnClickAtom);
-   const soundClicks = useAtomValue(soundClicksAtom)
    const signedIn = useIsSignedIn();
 
    const playSound = useSetAtom(playSoundAtom);
 
-   const { execute, status } = useAction(updateUserConfiguration, {
+   const { execute, isExecuting } = useAction(updateUserConfiguration, {
       onSuccess: res => {
          if (res.data?.success) {
             console.log(res);

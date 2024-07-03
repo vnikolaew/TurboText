@@ -47,22 +47,6 @@ export async function sleep(duration: number) {
    return await new Promise(res => setTimeout(res, duration));
 }
 
-/**
- * Determines if the input URL is an absolute URL.
- * @param url
- */
-export function isAbsoluteUrl(url: string) {
-
-   // Regular expression for absolute URL
-   const absoluteUrlPattern = /^(?:https?:\/\/)?(?:\w+\.)+\w{2,}(?:\/.*)?$/;
-
-   // Test the string against the pattern
-   return absoluteUrlPattern.test(url);
-}
-
-export function isValidUuid(id: string) {
-   return /^[0-9A-F]{8}-[0-9A-F]{4}-[4][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i.test(id);
-}
 
 export function downloadFile(data: BlobPart, fileName: string, contentType: string) {
    const blob = new Blob([data], { type: contentType });
@@ -88,20 +72,6 @@ export function isEventInside(e: MouseEvent, element: HTMLElement) {
 
    return isInside;
 }
-
-export function getMonthName(monthIndex: number) {
-   const monthNames = [
-      "January", "February", "March", "April", "May", "June",
-      "July", "August", "September", "October", "November", "December",
-   ];
-
-   if (monthIndex < 0 || monthIndex > 11) {
-      throw new Error("Invalid month index. It should be between 0 and 11.");
-   }
-
-   return monthNames[monthIndex];
-}
-
 
 export function formatMillisecondsToTime(ms: number) {
    // Convert milliseconds to total seconds
@@ -190,18 +160,6 @@ export function exportObjectAsJson(obj: any, filename: string) {
 export function scrollToElement(elementId: string) {
    document.getElementById(elementId)?.scrollIntoView({ behavior: `smooth` });
 }
-
-export function isValidUrl(url: string) {
-   const urlPattern = new RegExp('^(https?:\\/\\/)?'+ // validate protocol
-      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
-      '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
-      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
-      '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
-      '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
-
-   return urlPattern.test(url);
-}
-
 
 export function hslToHex(hslString: string) {
    if (!hslString?.length) return ``;
@@ -309,16 +267,16 @@ export function normalizeURL(url: string) {
 }
 
 export const LABELS = [
-   'Novice',        // Level 0-9
-   'Beginner',      // Level 10-19
-   'Apprentice',    // Level 20-29
-   'Journeyman',    // Level 30-39
-   'Specialist',    // Level 40-49
-   'Expert',        // Level 50-59
-   'Professional',  // Level 60-69
-   'Master',        // Level 70-79
-   'Grandmaster',   // Level 80-89
-   'Legend'         // Level 90-99
+   "Novice",        // Level 0-9
+   "Beginner",      // Level 10-19
+   "Apprentice",    // Level 20-29
+   "Journeyman",    // Level 30-39
+   "Specialist",    // Level 40-49
+   "Expert",        // Level 50-59
+   "Professional",  // Level 60-69
+   "Master",        // Level 70-79
+   "Grandmaster",   // Level 80-89
+   "Legend",         // Level 90-99
 ];
 
 export function getUserLabel(level: number) {

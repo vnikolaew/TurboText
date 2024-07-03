@@ -90,3 +90,22 @@ export const THEMES = [
    `sandstone`,
 ];
 
+
+export const SOUNDS = [
+   "Off",
+   "Click",
+   "Beep",
+   "Pop",
+   "Nk creams",
+   "Typewriter",
+   "Osu",
+   "Hitmarker",
+   "Sine",
+   "Sawtooth",
+   "Square",
+   "Triangle",
+   "Pentatonic",
+   "Wholetone",
+   "Fist fight",
+   "Rubber keys",
+];

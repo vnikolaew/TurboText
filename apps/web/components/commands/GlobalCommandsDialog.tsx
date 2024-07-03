@@ -7,7 +7,7 @@ import { FontFamilyOption } from "@components/commands/options/FontFamilyOption"
 import { LanguageOption } from "./options/LanguageOption";
 import PunctuationOptions from "@components/commands/options/PunctuationOptions";
 import SoundOnClickOption from "@components/commands/options/SoundOnClickOption";
-import { SOUNDS } from "@lib/sounds";
+import { SOUNDS } from "@lib/consts";
 import FlipTestColorsOptions from "@components/commands/options/FlipTestColorsOptions";
 import CaretStyleOptions from "@components/commands/options/CaretStyleOptions";
 import SmoothCaretOptions from "@components/commands/options/SmoothCaretOptions";

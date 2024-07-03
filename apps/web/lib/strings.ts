@@ -42,3 +42,32 @@ export function injectPunctuation(words: string[], punctuations: string) {
    }
    return words;
 }
+
+export function isValidUrl(url: string) {
+   const urlPattern = new RegExp("^(https?:\\/\\/)?" + // validate protocol
+      "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
+      "((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
+      "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
+      "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
+      "(\\#[-a-z\\d_]*)?$", "i"); // fragment locator
+
+   return urlPattern.test(url);
+}
+
+export function isValidUuid(id: string) {
+   return /^[0-9A-F]{8}-[0-9A-F]{4}-[4][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i.test(id);
+}
+
+export function getMonthName(monthIndex: number) {
+   const monthNames = [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December",
+   ];
+
+   if (monthIndex < 0 || monthIndex > 11) {
+      throw new Error("Invalid month index. It should be between 0 and 11.");
+   }
+
+   return monthNames[monthIndex];
+}
+

@@ -1,9 +1,10 @@
 "use client";
-import { isValidUrl, normalizeURL } from "@lib/utils";
+import { normalizeURL } from "@lib/utils";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@repo/ui";
 import { Globe } from "lucide-react";
 import Link from "next/link";
 import React from "react";
+import { isValidUrl } from "@lib/strings";
 
 export interface UserWebsiteProps {
    website?: string;

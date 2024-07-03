@@ -60,7 +60,7 @@ const Header = ({}: NavbarProps) => {
                   </Link>
                </Button>
                <Button className={`hover:!bg-transparent text-secondary group`} variant={`ghost`} asChild>
-                  <Link title={`Leaderboard`} href={`/_lobby`} className={`flex items-center gap-2`}>
+                  <Link title={`Challenge`} href={`/_lobby`} className={`flex items-center gap-2`}>
                      <Swords className={`fill-secondary stroke-secondary group-hover:!fill-accent group-hover:!stroke-accent`} size={16} />
                   </Link>
                </Button>

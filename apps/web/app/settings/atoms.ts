@@ -3,7 +3,7 @@
 import { atom } from "jotai";
 import { useHydrateAtoms } from "jotai/utils";
 import { soundOnClickAtom, soundOnErrorAtom } from "@atoms/user";
-import { SOUNDS } from "@lib/sounds";
+import { SOUNDS } from "@lib/consts";
 
 export const soundClicksAtom = atom<string[]>([]);
 soundClicksAtom.debugLabel = `soundClicksAtom`;
