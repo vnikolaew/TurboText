@@ -110,10 +110,12 @@ const ChallengeLeaderboardTableRow = ({ row, index }: ChallengeLeaderboardTableR
                {row.user.og && index > 0 && <OgAccountBadge />}
             </div>
          </TableCell>
-         <TableCell className={`col-span-2 text-right flex flex-col justify-end !px-0 !text-xs`}>
-            {row.wins}/{row.losses}/{row.draws}
+         <TableCell className={`col-span-2 text-right flex justify-end !px-0 !text-base`}>
+           <span className={`text-green-500`}>{row.wins}</span>/
+            <span className={`text-amber-500`}>{row.draws}</span>/
+            <span className={`text-red-500`}>{row.losses}</span>
          </TableCell>
-         <TableCell className={`col-span-2 text-right flex flex-col justify-end !px-0 !text-xs`}>
+         <TableCell className={cn(`col-span-2 text-right flex flex-col justify-end !px-0 !text-base`, row.score < 0 && `text-red-500`)}>
             {row.score.toFixed(2)}
          </TableCell>
       </TableRow>

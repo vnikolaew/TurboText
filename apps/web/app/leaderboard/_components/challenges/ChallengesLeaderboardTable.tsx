@@ -18,10 +18,10 @@ const ChallengesLeaderboardTable = ({ caption, rows, showWarning }: ChallengesLe
             <div className={`grid w-full grid-cols-13 sticky top-0 !py-1 !z-[100] backdrop-blur`}>
                <div className={`col-span-1 text-secondary text-center`}>#</div>
                <div className={`col-span-6 text-left !text-main`}>name</div>
-               <div className={`col-span-2 text-right flex flex-col text-xs`}>
+               <div className={`col-span-2 text-right flex flex-col text-base`}>
                   W/D/L
                </div>
-               <div className={`col-span-2 text-right flex flex-col text-xs`}>
+               <div className={`col-span-2 text-right flex flex-col text-base`}>
                   Score
                </div>
             </div>

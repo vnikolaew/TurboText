@@ -15,6 +15,8 @@ import TimeframeButtons from "@app/leaderboard/_components/TimeframeButtons";
 import LeaderboardTypeSwitch from "@app/leaderboard/_components/LeaderboardTypeSwitch";
 import { ChallengeLeaderboardRow } from "@app/leaderboard/_components/challenges/ChallengeLeaderboardTableRow";
 import ChallengesLeaderboardTable from "@app/leaderboard/_components/challenges/ChallengesLeaderboardTable";
+import { cn } from "@lib/utils";
+import RefreshButton from "@app/leaderboard/_components/buttons/RefreshButton";
 
 export interface PageProps {
    searchParams: { daily?: string, language?: string, challenges?: string };
@@ -68,11 +70,12 @@ const Page = async ({ searchParams }: PageProps) => {
             </div>
          </div>
          <div className={`mt-8 grid grid-cols-2 w-full gap-4`}>
-            <div className={`w-full flex items-center justify-between`}>
+            <div className={cn(`w-full flex items-center justify-between`, searchParams.challenges === `true` && `col-span-2` )}>
                <span className={`text-2xl !text-main`}>
                   {searchParams.challenges === `true` ? `Challenges` : `Time 15`}
                </span>
                <div className={`flex items-center gap-2`}>
+                  {searchParams.challenges === `true` && <RefreshButton />}
                   <Button className={`!bg-black !rounded-xl`} size={`icon`}>
                      <Crown size={18} className={`text-white`} />
                   </Button>
@@ -82,7 +85,7 @@ const Page = async ({ searchParams }: PageProps) => {
                </div>
             </div>
 
-            {searchParams.challenges !== `true` ? (
+            {searchParams.challenges !== `true` && (
                <div className={`w-full flex items-center justify-between`}>
                   <span className={`text-2xl !text-main`}>Time 60</span>
                   <div className={`flex items-center gap-2`}>
@@ -94,12 +97,16 @@ const Page = async ({ searchParams }: PageProps) => {
                      </Button>
                   </div>
                </div>
-            ) : (<div />)}
-            <Separator className={`w-full bg-secondary mx-auto`} />
-            <Separator className={`w-full bg-secondary mx-auto`} />
+            )}
+            <Separator className={cn(`w-full bg-secondary mx-auto`, searchParams.challenges === `true` && `col-span-2`)} />
+            {searchParams.challenges !== `true` && (
+               <Separator className={`w-full bg-secondary mx-auto`} />
+            )}
 
             {searchParams.challenges === `true` ? (
-               <ChallengesLeaderboardTable showWarning={showWarning} rows={users.map(mapUser)} />
+               <div className={`col-span-2`}>
+                  <ChallengesLeaderboardTable showWarning={showWarning} rows={users.map(mapUser)} />
+               </div>
             ) : (
                <Fragment>
                   <LeaderboardTable
