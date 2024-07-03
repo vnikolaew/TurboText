@@ -18,6 +18,7 @@ import PageLinks from "./_components/PageLinks";
 import { UsersChallengeState } from "@repo/db";
 import UserChallengesRecord from "@app/profile/[userId]/_components/UserChallengesRecord";
 import { getUserChallengesRecord } from "@app/profile/[userId]/_queries";
+import { sum } from "lodash";
 
 export const metadata: Metadata = {
    title: `Account | ${APP_NAME}`,
@@ -44,6 +45,7 @@ const Page = async ({ searchParams }: PageProps) => {
    if (!user) notFound();
 
    let { wins, draws, losses } = await getUserChallengesRecord(user);
+   console.log({ runs: user.typingRuns });
 
    return (
       <section className={`w-2/3 mx-auto mt-24 flex flex-col items-center gap-4`}>
@@ -114,17 +116,14 @@ const Page = async ({ searchParams }: PageProps) => {
                </div>
                <div className={`flex flex-col items-start gap-1`}>
                   <span className={`text-secondary text-sm`}>Time typing</span>
-                  <h2 className={`text-3xl text-main`}>{formatMillisecondsToTime(user.totalTimeTypingMs)}</h2>
+                  <h2 className={`text-3xl text-main`}>{formatMillisecondsToTime(sum(user.typingRuns.map(r => r.totalTimeMilliseconds)))}</h2>
                </div>
             </div>
             <Separator orientation={`vertical`} className={`h-24 w-[4px] rounded-full bg-secondary`} />
             <AccountLinks user={user} />
          </div>
          <div className={`w-full bg-secondary-bg rounded-lg shadow-lg flex items-center p-6 py-10 gap-8 mt-8`}>
-            <UserActivitySection typingRuns={user?.typingRuns?.map(run => {
-               const { hasFlag, ...rest } = run;
-               return rest;
-            })} />
+            <UserActivitySection typingRuns={user?.typingRuns} />
          </div>
          <div className={`w-full bg-secondary-bg rounded-lg shadow-lg flex items-center p-12 py-10 gap-8 mt-8`}>
             <TypingRunsStatsSection runs={user.typingRuns} />

@@ -1,7 +1,7 @@
 import React from "react";
 import { UsersChallengeState, xprisma } from "@repo/db";
 import UsersTypingChallengeSection from "@app/(dev)/%5Fgame/[gameId]/_components/UsersTypingChallengeSection";
-import { getChallengeWinner, getGameUsers } from "@app/(dev)/%5Fgame/[gameId]/_queries";
+import { getChallengeInfo, getChallengeWinner, getGameUsers } from "@app/(dev)/%5Fgame/[gameId]/_queries";
 import { UserAvatar } from "@repo/ui";
 import HydrateAtoms from "@app/(dev)/%5Fgame/[gameId]/_components/HydrateAtoms";
 import { auth } from "@auth";
@@ -14,10 +14,7 @@ export interface PageProps {
 
 const Page = async ({ params: { gameId } }: PageProps) => {
    const session = await auth();
-   const challenge = await xprisma.usersChallenge.findUnique({
-      where: { id: gameId },
-      include: { userOneRun: true, userTwoRun: true },
-   });
+   const challenge = await getChallengeInfo(gameId!);
 
    if (!challenge) {
       return (
@@ -46,7 +43,7 @@ const Page = async ({ params: { gameId } }: PageProps) => {
                   </span>
                      <div className={`flex items-center gap-2`}>
                         <UserAvatar imageSrc={winner.image} />
-                        <Link className={`text-secondary`} href={`/profile/${winner.id}`}>{winner.name}</Link>
+                        <Link className={`text-secondary`} href={`/profile/${winner.id}`}>{winner.name} {winner.id === session?.user?.id && "(you)"}</Link>
                      </div>
                   </div>) : (
                   <div>

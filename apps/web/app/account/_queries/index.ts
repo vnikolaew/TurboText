@@ -77,15 +77,21 @@ export async function getUserWithTypingRuns() {
    });
    if (!user) return null;
 
+   const userChallengeRunsIds = new Set<string>(
+      [...user.challenges_one, ...user.challenges_two].flatMap(c => [c.userOneRunId, c.userTwoRunId]));
+
    const { updatePassword, verifyPassword, ...rest } = user;
    user.challenges_one = removeFunctions(user.challenges_one);
    user.challenges_two = removeFunctions(user.challenges_two);
 
-   rest.typingRuns = rest.typingRuns.map(run => {
-         const { hasFlag, ...rest } = run;
-         return rest;
-      },
-   );
+   console.log({ userChallengeRunsIds });
+   rest.typingRuns = rest.typingRuns
+      .filter(r => !userChallengeRunsIds.has(r.id))
+      .map(run => {
+            const { hasFlag, ...rest } = run;
+            return rest;
+         },
+      );
    return rest;
 }
 

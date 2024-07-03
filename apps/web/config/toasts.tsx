@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Check, Cookie, Flag, X } from "lucide-react";
+import { Check, Cookie, Flag, Sword, Swords, X } from "lucide-react";
 
 export const TOASTS = {
    FORGOT_PASSWORD: {
@@ -268,6 +268,52 @@ Export successful
       ),
       className: `text-base font-normal !text-main`,
    },
+   CHALLENGES_USER_SUCCESS: (userName: string) => ({
+      message: (
+         <div className={`flex items-center gap-2`}>
+            <Swords className={`text-accent`} size={24} />
+            <span>You've successfully challenged {userName}.</span>
+         </div>
+      ),
+      className: `text-base font-normal !text-main`,
+   }),
+   CHALLENGE_REJECTED: (userName: string) => ({
+      message: (
+         <div className={`flex items-center gap-2`}>
+            <Swords className={`text-accent`} size={24} />
+            <span>You've rejected the challenge from {userName}.</span>
+         </div>
+      ),
+      className: `text-base font-normal !text-main`,
+   }),
+   CHALLENGE_ACCEPTED: (userName: string) => ({
+      message: (
+         <div className={`flex items-center gap-2`}>
+            <Swords className={`text-accent`} size={24} />
+            <span>You've accepted the challenge from {userName}.</span>
+         </div>
+      ),
+      className: `text-base font-normal !text-main`,
+   }),
+   CHALLENGE_ACCEPTED_BY_OPPONENT: (userName: string) => ({
+      message: (
+         <div className={`flex items-center gap-2`}>
+            <Swords className={`text-accent`} size={24} />
+            <span>{userName} has accepted your challenge.</span>
+         </div>
+      ),
+      className: `text-base font-normal !text-main`,
+   }),
+
+   CHALLENGE_REJECTED_BY_OPPONENT: (userName: string) => ({
+      message: (
+         <div className={`flex items-center gap-2`}>
+            <Swords className={`text-red-500`} size={24} />
+            <span>{userName} has rejected your challenge.</span>
+         </div>
+      ),
+      className: `text-base font-normal !text-main`,
+   }),
 } as const;
 
 // export const toast = ({ message, ...config }: ExternalToast & { message: ReactNode }) => sonnerToast(message, config);

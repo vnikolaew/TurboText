@@ -26,6 +26,7 @@ generateWordsAtom.debugLabel = `generateWordsAtom`;
 export const wordsCountsAtom = atom<number>( WORDS_COUNTS["10"]!, async (get, set, wordCounts: number, updateWords = true) => {
    set(wordsCountsAtom, wordCounts);
    if(updateWords) {
+      console.log(`Generating ${wordCounts} new words.`);
       await set(generateWordsAtom, wordCounts);
    }
 });

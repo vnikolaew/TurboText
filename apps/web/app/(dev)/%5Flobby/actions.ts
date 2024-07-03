@@ -7,6 +7,7 @@ import Ably from "ably";
 import { EventType, matchParamsSchema } from "@app/api/challenge/route";
 import { generateWords } from "@app/api/words/[lang]/generate/route";
 import { LANGUAGES_MAP } from "@atoms/consts";
+import { auth } from "@auth";
 
 const CHANNEL_NAME = `private-global-chat`;
 
@@ -32,6 +33,8 @@ export const acceptChallenge = authorizedAction
       });
 
       if (!match || match.id !== matchId) return { success: false };
+
+      console.log({ match, matchId });
       match = await xprisma.usersChallengeMatch.update({
          where: {
             id: match.id,
@@ -57,7 +60,6 @@ export const acceptChallenge = authorizedAction
          const { words } = await generateWords(languageCode!, metadata?.time! * 1.5);
 
          // Save new challenge to DB:
-
          challenge = await xprisma.usersChallenge.create({
             data: {
                userOneId: userId,
@@ -166,4 +168,57 @@ export const stopChallenge = authorizedAction
       });
 
       return { success: true, challenge };
+   });
+
+
+const challengeSchema = z.object({
+   userId: z.string(),
+});
+
+/**
+ * An authorized action for sending a challenge to a player.
+ */
+export const challengePlayer = authorizedAction
+   .schema(challengeSchema)
+   .action(async ({ ctx: { userId }, parsedInput: { userId: challengeeId } }) => {
+      const session = await auth();
+
+      const DEFAULT_CHALLENGE_PARAMS = {
+         language: `English`,
+         difficulty: `MEDIUM`,
+         time: 10
+      }
+
+      let match = await xprisma.usersChallengeMatch.create({
+         data: {
+            userOneId: userId,
+            userTwoId: challengeeId,
+            state: UsersChallengeMatchState.HalfAccepted,
+            metadata: {...DEFAULT_CHALLENGE_PARAMS }
+         },
+      });
+
+
+      // Publish a stop event:
+      await channel.attach();
+      await channel.publish({
+         name: EventType.ChallengeUser,
+         data: {
+            fromUserId: userId,
+            fromUserImage: session?.user?.image,
+            fromUserName: session?.user?.name,
+            challengeeId,
+            matchId: match.id,
+            type: EventType.ChallengeUser,
+            ...DEFAULT_CHALLENGE_PARAMS,
+         },
+         extras: {
+            headers: {
+               fromUserId: session?.user?.id,
+               challengeeId: userId,
+            },
+         },
+      });
+
+      return { success: true, match };
    });

@@ -11,7 +11,7 @@ import RocketLogo from "@components/icons/RocketLogo";
 import { Lexend_Deca } from "next/font/google";
 import { useAtomValue } from "jotai";
 import { userDataLoadingAtom } from "@atoms/user";
-import UserNotificationsButton from "./UserNotificationsButton";
+import UserNotificationsButton from "./side-modal/notifications/UserNotificationsButton";
 import SearchInput from "@app/_components/search/SearchInput";
 
 const lexend = Lexend_Deca({

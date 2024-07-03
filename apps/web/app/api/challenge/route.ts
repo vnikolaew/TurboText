@@ -21,6 +21,7 @@ export enum EventType {
    Rejected = `rejected`,
    ChallengeStarted = `challenge-started`,
    ChallengeStopped = `challenge-stopped`,
+   ChallengeUser = `challenge-user`,
 }
 
 export const matchParamsSchema = z.object({

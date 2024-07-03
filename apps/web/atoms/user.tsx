@@ -5,6 +5,7 @@ import { focusAtom } from "jotai-optics";
 import { Session } from "next-auth";
 import { UserExperience } from "@atoms/consts";
 import { atomWithStorage } from "jotai/utils";
+import { global } from "styled-jsx/css";
 
 export const userDataLoadingAtom = atom(false);
 
@@ -175,3 +176,15 @@ export interface UserNotification {
 // @ts-ignore
 export const globalUserNotificationsAtom = atom<UserNotification[]>([]);
 globalUserNotificationsAtom.debugLabel = `globalUserNotificationsAtom`;
+
+// @ts-ignore
+export const globalUserInboxAtom = atom<UserNotification[]>([]);
+globalUserInboxAtom.debugLabel = `globalUserInboxAtom`;
+
+// @ts-ignore
+export const globalUserAnnouncementsAtom = atom<UserNotification[]>([]);
+globalUserAnnouncementsAtom.debugLabel = `globalUserAnnouncementsAtom`;
+
+// @ts-ignore
+export const globalUserSheetAtom = atom<boolean>(false);
+globalUserSheetAtom.debugLabel = `globalUserSheetAtom`;

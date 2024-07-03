@@ -20,7 +20,7 @@ export async function getUserChallengesRecord(user: User) {
       wins: userOutcomes.filter(o => o === ChallengeOutcome.WIN).length,
       draws: userOutcomes.filter(o => o === ChallengeOutcome.DRAW).length,
       losses: userOutcomes.filter(o => o === ChallengeOutcome.LOSE).length,
-   };
+   } as const;
 }
 
 export async function getUserInfo(userId: string) {

@@ -53,7 +53,7 @@ const Page = async ({ params }: PageProps) => {
                      <UserExperienceInfo />
                   </Suspense>
                </div>
-               <UserChallengesRecord userId={user.id} record={{ wins, losses, draws }} />
+               <UserChallengesRecord username={user.name!} userId={user.id} record={{ wins, losses, draws }} />
             </div>
             <Separator orientation={`vertical`} className={`h-60 w-[4px] rounded-full bg-secondary`} />
             <div className={`flex-1 h-full flex flex-col items-start justify-between gap-8`}>

@@ -52,3 +52,27 @@ export async function getChallengeWinner(challenge: ChallengeDetails) {
       userTwoWords: challenge.userTwoRun?.metadata?.completedWords,
    };
 }
+
+/**
+ * Retrieve details about a challenge
+ * @param gameId The id of the challenge
+ */
+export async function getChallengeInfo(gameId?: string) {
+   if(!gameId) return null;
+   const challenge = await xprisma.usersChallenge.findUnique({
+      where: { id: gameId },
+      include: { userOneRun: true, userTwoRun: true },
+   });
+
+   if(challenge.userOneRun) {
+      const { hasFlag, ...rest } = challenge.userOneRun;
+      challenge.userOneRun = rest;
+   }
+
+   if(challenge.userTwoRun) {
+      const { hasFlag_, ...rest_ } = challenge.userTwoRun;
+      challenge.userTwoRun = rest_;
+   }
+
+   return challenge;
+}

@@ -30,9 +30,9 @@ const UserChallengeRow = ({ challenge, userId }: UserChallengeRowProps) => {
          <TableCell className="font-medium text-base !w-fit text-center">
             <span
                className={cn(`!w-fit text-center`,
-                  outcome === ChallengeOutcome.WIN && `text-green-500`,
-                  outcome === ChallengeOutcome.DRAW && `text-amber-500`,
-                  outcome === ChallengeOutcome.LOSE && `text-red-500`,
+                  outcome === ChallengeOutcome.WIN && `text-green-400`,
+                  outcome === ChallengeOutcome.DRAW && `text-amber-400`,
+                  outcome === ChallengeOutcome.LOSE && `text-red-400`,
                )}>{outcome === ChallengeOutcome.WIN ? `VICTORY` : outcome === ChallengeOutcome.LOSE ? `DEFEAT` : `DRAW`}</span>
          </TableCell>
          <TableCell className="font-medium !w-fit text-wrap text-center text-lg">

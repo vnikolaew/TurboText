@@ -1,10 +1,15 @@
 "use client";
-import React from "react";
+import React, { useMemo } from "react";
 import { Swords } from "lucide-react";
-import { Button } from "@repo/ui";
+import { Button, toast } from "@repo/ui";
 import { useChannel } from "ably/react";
 import { CHANEL_NAME } from "@providers/AblyProvider";
 import { useSession } from "next-auth/react";
+import { TOASTS } from "@config/toasts";
+import { useAction } from "next-safe-action/hooks";
+import { challengePlayer } from "@app/(dev)/%5Flobby/actions";
+import { useRouter } from "next/navigation";
+import { useBoolean } from "@hooks/useBoolean";
 
 export interface UserChallengesRecordProps {
    record: {
@@ -14,45 +19,64 @@ export interface UserChallengesRecordProps {
    },
    withChallenge?: boolean,
    userId?: string;
+   username?: string;
 }
 
 export enum EventType {
    ChallengeUser = "challenge-user",
-}
-
-const DEFAULT_CHALLENGE_PARAMS = {
-   language: `English`,
-   difficulty: `MEDIUM`,
-   time: 10
+   ChallengeStarted = "challenge-started",
+   Rejected = "rejected",
 }
 
 const UserChallengesRecord = ({
                                  record: { wins, losses, draws },
                                  withChallenge = true,
                                  userId,
+                                 username,
                               }: UserChallengesRecordProps) => {
-   const { channel } = useChannel(CHANEL_NAME);
-   const session = useSession()
+   const router = useRouter();
+   const session = useSession();
+   const [challenged, setChallenged] = useBoolean();
+
+   const { channel } = useChannel(CHANEL_NAME, async message => {
+      if (message.name === EventType.ChallengeStarted &&
+         ((message.data.acceptedByUserId === session.data?.user?.id && message.data.matchedUserId === userId) ||
+            (message.data.acceptedByUserId === userId && message.data.matchedUserId === session.data?.user?.id))
+      ) {
+         console.log(`Challenge started!`, message);
+         toast(TOASTS.CHALLENGE_ACCEPTED_BY_OPPONENT(username!))
+
+         setTimeout(() => {
+            router.push(`/_game/${message.data.gameId!}`);
+         }, 2000);
+      }
+
+      if (message.name === EventType.Rejected &&
+         ((message.data.rejectedByUserId === session.data?.user?.id && message.data.matchedUserId === userId) ||
+            (message.data.rejectedByUserId  === userId && message.data.matchedUserId === session.data?.user?.id))
+      ) {
+         console.log(`Challenge rejected!`, message);
+         toast(TOASTS.CHALLENGE_REJECTED_BY_OPPONENT(username!))
+         setChallenged(false)
+      }
+   });
+   const showChallengeButton = useMemo(() => withChallenge && !challenged, [challenged, withChallenge]);
+
+   const { execute: challenge, isExecuting } = useAction(challengePlayer, {
+      onSuccess: res => {
+         if (res.data?.success) {
+            console.log(res.data.match);
+         }
+      },
+   });
 
    async function handleChallengePlayer() {
-      await channel.publish({
-         name: EventType.ChallengeUser,
-         data: {
-            fromUserId: session.data?.user?.id,
-            fromUserImage: session.data?.user?.image,
-            fromUserName: session.data?.user?.name,
-            challengeeId: userId,
-            type: EventType.ChallengeUser,
-            ...DEFAULT_CHALLENGE_PARAMS
-         },
-         extras: {
-            headers: {
-               fromUserId: session.data?.user?.id,
-               challengeeId: userId
-            }
-         }
-      })
+      if (challenged) return;
 
+      challenge({ userId: userId! });
+      setChallenged(true);
+
+      toast(TOASTS.CHALLENGES_USER_SUCCESS(username!));
       console.log(`Send a challenge invite!`);
    }
 
@@ -78,7 +102,15 @@ const UserChallengesRecord = ({
             {losses}L
          </span>
          </div>
-         {withChallenge && (
+         {challenged && (
+            <div className={`mt-4 flex flex-col items-center shadow-md gap-2 animate-pulse w-4/5`}>
+               <Swords size={18} className={`text-accent mr-0`} />
+               <span className={`text-center`}>
+                  Waiting for opponent's response
+               </span>
+            </div>
+         )}
+         {showChallengeButton && (
             <Button onClick={handleChallengePlayer} className={`mt-4 items-center shadow-md gap-4`} variant={`default`}>
                <Swords size={18} className={`text-accent mr-0`} />
                Challenge

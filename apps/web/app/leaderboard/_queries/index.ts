@@ -1,10 +1,12 @@
 "use server";
 
-import { TypingRun, xprisma } from "@repo/db";
+import { TypingRun, User, xprisma } from "@repo/db";
 import moment from "moment/moment";
 import { TypingMode } from "@atoms/consts";
 import { auth } from "@auth";
 import { LeaderboardRow } from "@app/leaderboard/_components/LeaderboardTable";
+import { getUserChallengesRecord } from "@app/profile/[userId]/_queries";
+import { ChallengeLeaderboardRow } from "@app/leaderboard/_components/challenges/ChallengeLeaderboardTableRow";
 
 function getSearchParamsNormalized(searchParams: { daily?: string, language?: string }) {
    const daily = searchParams?.daily === `true`;
@@ -12,6 +14,8 @@ function getSearchParamsNormalized(searchParams: { daily?: string, language?: st
 
    return { daily, language } as const;
 }
+
+
 
 function mapRow(run: TypingRun, index: number): LeaderboardRow {
    return {
@@ -101,3 +105,73 @@ export async function showUserWarning() {
 
    return showWarning;
 }
+
+/**
+ * Retrieve the users leaderboard for challenges.
+ * @param searchParams - The search params.
+ */
+export async function getChallengesLeaderboard({ daily, language }: { daily?: string, language?: string }) {
+   const challengesFilter = {
+      metadata: {
+         path: [`language`],
+         equals: language ?? `English`,
+      },
+      ...(daily ? {
+         createdAt: {
+            gte: moment(new Date()).subtract(1, `day`).toDate(),
+         },
+      } : {}),
+   };
+
+   const users: User[] = await xprisma.user.findMany({
+      include: {
+         typingRuns: {
+            orderBy: {
+               createdAt: `desc`,
+            },
+         },
+         challenges_one: {
+            where: challengesFilter,
+            include: {
+               userOne: true, userTwo: true,
+               userOneRun: {
+                  select: { id: true, userId: true, metadata: true },
+               },
+               userTwoRun: {
+                  select: { id: true, userId: true, metadata: true },
+               },
+            },
+         },
+         challenges_two: {
+            where: challengesFilter,
+            include: {
+               userOne: true, userTwo: true,
+               userOneRun: {
+                  select: { id: true, userId: true, metadata: true },
+               },
+               userTwoRun: {
+                  select: { id: true, userId: true, metadata: true },
+               },
+            },
+         },
+      },
+   });
+
+   const LOSS_PENALTY = 1;
+
+   return (await Promise.all(
+      users.map(async user => {
+         const { draws, wins, losses } = await getUserChallengesRecord(user);
+         const score = (wins * 3) + (draws) - (losses * LOSS_PENALTY);
+
+         return {
+            ...user,
+            score,
+            wins, draws, losses
+         };
+      }),
+   )).sort((a, b) => b.score - a.score)
+      .slice(0, 50)
+}
+
+export type UserChallengeLeaderboard = Awaited<ReturnType<typeof getChallengesLeaderboard>>[number]
