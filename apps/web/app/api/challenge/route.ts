@@ -5,7 +5,7 @@ import { Queue } from "@lib/queue";
 import { xprisma } from "@repo/db";
 import { z } from "zod";
 import { mean } from "lodash";
-import { UserDifficulty } from "@app/(dev)/%5Flobby/_atoms";
+import { UserDifficulty } from "@app/%5Flobby/_atoms";
 
 export const runtime = "nodejs"; // 'nodejs' (default) | 'edge'
 

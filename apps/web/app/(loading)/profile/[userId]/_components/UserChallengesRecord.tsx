@@ -7,9 +7,9 @@ import { CHANEL_NAME } from "@providers/AblyProvider";
 import { useSession } from "next-auth/react";
 import { TOASTS } from "@config/toasts";
 import { useAction } from "next-safe-action/hooks";
-import { challengePlayer } from "@app/(dev)/%5Flobby/actions";
 import { useRouter } from "next/navigation";
 import { useBoolean } from "@hooks/useBoolean";
+import { challengePlayer } from "@app/%5Flobby/actions";
 
 export interface UserChallengesRecordProps {
    record: {

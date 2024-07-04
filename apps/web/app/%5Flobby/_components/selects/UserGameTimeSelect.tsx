@@ -2,8 +2,8 @@
 import React from "react";
 import { Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@repo/ui";
 import { useSetAtom } from "jotai/index";
-import { userSelectedTimeAtom } from "@app/(dev)/%5Flobby/_atoms";
 import { TIMES } from "@atoms/timer";
+import { userSelectedTimeAtom } from "@app/%5Flobby/_atoms";
 
 export interface UserGameTimeSelectProps {
 }

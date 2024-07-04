@@ -4,14 +4,15 @@ import { useSession } from "next-auth/react";
 import { useChannel } from "ably/react";
 import { CHANEL_NAME } from "@providers/AblyProvider";
 import { useAction } from "next-safe-action/hooks";
-import { acceptChallenge, rejectChallenge } from "@app/(dev)/%5Flobby/actions";
 import Ably from "ably";
 import { useRouter } from "next/navigation";
 import { atom, useAtomValue } from "jotai";
-import { matchParamsAtom } from "@app/(dev)/%5Flobby/_atoms";
 import { useBoolean } from "@hooks/useBoolean";
 import { useAtom, useSetAtom } from "jotai/index";
 import { wordsAtom } from "@atoms/editor";
+import { matchParamsAtom } from "../_atoms";
+import { rejectChallenge } from "../actions";
+import { acceptChallenge } from "@app/%5Flobby/actions";
 
 export interface CurrentUserMatch {
    matchedUserId: string;
@@ -124,6 +125,7 @@ export function useTypingChallenge() {
          }
       },
    });
+   // eslint-disable-next-line no-undef
    const { execute: decline, isExecuting: declining } = useAction(rejectChallenge, {
       onSuccess: res => {
          if (res.data?.success) {

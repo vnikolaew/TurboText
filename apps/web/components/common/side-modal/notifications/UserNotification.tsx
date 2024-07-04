@@ -6,14 +6,14 @@ import moment from "moment";
 import Link from "next/link";
 import { useAtom, useSetAtom } from "jotai/index";
 import { useAction } from "next-safe-action/hooks";
-import { acceptChallenge, rejectChallenge } from "@app/(dev)/%5Flobby/actions";
 import { useSession } from "next-auth/react";
-import { ChallengeState, currentUserMatchAtom } from "@app/(dev)/%5Flobby/hooks/useTypingChallenge";
 import { useChannel } from "ably/react";
 import { CHANEL_NAME } from "@providers/AblyProvider";
 import { useRouter } from "next/navigation";
 import { TOASTS } from "@config/toasts";
 import LoadingButton from "@components/common/LoadingButton";
+import { ChallengeState, currentUserMatchAtom } from "@app/%5Flobby/hooks/useTypingChallenge";
+import { acceptChallenge, rejectChallenge } from "@app/%5Flobby/actions";
 
 export interface UserNotificationProps {
    notification: UN;

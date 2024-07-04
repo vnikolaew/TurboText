@@ -23,6 +23,10 @@ const nextConfig = {
             protocol: `https`,
          },
          {
+            hostname: "flagsapi.com",
+            protocol: `https`,
+         },
+         {
             hostname: "randomuser.me",
             protocol: `https`,
          },

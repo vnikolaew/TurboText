@@ -22,12 +22,12 @@ import SaveTypingRunPrompt from "@components/editor/SaveTypingRunPrompt";
 import { SignedOut } from "@components/common/Auth";
 import { signIn } from "next-auth/react";
 import TypingRunSummary from "@components/editor/TypingRunSummary";
-import GameEndConfetti from "@app/(dev)/%5Fgame/[gameId]/_components/GameEndConfetti";
-import { finishChallenge } from "@app/(dev)/%5Fgame/[gameId]/actions";
 import RestartButton from "@components/editor/buttons/RestartButton";
 import ToggleWordsHistory from "@components/editor/buttons/ToggleWordsHistory";
 import CopyToClipboardButton from "@components/editor/buttons/CopyToClipboardButton";
 import DevOnly from "@components/common/DevOnly";
+import GameEndConfetti from "./GameEndConfetti";
+import { finishChallenge } from "@app/%5Fgame/[gameId]/actions";
 
 export interface GameTypingEditorProps {
    user: User;

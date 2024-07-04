@@ -1,8 +1,8 @@
 "use client";
 
 import { atom } from "jotai/index";
-import { ChallengeDetails } from "@app/(dev)/%5Fgame/[gameId]/_hooks/useTypingGame";
 import { User } from "@repo/db";
+import { ChallengeDetails } from "../_hooks/useTypingGame";
 
 export const challengeDetailsAtom = atom<ChallengeDetails | null>(null!);
 challengeDetailsAtom.debugLabel = `challengeDetailsAtom`;

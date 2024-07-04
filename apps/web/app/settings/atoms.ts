@@ -2,7 +2,7 @@
 
 import { atom } from "jotai";
 import { useHydrateAtoms } from "jotai/utils";
-import { soundOnClickAtom, soundOnErrorAtom } from "@atoms/user";
+import { otherUserDataLoadingAtom, soundOnClickAtom, soundOnErrorAtom, userDataLoadingAtom } from "@atoms/user";
 import { SOUNDS } from "@lib/consts";
 
 export const soundClicksAtom = atom<string[]>([]);
@@ -48,6 +48,8 @@ playErrorSoundAtom.debugLabel = `playErrorSoundAtom`;
 export function useHydrateAllAtoms(soundClicks: string[]) {
    useHydrateAtoms([
       [soundClicksAtom, soundClicks],
-   ]);
+      [userDataLoadingAtom, false],
+      [otherUserDataLoadingAtom, false],
+   ], { dangerouslyForceHydrate: true });
 }
 

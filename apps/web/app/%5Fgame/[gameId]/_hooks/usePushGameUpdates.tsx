@@ -4,9 +4,9 @@ import { useCallback, useEffect, useRef } from "react";
 import { useAtomValue } from "jotai";
 import { currentCharIndexAtom } from "@atoms/editor";
 import { useChannel } from "ably/react";
-import { EventType } from "@app/(dev)/%5Fgame/[gameId]/_hooks/useTypingGame";
 import { CHANEL_NAME } from "@providers/AblyProvider";
 import { useSession } from "next-auth/react";
+import { EventType } from "@app/%5Fgame/[gameId]/_hooks/useTypingGame";
 
 export function usePushGameUpdates(gameId: string, interval: number) {
    const intervalRef = useRef<NodeJS.Timeout>(null!);

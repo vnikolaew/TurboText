@@ -2,16 +2,16 @@
 import React from "react";
 import { User } from "@repo/db";
 import { LoadingSpinner } from "@components/common/LoadingSpinner";
-import { useTypingGame } from "@app/(dev)/%5Fgame/[gameId]/_hooks/useTypingGame";
-import GameTypingEditor from "@app/(dev)/%5Fgame/[gameId]/_components/GameTypingEditor";
 import { useSession } from "next-auth/react";
 import { useAction } from "next-safe-action/hooks";
-import { stopChallenge } from "@app/(dev)/%5Flobby/actions";
 import LoadingButton from "@components/common/LoadingButton";
 import Link from "next/link";
 import { useAtomValue } from "jotai";
 import { challengeDetailsAtom, challengeWinnerDetailsAtom } from "../_atoms";
 import { UserAvatar } from "@repo/ui";
+import { useTypingGame } from "@app/%5Fgame/[gameId]/_hooks/useTypingGame";
+import GameTypingEditor from "./GameTypingEditor";
+import { stopChallenge } from "@app/%5Flobby/actions";
 
 export interface UsersTypingChallengeSectionProps {
    userOne: User;

@@ -1,7 +1,7 @@
 "use server";
 
 import { authorizedAction } from "@lib/actions";
-import { UsersChallenge, UsersChallengeMatch, UsersChallengeMatchState, UsersChallengeState, xprisma } from "@repo/db";
+import { Prisma, UsersChallenge, UsersChallengeMatch, UsersChallengeMatchState, UsersChallengeState, xprisma } from "@repo/db";
 import { z } from "zod";
 import Ably from "ably";
 import { EventType, matchParamsSchema } from "@app/api/challenge/route";
@@ -186,15 +186,15 @@ export const challengePlayer = authorizedAction
       const DEFAULT_CHALLENGE_PARAMS = {
          language: `English`,
          difficulty: `MEDIUM`,
-         time: 10
-      }
+         time: 10,
+      };
 
       let match = await xprisma.usersChallengeMatch.create({
          data: {
             userOneId: userId,
             userTwoId: challengeeId,
             state: UsersChallengeMatchState.HalfAccepted,
-            metadata: {...DEFAULT_CHALLENGE_PARAMS }
+            metadata: { ...DEFAULT_CHALLENGE_PARAMS },
          },
       });
 
@@ -221,4 +221,21 @@ export const challengePlayer = authorizedAction
       });
 
       return { success: true, match };
+   });
+
+
+/**
+ * An authorized action for sending a challenge to a player.
+ */
+export const getUserAverageWpm = authorizedAction
+   .schema(z.object({ userId: z.string() }))
+   .action(async ({ ctx: { userId }, parsedInput: { userId: uId } }) => {
+      const res = await xprisma.$queryRaw<{ avg: Prisma.Decimal }>`
+        SELECT AVG(cast(r.metadata->>'wpm' as decimal)) as avg FROM "TypingRun" r
+        LEFT JOIN public."User" u on r."userId" = u.id
+        WHERE r."userId" = ${uId}
+         GROUP BY u.id;
+      `;
+
+      return { success: true, avgWpm: res[0].avg.toNumber() as number };
    });

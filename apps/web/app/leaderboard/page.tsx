@@ -17,6 +17,7 @@ import { ChallengeLeaderboardRow } from "@app/leaderboard/_components/challenges
 import ChallengesLeaderboardTable from "@app/leaderboard/_components/challenges/ChallengesLeaderboardTable";
 import { cn } from "@lib/utils";
 import RefreshButton from "@app/leaderboard/_components/buttons/RefreshButton";
+import WithInitialState from "./_components/WithInitialState";
 
 export interface PageProps {
    searchParams: { daily?: string, language?: string, challenges?: string };
@@ -52,6 +53,7 @@ const Page = async ({ searchParams }: PageProps) => {
 
    return (
       <section className={`w-3/4 mx-auto mt-24 flex flex-col items-start gap-4`}>
+         <WithInitialState />
          <div className={`flex items-center justify-between w-full`}>
             <div className={`flex items-center gap-8`}>
                <LeaderboardTypeSwitch/>

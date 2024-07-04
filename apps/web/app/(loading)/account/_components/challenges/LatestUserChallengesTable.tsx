@@ -5,6 +5,7 @@ import { User } from "@repo/db";
 import Link from "next/link";
 import { Swords } from "lucide-react";
 import { ChallengeNormalized, challengesTableSortAtom } from "./LatestUserChallenges";
+import UserChallengeRow from "./UserChallengeRow";
 
 export interface LatestUserChallengesTableProps {
    challenges: ChallengeNormalized[];

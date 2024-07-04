@@ -1,12 +1,14 @@
 import React from "react";
-import { UsersChallengeState, xprisma } from "@repo/db";
-import UsersTypingChallengeSection from "@app/(dev)/%5Fgame/[gameId]/_components/UsersTypingChallengeSection";
-import { getChallengeInfo, getChallengeWinner, getGameUsers } from "@app/(dev)/%5Fgame/[gameId]/_queries";
+import { UsersChallengeState } from "@repo/db";
 import { UserAvatar } from "@repo/ui";
-import HydrateAtoms from "@app/(dev)/%5Fgame/[gameId]/_components/HydrateAtoms";
 import { auth } from "@auth";
 import { Swords } from "lucide-react";
 import Link from "next/link";
+import { getChallengeInfo, getGameUsers } from "./_queries";
+import { getChallengeWinner } from "@app/%5Fgame/[gameId]/_queries";
+import HydrateAtoms from "@app/%5Fgame/[gameId]/_components/HydrateAtoms";
+import UsersTypingChallengeSection from "./_components/UsersTypingChallengeSection";
+import WithInitialState from "./_components/WithInitialState";
 
 export interface PageProps {
    params: { gameId?: string };
@@ -31,6 +33,7 @@ const Page = async ({ params: { gameId } }: PageProps) => {
 
       return (
          <section className={`w-2/3 mx-auto my-24 flex flex-col items-center gap-4`}>
+            <WithInitialState />
             <div className={`text-xl flex flex-col items-center`}>
                <Swords className={`text-accent`} size={32} />
                <p className={`text-lg text-secondary`}>

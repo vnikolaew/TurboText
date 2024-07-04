@@ -65,7 +65,7 @@ const GlobalCommandsDialog = ({}: GlobalCommandProps) => {
          <CommandInput
             id={`global-commands`}
             inputMode={`text`} onValueChange={setQs} value={qs}
-            className={`!bg-secondary placeholder:!text-accent !border-none`}
+            className={`!bg-secondary placeholder:!text-secondary-bg !border-none`}
             placeholder="Search ..." />
          <CommandList className={`bg-secondary`}>
             {!!qs?.length && (

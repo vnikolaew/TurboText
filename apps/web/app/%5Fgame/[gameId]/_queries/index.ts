@@ -1,7 +1,7 @@
 "use server";
 
 import { xprisma } from "@repo/db";
-import { ChallengeDetails } from "@app/(dev)/%5Fgame/[gameId]/_hooks/useTypingGame";
+import { ChallengeDetails } from "../_hooks/useTypingGame";
 
 export async function getGameUsers(userIds: string[], userId: undefined | string) {
    const [userOne, userTwo] = await xprisma.user.findMany({

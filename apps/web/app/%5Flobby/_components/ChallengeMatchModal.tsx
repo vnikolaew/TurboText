@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useMemo, useState } from "react";
-import { ChallengeState, currentUserMatchAtom } from "@app/(dev)/%5Flobby/hooks/useTypingChallenge";
 import {
    Button,
    Dialog,
@@ -15,9 +14,10 @@ import {
 import { User } from "@repo/db";
 import { useBoolean } from "@hooks/useBoolean";
 import { useAtom } from "jotai/index";
-import { UserAcceptState, userAcceptStateAtom } from "@app/(dev)/%5Flobby/_atoms";
 import { useAtomValue } from "jotai";
-import { getUserDetails } from "@app/(dev)/%5Flobby/_queries";
+import { ChallengeState, currentUserMatchAtom } from "../hooks/useTypingChallenge";
+import { UserAcceptState, userAcceptStateAtom } from "../_atoms";
+import { getUserDetails } from "../_queries";
 
 export interface ChallengeMatchModalProps {
    open: boolean;

@@ -1,18 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useCountdown } from "@app/(dev)/%5Fgame/[gameId]/_hooks/useCountdown";
 import { useChannel } from "ably/react";
 import { CHANEL_NAME } from "@providers/AblyProvider";
 import { useAction } from "next-safe-action/hooks";
-import { ready } from "@app/(dev)/%5Fgame/[gameId]/actions";
 import { useSession } from "next-auth/react";
-import { usePushGameUpdates } from "@app/(dev)/%5Fgame/[gameId]/_hooks/usePushGameUpdates";
 import { useAtom, useAtomValue } from "jotai";
 import { typingRunStateAtom } from "@atoms/editor";
 import { TypingRunState } from "@atoms/consts";
 import { TypingRun, User, UsersChallenge } from "@repo/db";
 import { challengeDetailsAtom } from "../_atoms";
+import { useCountdown } from "./useCountdown";
+import { usePushGameUpdates } from "./usePushGameUpdates";
+import { ready } from "../actions";
 
 export enum EventType {
    GameStarted = `game-started`,
