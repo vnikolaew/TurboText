@@ -1,3 +1,5 @@
+import { PrismaPlugin } from '@prisma/nextjs-monorepo-workaround-plugin'
+
 /** @type {import("next").NextConfig} */
 const nextConfig = {
    experimental: {
@@ -7,6 +9,9 @@ const nextConfig = {
    eslint: { ignoreDuringBuilds: true  },
    webpack: (config, options) => {
       const isServer = options?.isServer;
+      if(isServer) {
+         config.plugins = [...config.plugins, new PrismaPlugin()]
+      }
       config.module.rules.push({
          test: /\.(ogg|mp3|wav|mpe?g)$/i,
          loader: "file-loader",

@@ -1,8 +1,7 @@
 import NextAuth, { DefaultSession } from "next-auth";
 import Google, { GoogleProfile } from "next-auth/providers/google";
 import Github from "next-auth/providers/github";
-import { globalForPrisma, xprisma } from "@repo/db";
-import { PrismaClient, User } from "@prisma/client";
+import { globalForPrisma, xprisma ,PrismaClient, User } from "@repo/db";
 import ResendProvider from "next-auth/providers/resend";
 import Credentials from "next-auth/providers/credentials";
 import { session } from "@lib/session";
