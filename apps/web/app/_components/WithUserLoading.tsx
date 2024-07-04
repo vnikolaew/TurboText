@@ -4,14 +4,16 @@ import { Progress } from "@repo/ui";
 import { AnimatePresence, motion } from "framer-motion";
 import { userDataLoadingAtom } from "@atoms/user";
 import { useAtom } from "jotai";
+import { PrimitiveAtom } from "jotai/index";
 
 export interface UserLoadingPageProps extends PropsWithChildren {
+   userLoadingAtom?: PrimitiveAtom<boolean>
 }
 
-const WithUserLoading = ({ children }: UserLoadingPageProps) => {
+const WithUserLoading = ({ children, userLoadingAtom }: UserLoadingPageProps) => {
    const intervalId = useRef<NodeJS.Timeout>();
    const [value, setValue] = useState(0);
-   const [userDataLoading, setUserDataLoading] = useAtom(userDataLoadingAtom);
+   const [userDataLoading, setUserDataLoading] = useAtom(userLoadingAtom ?? userDataLoadingAtom);
 
    const onTick = useCallback(() => {
       if (value >= 100) {
@@ -43,7 +45,7 @@ const WithUserLoading = ({ children }: UserLoadingPageProps) => {
                className="font-sans flex flex-col items-center justify-center min-h-screen p-8 pb-20 gap-16 sm:p-20 text-2xl w-full">
                <div className={`flex flex-col items-center gap-4 w-[300px]`}>
                   <Progress value={value} className={` text-amber-600 bg-neutral-800 shadow-md !h-2`} />
-                  <span className={`text-xl text-neutral-300 animate-pulse`}>Downloading user data ...</span>
+                  <span className={`text-lg text-neutral-300 animate-pulse text-nowrap`}>Downloading user data ...</span>
                </div>
             </motion.div>
          )}

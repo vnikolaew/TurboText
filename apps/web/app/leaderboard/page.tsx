@@ -48,7 +48,6 @@ const Page = async ({ searchParams }: PageProps) => {
    const { time60Runs, time15Runs, daily, language } = await getLeaderboard(searchParams);
    const users = await getChallengesLeaderboard(searchParams);
 
-   console.log({ searchParams });
    const showWarning = await showUserWarning()
 
    return (
@@ -75,7 +74,7 @@ const Page = async ({ searchParams }: PageProps) => {
                   {searchParams.challenges === `true` ? `Challenges` : `Time 15`}
                </span>
                <div className={`flex items-center gap-2`}>
-                  {searchParams.challenges === `true` && <RefreshButton />}
+                   <RefreshButton />
                   <Button className={`!bg-black !rounded-xl`} size={`icon`}>
                      <Crown size={18} className={`text-white`} />
                   </Button>
@@ -89,6 +88,7 @@ const Page = async ({ searchParams }: PageProps) => {
                <div className={`w-full flex items-center justify-between`}>
                   <span className={`text-2xl !text-main`}>Time 60</span>
                   <div className={`flex items-center gap-2`}>
+                     <RefreshButton />
                      <Button className={`!bg-black !rounded-xl`} size={`icon`}>
                         <Crown size={18} className={`text-white`} />
                      </Button>

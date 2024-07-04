@@ -4,6 +4,8 @@ import React from "react";
 import ChallengeLeaderboardTableRow, {
    ChallengeLeaderboardRow,
 } from "@app/leaderboard/_components/challenges/ChallengeLeaderboardTableRow";
+import { WARNING_MESSAGE } from "@app/leaderboard/_components/_consts";
+import DevOnly from "@components/common/DevOnly";
 
 export interface ChallengesLeaderboardTableProps {
    caption?: string;
@@ -41,11 +43,13 @@ const ChallengesLeaderboardTable = ({ caption, rows, showWarning }: ChallengesLe
                </TableBody>
             </Table>
          </ScrollArea>
-         {showWarning && (
-            <div className={`w-full text-center text-accent text-sm mt-2 !font-semibold`}>
-               Your account must have 2 hours typed to be placed on the leaderboard.
-            </div>
-         )}
+         <DevOnly>
+            {showWarning && (
+               <div className={`w-full text-center text-accent text-sm mt-2 !font-semibold`}>
+                  {WARNING_MESSAGE}
+               </div>
+            )}
+         </DevOnly>
       </div>
    );
 };

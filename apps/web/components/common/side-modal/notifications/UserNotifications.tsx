@@ -8,7 +8,6 @@ import { useAction } from "next-safe-action/hooks";
 import { markAllNotificationsRead, saveUserNotification } from "@components/common/actions";
 import { useChannel } from "ably/react";
 import { CHANEL_NAME } from "@providers/AblyProvider";
-import { EventType } from "@app/profile/[userId]/_components/UserChallengesRecord";
 import { useSetAtom } from "jotai/index";
 import { useSession } from "next-auth/react";
 import UserNotification from "./UserNotification";
@@ -36,7 +35,7 @@ const UserNotifications = ({ notifications }: UserNotificationsProps) => {
          }
       },
    });
-   const { channel } = useChannel(CHANEL_NAME, EventType.ChallengeUser, async message => {
+   const { channel } = useChannel(CHANEL_NAME, `challenge-user`, async message => {
       console.log(`New notification: `, { message });
 
       // Apply message filter first:
@@ -44,8 +43,8 @@ const UserNotifications = ({ notifications }: UserNotificationsProps) => {
          // Save notification to database ...
          save({
             id: message.id ?? null,
-            payload: message.data,
          });
+            payload: message.data,
 
          setNotifications(n => [...n, {
             id: message.id ?? crypto.randomUUID(),

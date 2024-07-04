@@ -27,6 +27,7 @@ import { finishChallenge } from "@app/(dev)/%5Fgame/[gameId]/actions";
 import RestartButton from "@components/editor/buttons/RestartButton";
 import ToggleWordsHistory from "@components/editor/buttons/ToggleWordsHistory";
 import CopyToClipboardButton from "@components/editor/buttons/CopyToClipboardButton";
+import DevOnly from "@components/common/DevOnly";
 
 export interface GameTypingEditorProps {
    user: User;
@@ -97,15 +98,15 @@ const GameTypingEditor = ({ user, gameId }: GameTypingEditorProps) => {
       {timerState === TypingRunState.FINISHED && <GameEndConfetti />}
       <div id={`editor`} className={`rounded-md px-4 py-8`}>
          {timerState !== TypingRunState.FINISHED && <TypeRunState />}
-         {timerState !== TypingRunState.RUNNING && (
-            <TypingRunInfo runs={user?.typingRuns} />
-         )}
+         {timerState !== TypingRunState.RUNNING && <TypingRunInfo runs={user?.typingRuns} />}
          {timerState !== TypingRunState.FINISHED && <TypingInput />}
       </div>
-      <div className={`flex items-center gap-2 w-full justify-center`}>
-         <span className={`mt-4 w-full text-center !text-main`}>Total run time: {totalRunTime}ms</span>
-         <span className={`mt-4 w-full text-center !text-main`}>Total pause time: {totalPauseTime}ms</span>
-      </div>
+      <DevOnly>
+         <div className={`flex items-center gap-2 w-full justify-center`}>
+            <span className={`mt-4 w-full text-center !text-main`}>Total run time: {totalRunTime}ms</span>
+            <span className={`mt-4 w-full text-center !text-main`}>Total pause time: {totalPauseTime}ms</span>
+         </div>
+      </DevOnly>
       <ToggleWords />
       <div className={`flex items-center justify-center w-full gap-4`}>
          <RestartButton />
@@ -135,9 +136,11 @@ const GameTypingEditor = ({ user, gameId }: GameTypingEditorProps) => {
             }
          </SignedOut>
       </AnimatePresence>
-      {
-         timerState === TypingRunState.FINISHED && <TypingRunSummary />
-      }
+      <DevOnly>
+         {
+            timerState === TypingRunState.FINISHED && <TypingRunSummary />
+         }
+      </DevOnly>
    </div>;
 
 };

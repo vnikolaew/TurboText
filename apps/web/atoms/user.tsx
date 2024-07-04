@@ -5,11 +5,12 @@ import { focusAtom } from "jotai-optics";
 import { Session } from "next-auth";
 import { UserExperience } from "@atoms/consts";
 import { atomWithStorage } from "jotai/utils";
-import { global } from "styled-jsx/css";
 
-export const userDataLoadingAtom = atom(false);
-
+export const userDataLoadingAtom = atom(true);
 userDataLoadingAtom.debugLabel = `userDataLoadingAtom`;
+
+export const otherUserDataLoadingAtom = atom(true);
+otherUserDataLoadingAtom.debugLabel = `otherUserDataLoadingAtom`;
 
 export const userAtom = atom<Session["user"] | null>(null!);
 userAtom.debugLabel = `userAtom`;

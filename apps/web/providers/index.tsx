@@ -13,26 +13,26 @@ interface ProvidersProps extends PropsWithChildren {
 }
 
 const Providers = ({ children }: ProvidersProps) => {
-   const theme = useAtomValue(themeAtom)
+   const theme = useAtomValue(themeAtom);
 
    return (
-         <SessionProvider>
-            <ThemeProvider
-               enableSystem
-               disableTransitionOnChange
-               themes={THEMES}
-               storageKey={crypto.randomUUID()}
-               defaultTheme={theme ?? `dark`}
-               attribute={`class`}>
+      <SessionProvider>
+         <ThemeProvider
+            enableSystem
+            disableTransitionOnChange
+            themes={THEMES}
+            storageKey={crypto.randomUUID()}
+            defaultTheme={theme ?? `dark`}
+            attribute={`class`}>
+            <AtomProvider>
                <AblyProvider>
-                  <AtomProvider>
-                     <FontProvider>
-                        {children}
-                     </FontProvider>
-                  </AtomProvider>
+                  <FontProvider>
+                     {children}
+                  </FontProvider>
                </AblyProvider>
-            </ThemeProvider>
-         </SessionProvider>
+            </AtomProvider>
+         </ThemeProvider>
+      </SessionProvider>
    );
 };
 

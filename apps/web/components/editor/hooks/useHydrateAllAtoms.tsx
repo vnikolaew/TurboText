@@ -71,7 +71,7 @@ export function useHydrateAllAtoms(user?: User & { configuration: UserConfigurat
          payload: n.payload
       })) ?? []],
       [cookiePreferencesAtom, user?.cookiePreferences ?? {}],
-      [userDataLoadingAtom, false],
+      [userDataLoadingAtom, true],
       [userXpAtom, { points: user?.experience?.points ?? 0, level: user?.experience?.level ?? 0 }],
       [prevUserXpAtom, { points: user?.experience?.points ?? 0, level: user?.experience?.level ?? 0 }],
       [lettersCorrectnessAtom, Array

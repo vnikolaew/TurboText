@@ -18,12 +18,14 @@ import { Crown } from "lucide-react";
 import moment from "moment";
 import React, { useState } from "react";
 import { useSession } from "next-auth/react";
-import MythicalBadge from "@app/account/_components/badges/MythicalBadge";
-import OgAccountBadge from "@app/account/_components/badges/OGAccountBadge";
 import Link from "next/link";
 import { TypingRun, User, UserExperience } from "@repo/db";
 import { useBoolean } from "@hooks/useBoolean";
 import { LoadingSpinner } from "@components/common/LoadingSpinner";
+import { WARNING_MESSAGE } from "@app/leaderboard/_components/_consts";
+import DevOnly from "@components/common/DevOnly";
+import MythicalBadge from "@app/(loading)/account/_components/badges/MythicalBadge";
+import OgAccountBadge from "@app/(loading)/account/_components/badges/OGAccountBadge";
 
 export interface LeaderboardRow {
    position: number;
@@ -91,11 +93,13 @@ export const LeaderboardTable = ({ caption, rows, showWarning }: LeaderboardTabl
                </TableBody>
             </Table>
          </ScrollArea>
-         {showWarning && (
-            <div className={`w-full text-center text-accent text-sm mt-2 !font-semibold`}>
-               Your account must have 2 hours typed to be placed on the leaderboard.
-            </div>
-         )}
+         <DevOnly>
+            {showWarning && (
+               <div className={`w-full text-center text-accent text-sm mt-2 !font-semibold`}>
+                  {WARNING_MESSAGE}
+               </div>
+            )}
+         </DevOnly>
       </div>
 
    );

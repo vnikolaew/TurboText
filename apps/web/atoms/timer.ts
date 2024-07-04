@@ -66,6 +66,7 @@ export const startAtom = atom(null, (get, set) => {
 startAtom.debugLabel = `startAtom`;
 
 export const pauseAtom = atom(null, (get, set) => {
+   console.log(`Pausing...`);
    const timerState = get(typingRunStateAtom);
    if (timerState !== TypingRunState.RUNNING) return;
 
@@ -91,6 +92,7 @@ currentPauseStartTimeAtom.debugLabel = `currentPauseStartTimeAtom`;
 
 
 export const resumeAtom = atom(null, (get, set) => {
+   console.log(`Resuming...`);
    const timerState = get(typingRunStateAtom);
    if (timerState !== TypingRunState.PAUSED) return;
 

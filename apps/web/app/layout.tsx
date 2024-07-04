@@ -77,7 +77,7 @@ export default async function RootLayout({
       <html className={theme} style={{ colorScheme: `dark` }} suppressHydrationWarning lang="en">
       <Providers>
          <body className={cn(`min-h-screen bg-background font-mono antialiased`, font!.variable)}>
-         <GoogleTagManager gtmId={`GTM-W2XLDZS8`}  />
+         <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID!} />
          <DynamicFontProvider>
             <WithInitialState user={user} />
             <LoadingBar />

@@ -18,7 +18,8 @@ import DifficultyOptions from "@components/commands/options/DifficultyOptions";
 import { parseAsString, useQueryState } from "nuqs";
 import ThemeOptions from "@components/commands/options/ThemeOptions";
 import { atom } from "jotai";
-import { useAtom } from "jotai/index";
+import { useAtom, useSetAtom } from "jotai/index";
+import { pauseAtom, resumeAtom } from "@atoms/timer";
 
 export interface GlobalCommandProps {
 }
@@ -29,6 +30,9 @@ export const commandsDialogOpen = atom(false);
 commandsDialogOpen.debugLabel = `commandsDialogOpen`;
 
 const GlobalCommandsDialog = ({}: GlobalCommandProps) => {
+   const pause = useSetAtom(pauseAtom);
+   const resume = useSetAtom(resumeAtom);
+
    const [open, setOpen] = useAtom(commandsDialogOpen);
    const [qs, setQs] = useQueryState(`search`, parseAsString.withDefault(``));
    const sp = useSearchParams();
@@ -44,15 +48,20 @@ const GlobalCommandsDialog = ({}: GlobalCommandProps) => {
          if (e.key === "Escape") {
             e.preventDefault();
             e.stopPropagation();
+
+            if (open) resume();
+            else pause();
             setOpen((open) => !open);
          }
       };
       document.addEventListener("keydown", down);
       return () => document.removeEventListener("keydown", down);
-   }, [sp]);
+   }, [sp, open, pause, resume]);
 
    return (
-      <CommandDialog dialogProps={{ className: `!bg-secondary` }} open={open} onOpenChange={setOpen}>
+      <CommandDialog dialogProps={{ className: `!bg-secondary` }} open={open} onOpenChange={value => {
+         setOpen(value);
+      }}>
          <CommandInput
             id={`global-commands`}
             inputMode={`text`} onValueChange={setQs} value={qs}

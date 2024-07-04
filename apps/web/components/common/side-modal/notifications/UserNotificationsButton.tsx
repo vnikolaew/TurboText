@@ -9,7 +9,7 @@ import {
 } from "@repo/ui";
 import React from "react";
 import { Bell } from "lucide-react";
-import { useAtom } from "jotai/index";
+import { useAtom } from "jotai";
 import {
    globalUserAnnouncementsAtom,
    globalUserInboxAtom,

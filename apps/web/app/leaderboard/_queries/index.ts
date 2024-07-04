@@ -5,8 +5,7 @@ import moment from "moment/moment";
 import { TypingMode } from "@atoms/consts";
 import { auth } from "@auth";
 import { LeaderboardRow } from "@app/leaderboard/_components/LeaderboardTable";
-import { getUserChallengesRecord } from "@app/profile/[userId]/_queries";
-import { ChallengeLeaderboardRow } from "@app/leaderboard/_components/challenges/ChallengeLeaderboardTableRow";
+import { getUserChallengesRecord } from "@app/(loading)/profile/[userId]/_queries";
 
 function getSearchParamsNormalized(searchParams: { daily?: string, language?: string }) {
    const daily = searchParams?.daily === `true`;

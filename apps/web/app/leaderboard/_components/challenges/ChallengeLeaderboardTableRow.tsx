@@ -9,8 +9,8 @@ import { Crown } from "lucide-react";
 import Link from "next/link";
 import { LoadingSpinner } from "@components/common/LoadingSpinner";
 import moment from "moment";
-import MythicalBadge from "@app/account/_components/badges/MythicalBadge";
-import OgAccountBadge from "@app/account/_components/badges/OGAccountBadge";
+import MythicalBadge from "@app/(loading)/account/_components/badges/MythicalBadge";
+import OgAccountBadge from "@app/(loading)/account/_components/badges/OGAccountBadge";
 
 export interface ChallengeLeaderboardRow {
    position: number;

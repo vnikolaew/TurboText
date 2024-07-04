@@ -30,6 +30,8 @@ import { TypingRun, User } from "@repo/db";
 import { useSetAtom } from "jotai/index";
 import EditorButtons from "@components/editor/buttons";
 import { SaveTypingRunPrompt, ToggleWords, TypingInput, TypingRunSummary } from "@components/editor";
+import DevOnly from "@components/common/DevOnly";
+import { Devonshire } from "next/dist/compiled/@next/font/dist/google";
 
 
 export interface TypingEditorProps {
@@ -71,7 +73,7 @@ const TypingEditor = ({ user }: TypingEditorProps) => {
    });
 
    const { timerState } = useTimer(() => {
-      console.log(typedLetters?.sort((a, b) => a.charIndex - b.charIndex));
+      // console.log(typedLetters?.sort((a, b) => a.charIndex - b.charIndex));
       setEnd(performance.now());
       LocalStorage.setItem(TYPING_RUN_LS_KEY, typingRun);
    });
@@ -121,10 +123,13 @@ const TypingEditor = ({ user }: TypingEditorProps) => {
                <TypingInput />
             )}
          </div>
-         <div className={`flex items-center gap-2 w-full justify-center`}>
-            <span className={`mt-4 w-full text-center !text-main`}>Total run time: {totalRunTime.toFixed(2)}ms</span>
-            <span className={`mt-4 w-full text-center !text-main`}>Total pause time: {totalPauseTime.toFixed(2)}ms</span>
-         </div>
+         <DevOnly>
+            <div className={`flex items-center gap-2 w-full justify-center`}>
+               <span className={`mt-4 w-full text-center !text-main`}>Total run time: {totalRunTime.toFixed(2)}ms</span>
+               <span
+                  className={`mt-4 w-full text-center !text-main`}>Total pause time: {totalPauseTime.toFixed(2)}ms</span>
+            </div>
+         </DevOnly>
          <ToggleWords />
          <EditorButtons />
          <AnimatePresence>
@@ -152,9 +157,11 @@ const TypingEditor = ({ user }: TypingEditorProps) => {
                }
             </SignedOut>
          </AnimatePresence>
-         {
-            timerState === TypingRunState.FINISHED && <TypingRunSummary />
-         }
+         <DevOnly>
+            {
+               timerState === TypingRunState.FINISHED && <TypingRunSummary />
+            }
+         </DevOnly>
       </div>
    );
 };

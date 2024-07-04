@@ -315,7 +315,6 @@ export const onKeyPressAtom = atom(null, (get, set, e: KeyboardEvent<HTMLDivElem
             if (lastLetterIsSpace) {
                set(lastLetterIsSpaceAtom, false);
             } else {
-               console.log(`Current incorrect letter (extra) is: ${e.key}`);
                set(typedLettersAtom, l => [...l, {
                   correct: false,
                   timestamp: performance.now() - startTime,
