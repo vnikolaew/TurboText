@@ -4,10 +4,10 @@ import Link from "next/link";
 import React from "react";
 
 export interface TimeframeButtonsProps {
-   daily?: boolean
+   daily?: boolean;
 }
 
-const TimeframeButtons = ({daily}: TimeframeButtonsProps) => {
+const TimeframeButtons = ({ daily }: TimeframeButtonsProps) => {
    return (
       <div className={`flex items-center gap-4`}>
          <Button asChild variant={`secondary`}

@@ -58,7 +58,7 @@ const Page = async ({ searchParams }: PageProps) => {
             <div className={`flex items-center gap-8`}>
                <LeaderboardTypeSwitch/>
                <h2 className={`text-4xl !text-main`}>
-                  All-Time {language} {searchParams.challenges === `true` ? `Challenges` : ``} Leaderboards
+                  {daily ? `Daily` : `All-Time`} {language} {searchParams.challenges === `true` ? `Challenges` : ``} Leaderboards
                </h2>
             </div>
             <TimeframeButtons daily={daily} />

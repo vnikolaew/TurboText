@@ -25,11 +25,11 @@ const Providers = ({ children }: ProvidersProps) => {
             defaultTheme={theme ?? `dark`}
             attribute={`class`}>
             <AtomProvider>
-               <AblyProvider>
+               {/*<AblyProvider>*/}
                   <FontProvider>
                      {children}
                   </FontProvider>
-               </AblyProvider>
+               {/*</AblyProvider>*/}
             </AtomProvider>
          </ThemeProvider>
       </SessionProvider>

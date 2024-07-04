@@ -84,7 +84,7 @@ export const LeaderboardTable = ({ caption, rows, showWarning }: LeaderboardTabl
                <TableBody>
                   {!rows?.length && (
                      <TableRow className={`hover:!bg-transparent`}>
-                        <TableCell className={`w-full text-center !text-secondary`}>
+                        <TableCell className={`w-full text-center !text-secondary !text-lg`}>
                            There are no runs to show yet.
                         </TableCell>
                      </TableRow>

@@ -169,7 +169,9 @@ export async function getChallengesLeaderboard({ daily, language }: { daily?: st
             wins, draws, losses
          };
       }),
-   )).sort((a, b) => b.score - a.score)
+   ))
+      .filter(u => u.wins + u.draws + u.losses > 0)
+      .sort((a, b) => b.score - a.score)
       .slice(0, 50)
 }
 
