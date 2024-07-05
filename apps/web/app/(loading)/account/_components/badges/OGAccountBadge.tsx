@@ -12,9 +12,9 @@ const OgAccountBadge = ({}: OgAccountBadgeProps) => {
             <TooltipTrigger asChild>
       <span>
          <Badge
-            className={`!bg-accent !text-secondary inline-flex gap-2 items-center text-nowrap shadow-md text-xs cursor-pointer`}
+            className={`!bg-accent !text-black inline-flex gap-2 items-center text-nowrap shadow-md text-xs cursor-pointer`}
             variant={`default`}>
-            <Baby className={`!text-secondary`} size={14} />
+            <Baby className={`!text-black`} size={14} />
             <span className={`!text-xs`}>
                OG Account
             </span>

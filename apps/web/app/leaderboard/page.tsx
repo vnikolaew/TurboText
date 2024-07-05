@@ -1,7 +1,5 @@
-import { Button, Separator } from "@repo/ui";
-import React, { Fragment } from "react";
-import { Crown, User } from "lucide-react";
-import { LeaderboardTable } from "@app/leaderboard/_components/LeaderboardTable";
+import { Separator } from "@repo/ui";
+import React, {} from "react";
 import LanguageFilter from "@app/leaderboard/_components/LanguageFilter";
 import type { Metadata } from "next";
 import { APP_DESCRIPTION, APP_NAME } from "@config/site";
@@ -9,15 +7,11 @@ import {
    getChallengesLeaderboard,
    getLeaderboard,
    showUserWarning,
-   UserChallengeLeaderboard,
 } from "@app/leaderboard/_queries";
 import TimeframeButtons from "@app/leaderboard/_components/TimeframeButtons";
 import LeaderboardTypeSwitch from "@app/leaderboard/_components/LeaderboardTypeSwitch";
-import { ChallengeLeaderboardRow } from "@app/leaderboard/_components/challenges/ChallengeLeaderboardTableRow";
-import ChallengesLeaderboardTable from "@app/leaderboard/_components/challenges/ChallengesLeaderboardTable";
-import { cn } from "@lib/utils";
-import RefreshButton from "@app/leaderboard/_components/buttons/RefreshButton";
 import WithInitialState from "./_components/WithInitialState";
+import LeaderboardsSection from "@app/leaderboard/_components/challenges/LeaderboardsSection";
 
 export interface PageProps {
    searchParams: { daily?: string, language?: string, challenges?: string };
@@ -28,35 +22,20 @@ export const metadata: Metadata = {
    description: APP_DESCRIPTION,
 };
 
-function mapUser(user: UserChallengeLeaderboard, index: number): ChallengeLeaderboardRow {
-   return {
-      position: index + 1,
-      wins: user.wins,
-      draws: user.draws,
-      losses: user.losses,
-      score: user.score,
-      user: {
-         id: user.id,
-         image: user.image!,
-         level: user.experience?.level,
-         name: user.name!,
-         og: user.metadata?.ogAccount ?? false,
-      }
-   }
-}
 
 const Page = async ({ searchParams }: PageProps) => {
    const { time60Runs, time15Runs, daily, language } = await getLeaderboard(searchParams);
    const users = await getChallengesLeaderboard(searchParams);
 
-   const showWarning = await showUserWarning()
+   const showWarning = await showUserWarning();
+   // console.log({ da});
 
    return (
       <section className={`w-3/4 mx-auto mt-24 flex flex-col items-start gap-4`}>
          <WithInitialState />
          <div className={`flex items-center justify-between w-full`}>
             <div className={`flex items-center gap-8`}>
-               <LeaderboardTypeSwitch/>
+               <LeaderboardTypeSwitch />
                <h2 className={`text-4xl !text-main`}>
                   {daily ? `Daily` : `All-Time`} {language} {searchParams.challenges === `true` ? `Challenges` : ``} Leaderboards
                </h2>
@@ -70,56 +49,10 @@ const Page = async ({ searchParams }: PageProps) => {
                <LanguageFilter language={language} />
             </div>
          </div>
-         <div className={`mt-8 grid grid-cols-2 w-full gap-4`}>
-            <div className={cn(`w-full flex items-center justify-between`, searchParams.challenges === `true` && `col-span-2` )}>
-               <span className={`text-2xl !text-main`}>
-                  {searchParams.challenges === `true` ? `Challenges` : `Time 15`}
-               </span>
-               <div className={`flex items-center gap-2`}>
-                   <RefreshButton />
-                  <Button className={`!bg-black !rounded-xl`} size={`icon`}>
-                     <Crown size={18} className={`text-white`} />
-                  </Button>
-                  <Button className={`!bg-black !rounded-xl`} size={`icon`}>
-                     <User className={`!text-white`} size={18} />
-                  </Button>
-               </div>
-            </div>
-
-            {searchParams.challenges !== `true` && (
-               <div className={`w-full flex items-center justify-between`}>
-                  <span className={`text-2xl !text-main`}>Time 60</span>
-                  <div className={`flex items-center gap-2`}>
-                     <RefreshButton />
-                     <Button className={`!bg-black !rounded-xl`} size={`icon`}>
-                        <Crown size={18} className={`text-white`} />
-                     </Button>
-                     <Button className={`!bg-black !rounded-xl`} size={`icon`}>
-                        <User className={`!text-white`} size={18} />
-                     </Button>
-                  </div>
-               </div>
-            )}
-            <Separator className={cn(`w-full bg-secondary mx-auto`, searchParams.challenges === `true` && `col-span-2`)} />
-            {searchParams.challenges !== `true` && (
-               <Separator className={`w-full bg-secondary mx-auto`} />
-            )}
-
-            {searchParams.challenges === `true` ? (
-               <div className={`col-span-2`}>
-                  <ChallengesLeaderboardTable showWarning={showWarning} rows={users.map(mapUser)} />
-               </div>
-            ) : (
-               <Fragment>
-                  <LeaderboardTable
-                     rows={time15Runs}
-                     showWarning={showWarning} />
-                  <LeaderboardTable
-                     rows={time60Runs}
-                     showWarning={showWarning} />
-               </Fragment>
-            )}
-         </div>
+         <LeaderboardsSection
+            searchParams={{ challenges: searchParams?.challenges === `true` }}
+            users={users}
+            time15Runs={time15Runs} time60Runs={time60Runs} showWarning={showWarning} />
       </section>
    );
 };

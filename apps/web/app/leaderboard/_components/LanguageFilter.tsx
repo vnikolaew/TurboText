@@ -2,6 +2,7 @@
 import { LANGUAGES_MAP } from "@atoms/consts";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@repo/ui";
 import React from "react";
+import { parseAsString, useQueryState } from "nuqs";
 import { useRouter } from "next/navigation";
 
 export interface LanguageFilterProps {
@@ -9,11 +10,12 @@ export interface LanguageFilterProps {
 }
 
 const LanguageFilter = ({ language }: LanguageFilterProps) => {
-   const router = useRouter();
+   const [, setLanguage] = useQueryState(`language`, parseAsString.withDefault(language));
+   const router = useRouter()
 
    return (
       <Select
-         onValueChange={l => router.push(`?language=${encodeURIComponent(l)}`)}
+         onValueChange={l => setLanguage(l).then(_ => router.refresh())}
       >
          <SelectTrigger className="w-[300px] !bg-secondary-bg !text-main">
             <SelectValue placeholder={language} />

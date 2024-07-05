@@ -16,14 +16,15 @@ import {
 } from "@repo/ui";
 import { Crown } from "lucide-react";
 import moment from "moment";
-import React, { useState } from "react";
+import React, { forwardRef, useState } from "react";
 import { useSession } from "next-auth/react";
-import MythicalBadge from "@app/account/_components/badges/MythicalBadge";
-import OgAccountBadge from "@app/account/_components/badges/OGAccountBadge";
 import Link from "next/link";
 import { TypingRun, User, UserExperience } from "@repo/db";
 import { useBoolean } from "@hooks/useBoolean";
 import { LoadingSpinner } from "@components/common/LoadingSpinner";
+import OgAccountBadge from "@app/(loading)/account/_components/badges/OGAccountBadge";
+import MythicalBadge from "@app/(loading)/account/_components/badges/MythicalBadge";
+import "./styles.css";
 
 export interface LeaderboardRow {
    position: number;
@@ -46,12 +47,18 @@ export interface LeaderboardTableProps {
    caption?: string;
    rows: LeaderboardRow[];
    showWarning: boolean;
+   onScrollToTop?: () => void;
 }
 
-export const LeaderboardTable = ({ caption, rows, showWarning }: LeaderboardTableProps) => {
+export const LeaderboardTable = forwardRef<HTMLDivElement, LeaderboardTableProps>(({
+                                                                                      caption,
+                                                                                      rows,
+                                                                                      showWarning,
+                                                                                   }: LeaderboardTableProps, ref) => {
    return (
       <div className={`flex flex-col items-start mb-12`}>
-         <ScrollArea className={`h-[600px] w-full relative`}>
+         <ScrollArea ref={ref}
+                     className={`h-[600px] w-full relative !scrollbar-thumb-accent !scrollbar-track-red-500`}>
             <div className={`grid w-full grid-cols-13 sticky top-0 !py-1 !z-[100] backdrop-blur`}>
                <div className={`col-span-1 text-secondary text-center`}>#</div>
                <div className={`col-span-6 text-left !text-main`}>name</div>
@@ -99,7 +106,7 @@ export const LeaderboardTable = ({ caption, rows, showWarning }: LeaderboardTabl
       </div>
 
    );
-};
+});
 
 const LeaderboardTableRow = ({ row, index }: { row: LeaderboardRow, index: number }) => {
    const session = useSession();
@@ -143,7 +150,8 @@ const LeaderboardTableRow = ({ row, index }: { row: LeaderboardRow, index: numbe
                   <HoverCardTrigger asChild>
                      {row.user.id !== session?.data?.user?.id ? (
                         <Link onMouseEnter={handleOnHover} href={`/profile/${row.user.id}`}>
-                           <span className={`text-nowrap !text-main`}> {row.user.name} {row.user.id === session?.data?.user?.id ? "(you)" : ""}
+                           <span
+                              className={`text-nowrap !text-main`}> {row.user.name} {row.user.id === session?.data?.user?.id ? "(you)" : ""}
                            </span>
                         </Link>
                      ) : (
@@ -185,7 +193,7 @@ const LeaderboardTableRow = ({ row, index }: { row: LeaderboardRow, index: numbe
          </TableCell>
          <TableCell className={`col-span-2 text-right flex flex-col justify-end !px-0 !text-xs`}>
             <span className={`!text-main`}>{row.raw}</span>
-            <span  className={`text-secondary`}>{row.consistency}%</span>
+            <span className={`text-secondary`}>{row.consistency}%</span>
          </TableCell>
          <TableCell className="col-span-2 text-right flex flex-col justify-end !pr-4 !text-xs">
             <span className={`text-nowrap !text-main`}>{moment(row.date).format(`DD MMM YYYY`)}</span>

@@ -1,6 +1,6 @@
 "use server";
 
-import { TypingRun, User, xprisma } from "@repo/db";
+import { TypingRun, User, UsersChallenge, xprisma } from "@repo/db";
 import moment from "moment/moment";
 import { TypingMode } from "@atoms/consts";
 import { auth } from "@auth";
@@ -13,7 +13,6 @@ function getSearchParamsNormalized(searchParams: { daily?: string, language?: st
 
    return { daily, language } as const;
 }
-
 
 
 function mapRow(run: TypingRun, index: number): LeaderboardRow {
@@ -105,6 +104,20 @@ export async function showUserWarning() {
    return showWarning;
 }
 
+function normalizeUserChallenges(challenges: UsersChallenge[]) {
+   return challenges?.map(c => {
+      if(c.userOne) {
+         const { verifyPassword, updatePassword, ...userRest } = c.userOne;
+         c.userOne = userRest;
+      }
+      if(c.userTwo) {
+         const { verifyPassword, updatePassword, ...userRest } = c.userTwo;
+         c.userTwo = userRest;
+      }
+      return c
+   }) ?? [];
+}
+
 /**
  * Retrieve the users leaderboard for challenges.
  * @param searchParams - The search params.
@@ -163,16 +176,26 @@ export async function getChallengesLeaderboard({ daily, language }: { daily?: st
          const { draws, wins, losses } = await getUserChallengesRecord(user);
          const score = (wins * 3) + (draws) - (losses * LOSS_PENALTY);
 
+         const { verifyPassword, updatePassword, ...userRest } = user;
+
+         userRest.typingRuns = userRest.typingRuns?.map(run => {
+            const { hasFlag, ...rest } = run;
+            return rest;
+         }) ?? [];
+
+         userRest.challenges_one = normalizeUserChallenges(userRest.challenges_one);
+         userRest.challenges_two = normalizeUserChallenges(userRest.challenges_two);
+
          return {
-            ...user,
+            ...userRest,
             score,
-            wins, draws, losses
+            wins, draws, losses,
          };
       }),
    ))
       .filter(u => u.wins + u.draws + u.losses > 0)
       .sort((a, b) => b.score - a.score)
-      .slice(0, 50)
+      .slice(0, 50);
 }
 
 export type UserChallengeLeaderboard = Awaited<ReturnType<typeof getChallengesLeaderboard>>[number]
