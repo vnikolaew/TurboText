@@ -287,3 +287,9 @@ export function getUserLabel(level: number) {
    const index = Math.floor(level / 10); // Calculate the index based on level
    return LABELS[index];
 }
+
+export function abortSignalWithTimeout(timeout: number) {
+   const controller = new AbortController();
+   setTimeout(() => controller.abort(), timeout);
+   return controller.signal;
+}

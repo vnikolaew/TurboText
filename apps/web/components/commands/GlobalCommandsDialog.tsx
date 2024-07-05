@@ -24,7 +24,7 @@ import { pauseAtom, resumeAtom } from "@atoms/timer";
 export interface GlobalCommandProps {
 }
 
-const IGNORE_PARAMS = [`contact`, `edit-profile`, `report-user`, `import-settings`, `custom-words`, `custom-time`, `add-tag-modal`, `update-cookie-preferences`, `practice-words`] as const;
+const IGNORE_PARAMS = [`contact`, `edit-profile`, `report-user`, `import-settings`, `custom-words`, `custom-time`, `add-tag-modal`, `update-cookie-preferences`, `practice-words`, `side`] as const;
 
 export const commandsDialogOpen = atom(false);
 commandsDialogOpen.debugLabel = `commandsDialogOpen`;

@@ -1,12 +1,5 @@
 "use client";
-import {
-   Sheet,
-   SheetContent,
-   SheetDescription,
-   SheetHeader,
-   SheetTitle,
-   SheetTrigger
-} from "@repo/ui";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@repo/ui";
 import React from "react";
 import { Bell } from "lucide-react";
 import { useAtom } from "jotai";
@@ -20,21 +13,26 @@ import UserInbox from "../inbox/UserInbox";
 import UserAnnouncements from "../announcements/UserAnnouncements";
 import UserNotifications from "@components/common/side-modal/notifications/UserNotifications";
 import { useAtomValue } from "jotai";
+import { parseAsBoolean, useQueryState } from "nuqs";
 
 export interface UserNotificationsButtonProps {
 }
 
 const UserNotificationsButton = ({}: UserNotificationsButtonProps) => {
    const notifications = useAtomValue(globalUserNotificationsAtom);
+   const [notificationsQs, setNotificationsQs] = useQueryState(`side`, parseAsBoolean.withDefault(false));
+
    const inbox = useAtomValue(globalUserInboxAtom);
    const announcements = useAtomValue(globalUserAnnouncementsAtom);
 
    const [userSheetOpen, setUserSheetOpen] = useAtom(globalUserSheetAtom);
 
    return (
-      <Sheet open={userSheetOpen} onOpenChange={open => {
-         setUserSheetOpen(open);
-      }}>
+      <Sheet
+         open={userSheetOpen}
+         onOpenChange={open => {
+            setNotificationsQs(open ? true : null).then(() => setUserSheetOpen(open));
+         }}>
          <SheetTrigger>
             <div className={`relative`}>
                <Bell
