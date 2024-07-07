@@ -196,7 +196,7 @@ const LoginForm = ({}: LoginFormProps) => {
                   variant={`link`}
                   asChild
                >
-                  <Link className={`text-right`} href={`/`}>
+                  <Link className={`text-right`} href={`/account/forgot-password`}>
                      Forgot your password?
                   </Link>
                </Button>

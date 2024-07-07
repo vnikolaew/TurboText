@@ -1,9 +1,4 @@
 "use client";
-import { UserAcceptState, userAcceptStateAtom } from "@app/%5Flobby/_atoms";
-import {
-   ChallengeState,
-   useTypingChallenge,
-} from "@app/%5Flobby/hooks/useTypingChallenge";
 import LoadingButton from "@components/common/LoadingButton";
 import { Button, Separator } from "@repo/ui";
 import { useAtom } from "jotai/index";
@@ -18,6 +13,8 @@ import {
    UserGameLanguageSelect,
    UserGameTimeSelect,
 } from "./_components/selects";
+import { UserAcceptState, userAcceptStateAtom } from "./_atoms";
+import { useTypingChallenge } from "./hooks/useTypingChallenge";
 
 export interface PageProps {}
 

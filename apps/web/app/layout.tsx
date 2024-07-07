@@ -78,8 +78,7 @@ export default async function RootLayout({
 }: Readonly<{
    children: React.ReactNode;
 }>) {
-   let font = await getUserFontFamily();
-   let user = await getUserInfo();
+   let [font, user] =await Promise.all([getUserFontFamily(), getUserInfo()] as const)
 
    const theme = THEMES.includes(user?.configuration?.theme ?? ``)
       ? user?.configuration.theme
@@ -111,7 +110,7 @@ export default async function RootLayout({
                      <WithTransition>{children}</WithTransition>
                   </main>
                   <ScrollToTopButton />
-                  <Suspense fallback={`...`}>
+                  <Suspense fallback={``}>
                      <CookieConsentBanner />
                   </Suspense>
                   <ProductionOnly>

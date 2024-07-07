@@ -324,6 +324,24 @@ export const TOASTS = {
       ),
       className: `text-base font-normal !text-main`,
    }),
+   RESET_EMAIL_SENT_SUCCESS: (email: string) => ({
+      message: (
+         <div className={`flex items-center gap-2`}>
+            <Check className={`text-green-500`} size={24} />
+            <span>A reset email was successfully sent to <b className={`!font-semibold`}>{email}</b> .</span>
+         </div>
+      ),
+      className: `text-base font-normal !text-main`,
+   }),
+   PASSWORD_RESET_SUCCESS: ({
+      message: (
+         <div className={`flex items-center gap-2`}>
+            <Check className={`text-green-500`} size={24} />
+            <span>You've successfully changed your password.</span>
+         </div>
+      ),
+      className: `text-base font-normal !text-main`,
+   }),
 } as const;
 
 // export const toast = ({ message, ...config }: ExternalToast & { message: ReactNode }) => sonnerToast(message, config);

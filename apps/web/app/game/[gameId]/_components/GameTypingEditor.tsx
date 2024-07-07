@@ -1,5 +1,4 @@
 "use client";
-import { finishChallenge } from "@app/%5Fgame/[gameId]/actions";
 import { TypingRunState } from "@atoms/consts";
 import {
    endTimeAtom,
@@ -35,6 +34,7 @@ import { useAction } from "next-safe-action/hooks";
 import { Fragment, useEffect, useMemo } from "react";
 import { match } from "ts-pattern";
 import GameEndConfetti from "./GameEndConfetti";
+import { finishChallenge } from "@app/game/[gameId]/actions";
 
 export interface GameTypingEditorProps {
    user: User;

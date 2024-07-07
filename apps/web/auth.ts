@@ -16,14 +16,16 @@ globalForPrisma.prisma ??= new PrismaClient();
 
 const RESEND_ONBOARDING_EMAIL = ``;
 
+export const MAGIC_SIGNIN = `magic_signin`;
+
 const customAdapter = {
    ...PrismaAdapter(xprisma),
    // @ts-ignore
    async createUser({
-      id,
-      iss,
-      ...user
-   }: AdapterUser): Promise<Awaitable<AdapterUser>> {
+                       id,
+                       iss,
+                       ...user
+                    }: AdapterUser): Promise<Awaitable<AdapterUser>> {
       const { email, name, picture, image, emailVerified } =
          user as unknown as GoogleProfile;
       const userCount = await xprisma.user.count({});
@@ -100,11 +102,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             });
             if (res.success)
                console.log(
-                  `Welcome e-mail successfully sent to: ${user.user.email} with ID: ${res?.success ? res?.id : ``}`
+                  `Welcome e-mail successfully sent to: ${user.user.email} with ID: ${res?.success ? res?.id : ``}`,
                );
          } catch (err) {
             console.error(
-               `An error occurred while sending a Welcome e-mail to: ${user.user.email}: ${err}`
+               `An error occurred while sending a Welcome e-mail to: ${user.user.email}: ${err}`,
             );
          }
       },
@@ -156,21 +158,21 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             return crypto.randomUUID();
          },
          async sendVerificationRequest({
-            request,
-            url,
-            identifier,
-            provider,
-            token,
-         }) {
+                                          request,
+                                          url,
+                                          identifier,
+                                          provider,
+                                          token,
+                                       }) {
             try {
                const res = await new EmailService().sendMail({
                   to: identifier,
                   subject: "Login Link to your Account",
                   html:
-                     '<p>Click the magic link below to sign in to your account:</p>\
-                 <p><a href="' +
+                     "<p>Click the magic link below to sign in to your account:</p>\
+                 <p><a href=\"" +
                      url +
-                     '"><b>Sign in</b></a></p>',
+                     "\"><b>Sign in</b></a></p>",
                });
             } catch (error) {
                console.log({ error });
@@ -211,8 +213,24 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                      username: username as string,
                      image: imageUrl,
                   },
-                  { image: true }
+                  { image: true },
                );
+
+               return {
+                  id: user.id,
+                  email: user.email,
+                  name: user.name,
+                  image: user.image,
+               };
+            } else if (type === MAGIC_SIGNIN) {
+               // Handle user sign up:
+               const user = await xprisma.user.findFirst({
+                  where: {
+                     email: email as string,
+                     name: username,
+                  },
+               });
+               if (!user) return null!;
 
                return {
                   id: user.id,

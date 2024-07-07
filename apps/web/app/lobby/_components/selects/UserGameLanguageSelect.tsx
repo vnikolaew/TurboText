@@ -1,5 +1,5 @@
 "use client";
-import { userSelectedLanguageAtom } from "@app/%5Flobby/_atoms";
+import { userSelectedLanguageAtom } from "@app/lobby/_atoms";
 import { LANGUAGES_MAP } from "@atoms/consts";
 import {
    Label,

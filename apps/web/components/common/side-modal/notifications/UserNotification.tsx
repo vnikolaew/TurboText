@@ -1,9 +1,9 @@
 "use client";
-import { acceptChallenge, rejectChallenge } from "@app/%5Flobby/actions";
+import { acceptChallenge, rejectChallenge } from "@app/lobby/actions";
 import {
    ChallengeState,
    currentUserMatchAtom,
-} from "@app/%5Flobby/hooks/useTypingChallenge";
+} from "@app/lobby/hooks/useTypingChallenge";
 import { globalUserSheetAtom, UserNotification as UN } from "@atoms/user";
 import LoadingButton from "@components/common/LoadingButton";
 import { TOASTS } from "@config/toasts";

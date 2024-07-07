@@ -1,5 +1,5 @@
 "use client";
-import { userSelectedTimeAtom } from "@app/%5Flobby/_atoms";
+import { userSelectedTimeAtom } from "@app/lobby/_atoms";
 import { TIMES } from "@atoms/timer";
 import {
    Label,

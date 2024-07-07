@@ -1,5 +1,4 @@
 "use client";
-import { getUserAverageWpm } from "@app/%5Flobby/actions";
 import { cn } from "@lib/utils";
 import {
    Label,
@@ -14,6 +13,7 @@ import { useSession } from "next-auth/react";
 import { useAction } from "next-safe-action/hooks";
 import { useEffect, useMemo, useState } from "react";
 import { UserDifficulty, userSelectedDifficultyAtom } from "../../_atoms";
+import { getUserAverageWpm } from "@app/lobby/actions";
 
 export interface UserGameDifficultySelectProps {}
 

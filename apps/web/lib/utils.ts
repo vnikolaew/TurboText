@@ -50,7 +50,7 @@ export async function sleep(duration: number) {
 export function downloadFile(
    data: BlobPart,
    fileName: string,
-   contentType: string
+   contentType: string,
 ) {
    const blob = new Blob([data], { type: contentType });
    const url = window.URL.createObjectURL(blob);
@@ -190,9 +190,8 @@ export function hslToHex(hslString: string) {
 
 export function injectCSSClass(
    className: string,
-   variables: Record<string, string>
+   variables: Record<string, string>,
 ) {
-   const styleSheet = document.styleSheets[0];
 
    // Construct the CSS variable definitions
    const cssVariables = Object.entries(variables)
@@ -202,7 +201,8 @@ export function injectCSSClass(
    // Construct the CSS rule
    const cssRule = `.${className} { ${cssVariables} :root { ${cssVariables} } } `;
 
-   console.log({ cssRule });
+   const styleSheet = document.styleSheets[0];
+
    // Insert the rule into the stylesheet
    styleSheet!.insertRule(cssRule, styleSheet!.cssRules.length);
 }
@@ -212,9 +212,7 @@ export function hexToHsl(hex: string) {
    hex = hex.replace(/^#/, "");
 
    // Parse the hex values
-   let r = parseInt(hex.substring(0, 2), 16);
-   let g = parseInt(hex.substring(2, 4), 16);
-   let b = parseInt(hex.substring(4, 6), 16);
+   let [r, g, b] = [parseInt(hex.substring(0, 2), 16), parseInt(hex.substring(2, 4), 16), parseInt(hex.substring(4, 6), 16)];
 
    // Convert RGB to a range of 0-1
    r /= 255;

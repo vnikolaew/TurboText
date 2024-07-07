@@ -1,5 +1,5 @@
 "use client";
-import { challengePlayer } from "@app/%5Flobby/actions";
+import { challengePlayer } from "@app/lobby/actions";
 import { TOASTS } from "@config/toasts";
 import { useBoolean } from "@hooks/useBoolean";
 import { CHANEL_NAME } from "@providers/AblyProvider";

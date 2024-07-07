@@ -74,6 +74,10 @@ const config: Config = {
             sm: "calc(var(--radius) - 4px)",
          },
          keyframes: {
+            "caret-blink": {
+               "0%,70%,100%": { opacity: "1" },
+               "20%,50%": { opacity: "0" },
+            },
             "rainbow-bg": {
                "0%": { backgroundColor: "red" },
                "14%": { backgroundColor: "orange" },
@@ -109,6 +113,7 @@ const config: Config = {
             },
          },
          animation: {
+            "caret-blink": "caret-blink 1.25s ease-out infinite",
             "rainbow-bg": "rainbow-bg 10s linear infinite",
             "accordion-down": "accordion-down 0.2s ease-out",
             "accordion-up": "accordion-up 0.2s ease-out",

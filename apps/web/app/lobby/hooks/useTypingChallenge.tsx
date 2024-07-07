@@ -1,5 +1,5 @@
 "use client";
-import { acceptChallenge } from "@app/%5Flobby/actions";
+import { acceptChallenge } from "@app/lobby/actions";
 import { wordsAtom } from "@atoms/editor";
 import { useBoolean } from "@hooks/useBoolean";
 import { CHANEL_NAME } from "@providers/AblyProvider";

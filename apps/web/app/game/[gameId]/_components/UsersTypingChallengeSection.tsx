@@ -1,6 +1,4 @@
 "use client";
-import { useTypingGame } from "@app/%5Fgame/[gameId]/_hooks/useTypingGame";
-import { stopChallenge } from "@app/%5Flobby/actions";
 import LoadingButton from "@components/common/LoadingButton";
 import { LoadingSpinner } from "@components/common/LoadingSpinner";
 import { User } from "@repo/db";
@@ -11,6 +9,8 @@ import { useAction } from "next-safe-action/hooks";
 import Link from "next/link";
 import { challengeDetailsAtom, challengeWinnerDetailsAtom } from "../_atoms";
 import GameTypingEditor from "./GameTypingEditor";
+import { stopChallenge } from "@app/lobby/actions";
+import { useTypingGame } from "../_hooks/useTypingGame";
 
 export interface UsersTypingChallengeSectionProps {
    userOne: User;
