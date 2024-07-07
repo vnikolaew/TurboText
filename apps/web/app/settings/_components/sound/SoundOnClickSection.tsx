@@ -1,18 +1,16 @@
 "use client";
-import React from "react";
-import { Volume2 } from "lucide-react";
+import { updateUserConfiguration } from "@app/settings/actions";
+import { playSoundAtom } from "@app/settings/atoms";
+import { soundOnClickAtom } from "@atoms/user";
+import { useIsSignedIn } from "@hooks/useIsSignedIn";
+import { SOUNDS } from "@lib/consts";
+import { cn } from "@lib/utils";
 import { Button } from "@repo/ui";
 import { useAtom, useSetAtom } from "jotai/index";
-import { soundOnClickAtom } from "@atoms/user";
+import { Volume2 } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
-import { updateUserConfiguration } from "@app/settings/actions";
-import { cn } from "@lib/utils";
-import { playSoundAtom } from "@app/settings/atoms";
-import { SOUNDS } from "@lib/consts";
-import { useIsSignedIn } from "@hooks/useIsSignedIn";
 
-export interface SoundOnClickSectionProps {
-}
+export interface SoundOnClickSectionProps {}
 
 const SoundOnClickSection = ({}: SoundOnClickSectionProps) => {
    const [soundOnClick, setSoundOnClick] = useAtom(soundOnClickAtom);
@@ -21,7 +19,7 @@ const SoundOnClickSection = ({}: SoundOnClickSectionProps) => {
    const playSound = useSetAtom(playSoundAtom);
 
    const { execute, isExecuting } = useAction(updateUserConfiguration, {
-      onSuccess: res => {
+      onSuccess: (res) => {
          if (res.data?.success) {
             console.log(res);
             setSoundOnClick(res.data?.userConfig?.sound_click_sound);
@@ -30,33 +28,33 @@ const SoundOnClickSection = ({}: SoundOnClickSectionProps) => {
    });
 
    return (
-      <div className={`flex flex-col w-full items-start gap-2`}>
+      <div className={`flex w-full flex-col items-start gap-2`}>
          <div className={`flex items-center gap-2`}>
-            <Volume2 className={`text-main `} size={20} />
-            <span className={`text-xl text-main`}>
-               Play sound on click
-            </span>
+            <Volume2 className={`text-main`} size={20} />
+            <span className={`text-xl text-main`}>Play sound on click</span>
          </div>
          <p className={`mt-2 text-base !text-secondary`}>
             Plays a short sound when you press a key.
          </p>
-         <div className={`w-full grid grid-cols-5 gap-4 mt-4`}>
+         <div className={`mt-4 grid w-full grid-cols-5 gap-4`}>
             {SOUNDS.map((sound, index) => (
                <Button
-                  onClick={async _ => {
+                  onClick={async (_) => {
                      await playSound(index);
-                     if(signedIn) {
+                     if (signedIn) {
                         execute({ sound_click_sound: sound });
-                     } else setSoundOnClick(sound)
+                     } else setSoundOnClick(sound);
                   }}
                   variant={`secondary`}
-                  className={cn(`!w-full`,
-                     soundOnClick === sound && `bg-accent`)}
-                  key={sound}>
+                  className={cn(
+                     `!w-full`,
+                     soundOnClick === sound && `bg-accent`
+                  )}
+                  key={sound}
+               >
                   {sound}
                </Button>
             ))}
-
          </div>
       </div>
    );

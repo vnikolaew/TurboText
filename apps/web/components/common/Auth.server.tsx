@@ -1,7 +1,6 @@
 import { auth } from "auth";
 import { PropsWithChildren } from "react";
 
-
 /**
  * Server component rendering children only if user is signed in.
  * @param children

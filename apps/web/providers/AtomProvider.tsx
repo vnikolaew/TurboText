@@ -1,12 +1,11 @@
 "use client";
+import DevOnly from "@components/common/DevOnly";
 import { Provider } from "jotai";
-import React, { PropsWithChildren } from "react";
 import { DevTools } from "jotai-devtools";
 import "jotai-devtools/styles.css";
-import DevOnly from "@components/common/DevOnly";
+import { PropsWithChildren } from "react";
 
-export interface AtomProviderProps extends PropsWithChildren {
-}
+export interface AtomProviderProps extends PropsWithChildren {}
 
 const AtomProvider = ({ children }: AtomProviderProps) => {
    return (

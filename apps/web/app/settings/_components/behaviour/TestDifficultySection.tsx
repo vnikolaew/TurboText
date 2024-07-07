@@ -1,17 +1,15 @@
 "use client";
-import React from "react";
-import SettingLayout from "../SettingLayout";
-import { Star } from "lucide-react";
-import { Button } from "@repo/ui";
-import { useAction } from "next-safe-action/hooks";
 import { updateUserConfiguration } from "@app/settings/actions";
-import { useAtom } from "jotai";
 import { userTestDifficultyAtom } from "@atoms/user";
-import { cn } from "@lib/utils";
 import { useIsSignedIn } from "@hooks/useIsSignedIn";
+import { cn } from "@lib/utils";
+import { Button } from "@repo/ui";
+import { useAtom } from "jotai";
+import { Star } from "lucide-react";
+import { useAction } from "next-safe-action/hooks";
+import SettingLayout from "../SettingLayout";
 
-export interface TestDifficultySectionProps {
-}
+export interface TestDifficultySectionProps {}
 
 const DIFFICULTIES = [
    {
@@ -29,20 +27,20 @@ const DIFFICULTIES = [
 ];
 
 const TestDifficultySection = ({}: TestDifficultySectionProps) => {
-   const [test_difficulty, setTestDifficulty] = useAtom(userTestDifficultyAtom)
-   const signedIn = useIsSignedIn()
+   const [test_difficulty, setTestDifficulty] = useAtom(userTestDifficultyAtom);
+   const signedIn = useIsSignedIn();
 
    const { execute, status } = useAction(updateUserConfiguration, {
-      onSuccess: res => {
+      onSuccess: (res) => {
          if (res.data?.success) {
             console.log(res);
-            setTestDifficulty(res.data?.userConfig?.test_difficulty!)
+            setTestDifficulty(res.data?.userConfig?.test_difficulty!);
          }
       },
    });
 
    function handleUpdate(value: string): void {
-      if(signedIn) {
+      if (signedIn) {
          execute({ test_difficulty: value });
       } else {
          setTestDifficulty(value);
@@ -53,24 +51,27 @@ const TestDifficultySection = ({}: TestDifficultySectionProps) => {
       <SettingLayout className={``}>
          <div className={`flex flex-col items-start gap-2`}>
             <h2 className={`inline-flex items-center gap-2`}>
-               <Star className={`text-main fill-main`} size={20} />
-               <span className={`text-xl text-main`}>
-                  Difficulty
-               </span>
+               <Star className={`fill-main text-main`} size={20} />
+               <span className={`text-xl text-main`}>Difficulty</span>
             </h2>
             <p className={`mt-2 text-base text-secondary`}>
-               Normal is the classic type test experience. Expert fails the test if you submit (press space) an
-               incorrect word. Master fails if you press a single incorrect key (meaning you have to achieve 100%
-               accuracy).
+               Normal is the classic type test experience. Expert fails the test
+               if you submit (press space) an incorrect word. Master fails if
+               you press a single incorrect key (meaning you have to achieve
+               100% accuracy).
             </p>
          </div>
-         <div className={`flex items-center gap-2 w-full h-full my-auto`}>
+         <div className={`my-auto flex h-full w-full items-center gap-2`}>
             {DIFFICULTIES.map(({ label, value }, index) => (
                <Button
-                  onClick={_ => handleUpdate(value)}
-                  key={value} variant={`default`}
-                  className={cn(`w-full shadow-md`,
-                  value === test_difficulty && `bg-accent`)}>
+                  onClick={(_) => handleUpdate(value)}
+                  key={value}
+                  variant={`default`}
+                  className={cn(
+                     `w-full shadow-md`,
+                     value === test_difficulty && `bg-accent`
+                  )}
+               >
                   {label}
                </Button>
             ))}

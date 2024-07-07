@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
 import { xprisma } from "@repo/db";
+import { NextRequest, NextResponse } from "next/server";
 
 /**
  * An API route for fetching details of typing challenge by its Id.
@@ -7,11 +7,19 @@ import { xprisma } from "@repo/db";
  * @param params
  * @constructor
  */
-export async function GET(req: NextRequest, { params }: { params: { challengeId: string } }) {
+export async function GET(
+   req: NextRequest,
+   { params }: { params: { challengeId: string } }
+) {
    const { challengeId } = params;
    const challenge = await xprisma.usersChallenge.findUnique({
       where: { id: challengeId },
-      include: { userOneRun: true, userTwoRun: true, userOne: true, userTwo: true },
+      include: {
+         userOneRun: true,
+         userTwoRun: true,
+         userOne: true,
+         userTwo: true,
+      },
    });
 
    if (!challenge) return new Response("Challenge not found", { status: 404 });

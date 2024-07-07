@@ -1,15 +1,14 @@
 "use client";
-import React, { Fragment, useEffect } from "react";
-import { useAtomValue } from "jotai";
-import { typingRunSuccessAtom } from "@atoms/editor";
 import { TypingRunSuccess } from "@atoms/consts";
-import { toast } from "@repo/ui";
+import { typingRunSuccessAtom } from "@atoms/editor";
 import { TOASTS } from "@config/toasts";
+import { toast } from "@repo/ui";
+import { useAtomValue } from "jotai";
+import { Fragment, useEffect } from "react";
 
-export interface OnRunFailedProps {
-}
+export interface OnRunFailedProps {}
 
-const OnRunFailed = ({ } : OnRunFailedProps) => {
+const OnRunFailed = ({}: OnRunFailedProps) => {
    const success = useAtomValue(typingRunSuccessAtom);
    useEffect(() => {
       if (success === TypingRunSuccess.FAILED) {

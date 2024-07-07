@@ -1,12 +1,17 @@
 "use client";
-import React, { useMemo } from "react";
-import { ChevronUp } from "lucide-react";
+import {
+   Button,
+   Tooltip,
+   TooltipContent,
+   TooltipProvider,
+   TooltipTrigger,
+} from "@repo/ui";
 import { AnimatePresence, motion } from "framer-motion";
 import useWindowScroll from "hooks/useWindowScroll";
-import { Button, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@repo/ui";
+import { ChevronUp } from "lucide-react";
+import { useMemo } from "react";
 
-export interface ScrollToTopButtonProps {
-}
+export interface ScrollToTopButtonProps {}
 
 const MotionButton = motion(Button);
 
@@ -25,9 +30,9 @@ const ScrollToTopButton = ({}: ScrollToTopButtonProps) => {
    };
 
    // @ts-ignore
-   return <AnimatePresence>
-      {
-         showButton && (
+   return (
+      <AnimatePresence>
+         {showButton && (
             <motion.div
                key={`scroll-to-top`}
                transition={{ duration: 0.3 }}
@@ -35,7 +40,8 @@ const ScrollToTopButton = ({}: ScrollToTopButtonProps) => {
                   opacity: 100,
                }}
                className={`!z-[100]`}
-               animate={{ opacity: 100 }} exit={{ opacity: 0 }}
+               animate={{ opacity: 100 }}
+               exit={{ opacity: 0 }}
             >
                <TooltipProvider>
                   <Tooltip>
@@ -43,20 +49,23 @@ const ScrollToTopButton = ({}: ScrollToTopButtonProps) => {
                         <MotionButton
                            variant={`secondary`}
                            onClick={scrollToTop}
-                           className={`rounded-full !p-2 fixed bottom-8 right-8 !h-fit opacity-70 !z-[100] !bg-secondary-bg !text-main`}>
+                           className={`fixed bottom-8 right-8 !z-[100] !h-fit rounded-full !bg-secondary-bg !p-2 !text-main opacity-70`}
+                        >
                            <ChevronUp size={28} />
                         </MotionButton>
                      </TooltipTrigger>
-                     <TooltipContent side={`top`} className={`bg-secondary-bg text-main rounded-full text-xs`}>
+                     <TooltipContent
+                        side={`top`}
+                        className={`rounded-full bg-secondary-bg text-xs text-main`}
+                     >
                         Scroll to top
                      </TooltipContent>
                   </Tooltip>
                </TooltipProvider>
             </motion.div>
-         )
-      }
-
-   </AnimatePresence>;
+         )}
+      </AnimatePresence>
+   );
 };
 
 export default ScrollToTopButton;

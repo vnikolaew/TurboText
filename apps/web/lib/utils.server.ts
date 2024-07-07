@@ -9,17 +9,29 @@ export async function getReferer() {
 
 const NEW_LINE = "\n";
 
-export async function recordsToCsv<T extends Object>(data: T[], delimiter = `,`) {
+export async function recordsToCsv<T extends Object>(
+   data: T[],
+   delimiter = `,`
+) {
    const keys = Object.keys(data[0]);
-   return keys.join(delimiter) + NEW_LINE + data.map(value => {
+   return (
+      keys.join(delimiter) +
+      NEW_LINE +
+      data
+         .map((value) => {
+            return keys
+               .map((key) => {
+                  const propValue = value[key];
+                  let propString = ``;
+                  if (typeof propValue === `boolean`)
+                     propString = String(propValue);
+                  else
+                     propString = `"${String(value[key]).replaceAll(`'`, `\\'`)}"`;
 
-      return keys.map(key => {
-         const propValue = value[key];
-         let propString = ``;
-         if (typeof propValue === `boolean`) propString = String(propValue);
-         else propString = `"${String(value[key]).replaceAll(`'`, `\\'`)}"`;
-
-         return `${propString}`;
-      }).join(delimiter);
-   }).join(NEW_LINE);
+                  return `${propString}`;
+               })
+               .join(delimiter);
+         })
+         .join(NEW_LINE)
+   );
 }

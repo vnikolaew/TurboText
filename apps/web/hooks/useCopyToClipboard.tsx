@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useCallback, useState } from "react";
 
 function useCopyToClipboard() {
    const [isCopied, setIsCopied] = useState(false);
@@ -9,7 +9,7 @@ function useCopyToClipboard() {
          navigator.clipboard.writeText(text).then(
             () => {
                setIsCopied(true);
-               setLastValue(text)
+               setLastValue(text);
                setTimeout(() => setIsCopied(false), 2000); // Reset after 2 seconds
             },
             () => {

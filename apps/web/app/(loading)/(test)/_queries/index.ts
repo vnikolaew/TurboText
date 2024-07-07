@@ -1,7 +1,7 @@
 "use server";
 
-import { xprisma } from "@repo/db";
 import { auth } from "@auth";
+import { xprisma } from "@repo/db";
 
 export async function getUser() {
    const session = await auth();
@@ -14,17 +14,25 @@ export async function getUser() {
          include: {
             tags: {
                select: {
-                  id: true, name: true,
+                  id: true,
+                  name: true,
                },
             },
             experience: {
                select: {
-                  id: true, points: true, level: true,
+                  id: true,
+                  points: true,
+                  level: true,
                },
             },
-            configuration: true, typingRuns: {
+            configuration: true,
+            typingRuns: {
                select: {
-                  id: true, typedLetters: true, mode: true, metadata: true, totalTimeMilliseconds: true,
+                  id: true,
+                  typedLetters: true,
+                  mode: true,
+                  metadata: true,
+                  totalTimeMilliseconds: true,
                },
             },
          },

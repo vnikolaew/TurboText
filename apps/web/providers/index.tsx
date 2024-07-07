@@ -1,16 +1,14 @@
 "use client";
-import React, { PropsWithChildren } from "react";
-import SessionProvider from "./SessionProvider";
-import { ThemeProvider } from "./ThemeProvider";
+import { themeAtom } from "@atoms/user";
+import { THEMES } from "@lib/consts";
 import AtomProvider from "@providers/AtomProvider";
 import FontProvider from "@providers/DynamicFontProvider";
 import { useAtomValue } from "jotai";
-import { themeAtom } from "@atoms/user";
-import { THEMES } from "@lib/consts";
-import AblyProvider from "./AblyProvider";
+import { PropsWithChildren } from "react";
+import SessionProvider from "./SessionProvider";
+import { ThemeProvider } from "./ThemeProvider";
 
-interface ProvidersProps extends PropsWithChildren {
-}
+interface ProvidersProps extends PropsWithChildren {}
 
 const Providers = ({ children }: ProvidersProps) => {
    const theme = useAtomValue(themeAtom);
@@ -23,12 +21,11 @@ const Providers = ({ children }: ProvidersProps) => {
             themes={THEMES}
             storageKey={crypto.randomUUID()}
             defaultTheme={theme ?? `dark`}
-            attribute={`class`}>
+            attribute={`class`}
+         >
             <AtomProvider>
                {/*<AblyProvider>*/}
-                  <FontProvider>
-                     {children}
-                  </FontProvider>
+               <FontProvider>{children}</FontProvider>
                {/*</AblyProvider>*/}
             </AtomProvider>
          </ThemeProvider>

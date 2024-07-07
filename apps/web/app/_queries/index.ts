@@ -1,9 +1,9 @@
 "use server";
 
-import { UserConfiguration, UserExperience, xprisma, User } from "@repo/db";
 import { FONTS_MAP, sfMono } from "@assets/fonts";
-import { FONT_FAMILIES } from "@lib/consts";
 import { auth } from "@auth";
+import { FONT_FAMILIES } from "@lib/consts";
+import { User, UserConfiguration, UserExperience, xprisma } from "@repo/db";
 import { NextFontWithVariable } from "next/dist/compiled/@next/font";
 
 export async function getUserFontFamily() {
@@ -16,7 +16,9 @@ export async function getUserFontFamily() {
       const userConfig = await xprisma.userConfiguration.findFirst({
          where: { userId: session.user.id },
       });
-      font = FONTS_MAP[userConfig?.font_family as (typeof FONT_FAMILIES)[number]] ?? sfMono;
+      font =
+         FONTS_MAP[userConfig?.font_family as (typeof FONT_FAMILIES)[number]] ??
+         sfMono;
    }
 
    return font;
@@ -35,10 +37,13 @@ export async function getUserConfig(): Promise<UserConfiguration | null> {
    }
 }
 
-export async function getUserInfo(): Promise<User & {
-   configuration: UserConfiguration,
-   experience: UserExperience
-} | null> {
+export async function getUserInfo(): Promise<
+   | (User & {
+        configuration: UserConfiguration;
+        experience: UserExperience;
+     })
+   | null
+> {
    const session = await auth();
 
    let user;
@@ -52,18 +57,25 @@ export async function getUserInfo(): Promise<User & {
             },
             tags: {
                select: {
-                  id: true, name: true,
+                  id: true,
+                  name: true,
                },
             },
             experience: {
                select: {
-                  id: true, points: true, level: true,
+                  id: true,
+                  points: true,
+                  level: true,
                },
             },
             configuration: true,
             typingRuns: {
                select: {
-                  id: true, typedLetters: true, mode: true, metadata: true, totalTimeMilliseconds: true,
+                  id: true,
+                  typedLetters: true,
+                  mode: true,
+                  metadata: true,
+                  totalTimeMilliseconds: true,
                },
             },
          },

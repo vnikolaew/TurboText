@@ -1,11 +1,9 @@
 "use client";
-import React from "react";
-import { parseAsArrayOf, parseAsString, useQueryState } from "nuqs";
-import { scrollToElement } from "@lib/utils";
 import { useIsSignedIn } from "@hooks/useIsSignedIn";
+import { scrollToElement } from "@lib/utils";
+import { parseAsArrayOf, parseAsString, useQueryState } from "nuqs";
 
-export interface SectionsProps {
-}
+export interface SectionsProps {}
 
 const SECTIONS = [
    "account",
@@ -20,17 +18,24 @@ const SECTIONS = [
 ];
 
 const Sections = ({}: SectionsProps) => {
-   const [_, setSections] = useQueryState(`sections`, parseAsArrayOf(parseAsString).withDefault([]));
+   const [_, setSections] = useQueryState(
+      `sections`,
+      parseAsArrayOf(parseAsString).withDefault([])
+   );
    const signedIn = useIsSignedIn();
 
    return (
-      <div className={`w-full flex items-center justify-between my-12`}>
+      <div className={`my-12 flex w-full items-center justify-between`}>
          {SECTIONS.slice(signedIn ? 0 : 1).map((section) => (
-            <span onClick={() => {
-               setSections(s => [...new Set(s.concat(section.split(` `).at(0)!))])
-                  .then(() => scrollToElement(section.split(` `).at(0)!));
-            }} key={section}
-                  className={`text-main cursor-pointer hover:!opacity-90 transition-all duration-200 text-2xl p-2 !px-4 rounded-xl bg-transparent hover:!bg-secondary-bg`}>
+            <span
+               onClick={() => {
+                  setSections((s) => [
+                     ...new Set(s.concat(section.split(` `).at(0)!)),
+                  ]).then(() => scrollToElement(section.split(` `).at(0)!));
+               }}
+               key={section}
+               className={`cursor-pointer rounded-xl bg-transparent p-2 !px-4 text-2xl text-main transition-all duration-200 hover:!bg-secondary-bg hover:!opacity-90`}
+            >
                {section}
             </span>
          ))}

@@ -1,5 +1,4 @@
 "use client";
-import { atom } from "jotai/index";
 import {
    currentCharIndexAtom,
    lettersCorrectnessAtom,
@@ -8,11 +7,15 @@ import {
    typingRunStateAtom,
    wordsAtom,
 } from "@atoms/editor";
-import { generate } from "random-words";
-import { currentTimestampAtom, timeAtom, totalPauseTimeAtom } from "@atoms/timer";
+import {
+   currentTimestampAtom,
+   timeAtom,
+   totalPauseTimeAtom,
+} from "@atoms/timer";
 import { generateWordsAtom, wordsCountsAtom } from "@atoms/words";
+import { atom } from "jotai/index";
+import { generate } from "random-words";
 import { DEFAULT_WORD_COUNT, TypingMode, TypingRunState } from "./consts";
-
 
 export const newTestAtom = atom(
    null, // it's a convention to pass `null` for the first argument
@@ -23,7 +26,7 @@ export const newTestAtom = atom(
 
       const mode = get(typingModeAtom);
       if (mode === TypingMode.WORDS) await set(generateWordsAtom, count);
-      else await set(generateWordsAtom, DEFAULT_WORD_COUNT)
+      else await set(generateWordsAtom, DEFAULT_WORD_COUNT);
 
       set(typedLettersAtom, []);
       set(currentTimestampAtom, time!);
@@ -31,11 +34,13 @@ export const newTestAtom = atom(
       set(currentCharIndexAtom, -1);
       // set(startTimeAtom, 0);
       set(totalPauseTimeAtom, 0);
-      set(lettersCorrectnessAtom, Array
-         .from({ length: words.reduce((a, b) => a + b.length, 0) })
-         .fill(null) as null[]);
-
-   },
+      set(
+         lettersCorrectnessAtom,
+         Array.from({ length: words.reduce((a, b) => a + b.length, 0) }).fill(
+            null
+         ) as null[]
+      );
+   }
 );
 newTestAtom.debugLabel = `newTestAtom`;
 
@@ -51,11 +56,13 @@ export const restartAtom = atom(
       set(currentCharIndexAtom, -1);
       // set(startTimeAtom, 0);
       set(totalPauseTimeAtom, 0);
-      set(lettersCorrectnessAtom, Array
-         .from({ length: words.reduce((a, b) => a + b.length, 0) })
-         .fill(null) as null[]);
-
-   },
+      set(
+         lettersCorrectnessAtom,
+         Array.from({ length: words.reduce((a, b) => a + b.length, 0) }).fill(
+            null
+         ) as null[]
+      );
+   }
 );
 restartAtom.debugLabel = `restartAtom`;
 
@@ -65,6 +72,6 @@ export const restartWithWordsAtom = atom(
       set(restartAtom);
       set(wordsCountsAtom, words.length, false);
       set(wordsAtom, words);
-   },
+   }
 );
 restartAtom.debugLabel = `restartAtom`;

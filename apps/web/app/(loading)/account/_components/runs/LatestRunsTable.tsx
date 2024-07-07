@@ -1,5 +1,6 @@
 "use client";
-import React, { Fragment, useState } from "react";
+import { TypedLetterFlags, TypedLetterInfo } from "@atoms/consts";
+import { Tag as TTag, TypingRun } from "@repo/db";
 import {
    Button,
    ScrollArea,
@@ -14,17 +15,16 @@ import {
    TooltipProvider,
    TooltipTrigger,
 } from "@repo/ui";
-import { Tag as TTag, TypingRun } from "@repo/db";
-import moment from "moment";
 import { useAtomValue } from "jotai";
-import { TypedLetterFlags, TypedLetterInfo } from "@atoms/consts";
+import moment from "moment";
+import React, { Fragment, useState } from "react";
 import { tableSortAtom } from "../_atoms";
 import { SortableTableHead } from "../common/SortableTableHead";
 import UserRunRow from "./UserRunRow";
 
 export interface LatestRunsTableProps {
-   runs: TypingRun[],
-   tagsById: Record<string, TTag[]>
+   runs: TypingRun[];
+   tagsById: Record<string, TTag[]>;
 }
 
 interface TableRun {
@@ -42,13 +42,17 @@ interface TableRun {
    createdAt: Date;
 }
 
-
 function mapRun(run: TypingRun, tagsById: Record<string, TTag[]>) {
    return {
       ...run,
-      correct: (run.typedLetters as TypedLetterInfo[]).filter(t => t.correct).length,
-      incorrect: (run.typedLetters as TypedLetterInfo[]).filter(t => t.correct === false).length,
-      extra: (run.typedLetters as TypedLetterInfo[]).filter(t => t.flags === TypedLetterFlags.EXTRA).length,
+      correct: (run.typedLetters as TypedLetterInfo[]).filter((t) => t.correct)
+         .length,
+      incorrect: (run.typedLetters as TypedLetterInfo[]).filter(
+         (t) => t.correct === false
+      ).length,
+      extra: (run.typedLetters as TypedLetterInfo[]).filter(
+         (t) => t.flags === TypedLetterFlags.EXTRA
+      ).length,
       blindMode: run.metadata?.blind_mode ?? false,
       wpm: run.wpm,
       wpmString: run.wpm.toFixed(2),
@@ -59,17 +63,27 @@ function mapRun(run: TypingRun, tagsById: Record<string, TTag[]>) {
       accuracy: run.accuracy,
       accuracyString: run.accuracy.toFixed(2),
       modeNormalized: `${run.mode?.toLowerCase()} ${run.mode === `TIME` ? run.time : run.wordCount}`,
-      tags: tagsById[run.metadata?.tags?.[0]]?.map(t => t.name)?.join(`, `) ?? `no tags`,
-      dateFormatted: <div className={`flex flex-col items-start gap-0`}>
-         <span>{moment(run.createdAt).format(`DD MMM YYYY`)}</span>
-         <span className={`text-secondary`}>{moment(run.createdAt).format(`HH:mm`)}</span>
-      </div>,
+      tags:
+         tagsById[run.metadata?.tags?.[0]]?.map((t) => t.name)?.join(`, `) ??
+         `no tags`,
+      dateFormatted: (
+         <div className={`flex flex-col items-start gap-0`}>
+            <span>{moment(run.createdAt).format(`DD MMM YYYY`)}</span>
+            <span className={`text-secondary`}>
+               {moment(run.createdAt).format(`HH:mm`)}
+            </span>
+         </div>
+      ),
    } as const;
 }
 
-export type RunNormalized = ReturnType<typeof mapRun>
+export type RunNormalized = ReturnType<typeof mapRun>;
 
-export function sortRuns<T>(a: T, b: T, tableSort: { key: keyof T; desc: boolean }) {
+export function sortRuns<T>(
+   a: T,
+   b: T,
+   tableSort: { key: keyof T; desc: boolean }
+) {
    const first = a[tableSort.key];
    const second = b[tableSort.key];
 
@@ -80,40 +94,51 @@ export function sortRuns<T>(a: T, b: T, tableSort: { key: keyof T; desc: boolean
    return (first > second ? 1 : -1) * (tableSort.desc ? -1 : 1);
 }
 
-
 const LatestRunsTable = ({ runs, tagsById }: LatestRunsTableProps) => {
    const [pagingCursor, setPagingCursor] = useState(10);
    const tableSort = useAtomValue(tableSortAtom);
 
-   const runsNormalized = runs?.slice(0, pagingCursor)
-      .map(r => mapRun(r, tagsById))
+   const runsNormalized = runs
+      ?.slice(0, pagingCursor)
+      .map((r) => mapRun(r, tagsById))
       .sort((a, b) => sortRuns(a, b, tableSort));
 
    return (
       <Fragment>
          <ScrollArea className={``}>
             <Table className={`!mb-12 !overflow-y-scroll`}>
-               <TableCaption className={`!text-secondary !font-semibold !text-sm`}>
+               <TableCaption
+                  className={`!text-sm !font-semibold !text-secondary`}
+               >
                   A list of your latest typing runs.
                </TableCaption>
                <TableHeader className={`w-full`}>
-                  <TableRow className={`text-sm w-full !text-secondary`}>
+                  <TableRow className={`w-full text-sm !text-secondary`}>
                      <TableHead className="w-[100px]"></TableHead>
                      <SortableTableHead sort={tableSortAtom} column={`wpm`} />
-                     <SortableTableHead sort={tableSortAtom} title={`raw`} column={`rawWpm`} />
-                     <SortableTableHead sort={tableSortAtom} column={`accuracy`} />
-                     <SortableTableHead sort={tableSortAtom} column={`consistency`} />
+                     <SortableTableHead
+                        sort={tableSortAtom}
+                        title={`raw`}
+                        column={`rawWpm`}
+                     />
+                     <SortableTableHead
+                        sort={tableSortAtom}
+                        column={`accuracy`}
+                     />
+                     <SortableTableHead
+                        sort={tableSortAtom}
+                        column={`consistency`}
+                     />
                      <TableHead className="text-left">
                         <TooltipProvider>
                            <Tooltip>
                               <TooltipTrigger asChild>
-                                 <span className={`cursor-pointer`}>
-                                    chars
-                                 </span>
+                                 <span className={`cursor-pointer`}>chars</span>
                               </TooltipTrigger>
                               <TooltipContent
                                  side={`top`}
-                                 className={`bg-black text-white rounded-xl text-sm border-neutral-700 !px-4 !py-2`}>
+                                 className={`rounded-xl border-neutral-700 bg-black !px-4 !py-2 text-sm text-white`}
+                              >
                                  correct/incorrect/extra/missed
                               </TooltipContent>
                            </Tooltip>
@@ -122,19 +147,29 @@ const LatestRunsTable = ({ runs, tagsById }: LatestRunsTableProps) => {
                      <TableHead className="text-left">mode</TableHead>
                      <TableHead className="text-left">info</TableHead>
                      <TableHead className="text-left">tags</TableHead>
-                     <SortableTableHead sort={tableSortAtom} title={`date`} column={`createdAt`} />
+                     <SortableTableHead
+                        sort={tableSortAtom}
+                        title={`date`}
+                        column={`createdAt`}
+                     />
                   </TableRow>
                </TableHeader>
-               <TableBody className={`w-full max-h-[1000px] !overflow-y-scroll`}>
+               <TableBody
+                  className={`max-h-[1000px] w-full !overflow-y-scroll`}
+               >
                   {runsNormalized.map((run, index) => (
                      <UserRunRow key={run.id} run={run} />
                   ))}
                </TableBody>
             </Table>
          </ScrollArea>
-         <div className={`flex items-center justify-center w-full`}>
+         <div className={`flex w-full items-center justify-center`}>
             {runs.length > pagingCursor && (
-               <Button onClick={_ => setPagingCursor(p => Math.min(p + 10, runs.length))}>
+               <Button
+                  onClick={(_) =>
+                     setPagingCursor((p) => Math.min(p + 10, runs.length))
+                  }
+               >
                   Load more
                </Button>
             )}
@@ -142,6 +177,5 @@ const LatestRunsTable = ({ runs, tagsById }: LatestRunsTableProps) => {
       </Fragment>
    );
 };
-
 
 export default LatestRunsTable;

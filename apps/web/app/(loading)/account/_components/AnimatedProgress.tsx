@@ -1,6 +1,6 @@
 "use client";
-import React, { useEffect, useState } from "react";
 import { Progress } from "@repo/ui";
+import { useEffect, useState } from "react";
 
 export interface AnimatedProgressProps {
    value: number;
@@ -21,8 +21,9 @@ const AnimatedProgress = ({ value, delay }: AnimatedProgressProps) => {
 
    return (
       <Progress
-         className={`w-full !h-2 cursor-pointer !bg-secondary`}
-         value={currentValue} />
+         className={`!h-2 w-full cursor-pointer !bg-secondary`}
+         value={currentValue}
+      />
    );
 };
 

@@ -1,7 +1,11 @@
 "use client";
 import { useEffect } from "react";
 
-export function useKeyPress(key: string, handler: (e: KeyboardEvent) => void, deps?: any[]) {
+export function useKeyPress(
+   key: string,
+   handler: (e: KeyboardEvent) => void,
+   deps?: any[]
+) {
    useEffect(() => {
       const realHandler = (e: KeyboardEvent) => {
          if (e.key === key) {
@@ -12,5 +16,4 @@ export function useKeyPress(key: string, handler: (e: KeyboardEvent) => void, de
       document.addEventListener(`keypress`, realHandler);
       return () => document.removeEventListener(`keypress`, realHandler);
    }, [...deps]);
-
 }

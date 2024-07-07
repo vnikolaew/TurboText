@@ -1,4 +1,12 @@
 "use client";
+import { restartWithWordsAtom } from "@atoms/actions";
+import {
+   missedWordsAtom,
+   slowWordsAtom,
+   typingRunAtom,
+   wordsAtom,
+} from "@atoms/editor";
+import { useBoolean } from "@hooks/useBoolean";
 import {
    Button,
    Dialog,
@@ -12,17 +20,13 @@ import {
    TooltipProvider,
    TooltipTrigger,
 } from "@repo/ui";
-import React, { PropsWithChildren } from "react";
 import { useAtomValue } from "jotai";
-import { missedWordsAtom, slowWordsAtom, typingRunAtom, wordsAtom } from "@atoms/editor";
 import { useSetAtom } from "jotai/index";
-import { restartWithWordsAtom } from "@atoms/actions";
-import { useBoolean } from "@hooks/useBoolean";
-import { parseAsBoolean, useQueryState } from "nuqs";
 import { Footprints } from "lucide-react";
+import { parseAsBoolean, useQueryState } from "nuqs";
+import { PropsWithChildren } from "react";
 
-export interface PracticeWordsButtonProps {
-}
+export interface PracticeWordsButtonProps {}
 
 const PracticeWordsButton = ({}: PracticeWordsButtonProps) => {
    return (
@@ -32,17 +36,21 @@ const PracticeWordsButton = ({}: PracticeWordsButtonProps) => {
                <PracticeWordsModal>
                   <Button
                      // onClick={}
-                     className={`hover:!bg-transparent group`}
+                     className={`group hover:!bg-transparent`}
                      variant={`ghost`}
-                     size={`icon`}>
-                     <Footprints className={`group-hover:!text-neutral-400  transition-colors duration-200 !text-main`}
-                                    size={18} />
+                     size={`icon`}
+                  >
+                     <Footprints
+                        className={`!text-main transition-colors duration-200 group-hover:!text-neutral-400`}
+                        size={18}
+                     />
                   </Button>
                </PracticeWordsModal>
             </TooltipTrigger>
             <TooltipContent
                side={`bottom`}
-               className={`bg-black text-white rounded-xl text-sm border-neutral-700 !px-4 !py-2`}>
+               className={`rounded-xl border-neutral-700 bg-black !px-4 !py-2 text-sm text-white`}
+            >
                Practice words
             </TooltipContent>
          </Tooltip>
@@ -52,7 +60,10 @@ const PracticeWordsButton = ({}: PracticeWordsButtonProps) => {
 
 export const PracticeWordsModal = ({ children }: PropsWithChildren) => {
    const [open, setOpen] = useBoolean();
-   const [, setPracticeWordsQs] = useQueryState(`practice-words`, parseAsBoolean.withDefault(false))
+   const [, setPracticeWordsQs] = useQueryState(
+      `practice-words`,
+      parseAsBoolean.withDefault(false)
+   );
 
    const typingRun = useAtomValue(typingRunAtom);
    const currentWords = useAtomValue(wordsAtom);
@@ -74,40 +85,46 @@ export const PracticeWordsModal = ({ children }: PropsWithChildren) => {
    }
 
    return (
-      < Dialog open={open} onOpenChange={async value => {
-         if(!value) await setPracticeWordsQs(null)
-         else await setPracticeWordsQs(true)
-         console.log({ typingRun, currentWords });
-         setOpen(value);
-      }} modal>
-         <DialogTrigger asChild>
-            {children}
-         </DialogTrigger>
+      <Dialog
+         open={open}
+         onOpenChange={async (value) => {
+            if (!value) await setPracticeWordsQs(null);
+            else await setPracticeWordsQs(true);
+            console.log({ typingRun, currentWords });
+            setOpen(value);
+         }}
+         modal
+      >
+         <DialogTrigger asChild>{children}</DialogTrigger>
          <DialogContent className={`!bg-neutral-900`}>
             <DialogHeader>
-               <DialogTitle>
-                  Practice words
-               </DialogTitle>
+               <DialogTitle>Practice words</DialogTitle>
                <DialogDescription>
-                  This will start a new run in custom mode. Words that you mistyped more often or words that you typed
-                  much slower will be weighted higher and appear more often.
+                  This will start a new run in custom mode. Words that you
+                  mistyped more often or words that you typed much slower will
+                  be weighted higher and appear more often.
                </DialogDescription>
             </DialogHeader>
-            <div className={`flex w-full flex-col items-center gap-4 mt-4`}>
-               <Button onClick={handlePracticeMissed} className={`w-full rounded-full flex items-center`}>
+            <div className={`mt-4 flex w-full flex-col items-center gap-4`}>
+               <Button
+                  onClick={handlePracticeMissed}
+                  className={`flex w-full items-center rounded-full`}
+               >
                   Practice missed
                </Button>
-               <Button onClick={handlePracticeSlow} className={`w-full rounded-full flex items-center`}>
+               <Button
+                  onClick={handlePracticeSlow}
+                  className={`flex w-full items-center rounded-full`}
+               >
                   Practice slow
                </Button>
-               <Button className={`w-full rounded-full flex items-center`}>
+               <Button className={`flex w-full items-center rounded-full`}>
                   Practice both
                </Button>
             </div>
          </DialogContent>
       </Dialog>
    );
-
 };
 
 export default PracticeWordsButton;

@@ -1,10 +1,7 @@
 "use client";
-import { usePathname, useRouter } from "next/navigation";
-import React, { Fragment, useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
+import { LoadingSpinner } from "@components/common/LoadingSpinner";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { EyeIcon, EyeOffIcon, UserPlus } from "lucide-react";
+import { useBoolean } from "@hooks/useBoolean";
 import {
    Button,
    Form,
@@ -16,15 +13,17 @@ import {
    FormMessage,
    Input,
 } from "@repo/ui";
-import { LoadingSpinner } from "@components/common/LoadingSpinner";
-import { useBoolean } from "@hooks/useBoolean";
+import { EyeIcon, EyeOffIcon, UserPlus } from "lucide-react";
 import { signIn } from "next-auth/react";
+import { usePathname, useRouter } from "next/navigation";
+import { Fragment, useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
-export interface RegisterFormProps {
-}
+export interface RegisterFormProps {}
 
-
-const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+{}|:"<>?[\]\\';,./]).{6,}$/;
+const PASSWORD_REGEX =
+   /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+{}|:"<>?[\]\\';,./]).{6,}$/;
 
 const formSchema = z.object({
    username: z.string().min(2).max(50),
@@ -32,9 +31,9 @@ const formSchema = z.object({
    verifyEmail: z.string().email(),
    password: z.string().min(6).max(50).regex(PASSWORD_REGEX),
    verifyPassword: z.string().min(6).max(50).regex(PASSWORD_REGEX),
-})
+});
 
-type FormValues = z.infer<typeof formSchema>
+type FormValues = z.infer<typeof formSchema>;
 
 const INITIAL_VALUES: FormValues = {
    username: ``,
@@ -42,14 +41,14 @@ const INITIAL_VALUES: FormValues = {
    verifyEmail: ``,
    password: ``,
    verifyPassword: ``,
-}
+};
 
 const RegisterForm = ({}: RegisterFormProps) => {
    const router = useRouter();
    const form = useForm<FormValues>({
       resolver: zodResolver(formSchema),
       defaultValues: {
-         ...INITIAL_VALUES
+         ...INITIAL_VALUES,
       },
    });
    const [showPassword, setShowPassword] = useState(false);
@@ -60,14 +59,20 @@ const RegisterForm = ({}: RegisterFormProps) => {
    }, [showPassword]);
    const [loading, setLoading] = useBoolean();
 
-   async function onSubmit({ username, password, verifyPassword, verifyEmail, email }: FormValues) {
+   async function onSubmit({
+      username,
+      password,
+      verifyPassword,
+      verifyEmail,
+      email,
+   }: FormValues) {
       setLoading(true);
-      if(email !== verifyEmail) {
+      if (email !== verifyEmail) {
          form.setError(`verifyEmail`, { message: `Emails don't match` });
          setLoading(false);
          return;
       }
-      if(password !== verifyPassword) {
+      if (password !== verifyPassword) {
          form.setError(`verifyPassword`, { message: `Passwords don't match` });
          setLoading(false);
          return;
@@ -80,7 +85,7 @@ const RegisterForm = ({}: RegisterFormProps) => {
          redirect: false,
          callbackUrl: pathname,
       })
-         .then(res => {
+         .then((res) => {
             if (res?.error === `CredentialsSignin`) {
                form.setError(`username`, { message: `Something went wrong.` });
             }
@@ -91,15 +96,16 @@ const RegisterForm = ({}: RegisterFormProps) => {
    }
 
    return (
-      <div className={`flex flex-col gap-4 !w-1/3`}>
+      <div className={`flex !w-1/3 flex-col gap-4`}>
          <div className={`flex items-center gap-2`}>
-            <UserPlus className={`!text-secondary !stroke-[3px]`} size={18} />
-            <span className={`text-secondary !font-semibold`}>
-               Register
-            </span>
+            <UserPlus className={`!stroke-[3px] !text-secondary`} size={18} />
+            <span className={`!font-semibold text-secondary`}>Register</span>
          </div>
          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 flex flex-col !w-full">
+            <form
+               onSubmit={form.handleSubmit(onSubmit)}
+               className="flex !w-full flex-col space-y-6"
+            >
                <FormField
                   control={form.control}
                   name="username"
@@ -107,10 +113,15 @@ const RegisterForm = ({}: RegisterFormProps) => {
                      <FormItem className={`!mt-4`}>
                         <FormLabel></FormLabel>
                         <FormControl className={`!mt-1`}>
-                           <Input className={`bg-secondary-bg !text-main`} type={`text`} required placeholder="username" {...field} />
+                           <Input
+                              className={`bg-secondary-bg !text-main`}
+                              type={`text`}
+                              required
+                              placeholder="username"
+                              {...field}
+                           />
                         </FormControl>
-                        <FormDescription>
-                        </FormDescription>
+                        <FormDescription></FormDescription>
                         <FormMessage className={`dark:text-red-400`} />
                      </FormItem>
                   )}
@@ -122,10 +133,15 @@ const RegisterForm = ({}: RegisterFormProps) => {
                      <FormItem className={`!mt-0`}>
                         <FormLabel></FormLabel>
                         <FormControl className={`!mt-1`}>
-                           <Input className={`!bg-secondary-bg !text-main`} type={`email`} required placeholder="email" {...field} />
+                           <Input
+                              className={`!bg-secondary-bg !text-main`}
+                              type={`email`}
+                              required
+                              placeholder="email"
+                              {...field}
+                           />
                         </FormControl>
-                        <FormDescription>
-                        </FormDescription>
+                        <FormDescription></FormDescription>
                         <FormMessage className={`dark:text-red-400`} />
                      </FormItem>
                   )}
@@ -137,10 +153,15 @@ const RegisterForm = ({}: RegisterFormProps) => {
                      <FormItem className={`!mt-0`}>
                         <FormLabel></FormLabel>
                         <FormControl className={`!mt-1`}>
-                           <Input className={`!bg-secondary-bg !text-main`} type={`email`} required placeholder="verify email" {...field} />
+                           <Input
+                              className={`!bg-secondary-bg !text-main`}
+                              type={`email`}
+                              required
+                              placeholder="verify email"
+                              {...field}
+                           />
                         </FormControl>
-                        <FormDescription>
-                        </FormDescription>
+                        <FormDescription></FormDescription>
                         <FormMessage className={`dark:text-red-400`} />
                      </FormItem>
                   )}
@@ -154,11 +175,17 @@ const RegisterForm = ({}: RegisterFormProps) => {
                         <FormLabel htmlFor={`password`}></FormLabel>
                         <FormControl className={`!mt-1`}>
                            <div className={`relative`}>
-                              <Input className={`!bg-secondary-bg !text-main`} required type={showPassword ? `text` : `password`}
-                                     placeholder="password" {...field} />
+                              <Input
+                                 className={`!bg-secondary-bg !text-main`}
+                                 required
+                                 type={showPassword ? `text` : `password`}
+                                 placeholder="password"
+                                 {...field}
+                              />
                               <PasswordIcon
-                                 onClick={_ => setShowPassword(!showPassword)}
-                                 className={`w-4 h-4 absolute right-3 top-3 cursor-pointer`} />
+                                 onClick={(_) => setShowPassword(!showPassword)}
+                                 className={`absolute right-3 top-3 h-4 w-4 cursor-pointer`}
+                              />
                            </div>
                         </FormControl>
                         <FormMessage className={`dark:text-red-400`} />
@@ -173,11 +200,17 @@ const RegisterForm = ({}: RegisterFormProps) => {
                         <FormLabel htmlFor={`verifyPassword`}></FormLabel>
                         <FormControl className={`!mt-1`}>
                            <div className={`relative`}>
-                              <Input className={`!bg-secondary-bg !text-main`} required type={showPassword ? `text` : `password`}
-                                     placeholder="verify password" {...field} />
+                              <Input
+                                 className={`!bg-secondary-bg !text-main`}
+                                 required
+                                 type={showPassword ? `text` : `password`}
+                                 placeholder="verify password"
+                                 {...field}
+                              />
                               <PasswordIcon
-                                 onClick={_ => setShowPassword(!showPassword)}
-                                 className={`w-4 h-4 absolute right-3 top-3 cursor-pointer`} />
+                                 onClick={(_) => setShowPassword(!showPassword)}
+                                 className={`absolute right-3 top-3 h-4 w-4 cursor-pointer`}
+                              />
                            </div>
                         </FormControl>
                         <FormMessage className={`dark:text-red-400`} />
@@ -188,9 +221,12 @@ const RegisterForm = ({}: RegisterFormProps) => {
                   disabled={loading}
                   size={`default`}
                   variant={`secondary`}
-                  className={`self-end !px-12 !py-1 rounded-lg !mt-8 shadow-md !w-full flex items-center gap-2 !bg-accent !text-main`}
-                  type="submit">
-                  {loading ? <LoadingSpinner /> : (
+                  className={`!mt-8 flex !w-full items-center gap-2 self-end rounded-lg !bg-accent !px-12 !py-1 !text-main shadow-md`}
+                  type="submit"
+               >
+                  {loading ? (
+                     <LoadingSpinner />
+                  ) : (
                      <Fragment>
                         <UserPlus size={14} />
                         Sign up

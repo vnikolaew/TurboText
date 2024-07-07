@@ -1,13 +1,12 @@
-import React from "react";
 import { Rocket } from "lucide-react";
 
-export interface MythicalBadgeProps {
-}
+export interface MythicalBadgeProps {}
 
 const MythicalBadge = ({}: MythicalBadgeProps) => {
    return (
       <div
-         className={`animate-rainbow-bg rounded-full px-2 py-1 inline-flex items-center gap-2 bg-white text-main shadow-md !text-sm`}>
+         className={`inline-flex animate-rainbow-bg items-center gap-2 rounded-full bg-white px-2 py-1 !text-sm text-main shadow-md`}
+      >
          <Rocket className={`text-accent`} size={18} />
          <span className={`text-accent`}>Mythical</span>
       </div>

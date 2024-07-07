@@ -1,12 +1,12 @@
 "use client";
 import { MotionProps, motion } from "framer-motion";
-import React, { DetailedHTMLProps, HTMLAttributes } from "react";
+import { DetailedHTMLProps, HTMLAttributes } from "react";
 
-export interface WithTransitionProps extends MotionProps, DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
+export interface WithTransitionProps
+   extends MotionProps,
+      DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> {}
 
-}
-
-const WithTransition = ({ children, ...props}: WithTransitionProps) => {
+const WithTransition = ({ children, ...props }: WithTransitionProps) => {
    return (
       <motion.div
          initial={{

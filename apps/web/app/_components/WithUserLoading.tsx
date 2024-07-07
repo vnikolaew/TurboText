@@ -1,19 +1,30 @@
 "use client";
-import React, { PropsWithChildren, useCallback, useEffect, useRef, useState } from "react";
+import { userDataLoadingAtom } from "@atoms/user";
 import { Progress } from "@repo/ui";
 import { AnimatePresence, motion } from "framer-motion";
-import { userDataLoadingAtom } from "@atoms/user";
 import { useAtom } from "jotai";
 import { PrimitiveAtom } from "jotai/index";
+import {
+   PropsWithChildren,
+   useCallback,
+   useEffect,
+   useRef,
+   useState,
+} from "react";
 
 export interface UserLoadingPageProps extends PropsWithChildren {
-   userLoadingAtom?: PrimitiveAtom<boolean>
+   userLoadingAtom?: PrimitiveAtom<boolean>;
 }
 
-const WithUserLoading = ({ children, userLoadingAtom }: UserLoadingPageProps) => {
+const WithUserLoading = ({
+   children,
+   userLoadingAtom,
+}: UserLoadingPageProps) => {
    const intervalId = useRef<NodeJS.Timeout>();
    const [value, setValue] = useState(0);
-   const [userDataLoading, setUserDataLoading] = useAtom(userLoadingAtom ?? userDataLoadingAtom);
+   const [userDataLoading, setUserDataLoading] = useAtom(
+      userLoadingAtom ?? userDataLoadingAtom
+   );
 
    const onTick = useCallback(() => {
       if (value >= 100) {
@@ -23,11 +34,11 @@ const WithUserLoading = ({ children, userLoadingAtom }: UserLoadingPageProps) =>
          }, 1000);
       }
 
-      setValue(prev => prev + 5);
+      setValue((prev) => prev + 5);
    }, [value]);
 
    useEffect(() => {
-      if(value >= 100) clearInterval(intervalId.current)
+      if (value >= 100) clearInterval(intervalId.current);
 
       intervalId.current = setInterval(onTick, 50);
       return () => clearInterval(intervalId.current);
@@ -42,10 +53,18 @@ const WithUserLoading = ({ children, userLoadingAtom }: UserLoadingPageProps) =>
                animate={{ opacity: 100 }}
                transition={{ duration: 0.3 }}
                exit={{ opacity: 0 }}
-               className="font-sans flex flex-col items-center justify-center min-h-screen p-8 pb-20 gap-16 sm:p-20 text-2xl w-full">
-               <div className={`flex flex-col items-center gap-4 w-[300px]`}>
-                  <Progress value={value} className={` text-amber-600 bg-neutral-800 shadow-md !h-2`} />
-                  <span className={`text-lg text-neutral-300 animate-pulse text-nowrap`}>Downloading user data ...</span>
+               className="flex min-h-screen w-full flex-col items-center justify-center gap-16 p-8 pb-20 font-sans text-2xl sm:p-20"
+            >
+               <div className={`flex w-[300px] flex-col items-center gap-4`}>
+                  <Progress
+                     value={value}
+                     className={`!h-2 bg-neutral-800 text-amber-600 shadow-md`}
+                  />
+                  <span
+                     className={`animate-pulse text-nowrap text-lg text-neutral-300`}
+                  >
+                     Downloading user data ...
+                  </span>
                </div>
             </motion.div>
          )}

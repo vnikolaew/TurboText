@@ -1,10 +1,9 @@
 "use server";
 
-
 import { authorizedAction } from "@lib/actions";
 import { xprisma } from "@repo/db";
-import { z } from "zod";
 import { revalidatePath } from "next/cache";
+import { z } from "zod";
 
 const editProfileSchema = z.object({
    bio: z.string().nullable(),
@@ -16,28 +15,31 @@ const editProfileSchema = z.object({
 
 export const editProfile = authorizedAction
    .schema(editProfileSchema)
-   .action(async (
-      { parsedInput: { bio, github, keyboard, twitter, website }, ctx: { userId } },
-   ) => {
-      const user = await xprisma.user.findUnique({
-         where: { id: userId },
-      });
-      if (!user) return { success: false };
-      await xprisma.user.update({
-         where: { id: userId },
-         data: {
-            metadata: {
-               ...(user.metadata ?? {}),
-               ...(bio && { bio }),
-               ...(github && { github }),
-               ...(keyboard && { keyboard }),
-               ...(twitter && { twitter }),
-               ...(website && { website }),
+   .action(
+      async ({
+         parsedInput: { bio, github, keyboard, twitter, website },
+         ctx: { userId },
+      }) => {
+         const user = await xprisma.user.findUnique({
+            where: { id: userId },
+         });
+         if (!user) return { success: false };
+         await xprisma.user.update({
+            where: { id: userId },
+            data: {
+               metadata: {
+                  ...(user.metadata ?? {}),
+                  ...(bio && { bio }),
+                  ...(github && { github }),
+                  ...(keyboard && { keyboard }),
+                  ...(twitter && { twitter }),
+                  ...(website && { website }),
+               },
             },
-         },
-      });
+         });
 
-      const {updatePassword, verifyPassword, ...rest} = user;
-      revalidatePath(`/account`)
-      return { success: true, user: rest };
-   });
+         const { updatePassword, verifyPassword, ...rest } = user;
+         revalidatePath(`/account`);
+         return { success: true, user: rest };
+      }
+   );

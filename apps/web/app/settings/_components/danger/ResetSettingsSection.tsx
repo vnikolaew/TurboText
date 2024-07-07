@@ -1,29 +1,27 @@
 "use client";
-import React from "react";
-import SettingLayout from "../SettingLayout";
-import { RotateCcw } from "lucide-react";
-import { Button, toast } from "@repo/ui";
-import { useIsSignedIn } from "@hooks/useIsSignedIn";
-import { useAtom } from "jotai/index";
-import { userConfigAtom } from "@atoms/user";
-import { useAction } from "next-safe-action/hooks";
 import { updateUserConfiguration } from "@app/settings/actions";
-import { DEFAULT_USER_SETTINGS } from "@lib/consts";
+import { userConfigAtom } from "@atoms/user";
 import { TOASTS } from "@config/toasts";
+import { useIsSignedIn } from "@hooks/useIsSignedIn";
+import { DEFAULT_USER_SETTINGS } from "@lib/consts";
+import { Button, toast } from "@repo/ui";
+import { useAtom } from "jotai/index";
+import { RotateCcw } from "lucide-react";
+import { useAction } from "next-safe-action/hooks";
+import SettingLayout from "../SettingLayout";
 
-export interface ResetSettingsSectionProps {
-}
+export interface ResetSettingsSectionProps {}
 
 const ResetSettingsSection = ({}: ResetSettingsSectionProps) => {
    const [userConfig, setUserConfig] = useAtom(userConfigAtom);
    const signedIn = useIsSignedIn();
 
    const { execute, status } = useAction(updateUserConfiguration, {
-      onSuccess: res => {
+      onSuccess: (res) => {
          if (res.data?.success) {
             console.log(res);
             setUserConfig(res.data?.userConfig);
-            toast(TOASTS.SETTINGS_RESET_SUCCESS)
+            toast(TOASTS.SETTINGS_RESET_SUCCESS);
          }
       },
    });
@@ -31,10 +29,10 @@ const ResetSettingsSection = ({}: ResetSettingsSectionProps) => {
    async function handleResetSettings() {
       console.log(`Resetting ...`);
       if (signedIn) {
-         execute({...DEFAULT_USER_SETTINGS});
+         execute({ ...DEFAULT_USER_SETTINGS });
       } else {
-         setUserConfig(c => ({ ...c, ...DEFAULT_USER_SETTINGS }));
-         toast(TOASTS.SETTINGS_RESET_SUCCESS)
+         setUserConfig((c) => ({ ...c, ...DEFAULT_USER_SETTINGS }));
+         toast(TOASTS.SETTINGS_RESET_SUCCESS);
       }
    }
 
@@ -42,10 +40,8 @@ const ResetSettingsSection = ({}: ResetSettingsSectionProps) => {
       <SettingLayout className={``}>
          <div className={`flex flex-col items-start gap-2`}>
             <h2 className={`inline-flex items-center gap-2`}>
-               <RotateCcw className={`text-main `} size={20} />
-               <span className={`text-xl text-main`}>
-                  Reset settings
-               </span>
+               <RotateCcw className={`text-main`} size={20} />
+               <span className={`text-xl text-main`}>Reset settings</span>
             </h2>
             <p className={`mt-2 text-base !text-secondary`}>
                Resets settings to the default (but doesn't touch your tags).
@@ -54,10 +50,13 @@ const ResetSettingsSection = ({}: ResetSettingsSectionProps) => {
                You can't undo this action!
             </p>
          </div>
-         <div className={`flex items-center gap-2 w-full h-full my-auto justify-center flex-wrap`}>
+         <div
+            className={`my-auto flex h-full w-full flex-wrap items-center justify-center gap-2`}
+         >
             <Button
                onClick={handleResetSettings}
-               className={`flex-1 !bg-red-700  text-black shadow-md hover:!opacity-90 transition-colors duration-100`}>
+               className={`flex-1 !bg-red-700 text-black shadow-md transition-colors duration-100 hover:!opacity-90`}
+            >
                Reset settings
             </Button>
          </div>

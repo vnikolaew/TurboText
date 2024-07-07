@@ -1,27 +1,36 @@
 import { TypingRun } from "@repo/db";
-import React from "react";
 
 export interface AppGlobalStatsSectionProps {
-   amount: number;
+   amount: string;
    unit: string;
+   runs: TypingRun[];
 }
 
-const AppGlobalStatsSection = ({ unit, amount }: AppGlobalStatsSectionProps) => {
+const AppGlobalStatsSection = ({
+   unit,
+   amount,
+   runs,
+}: AppGlobalStatsSectionProps) => {
    return (
-      <section id={`global-stats`} className={`w-full grid grid-cols-3 gap-4 mt-12`}>
+      <section
+         id={`global-stats`}
+         className={`mt-12 grid w-full grid-cols-3 gap-4`}
+      >
          <div className={`flex flex-col items-center`}>
             <h3 className={`text-lg text-secondary`}>Total tests started</h3>
             <h2 className={`text-6xl`}>{runs.length}</h2>
-            <span></span>
+            <span />
          </div>
          <div className={`flex flex-col items-center`}>
-            <h3 className={`text-lg text-secondary`}>Total users typing time</h3>
-            <h2 className={`text-6xl mt-2 drop-shadow-md`}>{amount}</h2>
+            <h3 className={`text-lg text-secondary`}>
+               Total users typing time
+            </h3>
+            <h2 className={`mt-2 text-6xl drop-shadow-md`}>{amount}</h2>
             <span className={`mt-2 text-lg`}>{unit}</span>
          </div>
          <div className={`flex flex-col items-center`}>
             <h3 className={`text-lg text-secondary`}>Total tests completed</h3>
-            <h2 className={`text-6xl mt-2 drop-shadow-md`}>{runs.length}</h2>
+            <h2 className={`mt-2 text-6xl drop-shadow-md`}>{runs.length}</h2>
             <span className={`mt-2`}></span>
          </div>
       </section>

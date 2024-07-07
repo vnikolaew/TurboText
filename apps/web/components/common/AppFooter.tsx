@@ -1,29 +1,30 @@
-"use client"
-import React from "react";
+"use client";
 import { APP_DESCRIPTION, APP_NAME, LINKS } from "@/config/site";
+import { themeAtom } from "@atoms/user";
 import { FooterTwo, FooterTwoProps } from "@components/common/FooterTwo";
 import RocketLogo from "@components/icons/RocketLogo";
-import { Cookie, Info, Lock, Mail, ReceiptText } from "lucide-react";
 import { useAtomValue } from "jotai";
-import { themeAtom } from "@atoms/user";
+import { Cookie, Info, Lock, Mail, ReceiptText } from "lucide-react";
 
-export interface AppFooterProps {
-}
+export interface AppFooterProps {}
 
 const AppFooter = ({}: AppFooterProps) => {
-   const theme = useAtomValue(themeAtom)
+   const theme = useAtomValue(themeAtom);
 
    const FOOTER_LINKS: FooterTwoProps["links"] = {
       links: [
          {
-            title: `About`, href: `/about`,
+            title: `About`,
+            href: `/about`,
             icon: <Info size={12} />,
          },
          {
-            title: `Contact`, href: `?contact=true`,
+            title: `Contact`,
+            href: `?contact=true`,
             icon: <Mail size={12} />,
          },
-      ], title: `LINKS`,
+      ],
+      title: `LINKS`,
    };
 
    const FOOTER_LEGAL = {
@@ -37,8 +38,12 @@ const AppFooter = ({}: AppFooterProps) => {
          {
             title: `Privacy Policy`,
             href: `/privacy-policy`,
-            icon: <Lock className={` group-hover:!stroke-accent transition-colors duration-100`}
-                        size={12} />,
+            icon: (
+               <Lock
+                  className={`transition-colors duration-100 group-hover:!stroke-accent`}
+                  size={12}
+               />
+            ),
          },
          {
             title: `Cookie Policy`,
@@ -51,16 +56,13 @@ const AppFooter = ({}: AppFooterProps) => {
    return (
       <FooterTwo
          appDescription={APP_DESCRIPTION}
-         appLogo={
-            <RocketLogo className={`w-10 h-10 fill-accent`} />
-         }
+         appLogo={<RocketLogo className={`h-10 w-10 fill-accent`} />}
          appName={APP_NAME}
          theme={theme}
          links={FOOTER_LINKS}
          legal={FOOTER_LEGAL}
          socialLinks={{ ...LINKS, title: `Socials` }}
       />
-
    );
 };
 

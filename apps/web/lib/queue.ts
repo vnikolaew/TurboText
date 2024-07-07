@@ -1,5 +1,5 @@
 export class Queue<T> {
-   items: T[]
+   items: T[];
 
    constructor() {
       this.items = [];
@@ -11,12 +11,12 @@ export class Queue<T> {
    }
 
    // Add an element to the end of the queue
-   remove(element:T) {
+   remove(element: T) {
       const index = this.items.indexOf(element);
-      if(index === -1) return false
+      if (index === -1) return false;
 
-      this.items.splice(index, 1)
-      return true
+      this.items.splice(index, 1);
+      return true;
    }
 
    // Remove and return the first element of the queue

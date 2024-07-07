@@ -1,10 +1,15 @@
 "use client";
+import { isValidUrl } from "@lib/strings";
 import { normalizeURL } from "@lib/utils";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@repo/ui";
+import {
+   Tooltip,
+   TooltipContent,
+   TooltipProvider,
+   TooltipTrigger,
+} from "@repo/ui";
 import { Globe } from "lucide-react";
 import Link from "next/link";
-import React from "react";
-import { isValidUrl } from "@lib/strings";
+import { match } from "ts-pattern";
 
 export interface UserWebsiteProps {
    website?: string;
@@ -15,21 +20,29 @@ const UserWebsite = ({ website }: UserWebsiteProps) => {
       <TooltipProvider>
          <Tooltip>
             <TooltipTrigger asChild>
-               {website && isValidUrl(website) ? (
-                  <Link
-                     target={`_blank`}
-                     href={`${normalizeURL(encodeURIComponent(website))}`}>
-                     <Globe size={32}
-                            className={`cursor-pointer stroke-secondary  hover:!stroke-accent transition-colors duration-200`} />
-                  </Link>
-               ) : (
-                  <Globe size={32}
-                         className={`cursor-pointer stroke-secondary hover:!stroke-accent transition-colors duration-200`} />
-               )}
+               {match(website && isValidUrl(website))
+                  .with(true, (_) => (
+                     <Link
+                        target={`_blank`}
+                        href={`${normalizeURL(encodeURIComponent(website!))}`}
+                     >
+                        <Globe
+                           size={32}
+                           className={`cursor-pointer stroke-secondary transition-colors duration-200 hover:!stroke-accent`}
+                        />
+                     </Link>
+                  ))
+                  .otherwise((_) => (
+                     <Globe
+                        size={32}
+                        className={`cursor-pointer stroke-secondary transition-colors duration-200 hover:!stroke-accent`}
+                     />
+                  ))}
             </TooltipTrigger>
             <TooltipContent
                side={`top`}
-               className={`bg-secondary-bg text-main rounded-xl text-sm border-none !px-4 !py-2`}>
+               className={`rounded-xl border-none bg-secondary-bg !px-4 !py-2 text-sm text-main`}
+            >
                {website ?? `No website`}
             </TooltipContent>
          </Tooltip>

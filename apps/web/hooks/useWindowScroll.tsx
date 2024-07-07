@@ -1,8 +1,8 @@
-"use client"
-import { useState, useEffect } from "react";
+"use client";
+import { useEffect, useState } from "react";
 
 function useWindowScroll() {
-   if(typeof window === undefined) return null!;
+   if (typeof window === undefined) return null!;
 
    // Initialize the state with the current scroll position
    const [scrollPosition, setScrollPosition] = useState({

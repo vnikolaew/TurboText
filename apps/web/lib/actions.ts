@@ -1,8 +1,10 @@
-import { createSafeActionClient, DEFAULT_SERVER_ERROR_MESSAGE } from "next-safe-action";
 import { auth } from "@auth";
+import {
+   createSafeActionClient,
+   DEFAULT_SERVER_ERROR_MESSAGE,
+} from "next-safe-action";
 
-export class AuthError extends Error {
-}
+export class AuthError extends Error {}
 
 /**
  * An authorized action that checks if the current user session is defined.
@@ -30,14 +32,19 @@ export const publicAction = createSafeActionClient().use(async ({ next }) => {
    });
 });
 
-export type SafeExecuteResponse<T> = {
-   success: true; result: T
-} | { success: false, error: any }
+export type SafeExecuteResponse<T> =
+   | {
+        success: true;
+        result: T;
+     }
+   | { success: false; error: any };
 
 /**
  * A helper method for wrapping actions in a try / catch.
  */
-export const safeExecute = async <T>(action: <T>() => Promise<T>): Promise<SafeExecuteResponse<T>> => {
+export const safeExecute = async <T>(
+   action: <T>() => Promise<T>
+): Promise<SafeExecuteResponse<T>> => {
    try {
       const result: T = await action();
       return { success: true, result };

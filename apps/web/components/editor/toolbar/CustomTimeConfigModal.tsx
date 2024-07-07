@@ -1,8 +1,16 @@
 "use client";
-import React, { PropsWithChildren, useMemo, useState } from "react";
-import { Button, Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, Input } from "@repo/ui";
-import { useAtom } from "jotai/index";
 import { timeAtom } from "@atoms/timer";
+import {
+   Button,
+   Dialog,
+   DialogContent,
+   DialogFooter,
+   DialogHeader,
+   DialogTitle,
+   Input,
+} from "@repo/ui";
+import { useAtom } from "jotai/index";
+import { PropsWithChildren, useMemo, useState } from "react";
 
 function parseTimeframe(timeframe: string) {
    // Regular expression to match the components
@@ -15,7 +23,7 @@ function parseTimeframe(timeframe: string) {
    const secondsPart = match[3] ? parseInt(match[3].slice(0, -1)) : 0;
 
    // Calculate the total time in seconds
-   const totalSeconds = (hoursPart * 3600) + (minutesPart * 60) + secondsPart;
+   const totalSeconds = hoursPart * 3600 + minutesPart * 60 + secondsPart;
 
    return {
       hours: hoursPart,
@@ -25,7 +33,7 @@ function parseTimeframe(timeframe: string) {
    };
 }
 
-type Timeframe = ReturnType<typeof parseTimeframe>
+type Timeframe = ReturnType<typeof parseTimeframe>;
 
 export interface CustomTimeConfigModalProps {
    open: boolean;
@@ -34,11 +42,16 @@ export interface CustomTimeConfigModalProps {
 
 export const Kbd = ({ children }: PropsWithChildren) => {
    return (
-      <kbd className={`bg-slate-300 text-neutral-800 rounded-md !px-1`}>{children}</kbd>
+      <kbd className={`rounded-md bg-slate-300 !px-1 text-neutral-800`}>
+         {children}
+      </kbd>
    );
 };
 
-const CustomTimeConfigModal = ({ setOpen, open }: CustomTimeConfigModalProps) => {
+const CustomTimeConfigModal = ({
+   setOpen,
+   open,
+}: CustomTimeConfigModalProps) => {
    const [value, setValue] = useState(``);
    const [error, setError] = useState(``);
 
@@ -70,41 +83,51 @@ const CustomTimeConfigModal = ({ setOpen, open }: CustomTimeConfigModalProps) =>
                   Test duration
                </DialogTitle>
             </DialogHeader>
-            <div className={`flex flex-col gap-2 items-start`}>
-               <div className={`text-sm`}>
-                  {timeFrameTitle}
-               </div>
+            <div className={`flex flex-col items-start gap-2`}>
+               <div className={`text-sm`}>{timeFrameTitle}</div>
                <Input
-                  onChange={e => {
+                  onChange={(e) => {
                      setValue(e.target.value);
                      setTimeframe(parseTimeframe(e.target.value));
                   }}
                   value={value}
-                  className={`w-full border-neutral-500 rounded-full !text-main`} />
+                  className={`w-full rounded-full border-neutral-500 !text-main`}
+               />
                {error && (
-                  <span className={`text-red-500 text-sm`}>{error}</span>
+                  <span className={`text-sm text-red-500`}>{error}</span>
                )}
-               <p className={`text-sm mt-2 text-secondary`}>
-                  You can use "h" for hours and "m" for minutes, for example "1h30m".
+               <p className={`mt-2 text-sm text-secondary`}>
+                  You can use "h" for hours and "m" for minutes, for example
+                  "1h30m".
                </p>
 
-               <p className={`text-sm mt-4 text-secondary`}>
-                  You can start an infinite test by inputting 0. Then, to stop the test, use the Bail Out feature
-                  ( <Kbd>esc</Kbd>{` `}
-                  or <Kbd>ctrl/cmd</Kbd> + <Kbd>shift</Kbd> + <Kbd>p</Kbd> &gt; Bail Out)
+               <p className={`mt-4 text-sm text-secondary`}>
+                  You can start an infinite test by inputting 0. Then, to stop
+                  the test, use the Bail Out feature ( <Kbd>esc</Kbd>
+                  {` `}
+                  or <Kbd>ctrl/cmd</Kbd> + <Kbd>shift</Kbd> + <Kbd>p</Kbd> &gt;
+                  Bail Out)
                </p>
-            </ div>
+            </div>
             <DialogFooter className={`mt-4`}>
-               <Button onClick={_ => {
-                  if (Number.isNaN(Number(value))) setError(`Input is not a number`);
-                  else {
-                     setTime(Number(value));
-                     setOpen(false);
-                  }
-               }} variant={`default`} className={`w-full`}>OK</Button>
+               <Button
+                  onClick={(_) => {
+                     if (Number.isNaN(Number(value)))
+                        setError(`Input is not a number`);
+                     else {
+                        setTime(Number(value));
+                        setOpen(false);
+                     }
+                  }}
+                  variant={`default`}
+                  className={`w-full`}
+               >
+                  OK
+               </Button>
             </DialogFooter>
          </DialogContent>
-      </Dialog>);
+      </Dialog>
+   );
 };
 
 export default CustomTimeConfigModal;

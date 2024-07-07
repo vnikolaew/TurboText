@@ -1,11 +1,10 @@
-import { motion } from "framer-motion";
-import React from "react";
-import { useAtomValue } from "jotai";
-import { typingRunStateAtom } from "@atoms/editor";
-import { useSetAtom } from "jotai/index";
-import { resumeAtom } from "@atoms/timer";
-import { MousePointer } from "lucide-react";
 import { TypingRunState } from "@atoms/consts";
+import { typingRunStateAtom } from "@atoms/editor";
+import { resumeAtom } from "@atoms/timer";
+import { motion } from "framer-motion";
+import { useAtomValue } from "jotai";
+import { useSetAtom } from "jotai/index";
+import { MousePointer } from "lucide-react";
 
 export interface FocusLostWarningProps {
    onClick?: () => void;
@@ -17,26 +16,28 @@ const FocusLostWarning = ({ onClick }: FocusLostWarningProps) => {
 
    return (
       <div
-         className={`absolute top-0 left-0 w-full h-full backdrop-blur-sm bg-transparent flex items-center justify-center`}>
+         className={`absolute left-0 top-0 flex h-full w-full items-center justify-center bg-transparent backdrop-blur-sm`}
+      >
          <motion.div
             id={`focus-lost`}
             initial={{ opacity: 100 }}
             animate={{ opacity: 100 }}
-            transition={{ duration: .2 }}
+            transition={{ duration: 0.2 }}
             exit={{ opacity: 0 }}
             onKeyDown={console.log}
-            onClick={_ => {
+            onClick={(_) => {
                if (timerState === TypingRunState.PAUSED) {
                   resume();
                }
 
                onClick?.();
             }}
-            className={`text-main flex items-center gap-2 !z-[100]`}>
+            className={`!z-[100] flex items-center gap-2 text-main`}
+         >
             <MousePointer size={18} />
             <span className={`text-sm`}>
-                       Click here or press any key to focus
-                   </span>
+               Click here or press any key to focus
+            </span>
          </motion.div>
       </div>
    );

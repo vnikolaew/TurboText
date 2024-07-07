@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { useAtomValue } from "jotai/index";
 import { wordsCountsAtom } from "@atoms/words";
+import { useAtomValue } from "jotai/index";
+import { useEffect, useRef, useState } from "react";
 
 export function usePaceCaret({ top, left }: { top: number; left: number }) {
    const intervalRef = useRef<NodeJS.Timer>();
@@ -12,13 +12,18 @@ export function usePaceCaret({ top, left }: { top: number; left: number }) {
    useEffect(() => {
       const wordElementsElement = document.getElementById(`editor-words`)!;
 
-      const endLeft = wordElementsElement!.offsetLeft + wordElementsElement.clientWidth;
+      const endLeft =
+         wordElementsElement!.offsetLeft + wordElementsElement.clientWidth;
 
       const wordElementsWidth = wordElementsElement?.clientWidth!;
-      const paceCaretSpeedAbsolute = wordElementsWidth / (wordCount / 50 * 60);
+      const paceCaretSpeedAbsolute =
+         wordElementsWidth / ((wordCount / 50) * 60);
 
       intervalRef.current = setInterval(() => {
-         setPaceCaretCoords(c => ({ ...c, left: c.left + (paceCaretSpeedAbsolute / 10) }));
+         setPaceCaretCoords((c) => ({
+            ...c,
+            left: c.left + paceCaretSpeedAbsolute / 10,
+         }));
       }, 100);
 
       return () => {
@@ -32,12 +37,13 @@ export function usePaceCaret({ top, left }: { top: number; left: number }) {
    useEffect(() => {
       const wordElementsElement = document.getElementById(`editor-words`)!;
 
-      const endLeft = wordElementsElement!.offsetLeft + wordElementsElement.clientWidth;
+      const endLeft =
+         wordElementsElement!.offsetLeft + wordElementsElement.clientWidth;
 
-      if(paceCaretCoords.left > endLeft && intervalRef?.current) {
+      if (paceCaretCoords.left > endLeft && intervalRef?.current) {
          clearInterval(intervalRef.current!);
       }
-   }, [paceCaretCoords.left])
+   }, [paceCaretCoords.left]);
 
    return { paceCaretCoords, wordCount, intervalRef };
 }

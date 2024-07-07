@@ -1,24 +1,26 @@
 "use client";
-import React, { useState } from "react";
+import { ActivityTooltip } from "@app/(loading)/account/_components/ActivityTooltip";
+import { useBoolean } from "@hooks/useBoolean";
+import { TypingRun } from "@repo/db";
+import moment from "moment";
+import { useState } from "react";
 import CalendarHeatmap from "react-calendar-heatmap";
 import "react-calendar-heatmap/dist/styles.css";
-import moment from "moment";
-import { TypingRun } from "@repo/db";
-import { useBoolean } from "@hooks/useBoolean";
-import { ActivityTooltip } from "@app/(loading)/account/_components/ActivityTooltip";
 
 export interface UserActivitySectionProps {
    typingRuns: TypingRun[];
 }
 
 function getRunsGroupedByDate(typingRuns: TypingRun[]) {
-   const grouped = getAllDates().map(date => {
+   const grouped = getAllDates().map((date) => {
       return {
          date,
-         runs: typingRuns.filter(run => {
-            return run.createdAt.getDate() === date.getDate()
-               && run.createdAt.getMonth() === date.getMonth()
-               && run.createdAt.getFullYear() === date.getFullYear();
+         runs: typingRuns.filter((run) => {
+            return (
+               run.createdAt.getDate() === date.getDate() &&
+               run.createdAt.getMonth() === date.getMonth() &&
+               run.createdAt.getFullYear() === date.getFullYear()
+            );
          }),
       };
    });
@@ -32,10 +34,10 @@ function getAllDates() {
 
    const sixMonthsAgo = now.clone().subtract(6, "months");
 
-// Initialize an array to store all dates
+   // Initialize an array to store all dates
    const datesInLastSixMonths: Date[] = [];
 
-// Iterate through each day from six months ago to today
+   // Iterate through each day from six months ago to today
    let currentDate = sixMonthsAgo.clone();
    while (currentDate.isBefore(now) || currentDate.isSame(now, "day")) {
       datesInLastSixMonths.push(currentDate.toDate());
@@ -55,20 +57,31 @@ const ACTIVITY_LEVELS_COLORS = {
 };
 
 const UserActivitySection = ({ typingRuns }: UserActivitySectionProps) => {
-   const grouped = getRunsGroupedByDate(typingRuns)
+   const grouped = getRunsGroupedByDate(typingRuns);
 
    const [{ top, left }, setTooltipCoords] = useState({ top: 0, left: 0 });
-   const [{ date, count }, setHoveredDay] = useState({ date: new Date(), count: 0 });
+   const [{ date, count }, setHoveredDay] = useState({
+      date: new Date(),
+      count: 0,
+   });
    const [showTooltip, setShowTooltip] = useBoolean(false);
 
    return (
-      <section id={`activity`} className={`h-[200px] z-[30] w-full flex items-center justify-center mt-12`}>
+      <section
+         id={`activity`}
+         className={`z-[30] mt-12 flex h-[200px] w-full items-center justify-center`}
+      >
          <div className={`w-1/2 text-secondary`}>
             {showTooltip && (
-               <ActivityTooltip top={top} left={left} count={count} date={date} />
+               <ActivityTooltip
+                  top={top}
+                  left={left}
+                  count={count}
+                  date={date}
+               />
             )}
             <CalendarHeatmap
-               tooltipDataAttrs={value => {
+               tooltipDataAttrs={(value) => {
                   return {
                      "data-tip": `${value.date?.toISOString().slice(0, 10)} has count: ${
                         value.count
@@ -77,10 +90,12 @@ const UserActivitySection = ({ typingRuns }: UserActivitySectionProps) => {
                      "data-count": value.count,
                   };
                }}
-               onMouseLeave={_ => setShowTooltip(false)}
-               onMouseOver={e => {
+               onMouseLeave={(_) => setShowTooltip(false)}
+               onMouseOver={(e) => {
                   setShowTooltip(true);
-                  const rects = (e.target as HTMLElement).getBoundingClientRect();
+                  const rects = (
+                     e.target as HTMLElement
+                  ).getBoundingClientRect();
                   const { date, count } = (e.target as HTMLElement).dataset;
 
                   setTooltipCoords({ top: rects.top, left: rects.left });
@@ -88,7 +103,6 @@ const UserActivitySection = ({ typingRuns }: UserActivitySectionProps) => {
                      date: moment(date).toDate(),
                      count: Number(count ?? 0),
                   });
-
                }}
                startDate={moment(new Date()).subtract(6, `month`).toDate()}
                showMonthLabels
@@ -96,12 +110,17 @@ const UserActivitySection = ({ typingRuns }: UserActivitySectionProps) => {
                horizontal={true}
                endDate={new Date()}
                classForValue={(value) => {
-                  for (const [level, className] of Object.entries(ACTIVITY_LEVELS_COLORS)) {
-                     if ((value?.count as number) <= Number(level)) return className;
+                  for (const [level, className] of Object.entries(
+                     ACTIVITY_LEVELS_COLORS
+                  )) {
+                     if ((value?.count as number) <= Number(level))
+                        return className;
                   }
                }}
-               values={grouped.map(({ runs, date }) => ({ date, count: runs.length }))
-               }
+               values={grouped.map(({ runs, date }) => ({
+                  date,
+                  count: runs.length,
+               }))}
             />
          </div>
       </section>

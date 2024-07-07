@@ -1,14 +1,16 @@
 "use client";
-import React from "react";
 import { Button } from "@repo/ui";
 import { signIn } from "next-auth/react";
 
-export interface SignOutButtonProps {
-}
+export interface SignOutButtonProps {}
 
 const SignInButton = ({}: SignOutButtonProps) => {
    return (
-      <Button onClick={() => signIn(`google`)} className={`px-8 rounded-lg`} variant={`secondary`}>
+      <Button
+         onClick={() => signIn(`google`)}
+         className={`rounded-lg px-8`}
+         variant={`secondary`}
+      >
          Sign in
       </Button>
    );

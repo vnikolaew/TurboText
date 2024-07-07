@@ -1,25 +1,26 @@
 "use server";
 
-import { authorizedAction, publicAction } from "lib/actions";
-import { xprisma } from "@repo/db";
-import { sleep } from "lib/utils";
-import { z } from "zod";
 import { auth } from "@/auth";
-import { cookies } from "next/headers";
 import { USER_LOCALE_COOKIE_NAME } from "@/lib/consts";
+import { xprisma } from "@repo/db";
 import crypto from "crypto";
+import { authorizedAction, publicAction } from "lib/actions";
+import { sleep } from "lib/utils";
+import { cookies } from "next/headers";
+import { z } from "zod";
 
 export interface CookiePreferences {
-   Necessary: boolean,
-   Statistics: boolean,
-   Functionality: boolean,
-   Marketing: boolean,
+   Necessary: boolean;
+   Statistics: boolean;
+   Functionality: boolean;
+   Marketing: boolean;
 }
 
 /**
  * A public action for accepting all site cookies.
  */
-export const acceptAllCookies = publicAction.schema(z.any())
+export const acceptAllCookies = publicAction
+   .schema(z.any())
    .action(async ({ ctx: { userId } }) => {
       await sleep(2000);
 
@@ -34,7 +35,7 @@ export const acceptAllCookies = publicAction.schema(z.any())
          },
          data: {
             metadata: {
-               ...user.metadata as Record<string, any>,
+               ...(user.metadata as Record<string, any>),
                "cookie-consent": true,
                "cookie-preferences": {
                   Necessary: true,
@@ -51,7 +52,8 @@ export const acceptAllCookies = publicAction.schema(z.any())
 /**
  * A public action for declining all site cookies.
  */
-export const declineCookieConsent = publicAction.schema(z.any())
+export const declineCookieConsent = publicAction
+   .schema(z.any())
    .action(async ({ ctx: { userId }, parsedInput }) => {
       await sleep(2000);
       const user = await xprisma.user.findFirst({
@@ -65,7 +67,7 @@ export const declineCookieConsent = publicAction.schema(z.any())
          },
          data: {
             metadata: {
-               ...user.metadata as Record<string, any>,
+               ...(user.metadata as Record<string, any>),
                "cookie-consent": false,
             },
          },
@@ -83,38 +85,42 @@ const cookiePreferencesSchema = z.object({
 /**
  * A public action for managing user's cookie preferences.
  */
-export const updateCookiePreferences = authorizedAction.schema(cookiePreferencesSchema).action(async ({
-                                                                                                         ctx: { userId },
-                                                                                                         parsedInput: cookiePreferences,
-                                                                                                      }) => {
-   await sleep(2000);
-   const user = await xprisma.user.findUnique({
-      where: { id: userId },
-   });
-   if (!user) return { success: false,  error: `User not found` };
+export const updateCookiePreferences = authorizedAction
+   .schema(cookiePreferencesSchema)
+   .action(async ({ ctx: { userId }, parsedInput: cookiePreferences }) => {
+      await sleep(2000);
+      const user = await xprisma.user.findUnique({
+         where: { id: userId },
+      });
+      if (!user) return { success: false, error: `User not found` };
 
-   await xprisma.user.update({
-      where: {
-         id: userId,
-      },
-      data: {
-         metadata: {
-            ...user.metadata as Record<string, any>,
-            "cookie-preferences": cookiePreferences,
-            "cookie-consent": true,
+      await xprisma.user.update({
+         where: {
+            id: userId,
          },
-      },
+         data: {
+            metadata: {
+               ...(user.metadata as Record<string, any>),
+               "cookie-preferences": cookiePreferences,
+               "cookie-consent": true,
+            },
+         },
+      });
+
+      return { success: true };
    });
 
-   return { success: true };
-});
-
-const changeThemeSchema = z.union([z.literal(`light`), z.literal(`dark`), z.literal(`system`)]);
+const changeThemeSchema = z.union([
+   z.literal(`light`),
+   z.literal(`dark`),
+   z.literal(`system`),
+]);
 
 /**
  * An authorized action for changing the user's site color theme.
  */
-export const changeUserTheme = authorizedAction.schema(changeThemeSchema)
+export const changeUserTheme = authorizedAction
+   .schema(changeThemeSchema)
    .action(async ({ ctx: { userId }, parsedInput: theme }) => {
       await sleep(2000);
 
@@ -129,15 +135,14 @@ export const changeUserTheme = authorizedAction.schema(changeThemeSchema)
          },
          data: {
             metadata: {
-               ...user.metadata as Record<string, any>,
-               "theme": theme,
+               ...(user.metadata as Record<string, any>),
+               theme: theme,
             },
          },
       });
 
       return { success: true };
    });
-
 
 const changeUserProfilePictureSchema = z.object({
    avatarSrc: z.string().startsWith(`avatars/`),
@@ -159,7 +164,6 @@ export const changeUserProfilePicture = authorizedAction
       return { success: true, user };
    });
 
-
 const reportIssueSchema = z.object({
    type: z.string(),
    description: z.string(),
@@ -171,26 +175,31 @@ const reportIssueSchema = z.object({
  */
 export const reportIssue = authorizedAction
    .schema(reportIssueSchema)
-   .action(async ({ ctx: { userId }, parsedInput: { type, description, priority } }) => {
-      await sleep(2000);
-      const session = await auth();
+   .action(
+      async ({
+         ctx: { userId },
+         parsedInput: { type, description, priority },
+      }) => {
+         await sleep(2000);
+         const session = await auth();
 
-      try {
-         return { success: true };
-      } catch (err) {
-         return { success: false, error: err };
+         try {
+            return { success: true };
+         } catch (err) {
+            return { success: false, error: err };
+         }
       }
-   });
+   );
 
 const changeLanguageSchema = z.object({
    language: z.string(),
 });
 
-
 /**
  * A public action for changing the user's language.
  */
-export const changeUserLanguage = publicAction.schema(changeLanguageSchema)
+export const changeUserLanguage = publicAction
+   .schema(changeLanguageSchema)
    .action(async ({ ctx: { userId }, parsedInput: { language } }) => {
       await sleep(1000);
       const cookie = cookies().get(USER_LOCALE_COOKIE_NAME);
@@ -214,12 +223,9 @@ export const changeUserLanguage = publicAction.schema(changeLanguageSchema)
       return { success: true };
    });
 
-
-
-
 const saveNotificationSchema = z.object({
    payload: z.record(z.string(), z.any()),
-   id: z.string().nullable()
+   id: z.string().nullable(),
 });
 
 /**
@@ -232,12 +238,12 @@ export const saveUserNotification = authorizedAction
 
       let notification = await xprisma.userNotification.create({
          data: {
-            id: id ?? crypto.randomUUID()  ,
+            id: id ?? crypto.randomUUID(),
             payload,
             read: false,
-            userId
-         }
-      })
+            userId,
+         },
+      });
       return { success: true, notification };
    });
 
@@ -253,7 +259,7 @@ export const markAllNotificationsRead = authorizedAction
          where: { userId },
          data: {
             read: true,
-         }
-      })
+         },
+      });
       return { success: true };
    });

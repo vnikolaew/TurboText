@@ -1,5 +1,8 @@
 "use client";
-import React, { PropsWithChildren } from "react";
+import { deleteAccount } from "@app/settings/_components/danger/actions";
+import LoadingButton from "@components/common/LoadingButton";
+import { TOASTS } from "@config/toasts";
+import { useBoolean } from "@hooks/useBoolean";
 import {
    Alert,
    AlertDescription,
@@ -12,23 +15,19 @@ import {
    DialogTrigger,
    toast,
 } from "@repo/ui";
-import LoadingButton from "@components/common/LoadingButton";
-import { useBoolean } from "@hooks/useBoolean";
-import { useAction } from "next-safe-action/hooks";
-import { TOASTS } from "@config/toasts";
-import { deleteAccount } from "@app/settings/_components/danger/actions";
-import { useRouter } from "next/navigation";
 import { TriangleAlert } from "lucide-react";
+import { useAction } from "next-safe-action/hooks";
+import { useRouter } from "next/navigation";
+import { PropsWithChildren } from "react";
 
-export interface DeleteAccountModalProps extends PropsWithChildren {
-}
+export interface DeleteAccountModalProps extends PropsWithChildren {}
 
 const DeleteAccountModal = ({ children }: DeleteAccountModalProps) => {
    const [open, setOpen] = useBoolean();
 
    const router = useRouter();
    const { execute, isExecuting } = useAction(deleteAccount, {
-      onSuccess: res => {
+      onSuccess: (res) => {
          if (res.data?.success) {
             console.log(res);
             // toast(TOASTS.IMPORT_SETTINGS_SUCCESS)
@@ -47,28 +46,31 @@ const DeleteAccountModal = ({ children }: DeleteAccountModalProps) => {
 
    return (
       <Dialog onOpenChange={setOpen} open={open}>
-         <DialogTrigger asChild>
-            {children}
-         </DialogTrigger>
+         <DialogTrigger asChild>{children}</DialogTrigger>
          <DialogContent className={`z-[100] !bg-neutral-800`}>
             <DialogHeader>
-               <DialogTitle className={`text-2xl`}>
-                  Delete account
-               </DialogTitle>
+               <DialogTitle className={`text-2xl`}>Delete account</DialogTitle>
             </DialogHeader>
             <div className={`w-full text-base leading-tight text-neutral-500`}>
-               This is the last time you can change your mind. After pressing the button everything is gone.
+               This is the last time you can change your mind. After pressing
+               the button everything is gone.
             </div>
-            <Alert className={`text-red-600 !border-red-600 shadow-md !py-2 mt-4`}>
+            <Alert
+               className={`mt-4 !border-red-600 !py-2 text-red-600 shadow-md`}
+            >
                <TriangleAlert className="h-8 w-8 text-red-600" />
                <AlertTitle className={`ml-4`}>Warning!</AlertTitle>
-               <AlertDescription className={`ml-4`}> This action cannot be undone. </AlertDescription>
+               <AlertDescription className={`ml-4`}>
+                  {" "}
+                  This action cannot be undone.{" "}
+               </AlertDescription>
             </Alert>
-            <DialogFooter className={`w-full !mt-2`}>
+            <DialogFooter className={`!mt-2 w-full`}>
                <LoadingButton
                   onClick={handleDelete}
                   loadingText={`Saving ...`}
-                  loading={isExecuting}>
+                  loading={isExecuting}
+               >
                   Delete
                </LoadingButton>
             </DialogFooter>

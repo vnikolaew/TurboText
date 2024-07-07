@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
             mode: `insensitive`,
          },
       },
-      include: { experience: true},
+      include: { experience: true },
       take: limit,
    });
    console.log({ users });

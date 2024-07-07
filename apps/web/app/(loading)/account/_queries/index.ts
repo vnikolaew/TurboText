@@ -1,31 +1,34 @@
 "use server";
 import { Tag, TypingRun, User, UsersChallenge, xprisma } from "@repo/db";
 
-import { groupBy } from "lodash";
 import { auth } from "@auth";
+import { groupBy } from "lodash";
 
 /**
  * Get unique tags from a user's typing runs.
  * @param user The user
  */
-export async function getUniqueRunTags(user: User & { typingRuns: TypingRun[] }): Promise<Record<string, Tag[]>> {
+export async function getUniqueRunTags(
+   user: User & { typingRuns: TypingRun[] }
+): Promise<Record<string, Tag[]>> {
    const runsTagIds = user.typingRuns
-      ?.filter(r => !!r.metadata?.tags?.length)
-      ?.flatMap(r => r.metadata?.tags ?? []);
+      ?.filter((r) => !!r.metadata?.tags?.length)
+      ?.flatMap((r) => r.metadata?.tags ?? []);
 
    const userTags = await xprisma.tag.findMany({
       where: {
          id: {
             in: runsTagIds,
-         }, userId: user.id,
+         },
+         userId: user.id,
       },
    });
-   const tagsById: Record<string, Tag[]> = groupBy(userTags, t => t.id);
+   const tagsById: Record<string, Tag[]> = groupBy(userTags, (t) => t.id);
    return tagsById;
 }
 
 function removeFunctions(challenges: UsersChallenge[]) {
-   return challenges?.map(c => {
+   return challenges?.map((c) => {
       const { updatePassword: _, verifyPassword: __, ...rest } = c.userOne;
       c.userOne = rest;
 
@@ -53,7 +56,8 @@ export async function getUserWithTypingRuns() {
          },
          challenges_one: {
             include: {
-               userOne: true, userTwo: true,
+               userOne: true,
+               userTwo: true,
                userOneRun: {
                   select: { id: true, userId: true, metadata: true },
                },
@@ -64,7 +68,8 @@ export async function getUserWithTypingRuns() {
          },
          challenges_two: {
             include: {
-               userOne: true, userTwo: true,
+               userOne: true,
+               userTwo: true,
                userOneRun: {
                   select: { id: true, userId: true, metadata: true },
                },
@@ -78,7 +83,11 @@ export async function getUserWithTypingRuns() {
    if (!user) return null;
 
    const userChallengeRunsIds = new Set<string>(
-      [...user.challenges_one, ...user.challenges_two].flatMap(c => [c.userOneRunId, c.userTwoRunId]));
+      [...user.challenges_one, ...user.challenges_two].flatMap((c) => [
+         c.userOneRunId,
+         c.userTwoRunId,
+      ])
+   );
 
    const { updatePassword, verifyPassword, ...rest } = user;
    user.challenges_one = removeFunctions(user.challenges_one);
@@ -86,12 +95,11 @@ export async function getUserWithTypingRuns() {
 
    console.log({ userChallengeRunsIds });
    rest.typingRuns = rest.typingRuns
-      .filter(r => !userChallengeRunsIds.has(r.id))
-      .map(run => {
-            const { hasFlag, ...rest } = run;
-            return rest;
-         },
-      );
+      .filter((r) => !userChallengeRunsIds.has(r.id))
+      .map((run) => {
+         const { hasFlag, ...rest } = run;
+         return rest;
+      });
    return rest;
 }
 
@@ -105,22 +113,35 @@ export async function getUserExperienceInfo() {
    const userExperience = await xprisma.userExperience.findFirst({
       where: { userId: session?.user?.id },
    });
-   const level = xprisma.userExperience.getLevelFromXp({ points: userExperience?.points ?? 0 });
+   const level = xprisma.userExperience.getLevelFromXp({
+      points: userExperience?.points ?? 0,
+   });
 
-   const xpNeededForCurrentLevel = Math.floor((100 * Math.pow(level - 1, EXPONENT)));
-   const xpNeededForNextLevel = Math.floor((100 * Math.pow(level, EXPONENT)));
-   const percentageUntilNextLevel = ((userExperience?.points ?? 0) - xpNeededForCurrentLevel)
-      / (xpNeededForNextLevel - xpNeededForCurrentLevel) * 100;
+   const xpNeededForCurrentLevel = Math.floor(
+      100 * Math.pow(level - 1, EXPONENT)
+   );
+   const xpNeededForNextLevel = Math.floor(100 * Math.pow(level, EXPONENT));
+   const percentageUntilNextLevel =
+      (((userExperience?.points ?? 0) - xpNeededForCurrentLevel) /
+         (xpNeededForNextLevel - xpNeededForCurrentLevel)) *
+      100;
 
-   return { xpNeededForCurrentLevel, xpNeededForNextLevel, percentageUntilNextLevel, level, userExperience };
+   return {
+      xpNeededForCurrentLevel,
+      xpNeededForNextLevel,
+      percentageUntilNextLevel,
+      level,
+      userExperience,
+   };
 }
 
-export async function getUserChallengesDetails(user: User & {
-   challenges_one: UsersChallenge[],
-   challenges_two: UsersChallenge[]
-}) {
-   const challenges = [...user.challenges_one, user.challenges_two]
-      .sort((a, b) => b.createdAt - a.createdAt);
-
+export async function getUserChallengesDetails(
+   user: User & {
+      challenges_one: UsersChallenge[];
+      challenges_two: UsersChallenge[];
+   }
+) {
+   const challenges = [...user.challenges_one, user.challenges_two].sort(
+      (a, b) => b.createdAt - a.createdAt
+   );
 }
-

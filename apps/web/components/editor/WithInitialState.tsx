@@ -1,14 +1,17 @@
 "use client";
-import React, { Fragment } from "react";
-import { User, UserConfiguration, UserExperience } from "@repo/db";
 import { useHydrateAllAtoms } from "@components/editor/hooks/useHydrateAllAtoms";
+import { User, UserConfiguration, UserExperience } from "@repo/db";
+import { Fragment } from "react";
 
 export interface WithInitialStateProps {
-   user?: User & { configuration: UserConfiguration, experience: UserExperience };
+   user?: User & {
+      configuration: UserConfiguration;
+      experience: UserExperience;
+   };
 }
 
 const WithInitialState = ({ user }: WithInitialStateProps) => {
-  useHydrateAllAtoms(user)
+   useHydrateAllAtoms(user);
 
    return <Fragment />;
 };

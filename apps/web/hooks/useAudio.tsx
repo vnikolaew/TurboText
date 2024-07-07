@@ -7,7 +7,6 @@ export function useAudio() {
    let invisAudioRef = useRef<HTMLAudioElement | null>(null!);
 
    async function handleReadAloud(downloadUrl: string) {
-
       if (playing && invisAudioRef.current) {
          console.log(`Audio is already playing!`);
          invisAudioRef.current.pause();
@@ -22,9 +21,13 @@ export function useAudio() {
       invisAudioRef.current.controls = invisAudioRef.current.loop = false;
       setPlaying(true);
 
-      invisAudioRef.current.addEventListener("ended", _ => {
-         setPlaying(false);
-      }, { once: true });
+      invisAudioRef.current.addEventListener(
+         "ended",
+         (_) => {
+            setPlaying(false);
+         },
+         { once: true }
+      );
       await invisAudioRef.current.play();
    }
 

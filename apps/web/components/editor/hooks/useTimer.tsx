@@ -1,11 +1,20 @@
 "use client";
-import { useCallback, useEffect, useRef } from "react";
-import { useAtom, useAtomValue } from "jotai";
-import { completedWordsAtom, typingModeAtom, typingRunStateAtom } from "@atoms/editor";
-import { currentTimestampAtom, pauseAtom, resumeAtom, startAtom } from "@atoms/timer";
-import { useSetAtom } from "jotai/index";
-import { wordsCountsAtom } from "@atoms/words";
 import { TypingMode, TypingRunState } from "@atoms/consts";
+import {
+   completedWordsAtom,
+   typingModeAtom,
+   typingRunStateAtom,
+} from "@atoms/editor";
+import {
+   currentTimestampAtom,
+   pauseAtom,
+   resumeAtom,
+   startAtom,
+} from "@atoms/timer";
+import { wordsCountsAtom } from "@atoms/words";
+import { useAtom, useAtomValue } from "jotai";
+import { useSetAtom } from "jotai/index";
+import { useCallback, useEffect, useRef } from "react";
 
 export function useTimer(onFinish?: () => void) {
    const currentTimestamp = useAtomValue(currentTimestampAtom);

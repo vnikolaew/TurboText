@@ -1,25 +1,35 @@
 "use client";
-import React, { PropsWithChildren } from "react";
-import { useAtomValue } from "jotai";
-import { userActiveTagsAtom, userLanguageAtom, userTestDifficultyAtom } from "@atoms/user";
-import { Gauge, Globe, Star, Tag } from "lucide-react";
+import {
+   userActiveTagsAtom,
+   userLanguageAtom,
+   userTestDifficultyAtom,
+} from "@atoms/user";
 import { TypingRun } from "@repo/db";
+import { useAtomValue } from "jotai";
 import { sum } from "lodash";
+import { Gauge, Globe, Star, Tag } from "lucide-react";
+import { PropsWithChildren } from "react";
 
 interface TypingRunInfoProps {
    runs: TypingRun[];
 }
 
 function getAverages(runs: TypingRun[]) {
-   const averagePace = runs?.length ? sum(runs
-         ?.filter(r => !isNaN(Number(r.metadata?.wpm)))
-         ?.map(r => r.metadata?.wpm)) /
-      runs?.filter(r => !isNaN(Number(r.metadata?.wpm)))?.length! : 0;
+   const averagePace = runs?.length
+      ? sum(
+           runs
+              ?.filter((r) => !isNaN(Number(r.metadata?.wpm)))
+              ?.map((r) => r.metadata?.wpm)
+        ) / runs?.filter((r) => !isNaN(Number(r.metadata?.wpm)))?.length!
+      : 0;
 
-   const averageAccuracy = runs?.length ? sum(runs
-         ?.filter(r => !isNaN(Number(r.metadata?.accuracy)))
-         ?.map(r => r.metadata?.accuracy)) /
-      runs?.filter(r => !isNaN(Number(r.metadata?.accuracy)))?.length! : 0;
+   const averageAccuracy = runs?.length
+      ? sum(
+           runs
+              ?.filter((r) => !isNaN(Number(r.metadata?.accuracy)))
+              ?.map((r) => r.metadata?.accuracy)
+        ) / runs?.filter((r) => !isNaN(Number(r.metadata?.accuracy)))?.length!
+      : 0;
 
    return { averagePace, averageAccuracy };
 }
@@ -32,37 +42,32 @@ const TypingRunInfo = ({ runs }: TypingRunInfoProps) => {
    const { averagePace, averageAccuracy } = getAverages(runs);
 
    return (
-      <div className={`w-full flex items-center justify-center gap-8 text-secondary`}>
+      <div
+         className={`flex w-full items-center justify-center gap-8 text-secondary`}
+      >
          <RunInfo>
             <Globe size={18} />
-            <span>
-               {language as string}
-            </span>
+            <span>{language as string}</span>
          </RunInfo>
 
          <RunInfo>
             <Star size={18} />
-            <span>
-               {(difficulty as string)?.toLowerCase()}
-            </span>
+            <span>{(difficulty as string)?.toLowerCase()}</span>
+         </RunInfo>
+         <RunInfo>
+            <Gauge size={18} />
+            <span>average pace {averagePace.toFixed(0)} WPM</span>
          </RunInfo>
          <RunInfo>
             <Gauge size={18} />
             <span>
-               average pace {averagePace.toFixed(0)} WPM
-            </span>
-         </RunInfo>
-         <RunInfo>
-            <Gauge size={18} />
-            <span>
-               avg: {averagePace.toFixed(0)} wpm {averageAccuracy.toFixed(0)}% acc
+               avg: {averagePace.toFixed(0)} wpm {averageAccuracy.toFixed(0)}%
+               acc
             </span>
          </RunInfo>
          <RunInfo>
             <Tag size={18} />
-            <span>
-               {activeTags?.join(", ")}
-            </span>
+            <span>{activeTags?.join(", ")}</span>
          </RunInfo>
       </div>
    );
@@ -71,7 +76,8 @@ const TypingRunInfo = ({ runs }: TypingRunInfoProps) => {
 const RunInfo = ({ children }: PropsWithChildren) => {
    return (
       <div
-         className={`flex items-center gap-2 text-sm cursor-pointer hover:!text-neutral-300 transition-colors duration-200`}>
+         className={`flex cursor-pointer items-center gap-2 text-sm transition-colors duration-200 hover:!text-neutral-300`}
+      >
          {children}
       </div>
    );

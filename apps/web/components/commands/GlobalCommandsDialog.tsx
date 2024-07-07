@@ -1,30 +1,40 @@
 "use client";
-import React, { Fragment, useEffect } from "react";
-import { CommandDialog, CommandInput, CommandList } from "@repo/ui";
 import { LANGUAGES } from "@app/settings/_components/behaviour/LanguageSection";
 import { FONTS_MAP } from "@assets/fonts";
-import { FontFamilyOption } from "@components/commands/options/FontFamilyOption";
-import { LanguageOption } from "./options/LanguageOption";
-import PunctuationOptions from "@components/commands/options/PunctuationOptions";
-import SoundOnClickOption from "@components/commands/options/SoundOnClickOption";
-import { SOUNDS } from "@lib/consts";
-import FlipTestColorsOptions from "@components/commands/options/FlipTestColorsOptions";
-import CaretStyleOptions from "@components/commands/options/CaretStyleOptions";
-import SmoothCaretOptions from "@components/commands/options/SmoothCaretOptions";
-import PaceCaretStyleOptions from "@components/commands/options/PaceCaretStyleOptions";
-import { useSearchParams } from "next/navigation";
+import { pauseAtom, resumeAtom } from "@atoms/timer";
 import BlindModeOptions from "@components/commands/options/BlindModeOptions";
+import CaretStyleOptions from "@components/commands/options/CaretStyleOptions";
 import DifficultyOptions from "@components/commands/options/DifficultyOptions";
-import { parseAsString, useQueryState } from "nuqs";
+import FlipTestColorsOptions from "@components/commands/options/FlipTestColorsOptions";
+import { FontFamilyOption } from "@components/commands/options/FontFamilyOption";
+import PaceCaretStyleOptions from "@components/commands/options/PaceCaretStyleOptions";
+import PunctuationOptions from "@components/commands/options/PunctuationOptions";
+import SmoothCaretOptions from "@components/commands/options/SmoothCaretOptions";
+import SoundOnClickOption from "@components/commands/options/SoundOnClickOption";
 import ThemeOptions from "@components/commands/options/ThemeOptions";
+import { SOUNDS } from "@lib/consts";
+import { CommandDialog, CommandInput, CommandList } from "@repo/ui";
 import { atom } from "jotai";
 import { useAtom, useSetAtom } from "jotai/index";
-import { pauseAtom, resumeAtom } from "@atoms/timer";
+import { useSearchParams } from "next/navigation";
+import { parseAsString, useQueryState } from "nuqs";
+import { Fragment, useEffect } from "react";
+import { LanguageOption } from "./options/LanguageOption";
 
-export interface GlobalCommandProps {
-}
+export interface GlobalCommandProps {}
 
-const IGNORE_PARAMS = [`contact`, `edit-profile`, `report-user`, `import-settings`, `custom-words`, `custom-time`, `add-tag-modal`, `update-cookie-preferences`, `practice-words`, `side`] as const;
+const IGNORE_PARAMS = [
+   `contact`,
+   `edit-profile`,
+   `report-user`,
+   `import-settings`,
+   `custom-words`,
+   `custom-time`,
+   `add-tag-modal`,
+   `update-cookie-preferences`,
+   `practice-words`,
+   `side`,
+] as const;
 
 export const commandsDialogOpen = atom(false);
 commandsDialogOpen.debugLabel = `commandsDialogOpen`;
@@ -38,7 +48,7 @@ const GlobalCommandsDialog = ({}: GlobalCommandProps) => {
    const sp = useSearchParams();
 
    useEffect(() => {
-      let contactModalOpen = IGNORE_PARAMS.some(p => sp.get(p) === `true`);
+      let contactModalOpen = IGNORE_PARAMS.some((p) => sp.get(p) === `true`);
       if (contactModalOpen) return;
 
       const down = async (e: KeyboardEvent) => {
@@ -59,14 +69,21 @@ const GlobalCommandsDialog = ({}: GlobalCommandProps) => {
    }, [sp, open, pause, resume]);
 
    return (
-      <CommandDialog dialogProps={{ className: `!bg-secondary` }} open={open} onOpenChange={value => {
-         setOpen(value);
-      }}>
+      <CommandDialog
+         dialogProps={{ className: `!bg-secondary` }}
+         open={open}
+         onOpenChange={(value) => {
+            setOpen(value);
+         }}
+      >
          <CommandInput
             id={`global-commands`}
-            inputMode={`text`} onValueChange={setQs} value={qs}
-            className={`!bg-secondary placeholder:!text-secondary-bg !border-none`}
-            placeholder="Search ..." />
+            inputMode={`text`}
+            onValueChange={setQs}
+            value={qs}
+            className={`!border-none !bg-secondary placeholder:!text-secondary-bg`}
+            placeholder="Search ..."
+         />
          <CommandList className={`bg-secondary`}>
             {!!qs?.length && (
                <Fragment>

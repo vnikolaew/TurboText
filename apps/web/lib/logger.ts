@@ -6,15 +6,14 @@ export class Logger {
    static ERROR = "ERROR";
    static console: Console;
 
-   static  {
-   }
+   static {}
 
    private static get enabled() {
       return __IS_DEV__;
    }
 
    static log(level: string, message: string) {
-      if(!this.enabled) return;
+      if (!this.enabled) return;
       let color;
 
       switch (level) {
@@ -34,7 +33,7 @@ export class Logger {
       console.log(
          `%c[${level}]%c ${message}`,
          `color: white; background-color: ${color}; font-weight: bold;`,
-         "color: inherit; font-weight: normal;",
+         "color: inherit; font-weight: normal;"
       );
    }
 

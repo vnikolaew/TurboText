@@ -1,17 +1,25 @@
 "use client";
-import React, { PropsWithChildren } from "react";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, Switch, toast } from "@repo/ui";
-import { useBoolean } from "@hooks/useBoolean";
-import LoadingButton from "@components/common/LoadingButton";
-import { useAction } from "next-safe-action/hooks";
-import { TOASTS } from "@config/toasts";
-import { updateCookiePreferences } from "@components/common/actions";
-import { useAtom } from "jotai/index";
 import { cookiePreferencesAtom } from "@atoms/user";
+import LoadingButton from "@components/common/LoadingButton";
+import { updateCookiePreferences } from "@components/common/actions";
+import { TOASTS } from "@config/toasts";
+import { useBoolean } from "@hooks/useBoolean";
+import {
+   Dialog,
+   DialogContent,
+   DialogFooter,
+   DialogHeader,
+   DialogTitle,
+   DialogTrigger,
+   Switch,
+   toast,
+} from "@repo/ui";
+import { useAtom } from "jotai/index";
+import { useAction } from "next-safe-action/hooks";
 import { parseAsBoolean, useQueryState } from "nuqs";
+import { PropsWithChildren } from "react";
 
-export interface UpdateCookiePreferencesModalProps extends PropsWithChildren {
-}
+export interface UpdateCookiePreferencesModalProps extends PropsWithChildren {}
 
 const COOKIE_PREFS_CATEGORIES = [
    {
@@ -32,13 +40,20 @@ const COOKIE_PREFS_CATEGORIES = [
    },
 ];
 
-const UpdateCookiePreferencesModal = ({ children }: UpdateCookiePreferencesModalProps) => {
-   const [cookiePreferences, setCookiePreferences] = useAtom(cookiePreferencesAtom);
+const UpdateCookiePreferencesModal = ({
+   children,
+}: UpdateCookiePreferencesModalProps) => {
+   const [cookiePreferences, setCookiePreferences] = useAtom(
+      cookiePreferencesAtom
+   );
    const [open, setOpen] = useBoolean();
-   const [, setUpdateCookiePrefModal] = useQueryState(`update-cookie-preferences`, parseAsBoolean.withDefault(false));
+   const [, setUpdateCookiePrefModal] = useQueryState(
+      `update-cookie-preferences`,
+      parseAsBoolean.withDefault(false)
+   );
 
    const { execute, isExecuting } = useAction(updateCookiePreferences, {
-      onSuccess: async res => {
+      onSuccess: async (res) => {
          if (res.data?.success) {
             console.log(res);
             toast(TOASTS.CHANGE_COOKIE_PREFERENCES_SUCCESS);
@@ -50,40 +65,47 @@ const UpdateCookiePreferencesModal = ({ children }: UpdateCookiePreferencesModal
    });
 
    function handleChangePrefs(_): void {
-      execute(cookiePreferences)
+      execute(cookiePreferences);
    }
 
    return (
-      <Dialog onOpenChange={async value => {
-         if(value) await setUpdateCookiePrefModal(true);
-         else await setUpdateCookiePrefModal(null)
-         setOpen(value);
-      }} open={open}>
-         <DialogTrigger asChild>
-            {children}
-         </DialogTrigger>
+      <Dialog
+         onOpenChange={async (value) => {
+            if (value) await setUpdateCookiePrefModal(true);
+            else await setUpdateCookiePrefModal(null);
+            setOpen(value);
+         }}
+         open={open}
+      >
+         <DialogTrigger asChild>{children}</DialogTrigger>
          <DialogContent className={`z-[100] !bg-secondary-bg`}>
             <DialogHeader>
                <DialogTitle className={`text-2xl text-accent`}>
                   Update cookie preferences
                </DialogTitle>
             </DialogHeader>
-            <div className={`w-full flex flex-col items-start gap-4`}>
+            <div className={`flex w-full flex-col items-start gap-4`}>
                {COOKIE_PREFS_CATEGORIES.map(({ label, description }) => (
                   <PreferenceSwitch
                      key={label}
-                     onCheckedChange={_ => setCookiePreferences({
-                        ...cookiePreferences,
-                        [label]: !cookiePreferences[label],
-                     })}
-                     checked={cookiePreferences[label]!} description={description} label={label} />
+                     onCheckedChange={(_) =>
+                        setCookiePreferences({
+                           ...cookiePreferences,
+                           [label]: !cookiePreferences[label],
+                        })
+                     }
+                     checked={cookiePreferences[label]!}
+                     description={description}
+                     label={label}
+                  />
                ))}
             </div>
-            <DialogFooter className={`w-full !mt-8`}>
+            <DialogFooter className={`!mt-8 w-full`}>
                <LoadingButton
                   onClick={handleChangePrefs}
                   loadingText={`Saving ...`}
-                  loading={isExecuting}>
+                  loading={isExecuting}
+               >
                   Accept selected
                </LoadingButton>
             </DialogFooter>
@@ -99,17 +121,25 @@ interface PreferenceSwitchProps {
    onCheckedChange: (checked: boolean) => void;
 }
 
-const PreferenceSwitch = ({ label, description, onCheckedChange, checked }: PreferenceSwitchProps) => {
+const PreferenceSwitch = ({
+   label,
+   description,
+   onCheckedChange,
+   checked,
+}: PreferenceSwitchProps) => {
    return (
-      <div className={`w-full flex items-center justify-between gap-4`}>
-         <div className={`flex flex-col gap-1 items-start mt-2`}>
+      <div className={`flex w-full items-center justify-between gap-4`}>
+         <div className={`mt-2 flex flex-col items-start gap-1`}>
             <h2 className={`text-xl text-main`}>{label}</h2>
-            <p className={`line-clamp-3 text-sm leading-tight text-secondary`}>{description}</p>
+            <p className={`line-clamp-3 text-sm leading-tight text-secondary`}>
+               {description}
+            </p>
          </div>
          <Switch
             checked={checked!}
             onCheckedChange={onCheckedChange}
-            className={`h-6 !bg-accent data-[state=unchecked]:!bg-transparent`} />
+            className={`h-6 !bg-accent data-[state=unchecked]:!bg-transparent`}
+         />
       </div>
    );
 };

@@ -1,18 +1,21 @@
 "use client";
-import React from "react";
-import { Button, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@repo/ui";
-import { BarChartHorizontal } from "lucide-react";
-import { useAtom } from "jotai/index";
 import { toggleWordsAtom } from "@atoms/editor";
+import {
+   Button,
+   Tooltip,
+   TooltipContent,
+   TooltipProvider,
+   TooltipTrigger,
+} from "@repo/ui";
+import { useAtom } from "jotai/index";
+import { BarChartHorizontal } from "lucide-react";
 
-export interface ToggleWordsHistoryProps {
-}
-
+export interface ToggleWordsHistoryProps {}
 
 const ToggleWordsHistory = ({}: ToggleWordsHistoryProps) => {
    const [toggleWords, setToggleWords] = useAtom(toggleWordsAtom);
 
-   const handleToggleWordsHistory = () => setToggleWords(!toggleWords)
+   const handleToggleWordsHistory = () => setToggleWords(!toggleWords);
 
    return (
       <TooltipProvider>
@@ -20,15 +23,20 @@ const ToggleWordsHistory = ({}: ToggleWordsHistoryProps) => {
             <TooltipTrigger asChild>
                <Button
                   onClick={handleToggleWordsHistory}
-                  className={`hover:!bg-transparent group`}
+                  className={`group hover:!bg-transparent`}
                   variant={`ghost`}
-                  size={`icon`}>
-                  <BarChartHorizontal className={`group-hover:!text-neutral-400  transition-colors duration-200 !text-main`} size={18} />
+                  size={`icon`}
+               >
+                  <BarChartHorizontal
+                     className={`!text-main transition-colors duration-200 group-hover:!text-neutral-400`}
+                     size={18}
+                  />
                </Button>
             </TooltipTrigger>
             <TooltipContent
                side={`bottom`}
-               className={`bg-black text-white rounded-xl text-sm border-neutral-700 !px-4 !py-2`}>
+               className={`rounded-xl border-neutral-700 bg-black !px-4 !py-2 text-sm text-white`}
+            >
                Toggle words history
             </TooltipContent>
          </Tooltip>

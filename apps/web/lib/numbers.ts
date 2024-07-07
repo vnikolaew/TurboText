@@ -8,7 +8,7 @@ export function stdDev(array: number[]): number {
       const n = array.length;
       const mean = array.reduce((a, b) => a + b) / n;
       return Math.sqrt(
-         array.map((x) => Math.pow(x - mean, 2)).reduce((a, b) => a + b) / n,
+         array.map((x) => Math.pow(x - mean, 2)).reduce((a, b) => a + b) / n
       );
    } catch (e) {
       return 0;
@@ -23,7 +23,8 @@ export function stdDev(array: number[]): number {
 export function mean(array: number[]): number {
    try {
       return (
-         array.reduce((previous, current) => (current += previous)) / array.length
+         array.reduce((previous, current) => (current += previous)) /
+         array.length
       );
    } catch (e) {
       return 0;

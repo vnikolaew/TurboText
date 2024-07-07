@@ -1,16 +1,16 @@
-import NextAuth, { DefaultSession } from "next-auth";
-import Google, { GoogleProfile } from "next-auth/providers/google";
-import Github from "next-auth/providers/github";
-import { globalForPrisma, xprisma ,PrismaClient, User } from "@repo/db";
-import ResendProvider from "next-auth/providers/resend";
-import Credentials from "next-auth/providers/credentials";
+import { PrismaAdapter } from "@auth/prisma-adapter";
+import { APP_DESCRIPTION, APP_NAME } from "@config/site";
 import { session } from "@lib/session";
 import { getGravatarImageUrl } from "@lib/utils";
+import { PrismaClient, User, globalForPrisma, xprisma } from "@repo/db";
 import { WelcomeEmail } from "@repo/emails/src";
-import { APP_DESCRIPTION, APP_NAME } from "@config/site";
-import { PrismaAdapter } from "@auth/prisma-adapter";
-import { Adapter } from "next-auth/adapters";
 import { EmailService } from "@repo/emails/src/emailService";
+import NextAuth, { DefaultSession } from "next-auth";
+import { Adapter } from "next-auth/adapters";
+import Credentials from "next-auth/providers/credentials";
+import Github from "next-auth/providers/github";
+import Google, { GoogleProfile } from "next-auth/providers/google";
+import ResendProvider from "next-auth/providers/resend";
 
 globalForPrisma.prisma ??= new PrismaClient();
 
@@ -19,13 +19,21 @@ const RESEND_ONBOARDING_EMAIL = ``;
 const customAdapter = {
    ...PrismaAdapter(xprisma),
    // @ts-ignore
-   async createUser({ id, iss, ...user }: AdapterUser): Promise<Awaitable<AdapterUser>> {
-      const { email, name, picture, image, emailVerified } = user as unknown as GoogleProfile;
+   async createUser({
+      id,
+      iss,
+      ...user
+   }: AdapterUser): Promise<Awaitable<AdapterUser>> {
+      const { email, name, picture, image, emailVerified } =
+         user as unknown as GoogleProfile;
       const userCount = await xprisma.user.count({});
 
       return xprisma.user.create({
          data: {
-            email, name, image: picture ?? image, emailVerified,
+            email,
+            name,
+            image: picture ?? image,
+            emailVerified,
             metadata: {
                ogAccount: userCount <= 1000,
             },
@@ -90,9 +98,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                   features,
                }),
             });
-            if (res.success) console.log(`Welcome e-mail successfully sent to: ${user.user.email} with ID: ${res?.success ? res?.id : ``}`);
+            if (res.success)
+               console.log(
+                  `Welcome e-mail successfully sent to: ${user.user.email} with ID: ${res?.success ? res?.id : ``}`
+               );
          } catch (err) {
-            console.error(`An error occurred while sending a Welcome e-mail to: ${user.user.email}: ${err}`);
+            console.error(
+               `An error occurred while sending a Welcome e-mail to: ${user.user.email}: ${err}`
+            );
          }
       },
    },
@@ -123,7 +136,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
    providers: [
       Github({
          account: ({ access_token, id_token, authorization_details }) => {
-            console.log({ access_token, id_token, authorization_details});
+            console.log({ access_token, id_token, authorization_details });
          },
          allowDangerousEmailAccountLinking: true,
          id: `github`,
@@ -136,18 +149,28 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                response_type: `code`,
             },
          },
-      }), ResendProvider({
+      }),
+      ResendProvider({
          from: RESEND_ONBOARDING_EMAIL,
          generateVerificationToken() {
             return crypto.randomUUID();
          },
-         async sendVerificationRequest({ request, url, identifier, provider, token }) {
+         async sendVerificationRequest({
+            request,
+            url,
+            identifier,
+            provider,
+            token,
+         }) {
             try {
                const res = await new EmailService().sendMail({
                   to: identifier,
                   subject: "Login Link to your Account",
-                  html: "<p>Click the magic link below to sign in to your account:</p>\
-                 <p><a href=\"" + url + "\"><b>Sign in</b></a></p>",
+                  html:
+                     '<p>Click the magic link below to sign in to your account:</p>\
+                 <p><a href="' +
+                     url +
+                     '"><b>Sign in</b></a></p>',
                });
             } catch (error) {
                console.log({ error });
@@ -155,55 +178,58 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
          },
       }),
       Credentials({
-            credentials: {
-               email: {
-                  type: "email",
-               },
-               username: {
-                  type: "text",
-               },
-               password: {
-                  type: "password",
-               },
-               type: {
-                  type: "text",
-               },
+         credentials: {
+            email: {
+               type: "email",
             },
-            authorize: async ({ username, email, password, type }) => {
-               if (type === `signup`) {
-                  // Handle user sign up:
-                  const existing = await xprisma.user.findFirst({
-                     where: {
-                        email: email as string,
-                     },
-                  });
-                  if (existing) return null!;
+            username: {
+               type: "text",
+            },
+            password: {
+               type: "password",
+            },
+            type: {
+               type: "text",
+            },
+         },
+         authorize: async ({ username, email, password, type }) => {
+            if (type === `signup`) {
+               // Handle user sign up:
+               const existing = await xprisma.user.findFirst({
+                  where: {
+                     email: email as string,
+                  },
+               });
+               if (existing) return null!;
 
-                  // Retrieve Gravatar image:
-                  let imageUrl = await getGravatarImageUrl(email as string);
-                  const user = await xprisma.user.signUp({
+               // Retrieve Gravatar image:
+               let imageUrl = await getGravatarImageUrl(email as string);
+               const user = await xprisma.user.signUp(
+                  {
                      email: email as string,
                      password: password as string,
                      username: username as string,
                      image: imageUrl,
-                  }, { image: true });
+                  },
+                  { image: true }
+               );
 
-                  return {
-                     id: user.id,
-                     email: user.email,
-                     name: user.name,
-                     image: user.image,
-                  };
-               }
+               return {
+                  id: user.id,
+                  email: user.email,
+                  name: user.name,
+                  image: user.image,
+               };
+            }
 
-               const user = await xprisma.user.signIn({
-                  email: email as string,
-                  password: password as string,
-                  username: username as string,
-               });
+            const user = await xprisma.user.signIn({
+               email: email as string,
+               password: password as string,
+               username: username as string,
+            });
 
-               return user!;
-            },
+            return user!;
          },
-      )],
+      }),
+   ],
 });

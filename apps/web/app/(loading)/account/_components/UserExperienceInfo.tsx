@@ -1,8 +1,11 @@
-import React from "react";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@repo/ui";
-import { getUserExperienceInfo } from "@app/(loading)/account/_queries";
 import AnimatedProgress from "@app/(loading)/account/_components/AnimatedProgress";
-
+import { getUserExperienceInfo } from "@app/(loading)/account/_queries";
+import {
+   Tooltip,
+   TooltipContent,
+   TooltipProvider,
+   TooltipTrigger,
+} from "@repo/ui";
 
 export async function UserExperienceInfo() {
    const {
@@ -13,7 +16,7 @@ export async function UserExperienceInfo() {
    } = await getUserExperienceInfo();
 
    return (
-      <div className={`w-full flex items-center gap-4`}>
+      <div className={`flex w-full items-center gap-4`}>
          <TooltipProvider delayDuration={0}>
             <Tooltip>
                <TooltipTrigger asChild>
@@ -21,7 +24,8 @@ export async function UserExperienceInfo() {
                </TooltipTrigger>
                <TooltipContent
                   side={`top`}
-                  className={`!bg-secondary text-white rounded-xl text-sm  !px-4 !py-2`}>
+                  className={`rounded-xl !bg-secondary !px-4 !py-2 text-sm text-white`}
+               >
                   {userExperience.label}
                </TooltipContent>
             </Tooltip>
@@ -34,7 +38,8 @@ export async function UserExperienceInfo() {
                   </TooltipTrigger>
                   <TooltipContent
                      side={`top`}
-                     className={`!bg-secondary text-white rounded-xl text-sm  !px-4 !py-2`}>
+                     className={`rounded-xl !bg-secondary !px-4 !py-2 text-sm text-white`}
+                  >
                      {percentageUntilNextLevel.toFixed(2)}%
                   </TooltipContent>
                </Tooltip>
@@ -45,12 +50,17 @@ export async function UserExperienceInfo() {
             <Tooltip>
                <TooltipTrigger asChild>
                   <span
-                     className={`justify-self-end text-secondary text-sm cursor-pointer`}>{userExperience?.points}/{xpNeededForNextLevel}</span>
+                     className={`cursor-pointer justify-self-end text-sm text-secondary`}
+                  >
+                     {userExperience?.points}/{xpNeededForNextLevel}
+                  </span>
                </TooltipTrigger>
                <TooltipContent
                   side={`top`}
-                  className={`!bg-secondary text-main rounded-xl text-sm  !px-4 !py-2 border-none`}>
-                  {xpNeededForNextLevel - userExperience?.points} xp until next level
+                  className={`rounded-xl border-none !bg-secondary !px-4 !py-2 text-sm text-main`}
+               >
+                  {xpNeededForNextLevel - userExperience?.points} xp until next
+                  level
                </TooltipContent>
             </Tooltip>
          </TooltipProvider>

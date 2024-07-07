@@ -1,26 +1,25 @@
 "use client";
-import Link from "next/link";
-import React, { ReactNode } from "react";
-import { signOut } from "next-auth/react";
-import { SignedIn, SignedOut } from "./Auth";
-import { Crown, LogIn, LogOut, Settings, Swords } from "lucide-react";
-import { APP_NAME } from "@config/site";
 import UserAvatarDropdown from "@/components/common/UserAvatarDropdown";
-import { Button, Skeleton } from "@repo/ui";
-import RocketLogo from "@components/icons/RocketLogo";
-import { Lexend_Deca } from "next/font/google";
-import { useAtomValue } from "jotai";
-import { userDataLoadingAtom } from "@atoms/user";
-import UserNotificationsButton from "./side-modal/notifications/UserNotificationsButton";
 import SearchInput from "@app/_components/search/SearchInput";
+import { userDataLoadingAtom } from "@atoms/user";
+import RocketLogo from "@components/icons/RocketLogo";
+import { APP_NAME } from "@config/site";
+import { Button, Skeleton } from "@repo/ui";
+import { useAtomValue } from "jotai";
+import { Crown, LogIn, LogOut, Settings, Swords } from "lucide-react";
+import { signOut } from "next-auth/react";
+import { Lexend_Deca } from "next/font/google";
+import Link from "next/link";
+import { ReactNode } from "react";
+import { SignedIn, SignedOut } from "./Auth";
+import UserNotificationsButton from "./side-modal/notifications/UserNotificationsButton";
 
 const lexend = Lexend_Deca({
    weight: ["400"],
    subsets: ["latin"],
 });
 
-export interface NavbarProps {
-}
+export interface NavbarProps {}
 
 export interface InteractiveHeaderLinkProps {
    href: string;
@@ -37,31 +36,71 @@ const Header = ({}: NavbarProps) => {
 
    return (
       <header
-         className={`sticky top-0 w-full border-b border-secondary-bg bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 !py-3 !z-10`}>
-         <div className={`container flex h-14 max-w-screen-2xl items-center !w-4/5 justify-between`}>
+         className={`sticky top-0 !z-10 w-full border-b border-secondary-bg bg-background/95 !py-3 backdrop-blur supports-[backdrop-filter]:bg-background/60`}
+      >
+         <div
+            className={`container flex h-14 !w-4/5 max-w-screen-2xl items-center justify-between`}
+         >
             <nav className={`flex flex-1 items-center space-x-2 lg:space-x-2`}>
                <Link href={`/`} className={`flex items-center gap-3`}>
-                  <RocketLogo className={`w-8 h-8 fill-accent `} />
+                  <RocketLogo className={`h-8 w-8 fill-accent`} />
                   <div className={`flex flex-col items-start gap-0`}>
                      <span
-                        className={`text-lg !test-gradient drop-shadow-lg !font-semibold ${lexend.className} uppercase  !text-main`}>
+                        className={`!test-gradient text-lg !font-semibold drop-shadow-lg ${lexend.className} uppercase !text-main`}
+                     >
                         {APP_NAME}
                      </span>
-                     <span className={`text-secondary text-xs text-nowrap`}>Accelerate your typing speed</span>
+                     <span className={`text-nowrap text-xs text-secondary`}>
+                        Accelerate your typing speed
+                     </span>
                   </div>
                </Link>
-               <Button className={`hover:!bg-transparent group text-secondary !ml-8`} variant={`ghost`} asChild>
-                  <Link title={`Settings`} href={`/settings`} className={`flex items-center gap-2 `}>
-                     <Settings className={`group-hover:!text-accent transition-colors duration-200`} size={16} /> </Link>
-               </Button>
-               <Button className={`hover:!bg-transparent text-secondary group`} variant={`ghost`} asChild>
-                  <Link title={`Leaderboard`} href={`/leaderboard`} className={`flex items-center gap-2`}>
-                     <Crown className={`fill-secondary stroke-secondary group-hover:!fill-accent group-hover:!stroke-accent`} size={16} />
+               <Button
+                  className={`group !ml-8 text-secondary hover:!bg-transparent`}
+                  variant={`ghost`}
+                  asChild
+               >
+                  <Link
+                     title={`Settings`}
+                     href={`/settings`}
+                     className={`flex items-center gap-2`}
+                  >
+                     <Settings
+                        className={`transition-colors duration-200 group-hover:!text-accent`}
+                        size={16}
+                     />{" "}
                   </Link>
                </Button>
-               <Button className={`hover:!bg-transparent text-secondary group`} variant={`ghost`} asChild>
-                  <Link title={`Challenge`} href={`/_lobby`} className={`flex items-center gap-2`}>
-                     <Swords className={`fill-secondary stroke-secondary group-hover:!fill-accent group-hover:!stroke-accent`} size={16} />
+               <Button
+                  className={`group text-secondary hover:!bg-transparent`}
+                  variant={`ghost`}
+                  asChild
+               >
+                  <Link
+                     title={`Leaderboard`}
+                     href={`/leaderboard`}
+                     className={`flex items-center gap-2`}
+                  >
+                     <Crown
+                        className={`fill-secondary stroke-secondary group-hover:!fill-accent group-hover:!stroke-accent`}
+                        size={16}
+                     />
+                  </Link>
+               </Button>
+               <Button
+                  className={`group text-secondary hover:!bg-transparent`}
+                  variant={`ghost`}
+                  asChild
+               >
+                  <Link
+                     title={`Challenge`}
+                     href={`/lobby`}
+                     className={`flex items-center gap-2`}
+                  >
+                     <Swords
+                        className={`fill-secondary stroke-secondary group-hover:!fill-accent group-hover:!stroke-accent`}
+                        size={16}
+                     />
                   </Link>
                </Button>
             </nav>
@@ -71,16 +110,25 @@ const Header = ({}: NavbarProps) => {
                   <div className={`flex items-center gap-6`}>
                      <div id={`user-avatar`}>
                         {userDataLoading ? (
-                           <Skeleton className={`h-12 w-12 rounded-full bg-neutral-700`} />
-                        ) : <UserAvatarDropdown />}
+                           <Skeleton
+                              className={`h-12 w-12 rounded-full bg-neutral-700`}
+                           />
+                        ) : (
+                           <UserAvatarDropdown />
+                        )}
                      </div>
                      <UserNotificationsButton />
                      {userDataLoading ? (
-                        <Skeleton className={`h-8 w-32 rounded-lg bg-neutral-700`} />
+                        <Skeleton
+                           className={`h-8 w-32 rounded-lg bg-neutral-700`}
+                        />
                      ) : (
                         <Button
-                           className={`px-4 gap-2 rounded-lg !py-2 !h-fit !text-main`}
-                           onClick={_ => signOut({ redirect: true, callbackUrl: `/` })} variant={"ghost"}
+                           className={`!h-fit gap-2 rounded-lg !py-2 px-4 !text-main`}
+                           onClick={(_) =>
+                              signOut({ redirect: true, callbackUrl: `/` })
+                           }
+                           variant={"ghost"}
                         >
                            <LogOut size={14} />
                            {`Sign out`}
@@ -90,7 +138,7 @@ const Header = ({}: NavbarProps) => {
                </SignedIn>
                <SignedOut>
                   <Button
-                     className={`px-4 gap-2 rounded-lg !py-2 !h-fit`}
+                     className={`!h-fit gap-2 rounded-lg !py-2 px-4`}
                      asChild
                      variant={"secondary"}
                   >

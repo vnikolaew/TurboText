@@ -1,10 +1,8 @@
+import HydrateAllAtoms from "@app/_components/HydrateAllAtoms";
 import { auth } from "@auth";
 import { xprisma } from "@repo/db";
-import React from "react";
-import HydrateAllAtoms from "@app/_components/HydrateAllAtoms";
 
-export interface WithInitialStateProps {
-}
+export interface WithInitialStateProps {}
 
 const WithInitialState = async ({}: WithInitialStateProps) => {
    const session = await auth();
@@ -15,12 +13,15 @@ const WithInitialState = async ({}: WithInitialStateProps) => {
       include: {
          experience: {
             select: {
-               id: true, level: true, points: true,
+               id: true,
+               level: true,
+               points: true,
             },
          },
          configuration: {
             select: {
-               id: true, userId: true,
+               id: true,
+               userId: true,
             },
          },
       },

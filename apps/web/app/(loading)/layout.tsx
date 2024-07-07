@@ -1,16 +1,11 @@
 "use client";
-import React, { PropsWithChildren } from "react";
 import WithUserLoading from "@app/_components/WithUserLoading";
+import { PropsWithChildren } from "react";
 
-export interface LayoutProps extends PropsWithChildren {
-}
+export interface LayoutProps extends PropsWithChildren {}
 
 const Layout = ({ children }: LayoutProps) => {
-   return (
-      <WithUserLoading>
-         {children}
-      </WithUserLoading>
-   );
+   return <WithUserLoading>{children}</WithUserLoading>;
 };
 
 export default Layout;

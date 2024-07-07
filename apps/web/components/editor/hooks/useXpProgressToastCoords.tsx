@@ -1,9 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
-import { useAtomValue } from "jotai/index";
 import { prevUserXpAtom, userDataLoadingAtom, userXpAtom } from "@atoms/user";
+import { useAtomValue } from "jotai/index";
+import { useSession } from "next-auth/react";
+import { useCallback, useEffect, useState } from "react";
 
 export function useXpProgressToastCoords() {
    const userXp = useAtomValue(userXpAtom);
@@ -24,7 +24,10 @@ export function useXpProgressToastCoords() {
       } else return null!;
    }, []);
 
-   const [{ left, top }, setToastCoords] = useState<{ top: number, left: number }>(() => getAvatarElementCoords() ?? {top: 0, left: 0});
+   const [{ left, top }, setToastCoords] = useState<{
+      top: number;
+      left: number;
+   }>(() => getAvatarElementCoords() ?? { top: 0, left: 0 });
 
    useEffect(() => {
       const coords = getAvatarElementCoords();

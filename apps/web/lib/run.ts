@@ -28,7 +28,6 @@ export function countChars(inputWords: string[]): CharCount {
          //the word is correct
          correctWordChars += targetWord.length;
          correctChars += targetWord.length;
-
       } else if (inputWord.length >= targetWord.length) {
          //too many chars
          for (let c = 0; c < inputWord.length; c++) {

@@ -3,8 +3,8 @@
 import { auth } from "@auth";
 import { authorizedAction } from "@lib/actions";
 import { xprisma } from "@repo/db";
-import { z } from "zod";
 import moment from "moment";
+import { z } from "zod";
 
 const schema = z.object({
    username: z.string(),
@@ -17,16 +17,20 @@ export const changeUsername = authorizedAction
    .schema(schema)
    .action(async ({ ctx: { userId }, parsedInput: { username } }) => {
       const session = await auth();
-      if (session?.user?.name === username) return {
-         success: false,
-         error: "You can't change your username to the same name",
-      };
+      if (session?.user?.name === username)
+         return {
+            success: false,
+            error: "You can't change your username to the same name",
+         };
       let user = await xprisma.user.findUnique({
          where: { id: userId },
       });
 
-      if (user?.metadata?.usernameLastUpdated
-         && moment(user?.metadata?.usernameLastUpdated).add(30, `day`).toDate() > new Date()) {
+      if (
+         user?.metadata?.usernameLastUpdated &&
+         moment(user?.metadata?.usernameLastUpdated).add(30, `day`).toDate() >
+            new Date()
+      ) {
          return {
             success: false,
             error: "You can only change your username once every 30 days.",
@@ -36,7 +40,8 @@ export const changeUsername = authorizedAction
       user = await xprisma.user.update({
          where: { id: userId },
          data: {
-            name: username, metadata: {
+            name: username,
+            metadata: {
                ...(user?.metadata || {}),
                usernameLastUpdated: new Date().toISOString(),
             },
@@ -50,13 +55,13 @@ export const changeUsername = authorizedAction
 /**
  * An authorized action for deleting the user's account.
  */
-export const deleteAccount = authorizedAction.schema(z.any())
+export const deleteAccount = authorizedAction
+   .schema(z.any())
    .action(async ({ ctx: { userId } }) => {
       const session = await auth();
 
-      let user =
-         await xprisma.user.delete({
-            where: { id: userId },
-         });
+      let user = await xprisma.user.delete({
+         where: { id: userId },
+      });
       return { success: true, user };
    });

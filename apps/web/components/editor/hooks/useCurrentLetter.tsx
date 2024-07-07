@@ -1,7 +1,7 @@
-import { useEffect, useRef } from "react";
-import { useAtom, useAtomValue } from "jotai/index";
 import { caretCoordinatesAtom, currentCharIndexAtom } from "@atoms/editor";
 import useWindowScroll from "@hooks/useWindowScroll";
+import { useAtom, useAtomValue } from "jotai/index";
+import { useEffect, useRef } from "react";
 
 export function useCurrentLetter() {
    const currentCharIndex = useAtomValue(currentCharIndexAtom);
@@ -16,7 +16,10 @@ export function useCurrentLetter() {
       if (currentCharIndex <= -1) {
          setCoords({ top: rects.top + windowScroll, left: rects.left });
       } else {
-         setCoords({ top: rects.top + windowScroll, left: rects.left + rects.width + 1 });
+         setCoords({
+            top: rects.top + windowScroll,
+            left: rects.left + rects.width + 1,
+         });
       }
    }, [currentCharIndex, windowScroll]);
 

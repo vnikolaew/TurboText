@@ -1,18 +1,16 @@
 "use client";
-import React from "react";
-import { useAtomValue } from "jotai";
-import { typingRunStateAtom } from "@atoms/editor";
 import { TypingRunState } from "@atoms/consts";
+import { typingRunStateAtom } from "@atoms/editor";
+import { useAtomValue } from "jotai";
 
-export interface PressKeyLabelProps {
-}
+export interface PressKeyLabelProps {}
 
 const PressKeyLabel = ({}: PressKeyLabelProps) => {
    const state = useAtomValue(typingRunStateAtom);
-   if(state !== TypingRunState.STOPPED) return null;
+   if (state !== TypingRunState.STOPPED) return null;
 
    return (
-      <div className={`text-sm text-secondary mt-2`}>
+      <div className={`mt-2 text-sm text-secondary`}>
          Press a key to begin your typing run.
       </div>
    );

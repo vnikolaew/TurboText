@@ -1,9 +1,8 @@
 "use client";
-import React, { Fragment } from "react";
 import Script from "next/script";
+import { Fragment } from "react";
 
-export interface GoogleReCaptchaProps {
-}
+export interface GoogleReCaptchaProps {}
 
 const GoogleReCaptcha = ({}: GoogleReCaptchaProps) => {
    return (
@@ -20,11 +19,13 @@ const GoogleReCaptcha = ({}: GoogleReCaptchaProps) => {
             <div id="html_element"></div>
             <br />
             <input type="submit" value="Submit" />
-
          </form>
-         <Script id={`google-recaptcha-script`}
-                 src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit"
-                 async defer />
+         <Script
+            id={`google-recaptcha-script`}
+            src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit"
+            async
+            defer
+         />
       </Fragment>
    );
 };

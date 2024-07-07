@@ -1,21 +1,17 @@
 "use client";
-import React from "react";
 import SettingLayout from "@app/settings/_components/SettingLayout";
 import { Button } from "@repo/ui";
 import { RotateCcw } from "lucide-react";
 
-export interface ResetAccountSectionProps {
-}
+export interface ResetAccountSectionProps {}
 
 const ResetAccountSection = ({}: ResetAccountSectionProps) => {
    return (
       <SettingLayout className={``}>
          <div className={`flex flex-col items-start gap-2`}>
             <h2 className={`inline-flex items-center gap-2`}>
-               <RotateCcw className={`text-main `} size={20} />
-               <span className={`text-xl text-main`}>
-                  Reset account
-               </span>
+               <RotateCcw className={`text-main`} size={20} />
+               <span className={`text-xl text-main`}>Reset account</span>
             </h2>
             <p className={`mt-2 text-base !text-secondary`}>
                Completely resets your account to a blank state.
@@ -24,9 +20,12 @@ const ResetAccountSection = ({}: ResetAccountSectionProps) => {
                You can't undo this action!
             </p>
          </div>
-         <div className={`flex items-center gap-2 w-full h-full my-auto justify-center flex-wrap`}>
+         <div
+            className={`my-auto flex h-full w-full flex-wrap items-center justify-center gap-2`}
+         >
             <Button
-               className={`flex-1 !bg-red-700  text-black shadow-md hover:!opacity-90 transition-colors duration-100`}>
+               className={`flex-1 !bg-red-700 text-black shadow-md transition-colors duration-100 hover:!opacity-90`}
+            >
                Reset account
             </Button>
          </div>

@@ -1,10 +1,21 @@
-import { Button, Table, TableBody, TableCaption, TableHead, TableHeader, TableRow } from "@repo/ui";
-import React, { Fragment } from "react";
-import { SortableTableHead } from "../common/SortableTableHead";
 import { User } from "@repo/db";
-import Link from "next/link";
+import {
+   Button,
+   Table,
+   TableBody,
+   TableCaption,
+   TableHead,
+   TableHeader,
+   TableRow,
+} from "@repo/ui";
 import { Swords } from "lucide-react";
-import { ChallengeNormalized, challengesTableSortAtom } from "./LatestUserChallenges";
+import Link from "next/link";
+import { Fragment } from "react";
+import { SortableTableHead } from "../common/SortableTableHead";
+import {
+   ChallengeNormalized,
+   challengesTableSortAtom,
+} from "./LatestUserChallenges";
 import UserChallengeRow from "./UserChallengeRow";
 
 export interface LatestUserChallengesTableProps {
@@ -12,53 +23,85 @@ export interface LatestUserChallengesTableProps {
    user: User;
 }
 
-const LatestUserChallengesTable = ({ challenges, user }: LatestUserChallengesTableProps) => {
+const LatestUserChallengesTable = ({
+   challenges,
+   user,
+}: LatestUserChallengesTableProps) => {
    return (
       <Fragment>
-         <Table className={`!mb-12 !w-full`}> {!!challenges?.length && (
-            <TableCaption className={`!text-secondary !font-semibold !text-sm`}>
-               A list of your latest typing challenges.
-            </TableCaption>
-         )}
+         <Table className={`!mb-12 !w-full`}>
+            {" "}
+            {!!challenges?.length && (
+               <TableCaption
+                  className={`!text-sm !font-semibold !text-secondary`}
+               >
+                  A list of your latest typing challenges.
+               </TableCaption>
+            )}
             <TableHeader className={`w-full`}>
-               <TableRow className={`text-sm w-full !text-secondary`}>
+               <TableRow className={`w-full text-sm !text-secondary`}>
                   <TableHead className="w-fit"></TableHead>
                   <SortableTableHead
                      title={`outcome`}
-                     column={`outcome`} sort={challengesTableSortAtom}
-                     className="w-fit" />
+                     column={`outcome`}
+                     sort={challengesTableSortAtom}
+                     className="w-fit"
+                  />
                   <TableHead className="text-center">completed words</TableHead>
                   <TableHead className="text-center">opponent</TableHead>
                   <SortableTableHead
-                     column={`language`} sort={challengesTableSortAtom}
-                     className="">language</SortableTableHead>
+                     column={`language`}
+                     sort={challengesTableSortAtom}
+                     className=""
+                  >
+                     language
+                  </SortableTableHead>
                   <SortableTableHead
-                     sort={challengesTableSortAtom} column={`difficulty`}
-                     className="">difficulty</SortableTableHead>
+                     sort={challengesTableSortAtom}
+                     column={`difficulty`}
+                     className=""
+                  >
+                     difficulty
+                  </SortableTableHead>
                   <SortableTableHead
-                     column={`time`} sort={challengesTableSortAtom}
-                     className="">time</SortableTableHead>
+                     column={`time`}
+                     sort={challengesTableSortAtom}
+                     className=""
+                  >
+                     time
+                  </SortableTableHead>
                   <SortableTableHead
-                     sort={challengesTableSortAtom} className={`text-right`} title={`date`}
-                     column={`createdAt`} />
+                     sort={challengesTableSortAtom}
+                     className={`text-right`}
+                     title={`date`}
+                     column={`createdAt`}
+                  />
                </TableRow>
             </TableHeader>
-            <TableBody className={`w-full max-h-[1000px] !overflow-y-scroll relative`}>
+            <TableBody
+               className={`relative max-h-[1000px] w-full !overflow-y-scroll`}
+            >
                {challenges.map((challenge, index) => (
-                  <UserChallengeRow key={challenge!.id} challenge={challenge} userId={user.id} />
+                  <UserChallengeRow
+                     key={challenge!.id}
+                     challenge={challenge}
+                     userId={user.id}
+                  />
                ))}
             </TableBody>
          </Table>
          <div>
             {!challenges?.length && (
                <div
-                  className={`!w-full !h-fit !text-center text-secondary justify-center flex flex-col items-center gap-4 !mb-12`}>
-                       <span>
-                           You don't have any challenges yet.
-                       </span>
+                  className={`!mb-12 flex !h-fit !w-full flex-col items-center justify-center gap-4 !text-center text-secondary`}
+               >
+                  <span>You don't have any challenges yet.</span>
                   <div>
                      <Button asChild>
-                        <Link className={`inline-flex text-lg items-center gap-2 !text-accent !bg-secondary-bg`} href={`/_lobby`}>
+                        <Link
+                           className={`inline-flex items-center gap-2 !bg-secondary-bg text-lg !text-accent`}
+                           href={`/_lobby`}
+                        >
                            <Swords className={``} size={24} />
                            Find opponents
                         </Link>

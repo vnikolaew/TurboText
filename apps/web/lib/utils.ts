@@ -1,6 +1,6 @@
 import { ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
 import crypto from "crypto";
+import { twMerge } from "tailwind-merge";
 import { HTTP } from "./consts";
 
 export function cn(...inputs: ClassValue[]) {
@@ -21,7 +21,7 @@ export async function getGravatarImageUrl(email: string) {
    const res = await fetch(url, {
       method: "GET",
       headers: {
-         "Accept": HTTP.MEDIA_TYPES.APPLICATION_JSON,
+         Accept: HTTP.MEDIA_TYPES.APPLICATION_JSON,
       },
    });
    if (res.ok) {
@@ -44,11 +44,14 @@ export async function getGravatarImageUrl(email: string) {
  * @param duration
  */
 export async function sleep(duration: number) {
-   return await new Promise(res => setTimeout(res, duration));
+   return await new Promise((res) => setTimeout(res, duration));
 }
 
-
-export function downloadFile(data: BlobPart, fileName: string, contentType: string) {
+export function downloadFile(
+   data: BlobPart,
+   fileName: string,
+   contentType: string
+) {
    const blob = new Blob([data], { type: contentType });
    const url = window.URL.createObjectURL(blob);
    const a = document.createElement("a");
@@ -67,8 +70,8 @@ export function downloadFile(data: BlobPart, fileName: string, contentType: stri
 export function isEventInside(e: MouseEvent, element: HTMLElement) {
    const { x, y, width, height } = element?.getBoundingClientRect();
 
-   const isInside = e.x >= x && e.x <= x + width
-      && e.y >= y && e.y <= y + height;
+   const isInside =
+      e.x >= x && e.x <= x + width && e.y >= y && e.y <= y + height;
 
    return isInside;
 }
@@ -94,8 +97,10 @@ export function formatMillisecondsToTime(ms: number) {
 export function formatMilliseconds(ms: number) {
    const millisecondsInSecond = 1000;
    const millisecondsInMinute = millisecondsInSecond * 60;
+
    const millisecondsInHour = millisecondsInMinute * 60;
    const millisecondsInDay = millisecondsInHour * 24;
+
    const millisecondsInMonth = millisecondsInDay * 30.44; // Average month length
    const millisecondsInYear = millisecondsInDay * 365.25; // Average year length
 
@@ -168,7 +173,7 @@ export function hslToHex(hslString: string) {
 
    // Convert HSL to RGB first
    const normalizedL = l / 100;
-   const a = s * Math.min(normalizedL, 1 - normalizedL) / 100;
+   const a = (s * Math.min(normalizedL, 1 - normalizedL)) / 100;
    const f = (n: number) => {
       const k = (n + h / 30) % 12;
       const color = normalizedL - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
@@ -183,11 +188,16 @@ export function hslToHex(hslString: string) {
    return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
 }
 
-export function injectCSSClass(className: string, variables: Record<string, string>) {
+export function injectCSSClass(
+   className: string,
+   variables: Record<string, string>
+) {
    const styleSheet = document.styleSheets[0];
 
    // Construct the CSS variable definitions
-   const cssVariables = Object.entries(variables).map(([key, value]) => `--${key}: ${value} !important;`).join(" ");
+   const cssVariables = Object.entries(variables)
+      .map(([key, value]) => `--${key}: ${value} !important;`)
+      .join(" ");
 
    // Construct the CSS rule
    const cssRule = `.${className} { ${cssVariables} :root { ${cssVariables} } } `;
@@ -214,7 +224,9 @@ export function hexToHsl(hex: string) {
    // Find the maximum and minimum values of R, G and B
    let max = Math.max(r, g, b);
    let min = Math.min(r, g, b);
-   let h, s, l = (max + min) / 2;
+   let h,
+      s,
+      l = (max + min) / 2;
 
    if (max === min) {
       h = s = 0; // Achromatic
@@ -267,16 +279,16 @@ export function normalizeURL(url: string) {
 }
 
 export const LABELS = [
-   "Novice",        // Level 0-9
-   "Beginner",      // Level 10-19
-   "Apprentice",    // Level 20-29
-   "Journeyman",    // Level 30-39
-   "Specialist",    // Level 40-49
-   "Expert",        // Level 50-59
-   "Professional",  // Level 60-69
-   "Master",        // Level 70-79
-   "Grandmaster",   // Level 80-89
-   "Legend",         // Level 90-99
+   "Novice", // Level 0-9
+   "Beginner", // Level 10-19
+   "Apprentice", // Level 20-29
+   "Journeyman", // Level 30-39
+   "Specialist", // Level 40-49
+   "Expert", // Level 50-59
+   "Professional", // Level 60-69
+   "Master", // Level 70-79
+   "Grandmaster", // Level 80-89
+   "Legend", // Level 90-99
 ];
 
 export function getUserLabel(level: number) {

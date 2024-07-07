@@ -46,7 +46,7 @@ export enum TypingRunState {
    STOPPED = `STOPPED`,
    RUNNING = `RUNNING`,
    PAUSED = `PAUSED`,
-   FINISHED = `FINISHED`
+   FINISHED = `FINISHED`,
 }
 
 export interface TypedLetterInfo {
@@ -61,7 +61,6 @@ export interface WordRange {
    word: string;
    range: [number, number];
 }
-
 
 export interface UserExperience {
    points: number;

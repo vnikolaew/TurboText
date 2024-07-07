@@ -1,6 +1,6 @@
 "use client";
-import React, { Fragment } from "react";
 import { useHydrateAllAtoms } from "@app/settings/atoms";
+import { Fragment } from "react";
 
 export interface WithInitialStateProps {
    soundClicks: string[];

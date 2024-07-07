@@ -1,13 +1,12 @@
-import React, { Fragment, PropsWithChildren } from "react";
+import { Fragment, PropsWithChildren } from "react";
 import LayoutParticles from "./_components/LayoutParticles";
 
-export interface LayoutProps extends PropsWithChildren {
-}
+export interface LayoutProps extends PropsWithChildren {}
 
 const Layout = async ({ children }: LayoutProps) => {
    return (
       <Fragment>
-         <LayoutParticles/>
+         <LayoutParticles />
          {children}
       </Fragment>
    );

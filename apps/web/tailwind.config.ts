@@ -31,27 +31,27 @@ const config: Config = {
             mono: ["var(--font-mono)", ...fontFamily.mono],
          },
          colors: {
-            border: "hsl(var(--border))",
-            main: "hsl(var(--main))",
-            accent: "hsl(var(--accent))",
+            "border": "hsl(var(--border))",
+            "main": "hsl(var(--main))",
+            "accent": "hsl(var(--accent))",
             "secondary-bg": "hsl(var(--secondary-bg))",
-            input: "hsl(var(--input))",
-            ring: "hsl(var(--ring))",
-            background: "hsl(var(--background))",
-            foreground: "hsl(var(--foreground))",
-            primary: {
+            "input": "hsl(var(--input))",
+            "ring": "hsl(var(--ring))",
+            "background": "hsl(var(--background))",
+            "foreground": "hsl(var(--foreground))",
+            "primary": {
                DEFAULT: "hsl(var(--primary))",
                foreground: "hsl(var(--primary-foreground))",
             },
-            secondary: {
+            "secondary": {
                DEFAULT: "hsl(var(--secondary))",
                foreground: "hsl(var(--secondary-foreground))",
             },
-            destructive: {
+            "destructive": {
                DEFAULT: "hsl(var(--destructive))",
                foreground: "hsl(var(--destructive-foreground))",
             },
-            muted: {
+            "muted": {
                DEFAULT: "hsl(var(--muted))",
                foreground: "hsl(var(--muted-foreground))",
             },
@@ -59,11 +59,11 @@ const config: Config = {
             //    DEFAULT: "hsl(var(--accent))",
             //    foreground: "hsl(var(--accent-foreground))",
             // },
-            popover: {
+            "popover": {
                DEFAULT: "hsl(var(--popover))",
                foreground: "hsl(var(--popover-foreground))",
             },
-            card: {
+            "card": {
                DEFAULT: "hsl(var(--card))",
                foreground: "hsl(var(--card-foreground))",
             },
@@ -96,12 +96,15 @@ const config: Config = {
                from: { height: "var(--radix-accordion-content-height)" },
                to: { height: "0" },
             },
-            meteor: {
-               "0%": { transform: "rotate(215deg) translateX(0)", opacity: '100%' },
-               "70%": { opacity: '100%' },
+            "meteor": {
+               "0%": {
+                  transform: "rotate(215deg) translateX(0)",
+                  opacity: "100%",
+               },
+               "70%": { opacity: "100%" },
                "100%": {
                   transform: "rotate(215deg) translateX(-500px)",
-                  opacity: '0%',
+                  opacity: "0%",
                },
             },
          },
@@ -110,12 +113,10 @@ const config: Config = {
             "accordion-down": "accordion-down 0.2s ease-out",
             "accordion-up": "accordion-up 0.2s ease-out",
             "alert": "animate-alert 2s ease-out alternate infinite",
-            meteor: "meteor 5s linear infinite",
+            "meteor": "meteor 5s linear infinite",
          },
       },
    },
-   plugins: [require("tailwindcss-animate"),
-      require('tailwind-scrollbar')
-   ],
+   plugins: [require("tailwindcss-animate"), require("tailwind-scrollbar")],
 };
 export default config;

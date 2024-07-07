@@ -1,11 +1,15 @@
 "use client";
-import React from "react";
+import {
+   Button,
+   Tooltip,
+   TooltipContent,
+   TooltipProvider,
+   TooltipTrigger,
+} from "@repo/ui";
 import { RefreshCw } from "lucide-react";
-import { Button, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@repo/ui";
 import { useRouter } from "next/navigation";
 
-export interface RefreshButtonProps {
-}
+export interface RefreshButtonProps {}
 
 const RefreshButton = ({}: RefreshButtonProps) => {
    const router = useRouter();
@@ -13,13 +17,19 @@ const RefreshButton = ({}: RefreshButtonProps) => {
       <TooltipProvider>
          <Tooltip>
             <TooltipTrigger asChild>
-               <Button onClick={_ => router.refresh()} variant={`ghost`} className={`!rounded-xl`} size={`icon`}>
+               <Button
+                  onClick={(_) => router.refresh()}
+                  variant={`ghost`}
+                  className={`!rounded-xl`}
+                  size={`icon`}
+               >
                   <RefreshCw size={18} className={`text-white`} />
                </Button>
             </TooltipTrigger>
             <TooltipContent
                side={`top`}
-               className={`bg-black text-white rounded-xl text-xs border-neutral-700 !px-4 !py-2`}>
+               className={`rounded-xl border-neutral-700 bg-black !px-4 !py-2 text-xs text-white`}
+            >
                Refresh
             </TooltipContent>
          </Tooltip>

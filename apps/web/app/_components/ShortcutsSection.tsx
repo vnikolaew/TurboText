@@ -1,19 +1,22 @@
-"use client"
-import React from "react";
-import { useAtomValue } from "jotai";
+"use client";
 import { keyTipsAtom } from "@atoms/user";
+import { useAtomValue } from "jotai";
 
-export interface ShortcutsSectionProps {
-}
+export interface ShortcutsSectionProps {}
 
 const ShortcutsSection = ({}: ShortcutsSectionProps) => {
-   const keyTips: boolean = useAtomValue(keyTipsAtom)
+   const keyTips: boolean = useAtomValue(keyTipsAtom);
 
-   if(!keyTips) return null;
+   if (!keyTips) return null;
    return (
-      <div className={`w-full flex flex-col items-center mt-16 text-xs`}>
+      <div className={`mt-16 flex w-full flex-col items-center text-xs`}>
          <span className={`text-accent`}>
-           <kbd className={`bg-accent/90 px-2 py-0.5 rounded-sm !text-main shadow-sm`}>esc</kbd> - command line
+            <kbd
+               className={`rounded-sm bg-accent/90 px-2 py-0.5 !text-main shadow-sm`}
+            >
+               esc
+            </kbd>{" "}
+            - command line
          </span>
       </div>
    );

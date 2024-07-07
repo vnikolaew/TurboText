@@ -1,23 +1,25 @@
 "use client";
-import { useEffect } from "react";
-import { useSession } from "next-auth/react";
-import { useAction } from "next-safe-action/hooks";
-import { saveTypingRun } from "@components/editor/actions";
-import { z } from "zod";
+import { TypingMode } from "@atoms/consts";
 import { TYPING_RUN_LS_KEY } from "@components/editor/TypingEditor";
-import { toast } from "@repo/ui";
+import { saveTypingRun } from "@components/editor/actions";
 import { TOASTS } from "@config/toasts";
 import { LocalStorage } from "@lib/local-storage";
-import { TypingMode } from "@atoms/consts";
+import { toast } from "@repo/ui";
+import { useSession } from "next-auth/react";
+import { useAction } from "next-safe-action/hooks";
+import { useEffect } from "react";
+import { z } from "zod";
 
 export const typedLettersSchema = z.object({
-   typedLetters: z.array(z.object({
-      charIndex: z.number().min(0),
-      timestamp: z.number().min(0),
-      letter: z.string().max(1),
-      correct: z.boolean().nullable(),
-      flags: z.number().nullable(),
-   })),
+   typedLetters: z.array(
+      z.object({
+         charIndex: z.number().min(0),
+         timestamp: z.number().min(0),
+         letter: z.string().max(1),
+         correct: z.boolean().nullable(),
+         flags: z.number().nullable(),
+      })
+   ),
    time: z.number(),
    totalRunTime: z.number(),
    completedWords: z.number(),
@@ -31,11 +33,11 @@ export type TypingRun = z.infer<typeof typedLettersSchema>;
 
 export function useSaveLatestUserRun() {
    // const params = useSearchParams();
-   const save = false
+   const save = false;
    const session = useSession();
 
    const { execute, status } = useAction(saveTypingRun, {
-      onSuccess: res => {
+      onSuccess: (res) => {
          if (res?.data?.success) {
             console.log(res.data);
             localStorage.removeItem(TYPING_RUN_LS_KEY);
@@ -45,8 +47,11 @@ export function useSaveLatestUserRun() {
    });
 
    useEffect(() => {
-      if(!save) return;
-      const result = LocalStorage.getParsedItem(TYPING_RUN_LS_KEY, typedLettersSchema);
+      if (!save) return;
+      const result = LocalStorage.getParsedItem(
+         TYPING_RUN_LS_KEY,
+         typedLettersSchema
+      );
 
       if (session?.status === `authenticated` && result) {
          console.log(`Saving run to DB`, { typedLetters: result.typedLetters });

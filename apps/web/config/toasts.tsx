@@ -1,7 +1,6 @@
 "use client";
 
-import React from "react";
-import { Check, Cookie, Flag, Sword, Swords, X } from "lucide-react";
+import { Check, Cookie, Flag, Swords, X } from "lucide-react";
 
 export const TOASTS = {
    FORGOT_PASSWORD: {
@@ -14,7 +13,8 @@ export const TOASTS = {
       description: `You've successfully edited your profile details.`,
       className: ``,
       classNames: {
-         title: `text-lg`, description: `text-md`,
+         title: `text-lg`,
+         description: `text-md`,
       },
       duration: 10_000,
    },
@@ -23,7 +23,8 @@ export const TOASTS = {
       description: `You've successfully changed your profile picture.`,
       className: ``,
       classNames: {
-         title: `text-lg`, description: `text-md`,
+         title: `text-lg`,
+         description: `text-md`,
       },
       duration: 10_000,
    },
@@ -32,15 +33,19 @@ export const TOASTS = {
       description: `You've successfully saved your cookies preferences.`,
       className: ``,
       classNames: {
-         title: `text-lg text-main`, description: `text-md text-secondary`,
-      }, icon: <Cookie className={`text-accent`} size={16} />, duration: 10_000,
+         title: `text-lg text-main`,
+         description: `text-md text-secondary`,
+      },
+      icon: <Cookie className={`text-accent`} size={16} />,
+      duration: 10_000,
    },
    ACCEPT_COOKIE_CONSENT_SUCCESS: {
       message: `Cookies accepted.`,
       description: `You've successfully accepted the usage of cookies.`,
       className: ``,
       classNames: {
-         title: `text-lg`, description: `text-md`,
+         title: `text-lg`,
+         description: `text-md`,
       },
       icon: <Cookie className={`text-orange-800`} size={16} />,
       duration: 10_000,
@@ -50,186 +55,191 @@ export const TOASTS = {
       description: `There was a problem sending your message.`,
       className: ``,
       classNames: {
-         title: `text-lg`, description: `text-md`,
+         title: `text-lg`,
+         description: `text-md`,
       },
       duration: 10_000,
    },
    EXPORT_SUCCESS: {
-      message:
-         (<div className={`flex items-center gap-2`}>
+      message: (
+         <div className={`flex items-center gap-2`}>
             <Check className={`text-green-600`} size={24} />
-            <span>
-Export successful
-</span>
-         </div>),
+            <span>Export successful</span>
+         </div>
+      ),
       className: `text-base font-normal !text-main`,
    },
    CREATE_CATEGORY_SUCCESS: {
-      message:
-         (<div className={`flex items-center gap-2`}>
+      message: (
+         <div className={`flex items-center gap-2`}>
             <Check className={`text-green-600`} size={24} />
             <span>Category successfully created!</span>
-         </div>),
+         </div>
+      ),
       className: `text-base font-normal !text-main`,
    },
    CHANGE_CATEGORY_SUCCESS: {
-      message:
-         (<div className={`flex items-center gap-2`}>
+      message: (
+         <div className={`flex items-center gap-2`}>
             <Check className={`text-green-600`} size={24} />
             <span>Note category successfully changed!</span>
-         </div>),
+         </div>
+      ),
       className: `text-base font-normal !text-main`,
    },
    DELETE_NOTE_SUCCESS: {
-      message:
-         (<div className={`flex items-center gap-2`}>
-            <Check className={`text-green-600 bg-green-600`} size={24} />
+      message: (
+         <div className={`flex items-center gap-2`}>
+            <Check className={`bg-green-600 text-green-600`} size={24} />
             <span>Note successfully deleted!</span>
-         </div>),
+         </div>
+      ),
       className: `text-base font-normal !text-main`,
    },
    USER_FEEDBACK_SUCCESS: {
-      message:
-         (<div className={`flex items-center gap-2`}>
-            <Check className={`text-green-600 bg-green-600`} size={24} />
+      message: (
+         <div className={`flex items-center gap-2`}>
+            <Check className={`bg-green-600 text-green-600`} size={24} />
             <span>Feedback successfully submitted!</span>
-         </div>),
+         </div>
+      ),
       description: `Thank you for your feedback!`,
       className: `text-base font-normal !text-main`,
    },
    CHANGE_USER_PROFILE_PIC_SUCCESS: {
-      message:
-         (<div className={`flex items-center gap-2`}>
-            <Check className={`text-green-600 bg-green-600`} size={24} />
+      message: (
+         <div className={`flex items-center gap-2`}>
+            <Check className={`bg-green-600 text-green-600`} size={24} />
             <span>Profile picture successfully changed!</span>
-         </div>),
+         </div>
+      ),
       className: `text-base font-normal !text-main`,
    },
    SAVE_TYPING_RUN_SUCCESS: {
-      message:
-         (
-            <div className={`flex items-center gap-2`}>
-               <Check className={`text-green-600 bg-green-600`} size={24} />
-               <span>Your latest run has been saved!</span>
-            </div>),
+      message: (
+         <div className={`flex items-center gap-2`}>
+            <Check className={`bg-green-600 text-green-600`} size={24} />
+            <span>Your latest run has been saved!</span>
+         </div>
+      ),
       className: `text-base font-normal !text-main !text-main`,
    },
    SAVE_TYPING_RUN_SUCCESS_NOTIFICATION: (message: string) => ({
-      message:
-         (
-            <div className={`flex items-center gap-2`}>
-               <Check className={`text-green-600 bg-green-600`} size={24} />
-               <span>Your latest run has been saved! {message}</span>
-            </div>),
+      message: (
+         <div className={`flex items-center gap-2`}>
+            <Check className={`bg-green-600 text-green-600`} size={24} />
+            <span>Your latest run has been saved! {message}</span>
+         </div>
+      ),
       className: `text-base font-normal !text-main !text-main`,
    }),
    SAVE_TYPING_RUN_FAILURE: {
-      message:
-         (
-            <div className={`flex items-center gap-2`}>
-               <Check className={`text-green-600 bg-green-600`} size={24} />
-               <span>Your latest run could not be saved!</span>
-            </div>),
+      message: (
+         <div className={`flex items-center gap-2`}>
+            <Check className={`bg-green-600 text-green-600`} size={24} />
+            <span>Your latest run could not be saved!</span>
+         </div>
+      ),
       className: `text-base font-normal !text-main`,
    },
    PUBLIC_LINK_COPIED_SUCCESS: {
-      message:
-         (
-            <div className={`flex items-center gap-2`}>
-               <Check className={`text-green-600 bg-green-600`} size={24} />
-               <span>URL copied to clipboard</span>
-            </div>),
+      message: (
+         <div className={`flex items-center gap-2`}>
+            <Check className={`bg-green-600 text-green-600`} size={24} />
+            <span>URL copied to clipboard</span>
+         </div>
+      ),
       className: `text-base font-normal !text-main`,
    },
    DELETE_TAG_FAILURE: {
-      message:
-         (
-            <div className={`flex items-center gap-2`}>
-               <Check className={`text-green-600 bg-green-600`} size={24} />
-               <span>Tag could not be deleted</span>
-            </div>),
+      message: (
+         <div className={`flex items-center gap-2`}>
+            <Check className={`bg-green-600 text-green-600`} size={24} />
+            <span>Tag could not be deleted</span>
+         </div>
+      ),
       className: `text-base font-normal !text-main`,
    },
    DELETE_TAG_SUCCESS: {
-      message:
-         (
-            <div className={`flex items-center gap-2`}>
-               <Check className={`text-green-600 bg-green-600`} size={24} />
-               <span>Tag successfully deleted</span>
-            </div>),
+      message: (
+         <div className={`flex items-center gap-2`}>
+            <Check className={`bg-green-600 text-green-600`} size={24} />
+            <span>Tag successfully deleted</span>
+         </div>
+      ),
       className: `text-base font-normal !text-main`,
    },
    ADD_NEW_TAG_SUCCESS: {
-      message:
-         (
-            <div className={`flex items-center gap-2`}>
-               <Check className={`text-green-600 bg-green-600`} size={24} />
-               <span>Tag successfully added</span>
-            </div>),
+      message: (
+         <div className={`flex items-center gap-2`}>
+            <Check className={`bg-green-600 text-green-600`} size={24} />
+            <span>Tag successfully added</span>
+         </div>
+      ),
       className: `text-base font-normal !text-main`,
    },
    EDIT_USERNAME_FAILURE: (error: string) => ({
-      message:
-         (
-            <div className={`flex items-center gap-2`}>
-               <X className={`text-red-600 bg-red-600`} size={24} />
-               <span>Username could not be edited: {error}</span>
-            </div>),
+      message: (
+         <div className={`flex items-center gap-2`}>
+            <X className={`bg-red-600 text-red-600`} size={24} />
+            <span>Username could not be edited: {error}</span>
+         </div>
+      ),
       description: error,
       className: `text-base font-normal !text-main`,
    }),
    EDIT_USERNAME_SUCCESS: {
-      message:
-         (
-            <div className={`flex items-center gap-2`}>
-               <Check className={`text-green-600 bg-green-600`} size={24} />
-               <span>Username successfully edited</span>
-            </div>),
+      message: (
+         <div className={`flex items-center gap-2`}>
+            <Check className={`bg-green-600 text-green-600`} size={24} />
+            <span>Username successfully edited</span>
+         </div>
+      ),
       className: `text-base font-normal !text-main`,
    },
    EDIT_TAG_FAILURE: {
-      message:
-         (
-            <div className={`flex items-center gap-2`}>
-               <Check className={`text-green-600 bg-green-600`} size={24} />
-               <span>Tag could not be edited</span>
-            </div>),
+      message: (
+         <div className={`flex items-center gap-2`}>
+            <Check className={`bg-green-600 text-green-600`} size={24} />
+            <span>Tag could not be edited</span>
+         </div>
+      ),
       className: `text-base font-normal !text-main`,
    },
    IMPORT_SETTINGS_FAILURE: {
-      message:
-         (
-            <div className={`flex items-center gap-2`}>
-               <Check className={`text-green-600 bg-green-600`} size={24} />
-               <span>Could not parse JSON settings</span>
-            </div>),
+      message: (
+         <div className={`flex items-center gap-2`}>
+            <Check className={`bg-green-600 text-green-600`} size={24} />
+            <span>Could not parse JSON settings</span>
+         </div>
+      ),
       className: `text-base font-normal !text-main`,
    },
    IMPORT_SETTINGS_SUCCESS: {
-      message:
-         (
-            <div className={`flex items-center gap-2`}>
-               <Check className={`text-green-600 bg-green-600`} size={24} />
-               <span>Settings successfully imported</span>
-            </div>),
+      message: (
+         <div className={`flex items-center gap-2`}>
+            <Check className={`bg-green-600 text-green-600`} size={24} />
+            <span>Settings successfully imported</span>
+         </div>
+      ),
       className: `text-base font-normal !text-main`,
    },
    EDIT_TAG_SUCCESS: {
-      message:
-         (
-            <div className={`flex items-center gap-2`}>
-               <Check className={`text-green-600 bg-green-600`} size={24} />
-               <span>Tag successfully edited</span>
-            </div>),
+      message: (
+         <div className={`flex items-center gap-2`}>
+            <Check className={`bg-green-600 text-green-600`} size={24} />
+            <span>Tag successfully edited</span>
+         </div>
+      ),
       className: `text-base font-normal !text-main`,
    },
    ADD_NEW_TAG_FAILURE: (error: string) => ({
-      message:
-         (
-            <div className={`flex items-center gap-2`}>
-               <Check className={`text-green-600 bg-green-600`} size={24} />
-               <span>An error occurred: {error}</span>
-            </div>),
+      message: (
+         <div className={`flex items-center gap-2`}>
+            <Check className={`bg-green-600 text-green-600`} size={24} />
+            <span>An error occurred: {error}</span>
+         </div>
+      ),
       className: `text-base font-normal !text-main`,
    }),
    RUN_FAILED: (error: string) => ({

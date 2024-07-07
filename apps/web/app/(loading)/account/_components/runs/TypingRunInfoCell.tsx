@@ -1,8 +1,13 @@
 "use client";
 import { TypingRun } from "@repo/db";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@repo/ui";
-import React from "react";
+import {
+   Tooltip,
+   TooltipContent,
+   TooltipProvider,
+   TooltipTrigger,
+} from "@repo/ui";
 import { EyeOff, Globe, Star } from "lucide-react";
+import React from "react";
 
 export interface TypingRunInfoCellProps {
    run: TypingRun;
@@ -14,7 +19,9 @@ const TypingRunInfoCell = ({ run }: TypingRunInfoCellProps) => {
          <IconWithTooltip text={run.metadata?.language ?? `english`}>
             <Globe size={20} />
          </IconWithTooltip>
-         <IconWithTooltip text={run.metadata?.test_difficulty?.toLowerCase() ?? `normal`}>
+         <IconWithTooltip
+            text={run.metadata?.test_difficulty?.toLowerCase() ?? `normal`}
+         >
             <Star size={20} />
          </IconWithTooltip>
          {run.blindMode && (
@@ -26,7 +33,13 @@ const TypingRunInfoCell = ({ run }: TypingRunInfoCellProps) => {
    );
 };
 
-const IconWithTooltip = ({ children, text }: { children: React.ReactNode, text: string }) => {
+const IconWithTooltip = ({
+   children,
+   text,
+}: {
+   children: React.ReactNode;
+   text: string;
+}) => {
    return (
       <TooltipProvider delayDuration={100}>
          <Tooltip>
@@ -35,7 +48,8 @@ const IconWithTooltip = ({ children, text }: { children: React.ReactNode, text: 
             </TooltipTrigger>
             <TooltipContent
                side={`top`}
-               className={`bg-black text-white rounded-xl text-sm border-neutral-700 !px-4 !py-2`}>
+               className={`rounded-xl border-neutral-700 bg-black !px-4 !py-2 text-sm text-white`}
+            >
                {text}
             </TooltipContent>
          </Tooltip>

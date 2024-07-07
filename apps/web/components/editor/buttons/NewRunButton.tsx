@@ -1,12 +1,16 @@
 "use client";
-import React from "react";
-import { useSetAtom } from "jotai/index";
-import { Button, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@repo/ui";
-import { ChevronRight } from "lucide-react";
 import { newTestAtom } from "@atoms/actions";
+import {
+   Button,
+   Tooltip,
+   TooltipContent,
+   TooltipProvider,
+   TooltipTrigger,
+} from "@repo/ui";
+import { useSetAtom } from "jotai/index";
+import { ChevronRight } from "lucide-react";
 
-export interface NewRunButtonProps {
-}
+export interface NewRunButtonProps {}
 
 const NewRunButton = ({}: NewRunButtonProps) => {
    const newTest = useSetAtom(newTestAtom);
@@ -21,15 +25,20 @@ const NewRunButton = ({}: NewRunButtonProps) => {
             <TooltipTrigger asChild>
                <Button
                   onClick={handleNewTest}
-                  className={`hover:!bg-transparent group`}
+                  className={`group hover:!bg-transparent`}
                   variant={`ghost`}
-                  size={`icon`}>
-                  <ChevronRight className={`group-hover:!text-neutral-400  transition-colors duration-200 !text-main`} size={18} />
+                  size={`icon`}
+               >
+                  <ChevronRight
+                     className={`!text-main transition-colors duration-200 group-hover:!text-neutral-400`}
+                     size={18}
+                  />
                </Button>
             </TooltipTrigger>
             <TooltipContent
                side={`bottom`}
-               className={`bg-black text-white rounded-xl text-sm border-neutral-700 !px-4 !py-2`}>
+               className={`rounded-xl border-neutral-700 bg-black !px-4 !py-2 text-sm text-white`}
+            >
                New test
             </TooltipContent>
          </Tooltip>

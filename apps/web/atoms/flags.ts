@@ -1,7 +1,7 @@
-import { atom } from "jotai";
-import { injectPunctuation, strings } from "@lib/strings";
-import { typingModeAtom, wordsAtom } from "@atoms/editor";
 import { TypingFlags, TypingMode } from "@atoms/consts";
+import { typingModeAtom, wordsAtom } from "@atoms/editor";
+import { injectPunctuation, strings } from "@lib/strings";
+import { atom } from "jotai";
 
 export const toggleNumbersAtom = atom(null, (get, set) => {
    const flags = get(typingFlagsAtom);
@@ -13,32 +13,38 @@ export const toggleNumbersAtom = atom(null, (get, set) => {
    console.log({ addingNumbers, removingNumbers });
    if (addingNumbers) {
       if (mode === TypingMode.WORDS) {
-         set(wordsAtom, w => {
+         set(wordsAtom, (w) => {
             const newWords = [...w];
             console.log({ newWords });
             for (let x = 0; x < 2; x++) {
-               newWords[Math.floor(Math.random() * newWords.length)] = Math.floor(Math.random() * 1_000).toString();
+               newWords[Math.floor(Math.random() * newWords.length)] =
+                  Math.floor(Math.random() * 1_000).toString();
             }
             return newWords;
          });
       } else {
-
-         set(wordsAtom, w => {
+         set(wordsAtom, (w) => {
             const newWords = [...w];
             for (let x = 0; x < 2; x++) {
-               newWords.splice(Math.floor(Math.random() * newWords.length), 0, Math.floor(Math.random() * 1_000).toString());
+               newWords.splice(
+                  Math.floor(Math.random() * newWords.length),
+                  0,
+                  Math.floor(Math.random() * 1_000).toString()
+               );
             }
-            console.log({newWords});
+            console.log({ newWords });
             return newWords;
          });
       }
    } else if (removingNumbers) {
-      set(wordsAtom, w => w.map(x => {
-         [...strings.punctuation].forEach(char => {
-            x = x.replaceAll(char, ``);
-         });
-         return x;
-      }));
+      set(wordsAtom, (w) =>
+         w.map((x) => {
+            [...strings.punctuation].forEach((char) => {
+               x = x.replaceAll(char, ``);
+            });
+            return x;
+         })
+      );
    }
    set(typingFlagsAtom, flags ^ TypingFlags.NUMBERS);
 });
@@ -50,14 +56,16 @@ export const togglePunctuationAtom = atom(null, (get, set) => {
    const removingPunctuation = !addingPunctuation;
 
    if (addingPunctuation) {
-      set(wordsAtom, w => injectPunctuation(w, strings.punctuation));
+      set(wordsAtom, (w) => injectPunctuation(w, strings.punctuation));
    } else if (removingPunctuation) {
-      set(wordsAtom, w => w.map(x => {
-         [...strings.punctuation].forEach(char => {
-            x = x.replaceAll(char, ``);
-         });
-         return x;
-      }));
+      set(wordsAtom, (w) =>
+         w.map((x) => {
+            [...strings.punctuation].forEach((char) => {
+               x = x.replaceAll(char, ``);
+            });
+            return x;
+         })
+      );
    }
    set(typingFlagsAtom, flags ^ TypingFlags.PUNCTUATION);
 });

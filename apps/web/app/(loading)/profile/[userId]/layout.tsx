@@ -1,10 +1,9 @@
 "use client";
-import { PropsWithChildren, useEffect } from "react";
-import { usePathname } from "next/navigation";
 import { usePrevious } from "@hooks/usePrevious";
+import { usePathname } from "next/navigation";
+import { PropsWithChildren, useEffect } from "react";
 
-export interface LayoutProps extends PropsWithChildren {
-}
+export interface LayoutProps extends PropsWithChildren {}
 
 const Layout = ({ children }: LayoutProps) => {
    const pathname = usePathname();

@@ -1,10 +1,9 @@
 import { ZodSchema } from "zod";
 
 export class ZodLocalStorage {
-
    public getParsedItem<T>(key: string, schema: ZodSchema<T>) {
       const item = localStorage.getItem(key);
-      if(!item) return null;
+      if (!item) return null;
 
       const result = schema.safeParse(JSON.parse(item));
       return result.success ? result.data : null;
