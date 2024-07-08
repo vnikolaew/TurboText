@@ -9,6 +9,12 @@ import { Session } from "next-auth";
 export const userDataLoadingAtom = atom(true);
 userDataLoadingAtom.debugLabel = `userDataLoadingAtom`;
 
+export const userPbAtom = atom(0)
+userPbAtom.debugLabel = `userPbAtom`;
+
+export const typingTimeTodayAtom = atom(0)
+typingTimeTodayAtom.debugLabel = `typingTimeTodayAtom`;
+
 export const otherUserDataLoadingAtom = atom(true);
 otherUserDataLoadingAtom.debugLabel = `otherUserDataLoadingAtom`;
 

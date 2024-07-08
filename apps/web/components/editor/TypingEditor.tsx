@@ -3,7 +3,6 @@ import { TypingRunState } from "@atoms/consts";
 import {
    endTimeAtom,
    totalRunTimeAtom,
-   typedLettersAtom,
    typingRunAtom,
    typingRunStateAtom,
    useTypingRunSuccess,
@@ -36,6 +35,8 @@ import Confetti from "react-confetti";
 import TypeRunState from "./TypeRunState";
 import TypingRunInfo from "./TypingRunInfo";
 import { useSaveLatestUserRun } from "./hooks/useSaveLatestUserRun";
+import EditorToolbar from "@components/editor/toolbar/EditorToolbar";
+import PressKeyLabel from "@components/editor/PressKeyLabel";
 
 export interface TypingEditorProps {
    user: User & { typingRuns: TypingRun[] };
@@ -44,7 +45,6 @@ export interface TypingEditorProps {
 export const TYPING_RUN_LS_KEY = `typing-run`;
 
 const TypingEditor = ({ user }: TypingEditorProps) => {
-   const typedLetters = useAtomValue(typedLettersAtom);
    const totalRunTime = useAtomValue(totalRunTimeAtom);
    const totalPauseTime = useAtomValue(totalPauseTimeAtom);
    const typingRun = useAtomValue(typingRunAtom);
@@ -70,8 +70,8 @@ const TypingEditor = ({ user }: TypingEditorProps) => {
             if (res.data?.notification) {
                toast(
                   TOASTS.SAVE_TYPING_RUN_SUCCESS_NOTIFICATION(
-                     res.data?.notification!.message
-                  )
+                     res.data?.notification!.message,
+                  ),
                );
             } else {
                toast(TOASTS.SAVE_TYPING_RUN_SUCCESS);
@@ -97,88 +97,109 @@ const TypingEditor = ({ user }: TypingEditorProps) => {
    const autoSaveMode = useAtomValue(autoSaveModeAtom);
    const showSavePrompt = useMemo(
       () => timerState === TypingRunState.FINISHED,
-      [timerState, result, autoSaveMode]
+      [timerState, result, autoSaveMode],
    );
 
    function handleSaveTypingRun(): void {
       execute(typingRun);
    }
 
-   return (
-      <div className={`mx-auto flex w-3/4 flex-col items-center gap-8`}>
-         {timerState === TypingRunState.FINISHED && (
-            <Confetti
-               className={`h-full w-1/5`}
-               numberOfPieces={500}
-               width={300}
-               confettiSource={{
-                  x: 100,
-                  y: 100,
-                  w: 200,
-                  h: 200,
-               }}
-               recycle={false}
-               tweenDuration={3000}
-               height={300}
-            />
-         )}
-         <div id={`editor`} className={`rounded-md px-4 py-8`}>
-            {timerState !== TypingRunState.FINISHED && (
-               <Fragment>
-                  <TypeRunState />
-                  <CapsLockWarning />
-               </Fragment>
-            )}
-            {timerState !== TypingRunState.RUNNING && (
-               <TypingRunInfo runs={user?.typingRuns} />
-            )}
-            {timerState !== TypingRunState.FINISHED && <TypingInput />}
-         </div>
-         <DevOnly>
-            <div className={`flex w-full items-center justify-center gap-2`}>
-               <span className={`mt-4 w-full text-center !text-main`}>
-                  Total run time: {totalRunTime.toFixed(2)}ms
-               </span>
-               <span className={`mt-4 w-full text-center !text-main`}>
-                  Total pause time: {totalPauseTime.toFixed(2)}ms
-               </span>
-            </div>
-         </DevOnly>
-         <ToggleWords />
-         <EditorButtons />
-         <AnimatePresence>
-            {showSavePrompt && (
-               <SaveTypingRunPrompt
-                  loading={isExecuting}
-                  onDismiss={() => {
-                     LocalStorage.removeItem(TYPING_RUN_LS_KEY);
-                  }}
-                  onSave={handleSaveTypingRun}
-               />
-            )}
-         </AnimatePresence>
-         <AnimatePresence>
-            <SignedOut>
+   if (timerState === TypingRunState.FINISHED) {
+      return (
+         <div className={`mx-auto flex w-3/4 flex-col items-center gap-8`}>
+            <AnimatePresence>
                {showSavePrompt && (
-                  <div className={`flex w-full items-center justify-center`}>
-                     <span className={`text-lg`}>
-                        <Button
-                           className={`!px-0 !text-base`}
-                           variant={`link`}
-                           onClick={(_) => signIn(`google`)}
-                        >
-                           Sign in{" "}
-                        </Button>{" "}
-                        to save your result.
-                     </span>
-                  </div>
+                  <SaveTypingRunPrompt
+                     loading={isExecuting}
+                     onDismiss={() => {
+                        LocalStorage.removeItem(TYPING_RUN_LS_KEY);
+                     }}
+                     onSave={handleSaveTypingRun} />
                )}
-            </SignedOut>
-         </AnimatePresence>
-         <DevOnly>
-            {timerState === TypingRunState.FINISHED && <TypingRunSummary />}
-         </DevOnly>
-      </div>
+            </AnimatePresence>
+            <TypingRunSummary />
+            <ToggleWords />
+            <EditorButtons />
+         </div>
+      );
+   }
+
+   return (
+      <Fragment>
+         <div className={`flex w-full flex-col items-center gap-2`}>
+            <EditorToolbar />
+            <PressKeyLabel />
+         </div>
+         <div className={`mx-auto flex w-3/4 flex-col items-center gap-8`}>
+            {timerState === TypingRunState.FINISHED && (
+               <Confetti
+                  className={`h-full w-1/5`}
+                  numberOfPieces={500}
+                  width={300}
+                  confettiSource={{
+                     x: 100,
+                     y: 100,
+                     w: 200,
+                     h: 200,
+                  }}
+                  recycle={false}
+                  tweenDuration={3000}
+                  height={300} />
+            )}
+            <div id={`editor`} className={`rounded-md px-4 py-8`}>
+               {timerState !== TypingRunState.FINISHED && (
+                  <Fragment>
+                     <TypeRunState />
+                     <CapsLockWarning />
+                  </Fragment>
+               )}
+               {timerState !== TypingRunState.RUNNING && (
+                  <TypingRunInfo runs={user?.typingRuns} />
+               )}
+               {timerState !== TypingRunState.FINISHED && <TypingInput />}
+            </div>
+            <DevOnly>
+               <div className={`flex w-full items-center justify-center gap-2`}>
+                       <span className={`mt-4 w-full text-center !text-main`}>
+                           Total run time: {totalRunTime.toFixed(2)}ms
+                       </span>
+                  <span className={`mt-4 w-full text-center !text-main`}>
+                           Total pause time: {totalPauseTime.toFixed(2)}ms
+                       </span>
+               </div>
+            </DevOnly>
+            <ToggleWords />
+            <EditorButtons />
+            <AnimatePresence>
+               {showSavePrompt && (
+                  <SaveTypingRunPrompt
+                     loading={isExecuting}
+                     onDismiss={() => {
+                        LocalStorage.removeItem(TYPING_RUN_LS_KEY);
+                     }}
+                     onSave={handleSaveTypingRun} />
+               )}
+            </AnimatePresence>
+            <AnimatePresence>
+               <SignedOut>
+                  {showSavePrompt && (
+                     <div className={`flex w-full items-center justify-center`}>
+                               <span className={`text-lg`}>
+                                   <Button
+                                      className={`!px-0 !text-base`}
+                                      variant={`link`}
+                                      onClick={(_) => signIn(`google`)}
+                                   >
+                                       Sign in{" "}
+                                   </Button>{" "}
+                                  to save your result.
+                               </span>
+                     </div>
+                  )}
+               </SignedOut>
+            </AnimatePresence>
+         </div>
+      </Fragment>
    );
 };
 

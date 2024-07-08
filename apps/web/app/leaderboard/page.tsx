@@ -4,7 +4,7 @@ import TimeframeButtons from "@app/leaderboard/_components/TimeframeButtons";
 import LeaderboardsSection from "@app/leaderboard/_components/challenges/LeaderboardsSection";
 import {
    getChallengesLeaderboard,
-   getLeaderboard,
+   getLeaderboard, getSearchParamsNormalized,
    showUserWarning,
 } from "@app/leaderboard/_queries";
 import { APP_DESCRIPTION, APP_NAME } from "@config/site";
@@ -23,12 +23,12 @@ export const metadata: Metadata = {
 };
 
 const Page = async ({ searchParams }: PageProps) => {
-   const { time60Runs, time15Runs, daily, language } =
-      await getLeaderboard(searchParams);
-   const users = await getChallengesLeaderboard(searchParams);
-
-   const showWarning = await showUserWarning();
-   // console.log({ da});
+   const [{ time60Runs, time15Runs }, users, {language, daily}, showWarning] = await Promise.all([
+      getLeaderboard(searchParams),
+      getChallengesLeaderboard(searchParams),
+      getSearchParamsNormalized(searchParams),
+      showUserWarning()
+   ] as const);
 
    return (
       <section

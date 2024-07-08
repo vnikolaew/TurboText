@@ -17,7 +17,7 @@ import TypeRunState from "@components/editor/TypeRunState";
 import { TYPING_RUN_LS_KEY } from "@components/editor/TypingEditor";
 import TypingInput from "@components/editor/TypingInput";
 import TypingRunInfo from "@components/editor/TypingRunInfo";
-import TypingRunSummary from "@components/editor/TypingRunSummary";
+import TypingRunSummary from "@components/editor/summary/TypingRunSummary";
 import { saveTypingRun } from "@components/editor/actions";
 import CopyToClipboardButton from "@components/editor/buttons/CopyToClipboardButton";
 import RestartButton from "@components/editor/buttons/RestartButton";

@@ -17,18 +17,20 @@ import { TIMES, currentTimestampAtom } from "@atoms/timer";
 import {
    cookiePreferencesAtom,
    globalUserNotificationsAtom,
-   prevUserXpAtom,
+   prevUserXpAtom, typingTimeTodayAtom,
    userActiveTagsAtom,
    userAtom,
    userConfigAtom,
-   userDataLoadingAtom,
+   userDataLoadingAtom, userPbAtom,
    userXpAtom,
 } from "@atoms/user";
 import { wordsCountsAtom } from "@atoms/words";
 import { injectCSSClass } from "@lib/utils";
-import { Tag, User, UserConfiguration, UserNotification } from "@repo/db";
+import { Tag, TypingRun, User, UserConfiguration, UserNotification } from "@repo/db";
 import { useAtom } from "jotai";
 import { useHydrateAtoms } from "jotai/utils";
+import { max, sum } from "lodash";
+import moment from "moment";
 import { generate } from "random-words";
 import { useEffect, useRef } from "react";
 
@@ -36,7 +38,8 @@ export function useHydrateAllAtoms(
    user?: User & {
       configuration: UserConfiguration;
       notifications: UserNotification[];
-   }
+      typingRuns: TypingRun[];
+   },
 ) {
    const WORDS = useRef(generate(DEFAULT_WORD_COUNT) as string[]);
    const [userConfig, setUserConfig] = useAtom(userConfigAtom);
@@ -44,7 +47,7 @@ export function useHydrateAllAtoms(
    useEffect(() => {
       if (!!userConfig) {
          const ls_value = JSON.parse(
-            localStorage.getItem(`user-configuration`) ?? `{}`
+            localStorage.getItem(`user-configuration`) ?? `{}`,
          );
          setUserConfig({
             test_difficulty: "NORMAL",
@@ -66,8 +69,8 @@ export function useHydrateAllAtoms(
    const ls_value =
       typeof global?.window !== `undefined`
          ? JSON.parse(
-              window?.localStorage.getItem(`user-configuration`) ?? `{}`
-           )
+            window?.localStorage.getItem(`user-configuration`) ?? `{}`,
+         )
          : {};
 
    let newUserConfig: Partial<UserConfiguration> = {
@@ -88,6 +91,8 @@ export function useHydrateAllAtoms(
    //@ts-ignore
    useHydrateAtoms([
       [wordsAtom, WORDS.current],
+      [typingTimeTodayAtom, sum(user?.typingRuns?.filter(r => moment(r.createdAt).isSame(moment(), `day`)).map(r => r.totalTimeMilliseconds)) / 1000],
+      [userPbAtom, max(user?.typingRuns?.map(r => r.metadata?.wpm) ?? []) ?? 0],
       [
          globalUserNotificationsAtom,
          user?.notifications?.map((n) => ({

@@ -2,7 +2,6 @@
 import {
    ChartContainer,
    ChartLegend,
-   ChartLegendContent,
    ChartTooltip,
    ChartTooltipContent,
    type ChartConfig,

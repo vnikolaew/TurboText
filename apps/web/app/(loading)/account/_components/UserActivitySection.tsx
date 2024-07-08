@@ -56,6 +56,15 @@ const ACTIVITY_LEVELS_COLORS = {
    Infinity: `fill-amber-300`,
 };
 
+const ACTIVITY_LEVELS_BGS = {
+   0: `bg-black`,
+   3: `bg-stone-700`,
+   5: `bg-amber-900`,
+   7: `bg-amber-700`,
+   9: `bg-amber-500`,
+   Infinity: `bg-amber-300`,
+};
+
 const UserActivitySection = ({ typingRuns }: UserActivitySectionProps) => {
    const grouped = getRunsGroupedByDate(typingRuns);
 
@@ -69,60 +78,74 @@ const UserActivitySection = ({ typingRuns }: UserActivitySectionProps) => {
    return (
       <section
          id={`activity`}
-         className={`z-[30] mt-12 flex h-[200px] w-full items-center justify-center`}
+         className={`z-[30] mt-2 flex flex-col h-[240px] w-full items-center justify-start gap-4`}
       >
-         <div className={`w-1/2 text-secondary`}>
-            {showTooltip && (
-               <ActivityTooltip
-                  top={top}
-                  left={left}
-                  count={count}
-                  date={date}
-               />
-            )}
-            <CalendarHeatmap
-               tooltipDataAttrs={(value) => {
-                  return {
-                     "data-tip": `${value.date?.toISOString().slice(0, 10)} has count: ${
-                        value.count
-                     }`,
-                     "data-date": value.date,
-                     "data-count": value.count,
-                  };
-               }}
-               onMouseLeave={(_) => setShowTooltip(false)}
-               onMouseOver={(e) => {
-                  setShowTooltip(true);
-                  const rects = (
-                     e.target as HTMLElement
-                  ).getBoundingClientRect();
-                  const { date, count } = (e.target as HTMLElement).dataset;
+            <div className={`flex items-center gap-2`}>
+               <span>less</span>
+               <div className={`flex items-center gap-1`}>
+                  {Object.entries(ACTIVITY_LEVELS_BGS).map(
+                     ([key, value]) => (
+                        <div
+                           key={key}
+                           className={`w-4 h-4 rounded-md ${value}`}
+                        />
+                     )
+                  )}
+               </div>
+               <span>more</span>
+            </div>
+            <div className={`w-1/2 text-secondary`}>
+               {showTooltip && (
+                  <ActivityTooltip
+                     top={top}
+                     left={left}
+                     count={count}
+                     date={date}
+                  />
+               )}
+               <CalendarHeatmap
+                  tooltipDataAttrs={(value) => {
+                     return {
+                        "data-tip": `${value.date?.toISOString().slice(0, 10)} has count: ${
+                           value.count
+                        }`,
+                        "data-date": value.date,
+                        "data-count": value.count,
+                     };
+                  }}
+                  onMouseLeave={(_) => setShowTooltip(false)}
+                  onMouseOver={(e) => {
+                     setShowTooltip(true);
+                     const rects = (
+                        e.target as HTMLElement
+                     ).getBoundingClientRect();
+                     const { date, count } = (e.target as HTMLElement).dataset;
 
-                  setTooltipCoords({ top: rects.top, left: rects.left });
-                  setHoveredDay({
-                     date: moment(date).toDate(),
-                     count: Number(count ?? 0),
-                  });
-               }}
-               startDate={moment(new Date()).subtract(6, `month`).toDate()}
-               showMonthLabels
-               showWeekdayLabels
-               horizontal={true}
-               endDate={new Date()}
-               classForValue={(value) => {
-                  for (const [level, className] of Object.entries(
-                     ACTIVITY_LEVELS_COLORS
-                  )) {
-                     if ((value?.count as number) <= Number(level))
-                        return className;
-                  }
-               }}
-               values={grouped.map(({ runs, date }) => ({
-                  date,
-                  count: runs.length,
-               }))}
-            />
-         </div>
+                     setTooltipCoords({ top: rects.top, left: rects.left });
+                     setHoveredDay({
+                        date: moment(date).toDate(),
+                        count: Number(count ?? 0),
+                     });
+                  }}
+                  startDate={moment(new Date()).subtract(6, `month`).toDate()}
+                  showMonthLabels
+                  showWeekdayLabels
+                  horizontal={true}
+                  endDate={new Date()}
+                  classForValue={(value) => {
+                     for (const [level, className] of Object.entries(
+                        ACTIVITY_LEVELS_COLORS
+                     )) {
+                        if ((value?.count as number) <= Number(level))
+                           return className;
+                     }
+                  }}
+                  values={grouped.map(({ runs, date }) => ({
+                     date,
+                     count: runs.length,
+                  }))}
+               />
+            </div>
       </section>
    );
 };

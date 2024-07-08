@@ -7,7 +7,7 @@ import { auth } from "@auth";
 import { TypingRun, User, UsersChallenge, xprisma } from "@repo/db";
 import moment from "moment/moment";
 
-function getSearchParamsNormalized(searchParams: {
+export async function getSearchParamsNormalized(searchParams: {
    daily?: string;
    language?: string;
 }) {
@@ -40,7 +40,7 @@ export async function getLeaderboard(searchParams: {
    daily?: string;
    language?: string;
 }) {
-   const { daily, language } = getSearchParamsNormalized(searchParams);
+   const { daily, language } = await getSearchParamsNormalized(searchParams);
 
    const qualifiedUserIds = await xprisma.typingRun.groupBy({
       by: [`userId`],
@@ -60,18 +60,18 @@ export async function getLeaderboard(searchParams: {
       where: {
          ...(daily
             ? {
-                 createdAt: {
-                    gte: moment(new Date()).subtract(1, `day`).toDate(),
-                 },
-              }
+               createdAt: {
+                  gte: moment(new Date()).subtract(1, `day`).toDate(),
+               },
+            }
             : {}),
          ...(language
             ? {
-                 metadata: {
-                    path: [`language`],
-                    equals: language,
-                 },
-              }
+               metadata: {
+                  path: [`language`],
+                  equals: language,
+               },
+            }
             : {}),
          // userId:  {
          //    in:  qualifiedUserIds.map(_ => _.userId)
@@ -134,9 +134,9 @@ function normalizeUserChallenges(challenges: UsersChallenge[]) {
  * @param searchParams - The search params.
  */
 export async function getChallengesLeaderboard({
-   daily,
-   language,
-}: {
+                                                  daily,
+                                                  language,
+                                               }: {
    daily?: string;
    language?: string;
 }) {
@@ -147,10 +147,10 @@ export async function getChallengesLeaderboard({
       },
       ...(daily
          ? {
-              createdAt: {
-                 gte: moment(new Date()).subtract(1, `day`).toDate(),
-              },
-           }
+            createdAt: {
+               gte: moment(new Date()).subtract(1, `day`).toDate(),
+            },
+         }
          : {}),
    };
 
@@ -207,10 +207,10 @@ export async function getChallengesLeaderboard({
                }) ?? [];
 
             userRest.challenges_one = normalizeUserChallenges(
-               userRest.challenges_one
+               userRest.challenges_one,
             );
             userRest.challenges_two = normalizeUserChallenges(
-               userRest.challenges_two
+               userRest.challenges_two,
             );
 
             return {
@@ -220,7 +220,7 @@ export async function getChallengesLeaderboard({
                draws,
                losses,
             };
-         })
+         }),
       )
    )
       .filter((u) => u.wins + u.draws + u.losses > 0)

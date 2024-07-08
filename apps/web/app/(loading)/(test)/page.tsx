@@ -2,12 +2,10 @@ import { getUser } from "@app/(loading)/(test)/_queries";
 import SignInButton from "@components/buttons/SignInButton";
 import { ServerSignedOut } from "@components/common/Auth.server";
 import WithTransition from "@components/common/WithTransition";
-import PressKeyLabel from "@components/editor/PressKeyLabel";
 import TypingEditor from "@components/editor/TypingEditor";
 import WithInitialState from "@components/editor/WithInitialState";
 import OnRunFailed from "@components/editor/toasts/OnRunFailed";
 import OnRunSaved from "@components/editor/toasts/OnRunSaved";
-import EditorToolbar from "@components/editor/toolbar/EditorToolbar";
 
 interface HomeProps {}
 
@@ -27,10 +25,6 @@ export default async function Home({}: HomeProps) {
          exit={{ opacity: 100 }}
          className="flex min-h-screen w-full flex-col items-center justify-start gap-16 p-8 pb-20 font-sans text-2xl sm:p-20"
       >
-         <div className={`flex w-full flex-col items-center gap-2`}>
-            <EditorToolbar />
-            <PressKeyLabel />
-         </div>
          <WithInitialState user={user!} />
          <TypingEditor user={user!} />
          <OnRunFailed />

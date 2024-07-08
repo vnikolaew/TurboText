@@ -64,6 +64,36 @@ export const wpmAtom = atom<number>((get) => {
 });
 wpmAtom.debugLabel = `wpmAtom`;
 
+
+export const wpmBySecondsAtom = atom<number[]>((get) => {
+   // const wordCompletionTimes = get(wordsCompletionTimesAtom);
+   const totalTime = get(totalRunTimeAtom);
+   const typedLetters = get(typedLettersAtom)
+
+   return Array
+      .from({ length: Math.ceil(totalTime / 1000)})
+      .map((_, second) => {
+         const letters = typedLetters.filter(l => l.timestamp <= (second + 1) * 1000)
+         const correct = letters.filter(l => l.correct === true).length
+
+         return (correct * (60 / ((second + 1)))) / 5;
+      })
+});
+wpmBySecondsAtom.debugLabel = `wpmBySecondsAtom`;
+
+export const rawWpmBySecondsAtom = atom<number[]>((get) => {
+   const totalTime = get(totalRunTimeAtom);
+   const typedLetters = get(typedLettersAtom)
+
+   return Array
+      .from({ length: Math.ceil(totalTime / 1000)})
+      .map((_, second) => {
+         const letters = typedLetters.filter(l => l.timestamp <= (second + 1) * 1000)
+         return (letters.length * (60 / ((second + 1)))) / 5;
+      })
+});
+rawWpmBySecondsAtom.debugLabel = `rawWpmBySecondsAtom`;
+
 export const rawWpmAtom = atom<number>((get) => {
    const wordCompletionTimes = get(wordsCompletionTimesAtom);
    const totalTime = get(totalRunTimeAtom);

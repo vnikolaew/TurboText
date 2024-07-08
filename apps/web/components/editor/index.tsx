@@ -5,4 +5,4 @@ export { default as TypingCaret } from "./TypingCaret";
 export { default as TypingEditor } from "./TypingEditor";
 export { default as TypingInput } from "./TypingInput";
 export { default as TypingLetters } from "./TypingLetters";
-export { default as TypingRunSummary } from "./TypingRunSummary";
+export { default as TypingRunSummary } from "./summary/TypingRunSummary";

@@ -8,6 +8,7 @@ import { UserChallengeLeaderboard } from "@app/leaderboard/_queries";
 import { cn } from "@lib/utils";
 import { Separator } from "@repo/ui";
 import { Fragment, useRef } from "react";
+import { match } from "ts-pattern";
 
 interface LeaderboardsSectionProps {
    time15Runs: any;
@@ -19,7 +20,7 @@ interface LeaderboardsSectionProps {
 
 function mapUser(
    user: UserChallengeLeaderboard,
-   index: number
+   index: number,
 ): ChallengeLeaderboardRow {
    return {
       position: index + 1,
@@ -38,12 +39,12 @@ function mapUser(
 }
 
 const LeaderboardsSection = ({
-   time15Runs,
-   time60Runs,
-   showWarning,
-   searchParams,
-   users,
-}: LeaderboardsSectionProps) => {
+                                time15Runs,
+                                time60Runs,
+                                showWarning,
+                                searchParams,
+                                users,
+                             }: LeaderboardsSectionProps) => {
    const time15DivRef = useRef<HTMLDivElement>(null!);
    const time60DivRef = useRef<HTMLDivElement>(null!);
 
@@ -52,7 +53,7 @@ const LeaderboardsSection = ({
          <div
             className={cn(
                `flex w-full items-center justify-between`,
-               searchParams.challenges && `col-span-2`
+               searchParams.challenges && `col-span-2`,
             )}
          >
             <span className={`text-2xl !text-main`}>
@@ -90,34 +91,36 @@ const LeaderboardsSection = ({
          <Separator
             className={cn(
                `mx-auto w-full bg-secondary`,
-               searchParams.challenges && `col-span-2`
+               searchParams.challenges && `col-span-2`,
             )}
          />
          {!searchParams.challenges && (
             <Separator className={`mx-auto w-full bg-secondary`} />
          )}
 
-         {searchParams.challenges ? (
-            <div className={`col-span-2`}>
-               <ChallengesLeaderboardTable
-                  showWarning={showWarning}
-                  rows={users.map(mapUser)}
-               />
-            </div>
-         ) : (
-            <Fragment>
-               <LeaderboardTable
-                  ref={time15DivRef}
-                  rows={time15Runs}
-                  showWarning={showWarning}
-               />
-               <LeaderboardTable
-                  ref={time60DivRef}
-                  rows={time60Runs}
-                  showWarning={showWarning}
-               />
-            </Fragment>
-         )}
+         {match(searchParams.challenges)
+            .with(true, _ => (
+               <div className={`col-span-2`}>
+                  <ChallengesLeaderboardTable
+                     showWarning={showWarning}
+                     rows={users.map(mapUser)}
+                  />
+               </div>
+            ))
+            .otherwise(_ => (
+               <Fragment>
+                  <LeaderboardTable
+                     ref={time15DivRef}
+                     rows={time15Runs}
+                     showWarning={showWarning}
+                  />
+                  <LeaderboardTable
+                     ref={time60DivRef}
+                     rows={time60Runs}
+                     showWarning={showWarning}
+                  />
+               </Fragment>
+            ))}
       </div>
    );
 };
