@@ -262,6 +262,7 @@ export const challengePlayer = authorizedAction
 export const getUserAverageWpm = authorizedAction
    .schema(z.object({ userId: z.string() }))
    .action(async ({ ctx: { userId }, parsedInput: { userId: uId } }) => {
+
       const res = await xprisma.$queryRaw<{ avg: Prisma.Decimal }>`
         SELECT AVG(cast(r.metadata->>'wpm' as decimal)) as avg FROM "TypingRun" r
         LEFT JOIN public."User" u on r."userId" = u.id

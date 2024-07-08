@@ -23,6 +23,7 @@ import { BookCheck, MessageCircle } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useAction } from "next-safe-action/hooks";
 import UserNotification from "./UserNotification";
+import { match } from "ts-pattern";
 
 export interface UserNotificationsProps {
    notifications: UN[];
@@ -41,7 +42,7 @@ const UserNotifications = ({ notifications }: UserNotificationsProps) => {
                setNotifications([]);
             }
          },
-      }
+      },
    );
    const { execute: save, isExecuting } = useAction(saveUserNotification, {
       onSuccess: (res) => {
@@ -52,27 +53,26 @@ const UserNotifications = ({ notifications }: UserNotificationsProps) => {
    });
    const { channel } = useChannel(
       CHANEL_NAME,
-      `challenge-user`,
       async (message) => {
          console.log(`New notification: `, { message });
 
          // Apply message filter first:
-         if (message.data.challengeeId === session.data?.user?.id) {
+         if (message.name === `challenge-user` && message.data.challengeeId === session.data?.user?.id) {
             // Save notification to database ...
             save({
                id: message.id ?? null,
+               payload: message.data,
             });
-            payload: message.data,
-               setNotifications((n) => [
-                  ...n,
-                  {
-                     id: message.id ?? crypto.randomUUID(),
-                     timestamp: new Date(message.timestamp!),
-                     payload: message.data,
-                  },
-               ]);
+            setNotifications((n) => [
+               ...n,
+               {
+                  id: message.id ?? crypto.randomUUID(),
+                  timestamp: new Date(message.timestamp!),
+                  payload: message.data,
+               },
+            ]);
          }
-      }
+      },
    );
    return (
       <div className={`mt-4 flex w-full flex-col items-start gap-2`}>
@@ -106,29 +106,26 @@ const UserNotifications = ({ notifications }: UserNotificationsProps) => {
                </TooltipProvider>
             )}
          </div>
-         {notifications.length === 0 ? (
-            <div
-               className={`flex h-[100px] w-full items-center justify-center`}
-            >
-               Nothing to show
-            </div>
-         ) : (
-            <ScrollArea
-               className={`my-4 flex h-[400px] w-full flex-col items-center justify-center gap-2 px-2 py-4`}
-            >
-               <div
-                  className={`flex h-full w-full flex-col items-center gap-6`}
-               >
-                  {notifications
-                     .sort(
-                        (a, b) => b.timestamp.getTime() - a.timestamp.getTime()
-                     )
-                     .map((n, index) => (
-                        <UserNotification key={n.id} notification={n} />
-                     ))}
+         {match(notifications.length)
+            .with(0, _ => (
+               <div className={`flex h-[100px] w-full items-center justify-center`}>
+                  Nothing to show
                </div>
-            </ScrollArea>
-         )}
+            ))
+            .otherwise(_ => (
+               <ScrollArea
+                  className={`my-4 flex h-[400px] w-full flex-col items-center justify-center gap-2 px-2 py-4`}
+               >
+                  <div
+                     className={`flex h-full w-full flex-col items-center gap-6`}
+                  >
+                     {notifications.sort(
+                        (a, b) => b.timestamp.getTime()
+                           - a.timestamp.getTime(),
+                     ).map(n => <UserNotification key={n.id} notification={n} />)}
+                  </div>
+               </ScrollArea>
+            ))}
          <Separator orientation={`horizontal`} />
       </div>
    );

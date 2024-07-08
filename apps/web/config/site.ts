@@ -4,6 +4,7 @@ export const AUTHOR = `Victorio Nikolaev`;
 export const AUTHOR_WEBSITE = `www.victorio-nikolaev.com`;
 export const APP_HOST_NAME = `turbo-text`;
 export const APP_DESCRIPTION = `Accelerate Your Typing Speed`;
+export const APP_DESCRIPTION_LONGER = `Accelerate Your Typing Speed And Boost Your Productivity`;
 export const APP_KEYWORDS = [
    `speed`,
    `typing`,

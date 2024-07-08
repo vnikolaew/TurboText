@@ -118,7 +118,7 @@ export const FooterTwo = ({
                      {appName}
                   </span>
                </Link>
-               <span className={`!mt-2 text-sm font-normal !text-secondary`}>
+               <span className={`!mt-2 text-sm font-normal !text-secondary !text-wrap max-w-[300px]`}>
                   {appDescription}
                </span>
                <span className={`!mt-4 text-sm !text-secondary`}>

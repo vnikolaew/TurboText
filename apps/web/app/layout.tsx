@@ -83,7 +83,6 @@ export default async function RootLayout({
    const theme = THEMES.includes(user?.configuration?.theme ?? ``)
       ? user?.configuration.theme
       : `dark`;
-   console.log({ config: user?.configuration, theme });
 
    // @ts-ignore
    return (

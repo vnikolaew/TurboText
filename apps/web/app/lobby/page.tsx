@@ -14,7 +14,7 @@ import {
    UserGameTimeSelect,
 } from "./_components/selects";
 import { UserAcceptState, userAcceptStateAtom } from "./_atoms";
-import { useTypingChallenge } from "./hooks/useTypingChallenge";
+import { ChallengeState, useTypingChallenge } from "./hooks/useTypingChallenge";
 
 export interface PageProps {}
 
@@ -72,7 +72,7 @@ const Page = ({}: PageProps) => {
                   onClick={(_) => match()}
                   loading={matchLoading}
                >
-                  <UserRoundSearch size={14} />
+                  <UserRoundSearch size={18} />
                   Match with an opponent
                </LoadingButton>
             </div>

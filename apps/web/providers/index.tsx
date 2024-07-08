@@ -7,6 +7,7 @@ import { useAtomValue } from "jotai";
 import { PropsWithChildren } from "react";
 import SessionProvider from "./SessionProvider";
 import { ThemeProvider } from "./ThemeProvider";
+import AblyProvider from "./AblyProvider";
 
 interface ProvidersProps extends PropsWithChildren {}
 
@@ -24,9 +25,9 @@ const Providers = ({ children }: ProvidersProps) => {
             attribute={`class`}
          >
             <AtomProvider>
-               {/*<AblyProvider>*/}
-               <FontProvider>{children}</FontProvider>
-               {/*</AblyProvider>*/}
+               <AblyProvider>
+                  <FontProvider>{children}</FontProvider>
+               </AblyProvider>
             </AtomProvider>
          </ThemeProvider>
       </SessionProvider>

@@ -1,5 +1,5 @@
 "use client";
-import { APP_DESCRIPTION, APP_NAME, LINKS } from "@/config/site";
+import { APP_DESCRIPTION, APP_DESCRIPTION_LONGER, APP_NAME, LINKS } from "@/config/site";
 import { themeAtom } from "@atoms/user";
 import { FooterTwo, FooterTwoProps } from "@components/common/FooterTwo";
 import RocketLogo from "@components/icons/RocketLogo";
@@ -55,7 +55,7 @@ const AppFooter = ({}: AppFooterProps) => {
 
    return (
       <FooterTwo
-         appDescription={APP_DESCRIPTION}
+         appDescription={APP_DESCRIPTION_LONGER}
          appLogo={<RocketLogo className={`h-10 w-10 fill-accent`} />}
          appName={APP_NAME}
          theme={theme}

@@ -3,6 +3,7 @@ import { ExternalToast, toast as sonnerToast } from "sonner";
 
 export * from "./components/ui/button"
 export * from "./components/ui/label"
+export * from "./components/ui/chart"
 export * from "./components/ui/particles"
 export * from "./components/ui/hover-card"
 export * from "./components/ui/meteor"

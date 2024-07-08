@@ -1,6 +1,7 @@
 import { ListOrdered } from "lucide-react";
 
-export interface StatsSectionProps {}
+export interface StatsSectionProps {
+}
 
 const StatsSection = ({}: StatsSectionProps) => {
    return (
@@ -22,7 +23,9 @@ const StatsSection = ({}: StatsSectionProps) => {
                   characters in the correctly typed words (including spaces),
                   divided by 5 and normalised to 60 seconds.{" "}
                </li>
-               {/*<li> raw wpm - calculated just like wpm, but also includes incorrect words. </li>*/}
+               <li><b className={`text-accent`}>raw wpm</b> - calculated just like <b
+                  className={`!font-semibold`}>wpm</b> , but also includes incorrect words.
+               </li>
                <li>
                   {" "}
                   <b className={`text-accent`}>acc</b> - percentage of correctly

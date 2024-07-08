@@ -31,6 +31,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import PageLinks from "./_components/PageLinks";
+import UserRunsChart from "@app/(loading)/account/_components/UserRunsChart";
 
 export const metadata: Metadata = {
    title: `Account | ${APP_NAME}`,
@@ -86,7 +87,7 @@ const Page = async ({ searchParams }: PageProps) => {
                                  >
                                     Joined{" "}
                                     {moment(user.createdAt).format(
-                                       `DD MMM YYYY`
+                                       `DD MMM YYYY`,
                                     )}
                                  </span>
                               </TooltipTrigger>
@@ -160,7 +161,7 @@ const Page = async ({ searchParams }: PageProps) => {
                               ...user.challenges_one,
                               ...user.challenges_two,
                            ].filter(
-                              (c) => c.state === UsersChallengeState.Finished
+                              (c) => c.state === UsersChallengeState.Finished,
                            ).length
                         }
                      </h2>
@@ -170,7 +171,7 @@ const Page = async ({ searchParams }: PageProps) => {
                   <span className={`text-sm text-secondary`}>Time typing</span>
                   <h2 className={`text-3xl text-main`}>
                      {formatMillisecondsToTime(
-                        sum(user.typingRuns.map((r) => r.totalTimeMilliseconds))
+                        sum(user.typingRuns.map((r) => r.totalTimeMilliseconds)),
                      )}
                   </h2>
                </div>
@@ -185,6 +186,11 @@ const Page = async ({ searchParams }: PageProps) => {
             className={`mt-8 flex w-full items-center gap-8 rounded-lg bg-secondary-bg p-6 py-10 shadow-lg`}
          >
             <UserActivitySection typingRuns={user?.typingRuns} />
+         </div>
+         <div
+            className={`mt-8 flex w-full items-center gap-8 rounded-lg bg-secondary-bg p-12 py-10 shadow-lg`}
+         >
+            <UserRunsChart runs={user?.typingRuns} />
          </div>
          <div
             className={`mt-8 flex w-full items-center gap-8 rounded-lg bg-secondary-bg p-12 py-10 shadow-lg`}

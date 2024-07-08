@@ -1,0 +1,3 @@
+.recharts-xAxis text.recharts-text {
+    transform: rotate(45deg) !important;
+}
