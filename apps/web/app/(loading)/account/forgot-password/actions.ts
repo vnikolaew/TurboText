@@ -1,13 +1,13 @@
 "use server";
 
 import bcrypt from "bcryptjs";
-import { authorizedAction, publicAction } from "@lib/actions";
+import {  publicAction } from "@lib/actions";
 import { z } from "zod";
 import { xprisma } from "@repo/db";
 import moment from "moment";
 import { EmailService } from "@repo/emails";
 import ResetPasswordWithCodeEmail from "@repo/emails/src/ResetPasswordWithCodeEmail";
-import { APP_NAME } from "@config/site";
+import { APP_NAME } from "@config/site"
 import { MAGIC_SIGNIN, signIn } from "@auth";
 import { revalidatePath } from "next/cache";
 

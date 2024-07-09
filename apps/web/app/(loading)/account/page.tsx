@@ -19,6 +19,8 @@ import UserGeneralInfo from "@app/(loading)/account/_components/UserGeneralInfo"
 import { DetailedHTMLProps, HTMLAttributes, PropsWithChildren } from "react";
 import { cn } from "@lib/utils";
 import UserRunsChartTwo from "@app/(loading)/account/_components/charts/UserRunsChartTwo";
+import { max } from "lodash";
+import { TypingRun } from "@repo/db";
 
 export const metadata: Metadata = {
    title: `Account | ${APP_NAME}`,
@@ -41,9 +43,24 @@ export interface PageProps {
    searchParams: { verified?: string };
 }
 
+export function getRunsGrouped(runs: TypingRun[]) {
+   const runsGrouped = Array
+      .from({ length: Math.ceil(max(runs.map(r => r.metadata?.wpm)) / 10) })
+      .map((_, index) => {
+         const [from, to] = [10 * index, 10 * (index + 1) - 1];
+         return {
+            range: `${from}-${to}` as `${number}-${number}`,
+            runs: runs.filter(x => x.metadata?.wpm >= from && x.metadata?.wpm <= to).length,
+         };
+      });
+   return runsGrouped as const
+}
+
 const Page = async ({ searchParams }: PageProps) => {
    const user = await getUserWithTypingRuns();
    if (!user) notFound();
+
+   const runsGrouped = getRunsGrouped(user.typingRuns)
 
    return (
       <section
@@ -59,7 +76,7 @@ const Page = async ({ searchParams }: PageProps) => {
             <UserActivitySection typingRuns={user?.typingRuns} />
          </Section>
          <Section>
-            <UserRunsChart runs={user?.typingRuns} />
+            <UserRunsChart runs={runsGrouped} />
          </Section>
          <Section>
             <UserRunsChartTwo runs={user?.typingRuns} />

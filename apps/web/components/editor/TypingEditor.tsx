@@ -37,6 +37,7 @@ import TypingRunInfo from "./TypingRunInfo";
 import { useSaveLatestUserRun } from "./hooks/useSaveLatestUserRun";
 import EditorToolbar from "@components/editor/toolbar/EditorToolbar";
 import PressKeyLabel from "@components/editor/PressKeyLabel";
+import { useBoolean } from "@hooks/useBoolean";
 
 export interface TypingEditorProps {
    user: User & { typingRuns: TypingRun[] };
@@ -49,17 +50,21 @@ const TypingEditor = ({ user }: TypingEditorProps) => {
    const totalPauseTime = useAtomValue(totalPauseTimeAtom);
    const typingRun = useAtomValue(typingRunAtom);
    const autoSave = useAtomValue(autoSaveModeAtom) as boolean;
+
    const setUserXp = useSetAtom(updateUserXpAtom);
    const setEnd = useSetAtom(endTimeAtom);
 
    useTypingRunSuccess();
    useSaveLatestUserRun();
 
+   const [runSaved, setRunSaved] = useBoolean();
    const { isExecuting, execute, result } = useAction(saveTypingRun, {
       onSuccess: (res) => {
          if (res.data?.success) {
             console.log({ result });
             localStorage.removeItem(TYPING_RUN_LS_KEY);
+
+            setRunSaved(true);
 
             const newUserXp = {
                level: res.data.userXp?.level,
@@ -90,23 +95,37 @@ const TypingEditor = ({ user }: TypingEditorProps) => {
    const state = useAtomValue(typingRunStateAtom);
    useEffect(() => {
       if (state === TypingRunState.FINISHED && autoSave) {
-         execute(typingRun);
+         handleSaveTypingRun();
       }
-   }, [state, autoSave]);
+   }, [state, autoSave, typingRun]);
 
    const autoSaveMode = useAtomValue(autoSaveModeAtom);
+
    const showSavePrompt = useMemo(
-      () => timerState === TypingRunState.FINISHED,
-      [timerState, result, autoSaveMode],
+      () => timerState === TypingRunState.FINISHED && !runSaved,
+      [timerState, result, autoSaveMode, runSaved],
    );
 
-   function handleSaveTypingRun(): void {
+   function handleSaveTypingRun() {
       execute(typingRun);
    }
 
    if (timerState === TypingRunState.FINISHED) {
       return (
          <div className={`mx-auto flex w-3/4 flex-col items-center gap-8`}>
+            <Confetti
+               className={`h-full w-1/5`}
+               numberOfPieces={500}
+               width={300}
+               confettiSource={{
+                  x: 100,
+                  y: 100,
+                  w: 200,
+                  h: 200,
+               }}
+               recycle={false}
+               tweenDuration={3000}
+               height={300} />
             <AnimatePresence>
                {showSavePrompt && (
                   <SaveTypingRunPrompt
