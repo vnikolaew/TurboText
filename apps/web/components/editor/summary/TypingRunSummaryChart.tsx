@@ -148,7 +148,7 @@ const TypingRunSummaryChart = ({}: TypingRunSummaryChartProps) => {
                }>
                   <span className={`text-2xl text-accent`}>{Math.floor(runtime / 1000)}s</span>
                </StatTooltip>
-               <span className={`text-base text-secondary`}>{formatMillisecondsToTime(typingTimeToday * 1000)} today</span>
+               <span className={`text-base text-secondary`}>{formatMillisecondsToTime(typingTimeToday)} today</span>
             </div>
          </div>
       </div>

@@ -12,7 +12,6 @@ export interface WithInitialStateProps {
 
 const WithInitialState = ({ user }: WithInitialStateProps) => {
    useHydrateAllAtoms(user);
-
    return <Fragment />;
 };
 

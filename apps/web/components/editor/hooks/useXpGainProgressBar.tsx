@@ -15,7 +15,6 @@ function percentageUntilNextLevel({ points }: { points: number }) {
    );
    const xpNeededForNextLevel = Math.floor(100 * Math.pow(level, EXPONENT));
 
-   console.log({ xpNeededForCurrentLevel, xpNeededForNextLevel, level });
    return (
       ((points - xpNeededForCurrentLevel) /
          (xpNeededForNextLevel - xpNeededForCurrentLevel)) *

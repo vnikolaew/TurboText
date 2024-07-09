@@ -15,7 +15,7 @@ export const revalidate = 10;
 
 export default async function Home({}: HomeProps) {
    let user = await getUser();
-
+   console.log({ runs: user.typingRuns });
    return (
       <WithTransition
          key={`home`}

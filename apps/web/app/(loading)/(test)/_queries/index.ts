@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@auth";
-import { xprisma } from "@repo/db";
+import { TypingRun, xprisma } from "@repo/db";
 
 export async function getUser() {
    const session = await auth();
@@ -32,6 +32,7 @@ export async function getUser() {
                   typedLetters: true,
                   mode: true,
                   metadata: true,
+                  createdAt: true,
                   totalTimeMilliseconds: true,
                },
             },
@@ -40,6 +41,9 @@ export async function getUser() {
       if (!dbUser) user = null;
       else {
          const { updatePassword, verifyPassword, ...rest } = dbUser;
+         rest.typingRuns = rest.typingRuns.map((r: TypingRun) => ({
+            ...r, createdAt: r.createdAt?.toISOString()
+         }))
          user = rest;
       }
    }

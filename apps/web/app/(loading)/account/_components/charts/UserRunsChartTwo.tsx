@@ -62,8 +62,6 @@ const UserRunsChartTwo = ({ runs }: UserRunsChartTwoProps) => {
       },
    } satisfies ChartConfig;
 
-   console.log({ runsGrouped, stats, dates: getAllDaysInLastMonth() });
-
    return <div/>
 
    return (

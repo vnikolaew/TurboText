@@ -100,7 +100,7 @@ const LatestUserChallengesTable = ({
                      <Button asChild>
                         <Link
                            className={`inline-flex items-center gap-2 !bg-secondary-bg text-lg !text-accent`}
-                           href={`/_lobby`}
+                           href={`/lobby`}
                         >
                            <Swords className={``} size={24} />
                            Find opponents

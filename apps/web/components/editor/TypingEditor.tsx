@@ -8,7 +8,7 @@ import {
    useTypingRunSuccess,
 } from "@atoms/editor";
 import { totalPauseTimeAtom } from "@atoms/timer";
-import { autoSaveModeAtom, updateUserXpAtom } from "@atoms/user";
+import { autoSaveModeAtom, typingTimeTodayAtom, updateUserXpAtom } from "@atoms/user";
 import { SignedOut } from "@components/common/Auth";
 import DevOnly from "@components/common/DevOnly";
 import {
@@ -57,14 +57,16 @@ const TypingEditor = ({ user }: TypingEditorProps) => {
    useTypingRunSuccess();
    useSaveLatestUserRun();
 
+   const setTypingTimeToday = useSetAtom(typingTimeTodayAtom);
    const [runSaved, setRunSaved] = useBoolean();
+
    const { isExecuting, execute, result } = useAction(saveTypingRun, {
       onSuccess: (res) => {
          if (res.data?.success) {
-            console.log({ result });
             localStorage.removeItem(TYPING_RUN_LS_KEY);
 
             setRunSaved(true);
+            setTypingTimeToday(t => t + res.data?.run?.totalTimeMilliseconds ?? 0)
 
             const newUserXp = {
                level: res.data.userXp?.level,
