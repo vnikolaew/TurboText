@@ -1,30 +1,24 @@
 "use client";
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@repo/ui";
 import React from "react";
-import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
+import { CartesianGrid, Label, Line, LineChart, XAxis, YAxis } from "recharts";
 import { max } from "lodash";
 
 export interface UserRunsChartThreeProps {
    runs: ({
-      runs: number, range: Range
+      runsByAccuracy: number,
+      runsByConsistency: number,
+      range: Range
    })[];
 }
 
-const chartData = [
-   { month: "January", desktop: 186, mobile: 80 },
-   { month: "February", desktop: 305, mobile: 200 },
-   { month: "March", desktop: 237, mobile: 120 },
-   { month: "April", desktop: 73, mobile: 190 },
-   { month: "May", desktop: 209, mobile: 130 },
-   { month: "June", desktop: 214, mobile: 140 },
-];
 const chartConfig = {
-   desktop: {
-      label: "Desktop",
+   runsByAccuracy: {
+      label: <span className={`mr-2`}>Accuracy</span>,
       color: "hsl(var(--chart-1))",
    },
-   mobile: {
-      label: "Mobile",
+   runsByConsistency: {
+      label: <span className={`mr-2`}>Consistency</span>,
       color: "hsl(var(--chart-2))",
    },
 } satisfies ChartConfig;
@@ -44,11 +38,14 @@ const UserRunsChartThree = ({ runs }: UserRunsChartThreeProps) => {
             >
                <CartesianGrid vertical={false} />
                <YAxis
+                  scale={`linear`}
+                  interval={0}
                   label={{ value: `Runs`, angle: -90, position: "insideLeft" }}
                   dataKey="runs"
-                  domain={[0, max(runs?.map(x => x.runs)!)! + 2]}
+                  domain={[-1, max([...runs.flatMap(r => [r.runsByAccuracy, r.runsByConsistency])])! + 2]}
+                  type={`number`}
                   min={0}
-                  max={max(runs?.map(x => x.runs)!)! + 2}
+                  max={100}
                   tickLine={false}
                   tickMargin={10}
                   axisLine={false}
@@ -57,14 +54,34 @@ const UserRunsChartThree = ({ runs }: UserRunsChartThreeProps) => {
                   dataKey="range"
                   tickLine={false}
                   axisLine={false}
-                  tickMargin={8}
-                  tickFormatter={(value) => `${value.replaceAll(`-`, ` - `)}%`} />
+                  tickMargin={10}
+                  tickFormatter={(value) => `${value.replaceAll(`-`, ` - `)}%`}>
+                  <Label
+                     style={{ marginTop: `1rem` }} className={`mt-8`} position={`bottom`} offset={10}
+                     value={`Percentage`} />
+               </XAxis>
                <ChartTooltip
                   cursor={false}
-                  content={<ChartTooltipContent hideLabel />}
+                  content={<ChartTooltipContent className={``} content={props => {
+                     return <span>{JSON.stringify(props, null, 2)}</span>;
+                  }} labelFormatter={(label) => `${label.replaceAll(`-`, ` - `)}%`} />}
                />
                <Line
-                  dataKey="runs"
+                  label={`Consistency`}
+                  dataKey="runsByConsistency"
+                  type="natural"
+                  stroke="hsl(var(--main))"
+                  strokeWidth={2}
+                  dot={{
+                     fill: "hsl(var(--main))",
+                  }}
+                  activeDot={{
+                     r: 6,
+                  }}
+               />
+               <Line
+                  label={`Accuracy`}
+                  dataKey="runsByAccuracy"
                   type="natural"
                   stroke="hsl(var(--accent))"
                   strokeWidth={2}

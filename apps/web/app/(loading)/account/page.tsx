@@ -18,10 +18,9 @@ import UserRunsChart from "@app/(loading)/account/_components/charts/UserRunsCha
 import UserGeneralInfo from "@app/(loading)/account/_components/UserGeneralInfo";
 import { DetailedHTMLProps, HTMLAttributes, PropsWithChildren } from "react";
 import { cn } from "@lib/utils";
-import UserRunsChartTwo from "@app/(loading)/account/_components/charts/UserRunsChartTwo";
-import { max } from "lodash";
-import { TypingRun } from "@repo/db";
 import UserRunsChartThree from "@app/(loading)/account/_components/charts/UserRunsChartThree";
+import { getRunsGrouped, getRunsGroupedByAccuracy } from "./_queries/charts";
+import ChartsSection from "./_components/charts/ChartsSection";
 
 export const metadata: Metadata = {
    title: `Account | ${APP_NAME}`,
@@ -44,40 +43,12 @@ export interface PageProps {
    searchParams: { verified?: string };
 }
 
-export function getRunsGroupedByAccuracy(runs: TypingRun[]) {
-   const runsGrouped = Array
-      .from({ length: Math.ceil(max(runs.map(r => r.metadata?.accuracy)) / 10) })
-      .map((_, index) => {
-         const [from, to] = [10 * index, 10 * (index + 1) - 1];
-         return {
-            range: `${from}-${to}` as `${number}-${number}`,
-            runs: runs.filter(x => x.metadata?.accuracy >= from && x.metadata?.accuracy <= to).length,
-            runs_: runs.filter(x => x.metadata?.wpm >= from && x.metadata?.wpm <= to)
-         };
-      });
-   return runsGrouped as const
-}
-
-export function getRunsGrouped(runs: TypingRun[]) {
-   const runsGrouped = Array
-      .from({ length: Math.ceil(max(runs.map(r => r.metadata?.wpm)) / 10) })
-      .map((_, index) => {
-         const [from, to] = [10 * index, 10 * (index + 1) - 1];
-         return {
-            range: `${from}-${to}` as `${number}-${number}`,
-            runs: runs.filter(x => x.metadata?.wpm >= from && x.metadata?.wpm <= to).length,
-            runs_: runs.filter(x => x.metadata?.wpm >= from && x.metadata?.wpm <= to)
-         };
-      });
-   return runsGrouped as const
-}
 
 const Page = async ({ searchParams }: PageProps) => {
    const user = await getUserWithTypingRuns();
    if (!user) notFound();
 
-   const runsGrouped = getRunsGrouped(user.typingRuns)
-   const runsGroupedByAccuracy = getRunsGroupedByAccuracy(user.typingRuns)
+   const [runsGrouped, runsGroupedByAccuracy] = [getRunsGrouped(user.typingRuns), getRunsGroupedByAccuracy(user.typingRuns)];
 
    return (
       <section
@@ -93,10 +64,7 @@ const Page = async ({ searchParams }: PageProps) => {
             <UserActivitySection typingRuns={user?.typingRuns} />
          </Section>
          <Section>
-            <UserRunsChart runs={runsGrouped} />
-         </Section>
-         <Section>
-            <UserRunsChartThree runs={runsGroupedByAccuracy} />
+            <ChartsSection runs={user.typingRuns} />
          </Section>
          <Section>
             <TypingRunsStatsSection runs={user.typingRuns} />

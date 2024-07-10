@@ -46,8 +46,8 @@ const UserRunsChart = ({ runs }: UserRunsChartProps) => {
                   className={`!overflow-visible`}
                   // label={{ value: `WPM`, position: "bottom" }}
                   tickLine={false}
-                  tickMargin={10}
                   axisLine={false}
+                  tickMargin={10}
                   tickFormatter={label => label.replaceAll(`-`, ` - `)}
                >
                   <Label
