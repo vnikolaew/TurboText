@@ -1,4 +1,4 @@
-import { UserExperienceInfo } from "@app/(loading)/account/_components/UserExperienceInfo";
+import { UserExperienceInfo } from "@app/(loading)/account/_components/general/UserExperienceInfo";
 import MythicalBadge from "@app/(loading)/account/_components/badges/MythicalBadge";
 import ReportUserButton from "@app/(loading)/profile/[userId]/_components/ReportUserButton";
 import TimeRunsStats from "@app/(loading)/profile/[userId]/_components/TimeRunsStats";

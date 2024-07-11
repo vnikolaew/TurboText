@@ -1,8 +1,19 @@
 "use client";
 
 import { useWebSocket } from "@providers/WebSocketProvider";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { z } from "zod";
+
+export enum MessageType {
+   SEND = 0,
+   SUBSCRIBE = 1,
+   UNSUBSCRIBE = 2,
+   PING = 3
+}
+
+const initialSchema = z.object({
+   clientId: z.string(), initial: z.literal(true),
+});
 
 const messageSchema = z.object({
    clientId: z.string(),
@@ -27,35 +38,54 @@ export interface IMessage {
 
 export function useChannel(channelName: string, callback: (message: IMessage) => void) {
    const websocket = useWebSocket();
-   const clientId = ``;
+   const [clientId, setClientId] = useState(``);
 
    const publish = useCallback((name: string, message: IMessage) => {
       websocket.send(JSON.stringify({
          ...message,
          channelName: name,
+         clientId
       } as IMessage));
-   }, []);
+   }, [clientId]);
 
    useEffect(() => {
-      const message: IMessage = {
-         channelName,
-         messageName: `global`,
-         messageType: `SUBSCRIBE`,
-         clientId,
-         timestamp: Date.now(),
-         extras: {},
-         data: {},
+      const openHandler = _ => {
+         if(!clientId.length) return;
+
+         const message: IMessage = {
+            channelName,
+            messageName: `global`,
+            messageType: `SUBSCRIBE`,
+            clientId,
+            timestamp: Date.now(),
+            extras: {},
+            data: {},
+         };
+         websocket.send(JSON.stringify(message));
       };
 
-      websocket.send(JSON.stringify(message));
+      const messageHandler = (event: any) => {
+         const eventObj = JSON.parse(event.data)
+         const parsed = messageSchema.safeParse(eventObj);
 
-      websocket.addEventListener(`message`, (event) => {
-         const parsed = messageSchema.safeParse(event.data);
          if (parsed.success) {
             callback(parsed.data as IMessage);
          }
-      });
-   }, []);
 
-   return { publish, websocket }
+         const initial = initialSchema.safeParse(eventObj);
+         if (initial.success) {
+            setClientId(initial.data.clientId)
+         }
+      };
+
+      websocket.addEventListener(`open`, openHandler);
+      websocket.addEventListener(`message`, messageHandler);
+
+      return () => {
+         websocket.removeEventListener(`open`, openHandler);
+         websocket.removeEventListener(`message`, messageHandler);
+      };
+   }, [clientId]);
+
+   return { publish, websocket };
 }

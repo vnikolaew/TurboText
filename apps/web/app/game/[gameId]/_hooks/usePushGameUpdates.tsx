@@ -2,8 +2,8 @@
 
 import { EventType } from "@app/game/[gameId]/_hooks/useTypingGame";
 import { currentCharIndexAtom } from "@atoms/editor";
+import { useChannel } from "@hooks/websocket";
 import { CHANEL_NAME } from "@providers/AblyProvider";
-import { useChannel } from "ably/react";
 import { useAtomValue } from "jotai";
 import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useRef } from "react";
@@ -13,23 +13,29 @@ export function usePushGameUpdates(gameId: string, interval: number) {
    const currCharIndex = useAtomValue(currentCharIndexAtom);
    const session = useSession();
 
-   const { channel } = useChannel(CHANEL_NAME, async (message) => {
+   const { websocket, publish} = useChannel(CHANEL_NAME, async (message) => {
       if (message.data.userId === session.data?.user?.id) return;
       if (
          message.data.type === EventType.ChallengeStopped ||
          message.data.type === EventType.ChallengeFinished
       ) {
-         await channel.detach();
+         websocket.close()
       }
 
       console.log({ message });
    });
 
    const update = useCallback(async () => {
-      await channel.publish(EventType.GameUpdate, {
-         userId: session.data?.user?.id,
-         gameId,
-         charIndex: currCharIndex,
+      publish(EventType.GameUpdate, {
+         timestamp: Date.now(),
+         messageName: EventType.GameUpdate,
+         extras: { },
+         messageType: `SEND`,
+         data: {
+            userId: session.data?.user?.id,
+            gameId,
+            charIndex: currCharIndex,
+         }
       });
    }, [currCharIndex, session, gameId]);
 

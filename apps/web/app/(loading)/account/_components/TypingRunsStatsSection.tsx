@@ -54,8 +54,7 @@ const TypingRunsStatsSection = ({ runs }: TypingRunsStatsSectionProps) => {
 
    return (
       <section
-         id={`stats`}
-         className={`flex w-full flex-col items-center gap-4`}
+         className={`flex w-full flex-col items-center gap-4 px-12`}
       >
          <div className={`flex w-full items-center justify-center gap-4`}>
             <span className={`text-base text-secondary`}>
@@ -65,7 +64,9 @@ const TypingRunsStatsSection = ({ runs }: TypingRunsStatsSectionProps) => {
          </div>
          <div className={`mt-8 grid w-full grid-cols-3 gap-8`}>
             <TypingRunStat label={`tests started`} value={runs.length} />
-            <TypingRunStat label={`tests completed`} value={runs.length} />
+            <TypingRunStat
+               valueClassName={`text-accent`}
+               label={`tests completed`} value={runs.length} />
             <TypingRunStat
                label={`time typing`}
                value={formatSeconds(timeTyping / 1000)}

@@ -1,6 +1,6 @@
 import EmailNotVerifiedNotification from "@app/(loading)/account/_components/EmailNotVerifiedNotification";
 import TypingRunsStatsSection from "@app/(loading)/account/_components/TypingRunsStatsSection";
-import UserActivitySection from "@app/(loading)/account/_components/UserActivitySection";
+import UserActivitySection from "@app/(loading)/account/_components/activity/UserActivitySection";
 import LatestUserChallenges from "@app/(loading)/account/_components/challenges/LatestUserChallenges";
 import LatestUserRuns from "@app/(loading)/account/_components/runs/LatestUserRuns";
 import { getUserWithTypingRuns } from "@app/(loading)/account/_queries";
@@ -14,12 +14,9 @@ import {
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import PageLinks from "./_components/PageLinks";
-import UserRunsChart from "@app/(loading)/account/_components/charts/UserRunsChart";
-import UserGeneralInfo from "@app/(loading)/account/_components/UserGeneralInfo";
+import UserGeneralInfo from "@app/(loading)/account/_components/general/UserGeneralInfo";
 import { DetailedHTMLProps, HTMLAttributes, PropsWithChildren } from "react";
 import { cn } from "@lib/utils";
-import UserRunsChartThree from "@app/(loading)/account/_components/charts/UserRunsChartThree";
-import { getRunsGrouped, getRunsGroupedByAccuracy } from "./_queries/charts";
 import ChartsSection from "./_components/charts/ChartsSection";
 
 export const metadata: Metadata = {
@@ -47,8 +44,6 @@ export interface PageProps {
 const Page = async ({ searchParams }: PageProps) => {
    const user = await getUserWithTypingRuns();
    if (!user) notFound();
-
-   const [runsGrouped, runsGroupedByAccuracy] = [getRunsGrouped(user.typingRuns), getRunsGroupedByAccuracy(user.typingRuns)];
 
    return (
       <section

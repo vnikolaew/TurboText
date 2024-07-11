@@ -54,6 +54,7 @@ export const messageHandler = (wss: WebSocketServer, ws: WebSocket, data: RawDat
          clients
             .forEach(client => {
                const data = Buffer.from(JSON.stringify({ ...dataParsed }))
+               //@ts-ignore
                client.send(data, { binary: isBinary });
             });
 

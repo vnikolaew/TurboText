@@ -17,7 +17,7 @@ import { Github, Globe, Twitter } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import { useState } from "react";
 import { match } from "ts-pattern";
-import { editProfile } from "../actions";
+import { editProfile } from "../../actions";
 
 export interface EditProfileModalProps {
    editProfileModalOpen: boolean;

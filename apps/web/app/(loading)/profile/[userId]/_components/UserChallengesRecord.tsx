@@ -4,12 +4,12 @@ import { TOASTS } from "@config/toasts";
 import { useBoolean } from "@hooks/useBoolean";
 import { CHANEL_NAME } from "@providers/AblyProvider";
 import { Button, toast } from "@repo/ui";
-import { useChannel } from "ably/react";
 import { Swords } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useAction } from "next-safe-action/hooks";
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
+import { useChannel } from "@hooks/websocket";
 
 export interface UserChallengesRecordProps {
    record: {
@@ -38,9 +38,9 @@ const UserChallengesRecord = ({
    const session = useSession();
    const [challenged, setChallenged] = useBoolean();
 
-   const { channel } = useChannel(CHANEL_NAME, async (message) => {
+   const { } = useChannel(CHANEL_NAME, async (message) => {
       if (
-         message.name === EventType.ChallengeStarted &&
+         message.messageName === EventType.ChallengeStarted &&
          ((message.data.acceptedByUserId === session.data?.user?.id &&
             message.data.matchedUserId === userId) ||
             (message.data.acceptedByUserId === userId &&
@@ -55,7 +55,7 @@ const UserChallengesRecord = ({
       }
 
       if (
-         message.name === EventType.Rejected &&
+         message.messageName === EventType.Rejected &&
          ((message.data.rejectedByUserId === session.data?.user?.id &&
             message.data.matchedUserId === userId) ||
             (message.data.rejectedByUserId === userId &&

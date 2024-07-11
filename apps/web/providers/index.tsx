@@ -8,6 +8,7 @@ import { PropsWithChildren } from "react";
 import SessionProvider from "./SessionProvider";
 import { ThemeProvider } from "./ThemeProvider";
 import AblyProvider from "./AblyProvider";
+import WebSocketProvider from "@providers/WebSocketProvider";
 
 interface ProvidersProps extends PropsWithChildren {}
 
@@ -25,9 +26,11 @@ const Providers = ({ children }: ProvidersProps) => {
             attribute={`class`}
          >
             <AtomProvider>
-               <AblyProvider>
-                  <FontProvider>{children}</FontProvider>
-               </AblyProvider>
+               <WebSocketProvider>
+                  <AblyProvider>
+                     <FontProvider>{children}</FontProvider>
+                  </AblyProvider>
+               </WebSocketProvider>
             </AtomProvider>
          </ThemeProvider>
       </SessionProvider>

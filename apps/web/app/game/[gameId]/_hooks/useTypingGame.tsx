@@ -4,7 +4,6 @@ import { TypingRunState } from "@atoms/consts";
 import { typingRunStateAtom } from "@atoms/editor";
 import { CHANEL_NAME } from "@providers/AblyProvider";
 import { TypingRun, User, UsersChallenge } from "@repo/db";
-import { useChannel } from "ably/react";
 import { useAtom, useAtomValue } from "jotai";
 import { useSession } from "next-auth/react";
 import { useAction } from "next-safe-action/hooks";
@@ -13,6 +12,7 @@ import { challengeDetailsAtom } from "../_atoms";
 import { ready } from "../actions";
 import { useCountdown } from "./useCountdown";
 import { usePushGameUpdates } from "./usePushGameUpdates";
+import { useChannel } from "@hooks/websocket";
 
 export enum EventType {
    GameStarted = `game-started`,
@@ -61,7 +61,7 @@ export function useTypingGame(gameId: string) {
       if (gameState === `CountingDown`) start();
    }, [gameState]);
 
-   const { channel } = useChannel(CHANEL_NAME, async (message) => {
+   const { } = useChannel(CHANEL_NAME, async (message) => {
       if (message.data.type === EventType.ChallengeStopped) {
          setGameState(UsersChallengeState.Stopped);
          setChallengeStoppedByUserId(message.data.stoppedByUserId);
@@ -91,10 +91,10 @@ export function useTypingGame(gameId: string) {
    });
 
    useEffect(() => {
-      if (session.status === `authenticated` && channel.state === `attached`) {
+      if (session.status === `authenticated`) {
          execute({ gameId });
       }
-   }, [session.status, channel.state]);
+   }, [session.status]);
 
    return {
       gameState,

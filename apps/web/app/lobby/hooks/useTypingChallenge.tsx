@@ -4,7 +4,6 @@ import { wordsAtom } from "@atoms/editor";
 import { useBoolean } from "@hooks/useBoolean";
 import { CHANEL_NAME } from "@providers/AblyProvider";
 import Ably from "ably";
-import { useChannel } from "ably/react";
 import { atom, useAtomValue } from "jotai";
 import { useAtom, useSetAtom } from "jotai/index";
 import { useSession } from "next-auth/react";
@@ -13,6 +12,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 import { matchParamsAtom } from "../_atoms";
 import { rejectChallenge } from "../actions";
+import { useChannel } from "@hooks/websocket";
 
 export interface CurrentUserMatch {
    matchedUserId: string;
@@ -58,7 +58,7 @@ export function useTypingChallenge() {
 
    const [currentMatch, setCurrentMatch] =
       useAtom<CurrentUserMatch>(currentUserMatchAtom);
-   const { channel, publish } = useChannel(CHANEL_NAME, async (message) => {
+   const { publish } = useChannel(CHANEL_NAME, async (message) => {
       setMessages((prev) => [...prev, message]);
       if (message.data?.type === EventType.Match) {
          const { userOneId, userTwoId } = message.data;
@@ -157,7 +157,7 @@ export function useTypingChallenge() {
    const [matchLoading, setMatchLoading] = useBoolean();
 
    const match = useCallback(async () => {
-      if (session.status === `authenticated` && channel.state === `attached`) {
+      if (session.status === `authenticated`) {
          setMatchLoading(true);
          setCurrentMatch((m) => ({ ...m, state: ChallengeState.Pending }));
 
@@ -172,13 +172,12 @@ export function useTypingChallenge() {
          console.log({ res });
          setMatchLoading(false);
       }
-   }, [session.status, channel.state, matchParams]);
+   }, [session.status, matchParams]);
 
    return {
       currentMatch,
       accept,
       decline,
-      channel,
       messages,
       match,
       matchLoading,

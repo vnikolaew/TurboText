@@ -11,7 +11,7 @@ const WebSocketProvider = ({ children }: WebSocketProviderProps) => {
    const websocket = useRef(new WebSocket("ws://localhost:5002"));
 
    return (
-      <WebSocketContext.Provider value={websocket}>
+      <WebSocketContext.Provider value={websocket.current}>
          {children}
       </WebSocketContext.Provider>
    );

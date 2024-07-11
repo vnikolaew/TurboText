@@ -9,13 +9,13 @@ import LoadingButton from "@components/common/LoadingButton";
 import { TOASTS } from "@config/toasts";
 import { CHANEL_NAME } from "@providers/AblyProvider";
 import { Button, toast, UserAvatar } from "@repo/ui";
-import { useChannel } from "ably/react";
 import { useAtom, useSetAtom } from "jotai/index";
 import moment from "moment";
 import { useSession } from "next-auth/react";
 import { useAction } from "next-safe-action/hooks";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useChannel } from "@hooks/websocket";
 
 export interface UserNotificationProps {
    notification: UN;
@@ -35,12 +35,12 @@ const UserNotification = ({ notification }: UserNotificationProps) => {
    const [currentMatch, setCurrentMatch] = useAtom(currentUserMatchAtom);
    const router = useRouter();
    const session = useSession();
-   const { channel } = useChannel(CHANEL_NAME, async (message) => {
-      if (message.name === EventType.Accepted) {
+   const { } = useChannel(CHANEL_NAME, async (message) => {
+      if (message.messageName === EventType.Accepted) {
          console.log(`Challenge accepted!`, message);
       }
 
-      if (message.name === EventType.ChallengeStarted) {
+      if (message.messageName === EventType.ChallengeStarted) {
          console.log(`Challenge started!`, message);
          setCurrentMatch({
             ...(currentMatch ?? {}),

@@ -17,13 +17,13 @@ import {
    TooltipProvider,
    TooltipTrigger,
 } from "@repo/ui";
-import { useChannel } from "ably/react";
 import { useSetAtom } from "jotai/index";
 import { BookCheck, MessageCircle } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useAction } from "next-safe-action/hooks";
 import UserNotification from "./UserNotification";
 import { match } from "ts-pattern";
+import { useChannel } from "@hooks/websocket";
 
 export interface UserNotificationsProps {
    notifications: UN[];
@@ -51,22 +51,23 @@ const UserNotifications = ({ notifications }: UserNotificationsProps) => {
          }
       },
    });
-   const { channel } = useChannel(
+   const { } = useChannel(
       CHANEL_NAME,
       async (message) => {
          console.log(`New notification: `, { message });
 
          // Apply message filter first:
-         if (message.name === `challenge-user` && message.data.challengeeId === session.data?.user?.id) {
+         if (message.messageName === `challenge-user` && message.data.challengeeId === session.data?.user?.id) {
+
             // Save notification to database ...
             save({
-               id: message.id ?? null,
+               id: message.data.id ?? null,
                payload: message.data,
             });
             setNotifications((n) => [
                ...n,
                {
-                  id: message.id ?? crypto.randomUUID(),
+                  id: message.data.id ?? crypto.randomUUID(),
                   timestamp: new Date(message.timestamp!),
                   payload: message.data,
                },

@@ -12,11 +12,8 @@ import { Swords } from "lucide-react";
 import Link from "next/link";
 import { Fragment } from "react";
 import { SortableTableHead } from "../common/SortableTableHead";
-import {
-   ChallengeNormalized,
-   challengesTableSortAtom,
-} from "./LatestUserChallenges";
 import UserChallengeRow from "./UserChallengeRow";
+import { ChallengeNormalized, challengesTableSortAtom } from "../_atoms";
 
 export interface LatestUserChallengesTableProps {
    challenges: ChallengeNormalized[];

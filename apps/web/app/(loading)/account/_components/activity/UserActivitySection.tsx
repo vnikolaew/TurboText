@@ -1,5 +1,5 @@
 "use client";
-import { ActivityTooltip } from "@app/(loading)/account/_components/ActivityTooltip";
+import { ActivityTooltip } from "@app/(loading)/account/_components/general/ActivityTooltip";
 import { useBoolean } from "@hooks/useBoolean";
 import { TypingRun } from "@repo/db";
 import moment from "moment";

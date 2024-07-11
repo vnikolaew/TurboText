@@ -6,6 +6,7 @@ import UserRunsChartThree from "@app/(loading)/account/_components/charts/UserRu
 import { TypingRun } from "@repo/db";
 import { getRunsGrouped, getRunsGroupedByAccuracy } from "@app/(loading)/account/_queries/charts";
 import { match } from "ts-pattern";
+import { Crosshair, WholeWord } from "lucide-react";
 
 interface ChartsSectionProps {
    runs: TypingRun[];
@@ -21,16 +22,32 @@ const ChartsSection = ({ runs }: ChartsSectionProps) => {
    const [runsGrouped, runsGroupedByAccuracy] = useMemo(() => [getRunsGrouped(runs), getRunsGroupedByAccuracy(runs)], [runs]);
 
    return (
-      <div className={`flex flex-col items-center gap-8 w-full`}>
+      <section id={`stats`} className={`flex flex-col items-center gap-8 w-full`}>
         <div className={`flex flex-col gap-2 items-start`}>
            <Label className={`!text-lg`}>Select chart type</Label>
            <Select onValueChange={setValue} value={value}>
-              <SelectTrigger className="w-[300px]">
+              <SelectTrigger className="w-[320px]">
                  <SelectValue placeholder="Type" />
               </SelectTrigger>
-              <SelectContent>
-                 <SelectItem value={ChartType.WPM}>WPM</SelectItem>
-                 <SelectItem value={ChartType.ACC_CON}>Accuracy / Consistency</SelectItem>
+              <SelectContent className={`!bg-secondary-bg`}>
+                 <SelectItem className={``}  value={ChartType.WPM}>
+                    <div className={`flex items-center gap-2 w-full`}>
+                       <WholeWord size={20} />
+                       <span>
+                     WPM (Words Per Minute)
+                    </span>
+                    </div>
+                 </SelectItem>
+                 <SelectItem className={``} value={ChartType.ACC_CON}>
+                    <div className={`flex items-center gap-2 w-full`}>
+                       <Crosshair size={18} />
+                       <span>
+                           Accuracy / Consistency
+                        </span>
+                    </div>
+                    <span>
+                    </span>
+                 </SelectItem>
               </SelectContent>
            </Select>
         </div>
@@ -40,7 +57,7 @@ const ChartsSection = ({ runs }: ChartsSectionProps) => {
                .otherwise(() => <UserRunsChartThree runs={runsGroupedByAccuracy} />)
             }
          </div>
-      </div>
+      </section>
    );
 };
 
