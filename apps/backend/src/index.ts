@@ -1,34 +1,16 @@
-import { WebSocketServer } from "ws";
 import { Server } from "node:http";
+import ExpressConfig from "./express.config";
+import express from "express";
+import path from "node:path";
+import { wss } from "./websocket/websocket.config";
 
-const server: Server = require("http").createServer();
+const app = ExpressConfig();
+app.use(express.static(path.join(__dirname, "public")));
 
-const wss = new WebSocketServer({
-   server,
-   perMessageDeflate: {
-      zlibDeflateOptions: {
-         // See zlib defaults.
-         chunkSize: 1024,
-         memLevel: 7,
-         level: 3,
-      },
-      zlibInflateOptions: {
-         chunkSize: 10 * 1024,
-      },
-      // Other options settable:
-      clientNoContextTakeover: true, // Defaults to negotiated value.
-      serverNoContextTakeover: true, // Defaults to negotiated value.
-      serverMaxWindowBits: 10, // Defaults to negotiated value.
-      // Below options specified as default values.
-      concurrencyLimit: 10, // Limits zlib concurrency for perf.
-      threshold: 1024, // Size (in bytes) below which messages
-      // should not be compressed if context takeover is disabled.
-   },
-});
+const server: Server = require("http").createServer(app);
+const ws = wss(server)
 
+const PORT = process.env.PORT || 5002;
 
-// const app = ExpressConfig();
-const PORT = process.env.PORT || 5000;
-
-server.listen(PORT, () => console.log(`🚀 Server Running on port ${PORT} ...`));
+server.listen(PORT, () => console.log(`🚀 Server Running on port ${PORT} ... Go to http://localhost:${PORT}/index.html for Index page.`));
 // app.listen(PORT, );
