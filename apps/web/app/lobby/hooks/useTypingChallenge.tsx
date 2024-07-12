@@ -2,7 +2,7 @@
 import { acceptChallenge } from "@app/lobby/actions";
 import { wordsAtom } from "@atoms/editor";
 import { useBoolean } from "@hooks/useBoolean";
-import { CHANEL_NAME } from "@providers/AblyProvider";
+import { CHANEL_NAME } from "@providers";
 import Ably from "ably";
 import { atom, useAtomValue } from "jotai";
 import { useAtom, useSetAtom } from "jotai/index";
@@ -58,7 +58,7 @@ export function useTypingChallenge() {
 
    const [currentMatch, setCurrentMatch] =
       useAtom<CurrentUserMatch>(currentUserMatchAtom);
-   const { publish } = useChannel(CHANEL_NAME, async (message) => {
+   const { clientId } = useChannel(CHANEL_NAME, async (message) => {
       setMessages((prev) => [...prev, message]);
       if (message.data?.type === EventType.Match) {
          const { userOneId, userTwoId } = message.data;
@@ -167,6 +167,7 @@ export function useTypingChallenge() {
             body: JSON.stringify(matchParams),
             headers: {
                "Content-Type": `application/json`,
+               "X-Client-Id": clientId,
             },
          }).then((res) => res.json());
          console.log({ res });

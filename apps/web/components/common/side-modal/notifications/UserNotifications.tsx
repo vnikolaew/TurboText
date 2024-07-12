@@ -8,7 +8,7 @@ import {
    markAllNotificationsRead,
    saveUserNotification,
 } from "@components/common/actions";
-import { CHANEL_NAME } from "@providers/AblyProvider";
+import { CHANEL_NAME } from "@providers";
 import {
    ScrollArea,
    Separator,
@@ -51,7 +51,7 @@ const UserNotifications = ({ notifications }: UserNotificationsProps) => {
          }
       },
    });
-   const { } = useChannel(
+   const { clientId } = useChannel(
       CHANEL_NAME,
       async (message) => {
          console.log(`New notification: `, { message });

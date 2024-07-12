@@ -2,13 +2,13 @@
 import { challengePlayer } from "@app/lobby/actions";
 import { TOASTS } from "@config/toasts";
 import { useBoolean } from "@hooks/useBoolean";
-import { CHANEL_NAME } from "@providers/AblyProvider";
+import { CHANEL_NAME } from "@providers";
 import { Button, toast } from "@repo/ui";
 import { Swords } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useAction } from "next-safe-action/hooks";
 import { useRouter } from "next/navigation";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { useChannel } from "@hooks/websocket";
 
 export interface UserChallengesRecordProps {
@@ -38,7 +38,7 @@ const UserChallengesRecord = ({
    const session = useSession();
    const [challenged, setChallenged] = useBoolean();
 
-   const { } = useChannel(CHANEL_NAME, async (message) => {
+   const {clientId } = useChannel(CHANEL_NAME, async (message) => {
       if (
          message.messageName === EventType.ChallengeStarted &&
          ((message.data.acceptedByUserId === session.data?.user?.id &&
@@ -79,15 +79,15 @@ const UserChallengesRecord = ({
       },
    });
 
-   async function handleChallengePlayer() {
+   const handleChallengePlayer = useCallback(async ()=> {
       if (challenged) return;
 
-      challenge({ userId: userId! });
+      challenge({ userId: userId!, clientId  });
       setChallenged(true);
 
       toast(TOASTS.CHALLENGES_USER_SUCCESS(username!));
       console.log(`Send a challenge invite!`);
-   }
+   }, [clientId, challenged, userId])
 
    return (
       <div className={`flex w-full flex-col items-center gap-2`}>

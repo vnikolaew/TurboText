@@ -10,6 +10,7 @@ export enum MessageType {
 
 const messageSchema = z.object({
    clientId: z.string(),
+   clientName: z.string().optional(),
    channelName: z.string(),
    messageName: z.string(),
    // @ts-ignore
@@ -22,7 +23,7 @@ const messageSchema = z.object({
 /**
  * A map of channel name to a set of unique client IDs currently subscribed to it.
  */
-const WEBSOCKET_CHANNELS: Map<string, Set<string>> = new Map<string, Set<string>>();
+export const WEBSOCKET_CHANNELS: Map<string, Set<string>> = new Map<string, Set<string>>();
 
 export const messageHandler = (wss: WebSocketServer, ws: WebSocket, data: RawData, isBinary: boolean) => {
    console.log(WEBSOCKET_CHANNELS, [...wss.clients].map(c => c["clientId"]));
@@ -50,7 +51,6 @@ export const messageHandler = (wss: WebSocketServer, ws: WebSocket, data: RawDat
                return broadcastTo.has(c["clientId"]);
             });
 
-         console.log({ clients });
          clients
             .forEach(client => {
                const data = Buffer.from(JSON.stringify({ ...dataParsed }))

@@ -1,8 +1,10 @@
 "use client";
 
-import { useWebSocket } from "@providers/WebSocketProvider";
+import { clientIdAtom, useWebSocket } from "@providers/WebSocketProvider";
 import { useCallback, useEffect, useState } from "react";
 import { z } from "zod";
+import { useSession } from "next-auth/react";
+import { useAtom } from "jotai";
 
 export enum MessageType {
    SEND = 0,
@@ -18,6 +20,7 @@ const initialSchema = z.object({
 const messageSchema = z.object({
    clientId: z.string(),
    channelName: z.string(),
+   clientName: z.string().nullable(),
    messageName: z.string(),
    // @ts-ignore
    messageType: z.union(Object.entries(MessageType).map(([x, y]) => z.literal(x)) as const),
@@ -28,6 +31,7 @@ const messageSchema = z.object({
 
 export interface IMessage {
    clientId: string,
+   clientName?: string;
    channelName: string,
    messageName: string,
    messageType: string,
@@ -36,45 +40,58 @@ export interface IMessage {
    data: Record<string, any>;
 }
 
-export function useChannel(channelName: string, callback: (message: IMessage) => void) {
-   const websocket = useWebSocket();
-   const [clientId, setClientId] = useState(``);
+export function useChannel(channelName: string, callback?: (message: IMessage) => void) {
+   let websocket = useWebSocket();
+   const [clientId, setClientId] = useAtom(clientIdAtom);
+   const session = useSession();
 
    const publish = useCallback((name: string, message: IMessage) => {
       websocket.send(JSON.stringify({
          ...message,
          channelName: name,
-         clientId
+         clientName: session.data?.user?.name,
+         clientId,
       } as IMessage));
-   }, [clientId]);
+   }, [clientId, session.data?.user?.name]);
 
    useEffect(() => {
-      const openHandler = _ => {
-         if(!clientId.length) return;
+      if(!clientId?.length) return
 
-         const message: IMessage = {
-            channelName,
-            messageName: `global`,
-            messageType: `SUBSCRIBE`,
-            clientId,
-            timestamp: Date.now(),
-            extras: {},
-            data: {},
-         };
-         websocket.send(JSON.stringify(message));
+      const message: IMessage = {
+         channelName,
+         messageName: `global`,
+         messageType: `SUBSCRIBE`,
+         clientName: session.data?.user?.name,
+         clientId,
+         timestamp: Date.now(),
+         extras: {},
+         data: {},
+      };
+
+      websocket?.send(JSON.stringify(message));
+   }, [clientId])
+
+   useEffect(() => {
+      websocket ??= new WebSocket("ws://localhost:5002");
+      console.log(`we are in useEffect()`);
+
+      const openHandler = _ => {
+         console.log(`Opening websocket...`);
       };
 
       const messageHandler = (event: any) => {
-         const eventObj = JSON.parse(event.data)
+         console.log(`New unparsed message: `,{ event });
+         const eventObj = JSON.parse(event.data);
          const parsed = messageSchema.safeParse(eventObj);
 
-         if (parsed.success) {
-            callback(parsed.data as IMessage);
+         if (parsed.success && parsed.data.channelName === channelName) {
+            callback?.(parsed.data as IMessage);
          }
 
          const initial = initialSchema.safeParse(eventObj);
          if (initial.success) {
-            setClientId(initial.data.clientId)
+            console.log(`New client ID: ${initial.data.clientId}`);
+            setClientId(initial.data.clientId);
          }
       };
 
@@ -85,7 +102,7 @@ export function useChannel(channelName: string, callback: (message: IMessage) =>
          websocket.removeEventListener(`open`, openHandler);
          websocket.removeEventListener(`message`, messageHandler);
       };
-   }, [clientId]);
+   }, []);
 
-   return { publish, websocket };
+   return { publish, websocket, clientId };
 }

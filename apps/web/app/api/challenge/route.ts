@@ -7,6 +7,8 @@ import { mean } from "lodash";
 import { NextRequest, NextResponse } from "next/server";
 import { match } from "ts-pattern";
 import { z } from "zod";
+import { IMessage } from "@hooks/websocket";
+import { headers } from "next/headers";
 
 export const runtime = "nodejs"; // 'nodejs' (default) | 'edge'
 
@@ -90,9 +92,10 @@ export async function POST(req: NextRequest) {
          },
       });
 
-      await channel.attach();
-      await channel.publish({
-         name: EventType.Match,
+      const websocket = new WebSocket(process.env.WEBSOCKET_URL!)
+      const message: IMessage = {
+         channelName: `global`,
+         messageType: `SEND`,
          data: {
             userOneId: user1,
             userTwoId: user2,
@@ -102,7 +105,13 @@ export async function POST(req: NextRequest) {
             },
             matchId: match.id,
          },
-      });
+         messageName: EventType.Match,
+         clientId: headers().get("X-Client-Id") ?? ``,
+
+         timestamp: Date.now(),
+         extras: {},
+      }
+      websocket.send(JSON.stringify(message))
 
       return NextResponse.json({ ok: true, match }, { status: 200 });
    }

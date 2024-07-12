@@ -11,6 +11,8 @@ import { challengeDetailsAtom, challengeWinnerDetailsAtom } from "../_atoms";
 import GameTypingEditor from "./GameTypingEditor";
 import { stopChallenge } from "@app/lobby/actions";
 import { useTypingGame } from "../_hooks/useTypingGame";
+import { useWebSocket } from "@providers/WebSocketProvider";
+import { useChannel } from "@hooks/websocket";
 
 export interface UsersTypingChallengeSectionProps {
    userOne: User;
@@ -27,10 +29,10 @@ const UsersChallengeState = {
 };
 
 const UsersTypingChallengeSection = ({
-   userTwo,
-   userOne,
-   gameId,
-}: UsersTypingChallengeSectionProps) => {
+                                        userTwo,
+                                        userOne,
+                                        gameId,
+                                     }: UsersTypingChallengeSectionProps) => {
    const session = useSession();
 
    const {
@@ -43,6 +45,8 @@ const UsersTypingChallengeSection = ({
    } = useTypingGame(gameId);
    const challengeDetails = useAtomValue(challengeDetailsAtom);
    const challengeWinnerDetails = useAtomValue(challengeWinnerDetailsAtom);
+   const { clientId } = useChannel(`global`);
+
    const { execute: stop, isExecuting: stopping } = useAction(stopChallenge, {
       onSuccess: (res) => {
          if (res.data?.success) {
@@ -91,7 +95,7 @@ const UsersTypingChallengeSection = ({
                   href={`/profile/${challengeStoppedByUserId}`}
                >
                   {[userOne, userTwo].find(
-                     (u) => u.id === challengeStoppedByUserId
+                     (u) => u.id === challengeStoppedByUserId,
                   )?.name ?? `[${challengeStoppedByUserId}]`}
                </Link>
                .
@@ -107,6 +111,7 @@ const UsersTypingChallengeSection = ({
                onClick={(_) => {
                   if (gameState === UsersChallengeState.Playing) {
                      stop({
+                        clientId,
                         userId: userOne?.id!,
                         gameId,
                         matchedUserId: userTwo.id,
@@ -123,7 +128,7 @@ const UsersTypingChallengeSection = ({
                <GameTypingEditor
                   gameId={gameId}
                   user={[userOne, userTwo].find(
-                     (u) => u.id === session.data?.user?.id
+                     (u) => u.id === session.data?.user?.id,
                   )}
                />
             )}

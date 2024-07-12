@@ -6,28 +6,19 @@ import { LANGUAGES_MAP } from "@atoms/consts";
 import { auth } from "@auth";
 import { authorizedAction } from "@lib/actions";
 import {
-   Prisma,
    UsersChallenge,
    UsersChallengeMatch,
    UsersChallengeMatchState,
    UsersChallengeState,
    xprisma,
 } from "@repo/db";
-import Ably from "ably";
 import { z } from "zod";
-
-const CHANNEL_NAME = `private-global-chat`;
-
-const realtime = new Ably.Realtime({
-   key: process.env.ABLY_API_KEY!,
-   clientId: `turbo-text-node`,
-   tls: true,
-});
-const channel = realtime.channels.get(CHANNEL_NAME, {});
+import { IMessage } from "@hooks/websocket";
 
 const schema = z.object({
    matchId: z.string(),
    userId: z.string(),
+   clientId: z.string(),
    matchedUserId: z.string(),
 });
 
@@ -37,7 +28,8 @@ const schema = z.object({
 export const acceptChallenge = authorizedAction
    .schema(schema)
    .action(
-      async ({ ctx: { userId }, parsedInput: { matchedUserId, matchId } }) => {
+      async ({ ctx: { userId }, parsedInput: { matchedUserId, matchId, clientId } }) => {
+         let session = await auth()
          let match: UsersChallengeMatch =
             await xprisma.usersChallengeMatch.findUnique({
                where: {
@@ -66,13 +58,13 @@ export const acceptChallenge = authorizedAction
             const metadata = body.success ? body.data : undefined;
 
             const languageCode = Object.entries(LANGUAGES_MAP).find(
-               ([, value]) => value === metadata?.language
+               ([, value]) => value === metadata?.language,
             )?.[0];
 
             // Generate challenge words:
             const { words } = await generateWords(
                languageCode!,
-               metadata?.time! * 1.5
+               metadata?.time! * 1.5,
             );
 
             // Save new challenge to DB:
@@ -87,29 +79,42 @@ export const acceptChallenge = authorizedAction
             });
          }
 
-         await channel.attach();
-         await channel.publish({
-            name:
-               match.state === UsersChallengeMatchState.HalfAccepted
+         const websocket = new WebSocket(process.env.WEBSOCKET_URL!);
+         websocket.addEventListener(`open`, e => {
+            const message: IMessage = {
+               clientId,
+               timestamp: Date.now(),
+               channelName: `global`,
+               clientName: session?.user?.name,
+               messageName: match.state === UsersChallengeMatchState.HalfAccepted
                   ? EventType.Accepted
                   : EventType.ChallengeStarted,
-            data: {
-               acceptedByUserId: userId,
-               matchedUserId,
-               type:
-                  match.state === UsersChallengeMatchState.HalfAccepted
-                     ? EventType.Accepted
-                     : EventType.ChallengeStarted,
-               gameId:
-                  match.state === UsersChallengeMatchState.HalfAccepted
-                     ? undefined
-                     : challenge?.id,
-               matchId: match.id,
-            },
+               messageType: `SEND`,
+               extras: {
+                  headers: {
+                     fromUserId: session?.user?.id,
+                     challengeeId: userId,
+                  },
+               },
+               data: {
+                  acceptedByUserId: userId,
+                  matchedUserId,
+                  type:
+                     match.state === UsersChallengeMatchState.HalfAccepted
+                        ? EventType.Accepted
+                        : EventType.ChallengeStarted,
+                  gameId:
+                     match.state === UsersChallengeMatchState.HalfAccepted
+                        ? undefined
+                        : challenge?.id,
+                  matchId: match.id,
+               },
+            };
+            websocket.send(JSON.stringify(message));
          });
 
          return { success: true, match, challenge };
-      }
+      },
    );
 
 /**
@@ -118,7 +123,8 @@ export const acceptChallenge = authorizedAction
 export const rejectChallenge = authorizedAction
    .schema(schema)
    .action(
-      async ({ ctx: { userId }, parsedInput: { matchedUserId, matchId } }) => {
+      async ({ ctx: { userId }, parsedInput: { matchedUserId, matchId, clientId } }) => {
+         let session = await auth();
          let match: UsersChallengeMatch =
             await xprisma.usersChallengeMatch.findUnique({
                where: {
@@ -134,24 +140,39 @@ export const rejectChallenge = authorizedAction
             data: { state: UsersChallengeMatchState.Rejected },
          });
 
-         await channel.attach();
-         await channel.publish({
-            name: EventType.Rejected,
-            data: {
-               rejectedByUserId: userId,
-               matchedUserId,
-               type: EventType.Rejected,
-               matchId: match.id,
-            },
+         const websocket = new WebSocket(process.env.WEBSOCKET_URL!);
+         websocket.addEventListener(`open`, e => {
+            const message: IMessage = {
+               clientId,
+               timestamp: Date.now(),
+               channelName: `global`,
+               clientName: session?.user?.name,
+               messageName: EventType.Rejected,
+               messageType: `SEND`,
+               extras: {
+                  headers: {
+                     fromUserId: session?.user?.id,
+                     challengeeId: userId,
+                  },
+               },
+               data: {
+                  rejectedByUserId: userId,
+                  matchedUserId,
+                  type: EventType.Rejected,
+                  matchId: match.id,
+               },
+            };
+            websocket.send(JSON.stringify(message));
          });
 
          return { success: true, match };
-      }
+      },
    );
 
 const stopSchema = z.object({
    gameId: z.string(),
    userId: z.string(),
+   clientId: z.string(),
    matchedUserId: z.string(),
 });
 
@@ -161,7 +182,8 @@ const stopSchema = z.object({
 export const stopChallenge = authorizedAction
    .schema(stopSchema)
    .action(
-      async ({ ctx: { userId }, parsedInput: { matchedUserId, gameId } }) => {
+      async ({ ctx: { userId }, parsedInput: { matchedUserId, gameId, clientId } }) => {
+         let session = await auth();
          let challenge: UsersChallenge =
             await xprisma.usersChallenge.findUnique({
                where: {
@@ -173,7 +195,7 @@ export const stopChallenge = authorizedAction
          if (
             !challenge ||
             currentSet.difference(
-               new Set([challenge.userOneId, challenge.userTwoId])
+               new Set([challenge.userOneId, challenge.userTwoId]),
             )?.size !== 0
          ) {
             return { success: false };
@@ -187,24 +209,38 @@ export const stopChallenge = authorizedAction
             },
          });
 
-         // Publish a stop event:
-         await channel.attach();
-         await channel.publish({
-            name: EventType.ChallengeStopped,
-            data: {
-               stoppedByUserId: userId,
-               matchedUserId,
-               type: EventType.ChallengeStopped,
-               challengeId: challenge.id,
-            },
+         const websocket = new WebSocket(process.env.WEBSOCKET_URL!);
+         websocket.addEventListener(`open`, e => {
+            const message: IMessage = {
+               clientId,
+               timestamp: Date.now(),
+               channelName: `global`,
+               clientName: session?.user?.name,
+               messageName: EventType.ChallengeStopped,
+               messageType: `SEND`,
+               extras: {
+                  headers: {
+                     fromUserId: session?.user?.id,
+                     challengeeId: userId,
+                  },
+               },
+               data: {
+                  stoppedByUserId: userId,
+                  matchedUserId,
+                  type: EventType.ChallengeStopped,
+                  challengeId: challenge.id,
+               },
+            };
+            websocket.send(JSON.stringify(message));
          });
 
          return { success: true, challenge };
-      }
+      },
    );
 
 const challengeSchema = z.object({
    userId: z.string(),
+   clientId: z.string(),
 });
 
 /**
@@ -213,7 +249,7 @@ const challengeSchema = z.object({
 export const challengePlayer = authorizedAction
    .schema(challengeSchema)
    .action(
-      async ({ ctx: { userId }, parsedInput: { userId: challengeeId } }) => {
+      async ({ ctx: { userId }, parsedInput: { userId: challengeeId, clientId } }) => {
          const session = await auth();
 
          const DEFAULT_CHALLENGE_PARAMS = {
@@ -231,29 +267,36 @@ export const challengePlayer = authorizedAction
             },
          });
 
-         // Publish a stop event:
-         await channel.attach();
-         await channel.publish({
-            name: EventType.ChallengeUser,
-            data: {
-               fromUserId: userId,
-               fromUserImage: session?.user?.image,
-               fromUserName: session?.user?.name,
-               challengeeId,
-               matchId: match.id,
-               type: EventType.ChallengeUser,
-               ...DEFAULT_CHALLENGE_PARAMS,
-            },
-            extras: {
-               headers: {
-                  fromUserId: session?.user?.id,
-                  challengeeId: userId,
+         const websocket = new WebSocket(process.env.WEBSOCKET_URL!);
+         websocket.addEventListener(`open`, e => {
+            const message: IMessage = {
+               clientId,
+               timestamp: Date.now(),
+               channelName: `global`,
+               clientName: session?.user?.name,
+               messageName: EventType.ChallengeUser,
+               messageType: `SEND`,
+               extras: {
+                  headers: {
+                     fromUserId: session?.user?.id,
+                     challengeeId: userId,
+                  },
                },
-            },
+               data: {
+                  fromUserId: userId,
+                  fromUserImage: session?.user?.image,
+                  fromUserName: session?.user?.name,
+                  challengeeId,
+                  matchId: match.id,
+                  type: EventType.ChallengeUser,
+                  ...DEFAULT_CHALLENGE_PARAMS,
+               },
+            };
+            websocket.send(JSON.stringify(message));
          });
 
          return { success: true, match };
-      }
+      },
    );
 
 /**
@@ -261,14 +304,7 @@ export const challengePlayer = authorizedAction
  */
 export const getUserAverageWpm = authorizedAction
    .schema(z.object({ userId: z.string() }))
-   .action(async ({ ctx: { userId }, parsedInput: { userId: uId } }) => {
-
-      const res = await xprisma.$queryRaw<{ avg: Prisma.Decimal }>`
-        SELECT AVG(cast(r.metadata->>'wpm' as decimal)) as avg FROM "TypingRun" r
-        LEFT JOIN public."User" u on r."userId" = u.id
-        WHERE r."userId" = ${uId}
-         GROUP BY u.id;
-      `;
-
-      return { success: true, avgWpm: res[0].avg.toNumber() as number };
+   .action(async ({ parsedInput: { userId: uId } }) => {
+      const res = await xprisma.user.averageWpm({ userId: uId });
+      return { success: true, avgWpm: res };
    });

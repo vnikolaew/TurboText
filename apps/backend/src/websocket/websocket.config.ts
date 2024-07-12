@@ -1,6 +1,6 @@
 import { WebSocketServer } from "ws";
 import { Server } from "node:http";
-import { messageHandler } from "./channels";
+import { messageHandler, WEBSOCKET_CHANNELS } from "./channels";
 
 export function wss(server: Server) {
    let wss = new WebSocketServer({
@@ -61,8 +61,17 @@ function setupListeners(wss: WebSocketServer) {
          });
       }, 30000);
 
-      wss.on(`close`, _ => clearInterval(interval));
+      wss.on(`close`, _ => {
+         clearInterval(interval);
+         const clientId = ws["clientId"];
 
+         console.log(`Closing connection from client with ID of ${clientId} ...`);
+         for (let [, clientIds] of WEBSOCKET_CHANNELS.entries()) {
+            if(clientIds.has(clientId)) {
+               clientIds.delete(clientId)
+            }
+         }
+      });
    })
 
    return wss;

@@ -7,7 +7,7 @@ import {
 import { globalUserSheetAtom, UserNotification as UN } from "@atoms/user";
 import LoadingButton from "@components/common/LoadingButton";
 import { TOASTS } from "@config/toasts";
-import { CHANEL_NAME } from "@providers/AblyProvider";
+import { CHANEL_NAME } from "@providers";
 import { Button, toast, UserAvatar } from "@repo/ui";
 import { useAtom, useSetAtom } from "jotai/index";
 import moment from "moment";
@@ -35,7 +35,7 @@ const UserNotification = ({ notification }: UserNotificationProps) => {
    const [currentMatch, setCurrentMatch] = useAtom(currentUserMatchAtom);
    const router = useRouter();
    const session = useSession();
-   const { } = useChannel(CHANEL_NAME, async (message) => {
+   const { clientId } = useChannel(CHANEL_NAME, async (message) => {
       if (message.messageName === EventType.Accepted) {
          console.log(`Challenge accepted!`, message);
       }
@@ -91,6 +91,7 @@ const UserNotification = ({ notification }: UserNotificationProps) => {
          userId: session?.data?.user?.id!,
          matchedUserId: notification.payload.fromUserId,
          matchId: notification.payload.matchId,
+         clientId,
       });
    }
 
@@ -99,6 +100,7 @@ const UserNotification = ({ notification }: UserNotificationProps) => {
          userId: session?.data?.user?.id!,
          matchedUserId: notification.payload.fromUserId,
          matchId: notification.payload.matchId,
+         clientId,
       });
    }
 

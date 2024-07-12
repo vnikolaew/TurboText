@@ -24,7 +24,7 @@ export interface UserNotificationsButtonProps {}
 
 const UserNotificationsButton = ({}: UserNotificationsButtonProps) => {
    const notifications = useAtomValue(globalUserNotificationsAtom);
-   const [notificationsQs, setNotificationsQs] = useQueryState(
+   const [, setNotificationsQs] = useQueryState(
       `side`,
       parseAsBoolean.withDefault(false)
    );

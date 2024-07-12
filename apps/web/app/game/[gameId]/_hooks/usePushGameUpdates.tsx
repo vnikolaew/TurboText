@@ -3,7 +3,7 @@
 import { EventType } from "@app/game/[gameId]/_hooks/useTypingGame";
 import { currentCharIndexAtom } from "@atoms/editor";
 import { useChannel } from "@hooks/websocket";
-import { CHANEL_NAME } from "@providers/AblyProvider";
+import { CHANEL_NAME } from "@providers";
 import { useAtomValue } from "jotai";
 import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useRef } from "react";

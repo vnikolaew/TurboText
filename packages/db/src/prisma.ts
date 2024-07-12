@@ -23,7 +23,7 @@ export let xprisma = prisma.$extends({
          label: {
             needs: { level: true },
             compute({ level }) {
-               return getUserLabel(level)
+               return getUserLabel(level);
             },
          },
       },
@@ -47,8 +47,8 @@ export let xprisma = prisma.$extends({
             },
          },
          rawWpm: {
-            needs: {  metadata: true },
-            compute({  metadata }) {
+            needs: { metadata: true },
+            compute({ metadata }) {
                return Number(metadata?.rawWpm ?? 0);
             },
          },
@@ -220,6 +220,16 @@ export let xprisma = prisma.$extends({
          },
       },
       user: {
+         async averageWpm({ userId }: { userId: string }) {
+            const res = await xprisma.$queryRaw<{ avg: Prisma.Decimal }>`
+        SELECT AVG(cast(r.metadata->>'wpm' as decimal)) as avg FROM "TypingRun" r
+        LEFT JOIN public."User" u on r."userId" = u.id
+        WHERE r."userId" = ${userId}
+         GROUP BY u.id;
+      `;
+
+            return res[0].avg.toNumber() as number;
+         },
          async getUserPersonalBestWpm({ userId }: { userId: string }) {
             const userWpm: number = (await xprisma.typingRun.findMany({
                where: { userId },

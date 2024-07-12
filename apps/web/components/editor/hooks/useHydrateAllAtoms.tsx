@@ -94,8 +94,6 @@ export function useHydrateAllAtoms(
       [typingTimeTodayAtom, sum(user?.typingRuns?.filter(r => {
          const [date, today] = [new Date(r.createdAt), new Date()]
          let equal = date.getDate() === today.getDate() && date.getMonth() === today.getMonth() && date.getFullYear() === today.getFullYear();
-
-         console.log({ date, today, equal });
          return equal
       }).map(r => r.totalTimeMilliseconds))],
       [userPbAtom, max(user?.typingRuns?.map(r => r.metadata?.wpm) ?? []) ?? 0],

@@ -2,7 +2,6 @@
 
 import { TypingRunState } from "@atoms/consts";
 import { typingRunStateAtom } from "@atoms/editor";
-import { CHANEL_NAME } from "@providers/AblyProvider";
 import { TypingRun, User, UsersChallenge } from "@repo/db";
 import { useAtom, useAtomValue } from "jotai";
 import { useSession } from "next-auth/react";
@@ -13,6 +12,7 @@ import { ready } from "../actions";
 import { useCountdown } from "./useCountdown";
 import { usePushGameUpdates } from "./usePushGameUpdates";
 import { useChannel } from "@hooks/websocket";
+import { CHANEL_NAME } from "@providers";
 
 export enum EventType {
    GameStarted = `game-started`,
