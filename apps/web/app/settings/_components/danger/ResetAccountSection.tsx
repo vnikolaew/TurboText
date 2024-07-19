@@ -1,7 +1,7 @@
 "use client";
 import SettingLayout from "@app/settings/_components/SettingLayout";
 import { Button } from "@repo/ui";
-import { RotateCcw } from "lucide-react";
+import { RotateCcw, TriangleAlert } from "lucide-react";
 
 export interface ResetAccountSectionProps {}
 
@@ -16,8 +16,8 @@ const ResetAccountSection = ({}: ResetAccountSectionProps) => {
             <p className={`mt-2 text-base !text-secondary`}>
                Completely resets your account to a blank state.
             </p>
-            <p className={`mt-2 text-base !text-red-700`}>
-               You can't undo this action!
+            <p className={`mt-2 text-base !text-red-700 inline-flex items-center gap-2`}>
+               <TriangleAlert size={14} /> You can't undo this action!
             </p>
          </div>
          <div

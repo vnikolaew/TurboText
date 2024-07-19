@@ -87,7 +87,6 @@ export function useHydrateAllAtoms(
       ...(user?.configuration ?? {}),
    };
 
-   console.log( user?.typingRuns);
    //@ts-ignore
    useHydrateAtoms([
       [wordsAtom, WORDS.current],
@@ -139,7 +138,6 @@ export function useHydrateAllAtoms(
 
    const userCustomThemes = user?.configuration.metadata?.customThemes ?? [];
    if (Array.isArray(userCustomThemes) && userCustomThemes.length) {
-      console.log(` we are here: `, { userCustomThemes });
       userCustomThemes.forEach((t) => {
          const { name, ...vars } = t;
          injectCSSClass(name, vars);

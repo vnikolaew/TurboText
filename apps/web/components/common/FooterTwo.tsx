@@ -10,6 +10,7 @@ import { Github, Palette } from "lucide-react";
 import { Lexend_Deca } from "next/font/google";
 import Link from "next/link";
 import React, { ReactNode } from "react";
+import { parseAsString, useQueryState } from "nuqs";
 
 const lexend = Lexend_Deca({
    weight: ["400"],
@@ -103,6 +104,7 @@ export const FooterTwo = ({
    socialLinks: { linkedIn, discord, twitter, title },
 }: FooterTwoProps) => {
    const setCommandDialog = useSetAtom(commandsDialogOpen);
+   const [qs, setQs] = useQueryState(`search`, parseAsString.withDefault(``));
 
    return (
       <footer
@@ -190,7 +192,11 @@ export const FooterTwo = ({
                   <Tooltip>
                      <TooltipTrigger asChild>
                         <span
-                           onClick={(_) => setCommandDialog(true)}
+                           onClick={(_) => {
+                              setQs(`theme`).then(_ => {
+                                 setCommandDialog(true);
+                              })
+                           }}
                            className={`inline-flex cursor-pointer items-center gap-2 text-secondary transition-all duration-200 hover:!opacity-80`}
                         >
                            <Palette size={14} />

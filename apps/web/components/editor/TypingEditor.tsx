@@ -30,7 +30,7 @@ import { useAtomValue } from "jotai";
 import { useSetAtom } from "jotai/index";
 import { signIn } from "next-auth/react";
 import { useAction } from "next-safe-action/hooks";
-import { Fragment, useEffect, useMemo } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import Confetti from "react-confetti";
 import TypeRunState from "./TypeRunState";
 import TypingRunInfo from "./TypingRunInfo";
@@ -66,7 +66,7 @@ const TypingEditor = ({ user }: TypingEditorProps) => {
             localStorage.removeItem(TYPING_RUN_LS_KEY);
 
             setRunSaved(true);
-            setTypingTimeToday(t => t + res.data?.run?.totalTimeMilliseconds ?? 0)
+            setTypingTimeToday(t => t + res.data?.run?.totalTimeMilliseconds ?? 0);
 
             const newUserXp = {
                level: res.data.userXp?.level,
@@ -103,9 +103,10 @@ const TypingEditor = ({ user }: TypingEditorProps) => {
 
    const autoSaveMode = useAtomValue(autoSaveModeAtom);
 
+   const [showSavePromptDismissed, setShowSavePromptDismissed] = useState(false);
    const showSavePrompt = useMemo(
-      () => timerState === TypingRunState.FINISHED && !runSaved,
-      [timerState, result, autoSaveMode, runSaved],
+      () => timerState === TypingRunState.FINISHED && !runSaved && !showSavePromptDismissed,
+      [timerState, result, autoSaveMode, runSaved, showSavePromptDismissed],
    );
 
    function handleSaveTypingRun() {
@@ -196,9 +197,13 @@ const TypingEditor = ({ user }: TypingEditorProps) => {
                   <SaveTypingRunPrompt
                      loading={isExecuting}
                      onDismiss={() => {
+                        setShowSavePromptDismissed(true);
                         LocalStorage.removeItem(TYPING_RUN_LS_KEY);
                      }}
-                     onSave={handleSaveTypingRun} />
+                     onSave={() => {
+                        handleSaveTypingRun();
+                        setShowSavePromptDismissed(false)
+                     }} />
                )}
             </AnimatePresence>
             <AnimatePresence>

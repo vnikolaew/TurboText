@@ -1,5 +1,5 @@
 "use client";
-import { APP_DESCRIPTION, APP_DESCRIPTION_LONGER, APP_NAME, LINKS } from "@/config/site";
+import { APP_DESCRIPTION_LONGER, APP_NAME, LINKS } from "@/config/site";
 import { themeAtom } from "@atoms/user";
 import { FooterTwo, FooterTwoProps } from "@components/common/FooterTwo";
 import RocketLogo from "@components/icons/RocketLogo";

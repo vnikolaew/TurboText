@@ -88,7 +88,7 @@ const SearchInput = ({}: SearchInputProps) => {
                }}
                onChange={(e) => setValue(e.target.value)}
                value={value}
-               placeholder={`Search users ...`}
+               placeholder={`Search typists ...`}
                className={`w-[300px] rounded-xl !bg-secondary-bg/50 pl-9`}
             />
             <AnimatePresence>

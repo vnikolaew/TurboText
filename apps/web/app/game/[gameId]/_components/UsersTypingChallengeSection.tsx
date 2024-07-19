@@ -11,7 +11,6 @@ import { challengeDetailsAtom, challengeWinnerDetailsAtom } from "../_atoms";
 import GameTypingEditor from "./GameTypingEditor";
 import { stopChallenge } from "@app/lobby/actions";
 import { useTypingGame } from "../_hooks/useTypingGame";
-import { useWebSocket } from "@providers/WebSocketProvider";
 import { useChannel } from "@hooks/websocket";
 
 export interface UsersTypingChallengeSectionProps {

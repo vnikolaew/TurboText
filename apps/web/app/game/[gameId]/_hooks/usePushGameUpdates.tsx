@@ -13,7 +13,7 @@ export function usePushGameUpdates(gameId: string, interval: number) {
    const currCharIndex = useAtomValue(currentCharIndexAtom);
    const session = useSession();
 
-   const { websocket, publish} = useChannel(CHANEL_NAME, async (message) => {
+   const { websocket, publish, clientId } = useChannel(CHANEL_NAME, async (message) => {
       if (message.data.userId === session.data?.user?.id) return;
       if (
          message.data.type === EventType.ChallengeStopped ||
@@ -28,6 +28,9 @@ export function usePushGameUpdates(gameId: string, interval: number) {
    const update = useCallback(async () => {
       publish(EventType.GameUpdate, {
          timestamp: Date.now(),
+         channelName: CHANEL_NAME,
+         clientId,
+         clientName: session.data?.user?.name,
          messageName: EventType.GameUpdate,
          extras: { },
          messageType: `SEND`,

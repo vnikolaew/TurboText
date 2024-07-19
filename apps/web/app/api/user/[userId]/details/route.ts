@@ -3,12 +3,12 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
    req: NextRequest,
-   { params: { userId } }: { params: { userId: string } }
+   { params: { userId } }: { params: { userId: string } },
 ) {
    if (!userId)
       return NextResponse.json(
          { success: false, error: `User ID not provided` },
-         { status: 404 }
+         { status: 404 },
       );
 
    const user = await xprisma.user.findUnique({
@@ -19,6 +19,8 @@ export async function GET(
          image: true,
          experience: true,
          typingRuns: true,
+         challenges_one: true,
+         challenges_two: true,
          name: true,
          createdAt: true,
       },
@@ -26,8 +28,12 @@ export async function GET(
    if (!user)
       return NextResponse.json(
          { success: false, error: `User not found` },
-         { status: 404 }
+         { status: 404 },
       );
 
-   return NextResponse.json({ success: true, user }, { status: 200 });
+   console.log({ user });
+   return NextResponse.json({
+      success: true,
+      user: { ...user, challenges: [...user.challenges_one, ...user.challenges_two] },
+   }, { status: 200 });
 }

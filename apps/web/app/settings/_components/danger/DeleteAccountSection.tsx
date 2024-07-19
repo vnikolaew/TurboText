@@ -1,8 +1,8 @@
 "use client";
 import SettingLayout from "@app/settings/_components/SettingLayout";
 import DeleteAccountModal from "@app/settings/_components/danger/DeleteAccountModal";
-import { Button } from "@repo/ui";
-import { Trash } from "lucide-react";
+import {  Button } from "@repo/ui";
+import { Trash, TriangleAlert } from "lucide-react";
 
 export interface DeleteAccountSectionProps {}
 
@@ -17,8 +17,8 @@ const DeleteAccountSection = ({}: DeleteAccountSectionProps) => {
             <p className={`mt-2 text-base !text-secondary`}>
                Deletes your account and all data connected to it.
             </p>
-            <p className={`mt-2 text-base !text-red-700`}>
-               You can't undo this action!
+            <p className={`mt-2 text-base !text-red-700 inline-flex items-center gap-2`}>
+               <TriangleAlert size={14} /> You can't undo this action!
             </p>
          </div>
          <div

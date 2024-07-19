@@ -19,7 +19,7 @@ import {
    TableRow,
    UserAvatar,
 } from "@repo/ui";
-import { Crown } from "lucide-react";
+import { Crown, Play, Swords } from "lucide-react";
 import moment from "moment";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
@@ -112,9 +112,9 @@ export const LeaderboardTable = forwardRef<
 });
 
 const LeaderboardTableRow = ({
-   row,
-   index,
-}: {
+                                row,
+                                index,
+                             }: {
    row: LeaderboardRow;
    index: number;
 }) => {
@@ -122,9 +122,9 @@ const LeaderboardTableRow = ({
    const [userDetails, setUserDetails] = useState<
       Partial<
          User & {
-            typingRuns: TypingRun[];
-            experience: UserExperience;
-         }
+         typingRuns: TypingRun[];
+         experience: UserExperience;
+      }
       >
    >(null!);
    const [loading, setLoading] = useBoolean();
@@ -150,7 +150,7 @@ const LeaderboardTableRow = ({
          key={index}
          className={cn(
             `grid w-full grid-cols-13 !border-none`,
-            index % 2 === 1 && `bg-secondary-bg`
+            index % 2 === 1 && `bg-secondary-bg`,
          )}
       >
          <TableCell className="col-span-1 inline-flex items-center justify-center text-center font-medium !text-main">
@@ -219,14 +219,19 @@ const LeaderboardTableRow = ({
                                     >
                                        Joined{" "}
                                        {moment(userDetails?.createdAt)?.format(
-                                          `DD MMM YYYY`
+                                          `DD MMM YYYY`,
                                        )}
                                     </span>
                                  </div>
                               </div>
-                              <span className={`text-muted-foreground`}>
-                                 &bull; {userDetails?.typingRuns?.length} total
-                                 runs
+                              <span className={`text-muted-foreground text-xs inline-flex items-center gap-2 mt-4`}>
+                                 <Play className={`fill-accent text-accent`} size={14} />
+                                 {userDetails?.typingRuns?.length} total runs
+                              </span>
+                              <span className={`text-muted-foreground text-xs inline-flex gap-2 items-center`}>
+                                 <Swords className={`fill-accent text-accent`} size={14} />
+                                 {userDetails?.challenges?.length} total
+                                 challenges
                               </span>
                            </div>
                         ))}

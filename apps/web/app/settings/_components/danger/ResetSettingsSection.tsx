@@ -5,15 +5,15 @@ import { TOASTS } from "@config/toasts";
 import { useIsSignedIn } from "@hooks/useIsSignedIn";
 import { DEFAULT_USER_SETTINGS } from "@lib/consts";
 import { Button, toast } from "@repo/ui";
-import { useAtom } from "jotai/index";
-import { RotateCcw } from "lucide-react";
+import { useSetAtom } from "jotai/index";
+import { RotateCcw, TriangleAlert } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import SettingLayout from "../SettingLayout";
 
 export interface ResetSettingsSectionProps {}
 
 const ResetSettingsSection = ({}: ResetSettingsSectionProps) => {
-   const [userConfig, setUserConfig] = useAtom(userConfigAtom);
+   const setUserConfig = useSetAtom(userConfigAtom);
    const signedIn = useIsSignedIn();
 
    const { execute, status } = useAction(updateUserConfiguration, {
@@ -46,8 +46,8 @@ const ResetSettingsSection = ({}: ResetSettingsSectionProps) => {
             <p className={`mt-2 text-base !text-secondary`}>
                Resets settings to the default (but doesn't touch your tags).
             </p>
-            <p className={`mt-2 text-base !text-red-700`}>
-               You can't undo this action!
+            <p className={`mt-2 text-base !text-red-700 inline-flex items-center gap-2`}>
+               <TriangleAlert size={14} /> You can't undo this action!
             </p>
          </div>
          <div
