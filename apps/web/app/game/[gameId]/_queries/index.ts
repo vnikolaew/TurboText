@@ -1,6 +1,6 @@
 "use server";
 
-import { xprisma } from "@repo/db";
+import { UsersChallenge, xprisma } from "@repo/db";
 import { ChallengeDetails } from "../_hooks/useTypingGame";
 
 export async function getGameUsers(
@@ -18,10 +18,11 @@ export async function getGameUsers(
 
    const { updatePassword: x, verifyPassword: y, ...restOne } = userOne;
    const { updatePassword: _, verifyPassword: __, ...restTwo } = userTwo;
-   restOne.typingRuns = restOne.typingRuns.map(({ hasFlag, ...rest }) => {
+
+   restOne.typingRuns = restOne?.typingRuns?.map(({ hasFlag, ...rest }) => {
       return rest;
    });
-   restTwo.typingRuns = restTwo.typingRuns.map(({ hasFlag, ...rest }) => {
+   restTwo.typingRuns = restTwo?.typingRuns?.map(({ hasFlag, ...rest }) => {
       return rest;
    });
 
@@ -68,8 +69,9 @@ export async function getChallengeWinner(challenge: ChallengeDetails) {
  * Retrieve details about a challenge
  * @param gameId The id of the challenge
  */
-export async function getChallengeInfo(gameId?: string) {
+export async function getChallengeInfo(gameId?: string): Promise<UsersChallenge | null> {
    if (!gameId) return null;
+
    const challenge = await xprisma.usersChallenge.findUnique({
       where: { id: gameId },
       include: { userOneRun: true, userTwoRun: true },
@@ -81,7 +83,7 @@ export async function getChallengeInfo(gameId?: string) {
    }
 
    if (challenge.userTwoRun) {
-      const { hasFlag_, ...rest_ } = challenge.userTwoRun;
+      const { hasFlag, ...rest_ } = challenge.userTwoRun;
       challenge.userTwoRun = rest_;
    }
 

@@ -38,6 +38,7 @@ export const acceptChallenge = authorizedAction
             });
 
          if (!match || match.id !== matchId) return { success: false };
+         console.log(`Accepting match ${match.id} by ${userId}.`);
 
          console.log({ match, matchId });
          match = await xprisma.usersChallengeMatch.update({
@@ -68,6 +69,7 @@ export const acceptChallenge = authorizedAction
             );
 
             // Save new challenge to DB:
+            console.log({ userId, matchedUserId });
             challenge = await xprisma.usersChallenge.create({
                data: {
                   userOneId: userId,

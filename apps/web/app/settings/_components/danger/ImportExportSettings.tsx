@@ -3,14 +3,14 @@ import ImportSettingsModal from "@app/settings/_components/danger/ImportSettings
 import { userConfigAtom } from "@atoms/user";
 import { exportObjectAsJson } from "@lib/utils";
 import { Button } from "@repo/ui";
-import { useAtom } from "jotai";
+import { useAtomValue } from "jotai";
 import { SlidersHorizontal } from "lucide-react";
 import SettingLayout from "../SettingLayout";
 
 export interface ImportExportSettingsProps {}
 
 const ImportExportSettings = ({}: ImportExportSettingsProps) => {
-   const [userConfig, setUserConfig] = useAtom(userConfigAtom);
+   const userConfig = useAtomValue(userConfigAtom);
 
    return (
       <SettingLayout className={``}>

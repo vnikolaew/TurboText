@@ -1,34 +1,46 @@
 "use client";
 import {
+   averageAtom, paceCaretSpeedAtom,
    userActiveTagsAtom,
-   userLanguageAtom,
+   userLanguageAtom, userLastRunWpmAtom, userPbAtom, userPbTodayAtom,
    userTestDifficultyAtom,
 } from "@atoms/user";
-import { TypingRun } from "@repo/db";
+import { $Enums, TypingRun } from "@repo/db";
 import { useAtomValue } from "jotai";
 import { sum } from "lodash";
-import { Gauge, Globe, Star, Tag } from "lucide-react";
-import { PropsWithChildren } from "react";
+import { BarChartBig, Gauge, Globe, Star, Tag } from "lucide-react";
+import { Fragment, PropsWithChildren } from "react";
+import { match } from "ts-pattern";
+import userNotificationsButton from "@components/common/side-modal/notifications/UserNotificationsButton";
 
 interface TypingRunInfoProps {
    runs: TypingRun[];
 }
 
+const PaceCaretSpeed = {
+   OFF: 'OFF',
+   AVG: 'AVG',
+   PB: 'PB',
+   LAST: 'LAST',
+   DAILY: 'DAILY',
+   CUSTOM: 'CUSTOM'
+} as const;
+
 function getAverages(runs: TypingRun[]) {
    const averagePace = runs?.length
       ? sum(
-           runs
-              ?.filter((r) => !isNaN(Number(r.metadata?.wpm)))
-              ?.map((r) => r.metadata?.wpm)
-        ) / runs?.filter((r) => !isNaN(Number(r.metadata?.wpm)))?.length!
+      runs
+         ?.filter((r) => !isNaN(Number(r.metadata?.wpm)))
+         ?.map((r) => r.metadata?.wpm),
+   ) / runs?.filter((r) => !isNaN(Number(r.metadata?.wpm)))?.length!
       : 0;
 
    const averageAccuracy = runs?.length
       ? sum(
-           runs
-              ?.filter((r) => !isNaN(Number(r.metadata?.accuracy)))
-              ?.map((r) => r.metadata?.accuracy)
-        ) / runs?.filter((r) => !isNaN(Number(r.metadata?.accuracy)))?.length!
+      runs
+         ?.filter((r) => !isNaN(Number(r.metadata?.accuracy)))
+         ?.map((r) => r.metadata?.accuracy),
+   ) / runs?.filter((r) => !isNaN(Number(r.metadata?.accuracy)))?.length!
       : 0;
 
    return { averagePace, averageAccuracy };
@@ -38,8 +50,15 @@ const TypingRunInfo = ({ runs }: TypingRunInfoProps) => {
    const language = useAtomValue(userLanguageAtom);
    const difficulty = useAtomValue(userTestDifficultyAtom);
    const activeTags = useAtomValue(userActiveTagsAtom);
+   const showAverages = useAtomValue(averageAtom) as string;
+
+   const paceCaret = useAtomValue(paceCaretSpeedAtom) as $Enums.PaceCaretSpeed;
 
    const { averagePace, averageAccuracy } = getAverages(runs);
+
+   const userPb = useAtomValue(userPbAtom) as number;
+   const userPbToday = useAtomValue(userPbTodayAtom)
+   const userLastRunWpm = useAtomValue(userLastRunWpmAtom)
 
    return (
       <div
@@ -54,17 +73,45 @@ const TypingRunInfo = ({ runs }: TypingRunInfoProps) => {
             <Star size={18} />
             <span>{(difficulty as string)?.toLowerCase()}</span>
          </RunInfo>
-         <RunInfo>
-            <Gauge size={18} />
-            <span>average pace {averagePace.toFixed(0)} WPM</span>
-         </RunInfo>
-         <RunInfo>
-            <Gauge size={18} />
-            <span>
+         {match(paceCaret)
+            .with(PaceCaretSpeed.OFF, () => (
+               <Fragment />
+            ))
+            .with(PaceCaretSpeed.AVG, () => (
+               <RunInfo>
+                  <Gauge size={18} />
+                  <span>average pace {averagePace.toFixed(0)} wpm</span>
+               </RunInfo>
+            ))
+            .with(PaceCaretSpeed.PB, () => (
+               <RunInfo>
+                  <Gauge size={18} />
+                  <span>pb pace {userPb.toFixed(0)} wpm</span>
+               </RunInfo>
+            ))
+            .with(PaceCaretSpeed.DAILY, () => (
+               <RunInfo>
+                  <Gauge size={18} />
+                  <span>daily pace {userPbToday.toFixed(0)} wpm</span>
+               </RunInfo>
+            ))
+            .with(PaceCaretSpeed.LAST, () => (
+               <RunInfo>
+                  <Gauge size={18} />
+                  <span>last pace {userLastRunWpm.toFixed(0)} wpm</span>
+               </RunInfo>
+            ))
+            .otherwise(() => <Fragment />)
+         }
+         {showAverages !== `OFF` && (
+            <RunInfo>
+               <BarChartBig size={18} />
+               <span>
                avg: {averagePace.toFixed(0)} wpm {averageAccuracy.toFixed(0)}%
                acc
             </span>
-         </RunInfo>
+            </RunInfo>
+         )}
          <RunInfo>
             <Tag size={18} />
             <span>{activeTags?.join(", ")}</span>

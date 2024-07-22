@@ -12,8 +12,9 @@ import { useSetAtom } from "jotai/index";
 import { useSession } from "next-auth/react";
 import { useAction } from "next-safe-action/hooks";
 import { useEffect, useMemo, useState } from "react";
-import { UserDifficulty, userSelectedDifficultyAtom } from "../../_atoms";
+import { TUserDifficulty, UserDifficulty, userSelectedDifficultyAtom } from "../../_atoms";
 import { getUserAverageWpm } from "@app/lobby/actions";
+import { Sword } from "lucide-react";
 
 export interface UserGameDifficultySelectProps {}
 
@@ -23,7 +24,7 @@ export const UserGameDifficultySelect = ({}: UserGameDifficultySelectProps) => {
    const [userAvgWpm, setUserAvgWpm] = useState(0);
 
    const difficultyCategories = useMemo<Record<
-      UserDifficulty,
+      TUserDifficulty,
       [number, number]
    > | null>(() => {
       if (userAvgWpm === 0) return null;
@@ -55,8 +56,11 @@ export const UserGameDifficultySelect = ({}: UserGameDifficultySelectProps) => {
 
    return (
       <div className={`flex flex-col items-start gap-2`}>
-         <Label>Difficulty:</Label>
-         <Select onValueChange={(d) => setUserDifficulty(d as UserDifficulty)}>
+         <Label className={`inline-flex items-center gap-2`}>
+            <Sword className={`text-accent`} size={14} />
+            Difficulty:
+         </Label>
+         <Select onValueChange={(d) => setUserDifficulty(d as TUserDifficulty)}>
             <SelectTrigger className="w-[300px] !bg-secondary-bg !text-main">
                <SelectValue placeholder={UserDifficulty.MEDIUM} />
             </SelectTrigger>

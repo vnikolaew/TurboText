@@ -7,7 +7,7 @@ import WordRunsStats from "@app/(loading)/profile/[userId]/_components/WordRunsS
 import UserGithub from "@app/(loading)/profile/[userId]/_components/links/UserGithub";
 import UserTwitter from "@app/(loading)/profile/[userId]/_components/links/UserTwitter";
 import UserWebsite from "@app/(loading)/profile/[userId]/_components/links/UserWebsite";
-import { getUserInfo } from "@app/(loading)/profile/[userId]/_queries";
+import { getUserInfo } from "@/(loading)/profile/[userId]/_queries";
 import { formatMillisecondsToTime } from "@lib/utils";
 import {
    Separator,

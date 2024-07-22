@@ -36,7 +36,7 @@ export async function getUserChallengesRecord(user: User) {
 }
 
 export async function getUserInfo(userId: string) {
-   const user: User = await xprisma.user.findUnique({
+   const user = await xprisma.user.findUnique({
       where: { id: decodeURIComponent(userId!) },
       include: {
          typingRuns: true,

@@ -19,8 +19,8 @@ const initialSchema = z.object({
 
 const messageSchema = z.object({
    clientId: z.string(),
-   channelName: z.string(),
-   clientName: z.string().nullable(),
+   channelName: z.string().nullable(),
+   clientName: z.string().nullish(),
    messageName: z.string(),
    // @ts-ignore
    messageType: z.union(Object.entries(MessageType).map(([x, y]) => z.literal(x)) as const),

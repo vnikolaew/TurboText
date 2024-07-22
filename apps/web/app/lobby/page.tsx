@@ -15,12 +15,15 @@ import {
 } from "./_components/selects";
 import { UserAcceptState, userAcceptStateAtom } from "./_atoms";
 import { ChallengeState, useTypingChallenge } from "./hooks/useTypingChallenge";
+import { clientIdAtom } from "@providers/WebSocketProvider";
+import { useAtomValue } from "jotai";
 
 export interface PageProps {}
 
 const Page = ({}: PageProps) => {
    const session = useSession();
    const [userAcceptState, setUserAcceptState] = useAtom(userAcceptStateAtom);
+   const clientId = useAtomValue(clientIdAtom)
    const { currentMatch, accept, decline, match, matchLoading } =
       useTypingChallenge();
 
@@ -28,6 +31,7 @@ const Page = ({}: PageProps) => {
       if (userAcceptState === UserAcceptState.Accepted) return;
       accept({
          matchId: currentMatch?.matchId,
+         clientId,
          matchedUserId: currentMatch?.matchedUserId!,
          userId: session.data?.user?.id!,
       });
@@ -38,6 +42,7 @@ const Page = ({}: PageProps) => {
       if (userAcceptState === UserAcceptState.Declined) return;
       decline({
          matchId: currentMatch?.matchId,
+         clientId,
          matchedUserId: currentMatch?.matchedUserId!,
          userId: session.data?.user?.id!,
       });

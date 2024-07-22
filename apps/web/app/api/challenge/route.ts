@@ -1,26 +1,21 @@
-import { UserDifficulty } from "@app/lobby/_atoms";
 import { auth } from "@auth";
 import { Queue } from "@lib/queue";
 import { xprisma } from "@repo/db";
-import Ably from "ably";
 import { mean } from "lodash";
 import { NextRequest, NextResponse } from "next/server";
-import { match } from "ts-pattern";
 import { z } from "zod";
 import { IMessage } from "@hooks/websocket";
 import { headers } from "next/headers";
 
 export const runtime = "nodejs"; // 'nodejs' (default) | 'edge'
 
-const CHANNEL_NAME = `private-global-chat`;
 const USER_IDS_QUEUES = new Map<string, Queue<string>>();
 
-const realtime = new Ably.Realtime({
-   key: process.env.ABLY_API_KEY!,
-   clientId: `turbo-text-node`,
-   tls: true,
-});
-const channel = realtime.channels.get(CHANNEL_NAME, {});
+const UserDifficulty = {
+   EASY: "EASY",
+   MEDIUM: "MEDIUM",
+   HARD: "HARD",
+} as const;
 
 export enum EventType {
    Match = `match`,
@@ -39,35 +34,36 @@ export const matchParamsSchema = z.object({
 
 type MatchParams = z.infer<typeof matchParamsSchema>;
 
-async function getQueueKeyHash(params: MatchParams, userId: string) {
-   const userAvgWpm = mean(
-      (
-         await xprisma.typingRun.findMany({
-            where: { userId },
-            select: { id: true, metadata: true },
-         })
-      ).map((r) => r.wpm as number)
-   );
+async function getQueueKeyHash({ time, language, difficulty }: MatchParams, userId: string) {
+   const userRuns = await xprisma.typingRun.findMany({
+      where: { userId },
+      select: { id: true, metadata: true },
+   });
+   const userAvgWpm = mean(userRuns.map((r) => r.metadata?.wpm as number));
 
-   const opponentAvgWpm = match(params.difficulty)
-      .with(UserDifficulty.MEDIUM, (_) => userAvgWpm)
-      .with(UserDifficulty.HARD, (_) => userAvgWpm + 10)
-      .otherwise((_) => userAvgWpm - 10);
-
-   return `${params.language}-${params.time}-${opponentAvgWpm}`;
+   const opponentAvgWpm = difficulty === UserDifficulty.MEDIUM
+      ? userAvgWpm
+      : (difficulty === UserDifficulty.HARD ? userAvgWpm + 10 : userAvgWpm - 10);
+   return `${language}-${time}-${Math.floor(opponentAvgWpm / 10) * 10}`;
 }
 
+/**
+ * An API action for matching players.
+ * @param req - The request object.
+ * @constructor
+ */
 export async function POST(req: NextRequest) {
    const session = await auth();
-   if (!session)
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-   const userId = session.user?.id!;
+   if (!session) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
 
+   const userId = session.user?.id!;
    const body = matchParamsSchema.safeParse(await req.json());
-   if (!body.success)
-      return NextResponse.json({ message: "Invalid body" }, { status: 400 });
+
+   if (!body.success) return NextResponse.json({ message: "Invalid body" }, { status: 400 });
 
    const queueKeyHash = await getQueueKeyHash(body.data, userId);
+   console.log(`Queue key hash for user ${userId}: ${queueKeyHash}`);
+
    if (!USER_IDS_QUEUES.has(queueKeyHash)) {
       USER_IDS_QUEUES.set(queueKeyHash, new Queue<string>());
    }
@@ -79,7 +75,7 @@ export async function POST(req: NextRequest) {
       // Match players
       const [user1, user2] = [queue.dequeue()!, queue.dequeue()!];
       console.log(
-         `Successfully matched users ${user1} and ${user2}. Current queue size is: ${queue.size}`
+         `Successfully matched users ${user1} and ${user2}. Current queue size is: ${queue.size}`,
       );
 
       const match = await xprisma.usersChallengeMatch.create({
@@ -92,7 +88,7 @@ export async function POST(req: NextRequest) {
          },
       });
 
-      const websocket = new WebSocket(process.env.WEBSOCKET_URL!)
+      const websocket = new WebSocket(process.env.WEBSOCKET_URL!);
       const message: IMessage = {
          channelName: `global`,
          messageType: `SEND`,
@@ -110,9 +106,9 @@ export async function POST(req: NextRequest) {
 
          timestamp: Date.now(),
          extras: {},
-      }
-      websocket.send(JSON.stringify(message))
-
+      };
+      
+      websocket.onopen = () => websocket.send(JSON.stringify(message))
       return NextResponse.json({ ok: true, match }, { status: 200 });
    }
 
@@ -121,7 +117,7 @@ export async function POST(req: NextRequest) {
 
 /**
  * An API route for removing a user from the queue.
- * @param req
+ * @param req - The request object.
  * @constructor
  */
 export async function DELETE(req: NextRequest) {
@@ -140,14 +136,14 @@ export async function DELETE(req: NextRequest) {
    if (!queue)
       return NextResponse.json(
          { success: false, error: `Queue not found` },
-         { status: 404 }
+         { status: 404 },
       );
 
    if (queue.items.includes(userId)) {
       queue.remove(userId);
 
       console.log(
-         `Successfully removed user ${userId} from queue. Current queue size is: ${queue.size}`
+         `Successfully removed user ${userId} from queue. Current queue size is: ${queue.size}`,
       );
 
       return NextResponse.json({ success: true }, { status: 200 });
@@ -155,6 +151,6 @@ export async function DELETE(req: NextRequest) {
 
    return NextResponse.json(
       { success: false, error: `User is not in the queue` },
-      { status: 401 }
+      { status: 401 },
    );
 }

@@ -3,11 +3,13 @@
 import { TIMES } from "@atoms/timer";
 import { atom } from "jotai";
 
-export enum UserDifficulty {
-   EASY = "EASY",
-   MEDIUM = "MEDIUM",
-   HARD = "HARD",
-}
+export const UserDifficulty = {
+   EASY: "EASY",
+   MEDIUM: "MEDIUM",
+   HARD: "HARD",
+} as const;
+
+export type TUserDifficulty = (typeof UserDifficulty)[keyof typeof UserDifficulty];
 
 export const userSelectedLanguageAtom = atom<string>(`English`);
 userSelectedLanguageAtom.debugLabel = `userSelectedLanguageAtom`;
@@ -15,8 +17,8 @@ userSelectedLanguageAtom.debugLabel = `userSelectedLanguageAtom`;
 export const userSelectedTimeAtom = atom<number>(TIMES[10]);
 userSelectedTimeAtom.debugLabel = `userSelectedTimeAtom`;
 
-export const userSelectedDifficultyAtom = atom<UserDifficulty>(
-   UserDifficulty.MEDIUM
+export const userSelectedDifficultyAtom = atom<(typeof UserDifficulty)[keyof typeof UserDifficulty]>(
+   UserDifficulty.MEDIUM,
 );
 userSelectedDifficultyAtom.debugLabel = `userSelectedDifficultyAtom`;
 
@@ -36,6 +38,6 @@ export enum UserAcceptState {
 }
 
 export const userAcceptStateAtom = atom<UserAcceptState>(
-   UserAcceptState.Pending
+   UserAcceptState.Pending,
 );
 userAcceptStateAtom.debugLabel = `userAcceptStateAtom`;

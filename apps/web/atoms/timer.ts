@@ -39,6 +39,9 @@ export const timerIntervalAtom = atom<NodeJS.Timeout>(
 
 timerIntervalAtom.debugLabel = `timerIntervalAtom`;
 
+export const currentRunSavedAtom = atom<boolean>(false);
+currentRunSavedAtom.debugLabel = `currentRunSavedAtom`;
+
 export const runningAtom = atom<boolean>(false);
 runningAtom.debugLabel = `runningAtom`;
 
@@ -54,6 +57,7 @@ export const startAtom = atom(null, (get, set) => {
    set(startTimeAtom, performance.now());
    set(totalPauseTimeAtom, 0);
    set(currentPauseStartTimeAtom, 0);
+   set(currentRunSavedAtom, false)
    if (mode === TypingMode.WORDS) return;
 
    let interval = get(timerIntervalAtom);

@@ -15,8 +15,8 @@ export const LANGUAGES_MAP = {
    de: `German`,
    ru: `Russian`,
    mo: `Mongolian`,
-   arb: `Arabic`,
-   cs: `Czech`,
+   ae: `Arabic`,
+   cz: `Czech`,
 };
 
 export enum TypingMode {

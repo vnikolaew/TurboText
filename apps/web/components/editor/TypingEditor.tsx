@@ -1,22 +1,11 @@
 "use client";
 import { TypingRunState } from "@atoms/consts";
-import {
-   endTimeAtom,
-   totalRunTimeAtom,
-   typingRunAtom,
-   typingRunStateAtom,
-   useTypingRunSuccess,
-} from "@atoms/editor";
-import { totalPauseTimeAtom } from "@atoms/timer";
-import { autoSaveModeAtom, typingTimeTodayAtom, updateUserXpAtom } from "@atoms/user";
+import { endTimeAtom, totalRunTimeAtom, typingRunAtom, typingRunStateAtom, useTypingRunSuccess } from "@atoms/editor";
+import { currentRunSavedAtom, totalPauseTimeAtom } from "@atoms/timer";
+import { autoSaveModeAtom, typingTimeTodayAtom, updateUserXpAtom, userLastRunWpmAtom } from "@atoms/user";
 import { SignedOut } from "@components/common/Auth";
 import DevOnly from "@components/common/DevOnly";
-import {
-   SaveTypingRunPrompt,
-   ToggleWords,
-   TypingInput,
-   TypingRunSummary,
-} from "@components/editor";
+import { SaveTypingRunPrompt, ToggleWords, TypingInput, TypingRunSummary } from "@components/editor";
 import { saveTypingRun } from "@components/editor/actions";
 import EditorButtons from "@components/editor/buttons";
 import { useTimer } from "@components/editor/hooks/useTimer";
@@ -26,18 +15,17 @@ import { LocalStorage } from "@lib/local-storage";
 import { TypingRun, User } from "@repo/db";
 import { Button, toast } from "@repo/ui";
 import { AnimatePresence } from "framer-motion";
-import { useAtomValue } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { useSetAtom } from "jotai/index";
 import { signIn } from "next-auth/react";
 import { useAction } from "next-safe-action/hooks";
-import { Fragment, useEffect, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo } from "react";
 import Confetti from "react-confetti";
 import TypeRunState from "./TypeRunState";
 import TypingRunInfo from "./TypingRunInfo";
 import { useSaveLatestUserRun } from "./hooks/useSaveLatestUserRun";
 import EditorToolbar from "@components/editor/toolbar/EditorToolbar";
 import PressKeyLabel from "@components/editor/PressKeyLabel";
-import { useBoolean } from "@hooks/useBoolean";
 
 export interface TypingEditorProps {
    user: User & { typingRuns: TypingRun[] };
@@ -49,6 +37,7 @@ const TypingEditor = ({ user }: TypingEditorProps) => {
    const totalRunTime = useAtomValue(totalRunTimeAtom);
    const totalPauseTime = useAtomValue(totalPauseTimeAtom);
    const typingRun = useAtomValue(typingRunAtom);
+   const [runSaved, setRunSaved] = useAtom(currentRunSavedAtom);
    const autoSave = useAtomValue(autoSaveModeAtom) as boolean;
 
    const setUserXp = useSetAtom(updateUserXpAtom);
@@ -58,7 +47,7 @@ const TypingEditor = ({ user }: TypingEditorProps) => {
    useSaveLatestUserRun();
 
    const setTypingTimeToday = useSetAtom(typingTimeTodayAtom);
-   const [runSaved, setRunSaved] = useBoolean();
+   const setUserLastRunWpm  = useSetAtom(userLastRunWpmAtom);
 
    const { isExecuting, execute, result } = useAction(saveTypingRun, {
       onSuccess: (res) => {
@@ -66,13 +55,14 @@ const TypingEditor = ({ user }: TypingEditorProps) => {
             localStorage.removeItem(TYPING_RUN_LS_KEY);
 
             setRunSaved(true);
-            setTypingTimeToday(t => t + res.data?.run?.totalTimeMilliseconds ?? 0);
+            setTypingTimeToday(t => t + (res.data?.run?.totalTimeMilliseconds ?? 0));
 
             const newUserXp = {
                level: res.data.userXp?.level,
                points: res.data.userXp?.points,
             };
             setUserXp(newUserXp);
+            setUserLastRunWpm(res.data?.run?.metadata?.wpm ?? 0)
 
             if (res.data?.notification) {
                toast(
@@ -101,12 +91,9 @@ const TypingEditor = ({ user }: TypingEditorProps) => {
       }
    }, [state, autoSave, typingRun]);
 
-   const autoSaveMode = useAtomValue(autoSaveModeAtom);
-
-   const [showSavePromptDismissed, setShowSavePromptDismissed] = useState(false);
    const showSavePrompt = useMemo(
-      () => timerState === TypingRunState.FINISHED && !runSaved && !showSavePromptDismissed,
-      [timerState, result, autoSaveMode, runSaved, showSavePromptDismissed],
+      () => timerState === TypingRunState.FINISHED && !runSaved,
+      [timerState, result, runSaved],
    );
 
    function handleSaveTypingRun() {
@@ -178,16 +165,18 @@ const TypingEditor = ({ user }: TypingEditorProps) => {
                {timerState !== TypingRunState.RUNNING && (
                   <TypingRunInfo runs={user?.typingRuns} />
                )}
-               {timerState !== TypingRunState.FINISHED && <TypingInput />}
+               {timerState !== TypingRunState.FINISHED && (
+                  <TypingInput />
+               )}
             </div>
             <DevOnly>
                <div className={`flex w-full items-center justify-center gap-2`}>
-                       <span className={`mt-4 w-full text-center !text-main`}>
-                           Total run time: {totalRunTime.toFixed(2)}ms
-                       </span>
+                 <span className={`mt-4 w-full text-center !text-main`}>
+                     Total run time: {totalRunTime.toFixed(2)}ms
+                 </span>
                   <span className={`mt-4 w-full text-center !text-main`}>
-                           Total pause time: {totalPauseTime.toFixed(2)}ms
-                       </span>
+                     Total pause time: {totalPauseTime.toFixed(2)}ms
+                  </span>
                </div>
             </DevOnly>
             <ToggleWords />
@@ -197,12 +186,10 @@ const TypingEditor = ({ user }: TypingEditorProps) => {
                   <SaveTypingRunPrompt
                      loading={isExecuting}
                      onDismiss={() => {
-                        setShowSavePromptDismissed(true);
                         LocalStorage.removeItem(TYPING_RUN_LS_KEY);
                      }}
                      onSave={() => {
                         handleSaveTypingRun();
-                        setShowSavePromptDismissed(false)
                      }} />
                )}
             </AnimatePresence>
@@ -210,16 +197,15 @@ const TypingEditor = ({ user }: TypingEditorProps) => {
                <SignedOut>
                   {showSavePrompt && (
                      <div className={`flex w-full items-center justify-center`}>
-                               <span className={`text-lg`}>
-                                   <Button
-                                      className={`!px-0 !text-base`}
-                                      variant={`link`}
-                                      onClick={(_) => signIn(`google`)}
-                                   >
-                                       Sign in{" "}
-                                   </Button>{" "}
-                                  to save your result.
-                               </span>
+                        <span className={`text-lg`}>
+                           <Button
+                              className={`!px-0 !text-base`}
+                              variant={`link`}
+                              onClick={(_) => signIn(`google`)}
+                           >
+                              Sign in{" "}
+                           </Button>{" "}
+                           to save your result. </span>
                      </div>
                   )}
                </SignedOut>

@@ -21,7 +21,7 @@ import {
    userActiveTagsAtom,
    userAtom,
    userConfigAtom,
-   userDataLoadingAtom, userPbAtom,
+   userDataLoadingAtom, userLastRunWpmAtom, userPbAtom, userPbTodayAtom,
    userXpAtom,
 } from "@atoms/user";
 import { wordsCountsAtom } from "@atoms/words";
@@ -30,6 +30,7 @@ import { Tag, TypingRun, User, UserConfiguration, UserNotification } from "@repo
 import { useAtom } from "jotai";
 import { useHydrateAtoms } from "jotai/utils";
 import { max, sum } from "lodash";
+import moment from "moment";
 import { generate } from "random-words";
 import { useEffect, useRef } from "react";
 
@@ -91,9 +92,9 @@ export function useHydrateAllAtoms(
    useHydrateAtoms([
       [wordsAtom, WORDS.current],
       [typingTimeTodayAtom, sum(user?.typingRuns?.filter(r => {
-         const [date, today] = [new Date(r.createdAt), new Date()]
+         const [date, today] = [new Date(r.createdAt), new Date()];
          let equal = date.getDate() === today.getDate() && date.getMonth() === today.getMonth() && date.getFullYear() === today.getFullYear();
-         return equal
+         return equal;
       }).map(r => r.totalTimeMilliseconds))],
       [userPbAtom, max(user?.typingRuns?.map(r => r.metadata?.wpm) ?? []) ?? 0],
       [
@@ -104,6 +105,8 @@ export function useHydrateAllAtoms(
             payload: n.payload,
          })) ?? [],
       ],
+      [userPbTodayAtom, max(user?.typingRuns?.filter(r => moment(r.createdAt).isBetween(moment().subtract(24, `hours`), moment()))?.map(r => r.metadata?.wpm) ?? []) ?? 0],
+      [userLastRunWpmAtom, user?.typingRuns?.at(-1)?.metadata?.wpm ?? 0],
       [cookiePreferencesAtom, user?.cookiePreferences ?? {}],
       [userDataLoadingAtom, true],
       [
@@ -134,7 +137,7 @@ export function useHydrateAllAtoms(
       [typingFlagsAtom, 0],
       [userActiveTagsAtom, (user?.tags! as Tag[])?.map((t) => t.name)],
       [userConfigAtom, newUserConfig],
-   ] as const, );
+   ] as const);
 
    const userCustomThemes = user?.configuration.metadata?.customThemes ?? [];
    if (Array.isArray(userCustomThemes) && userCustomThemes.length) {

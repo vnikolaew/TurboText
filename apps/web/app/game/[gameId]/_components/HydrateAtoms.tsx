@@ -14,7 +14,7 @@ import {
    capsLockWarningAtom,
    colorfulModeAtom,
    flipColorsAtom,
-   paceCaretStyleAtom,
+   paceCaretStyleAtom, userDataLoadingAtom,
    userLanguageAtom,
    userTestDifficultyAtom,
 } from "@atoms/user";
@@ -29,7 +29,6 @@ export interface HydrateAtomsProps {
 }
 
 const HydrateAtoms = ({ challenge }: HydrateAtomsProps) => {
-   console.log({ challenge });
    const setWordsCounts = useSetAtom(wordsCountsAtom);
    useEffect(() => {
       setWordsCounts(challenge.metadata.words?.length, false);
@@ -44,6 +43,7 @@ const HydrateAtoms = ({ challenge }: HydrateAtomsProps) => {
          [totalPauseTimeAtom, 0],
          [timeAtom, challenge.metadata.time],
          [userLanguageAtom, challenge.metadata.language],
+         [userDataLoadingAtom, false],
          [wordsAtom, challenge.metadata.words],
          // [wordsCountsAtom, challenge.metadata.words?length],
          [autoSaveModeAtom, false],

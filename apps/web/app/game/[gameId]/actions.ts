@@ -1,10 +1,11 @@
 "use server";
 
+import { IMessage } from "@hooks/websocket";
 import { authorizedAction } from "@lib/actions";
 import { createTypingRun } from "@lib/use-cases/saveTypingRun";
 import { UsersChallengeState, xprisma } from "@repo/db";
-import Ably from "ably";
 import { z } from "zod";
+import { auth } from "@auth";
 
 const USERS_READY_QUEUE: Map<string, Set<string>> = new Map<
    string,
@@ -15,15 +16,6 @@ const USERS_FINISHED_SETS: Map<string, Set<string>> = new Map<
    Set<string>
 >();
 
-const CHANNEL_NAME = `private-global-chat`;
-
-const realtime = new Ably.Realtime({
-   key: process.env.ABLY_API_KEY!,
-   clientId: `turbo-text-node`,
-   tls: true,
-});
-const channel = realtime.channels.get(CHANNEL_NAME, {});
-
 enum EventType {
    GameStarted = `game-started`,
    UserFinishedRun = `user-finished-run`,
@@ -32,25 +24,40 @@ enum EventType {
 
 const schema = z.object({
    gameId: z.string(),
+   clientId: z.string(),
 });
 
 export const ready = authorizedAction
    .schema(schema)
-   .action(async ({ ctx: { userId }, parsedInput: { gameId } }) => {
+   .action(async ({ ctx: { userId }, parsedInput: { gameId, clientId } }) => {
+      const session = await auth();
+
       if (!USERS_READY_QUEUE.has(gameId)) {
          USERS_READY_QUEUE.set(gameId, new Set());
       }
 
       USERS_READY_QUEUE.get(gameId)!.add(userId!);
       if (USERS_READY_QUEUE.get(gameId)?.size === 2) {
-         await channel.publish({
-            name: EventType.GameStarted,
-            data: {
-               gameId,
-               type: EventType.GameStarted,
-            },
-         });
-         USERS_READY_QUEUE.get(gameId)!.clear();
+         const websocket = new WebSocket(process.env.WEBSOCKET_URL!);
+         websocket.onopen = () => {
+            websocket.send(JSON.stringify({
+               clientId,
+               timestamp: Date.now(),
+               channelName: `global`,
+               clientName: session?.user?.name,
+               messageName: EventType.GameStarted,
+               messageType: `SEND`,
+               extras: {
+                  headers: {},
+               },
+               data: {
+                  gameId,
+                  type: EventType.GameStarted,
+               },
+            } as IMessage));
+
+            USERS_READY_QUEUE.get(gameId)!.clear();
+         };
 
          // Update Challenge model in DB:
          const challenge = await xprisma.usersChallenge.update({
@@ -66,6 +73,7 @@ export const ready = authorizedAction
 
 const finishSchema = z.object({
    gameId: z.string(),
+   clientId: z.string(),
    typedLetters: z.array(
       z.object({
          charIndex: z.number().min(0),
@@ -73,7 +81,7 @@ const finishSchema = z.object({
          letter: z.string().max(1),
          correct: z.boolean().nullable(),
          flags: z.number().nullable(),
-      })
+      }),
    ),
    time: z.number().nullable(),
    totalRunTime: z.number(),
@@ -82,7 +90,7 @@ const finishSchema = z.object({
       z.object({
          word: z.string(),
          range: z.tuple([z.number(), z.number()]),
-      })
+      }),
    ),
    wordCorrectness: z.array(z.boolean().nullable()),
    wordCounts: z.number().nullable(),
@@ -95,7 +103,8 @@ const finishSchema = z.object({
  */
 export const finishChallenge = authorizedAction
    .schema(finishSchema)
-   .action(async ({ ctx: { userId }, parsedInput: { gameId, ...rest } }) => {
+   .action(async ({ ctx: { userId }, parsedInput: { gameId, clientId, ...rest } }) => {
+      const session = await auth();
       if (!USERS_FINISHED_SETS.has(gameId)) {
          USERS_FINISHED_SETS.set(gameId, new Set());
       }
@@ -104,15 +113,26 @@ export const finishChallenge = authorizedAction
       const result = await createTypingRun({ ...rest, mode: `TIME` }, userId);
       if (!result.success) return result;
 
-      await channel.publish({
-         name: EventType.UserFinishedRun,
-         data: {
-            gameId,
-            type: EventType.UserFinishedRun,
-            userId,
-            runId: result.run!.id,
-         },
-      });
+      const websocket = new WebSocket(process.env.WEBSOCKET_URL!);
+      websocket.onopen = () => {
+         websocket.send(JSON.stringify({
+            clientId,
+            timestamp: Date.now(),
+            channelName: `global`,
+            clientName: session?.user?.name,
+            messageName: EventType.UserFinishedRun,
+            messageType: `SEND`,
+            extras: {
+               headers: {},
+            },
+            data: {
+               gameId,
+               type: EventType.UserFinishedRun,
+               userId,
+               runId: result.run!.id,
+            },
+         } as IMessage));
+      };
 
       USERS_FINISHED_SETS.get(gameId)!.add(userId!);
 
@@ -138,13 +158,23 @@ export const finishChallenge = authorizedAction
             },
          });
 
-         await channel.publish({
-            name: EventType.ChallengeFinished,
-            data: {
-               gameId,
-               type: EventType.ChallengeFinished,
-            },
-         });
+         setTimeout(() => {
+            websocket.send(JSON.stringify({
+               clientId,
+               timestamp: Date.now(),
+               channelName: `global`,
+               clientName: session?.user?.name,
+               messageName: EventType.ChallengeFinished,
+               messageType: `SEND`,
+               extras: {
+                  headers: {},
+               },
+               data: {
+                  gameId,
+                  type: EventType.ChallengeFinished,
+               },
+            } as IMessage));
+         }, 2_000);
 
          return { success: true, challenge };
       } else {

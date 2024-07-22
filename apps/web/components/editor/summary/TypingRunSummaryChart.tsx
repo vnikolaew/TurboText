@@ -6,7 +6,6 @@ import { useAtomValue } from "jotai/index";
 import {
    totalRunTimeAtom,
    typedLettersAtom,
-   typingRunSuccessAtom,
 } from "@atoms/editor";
 import { consistencyScoreAtom, rawWpmAtom, rawWpmBySecondsAtom, wpmBySecondsAtom } from "@atoms/stats";
 import { TypedLetterFlags } from "@atoms/consts";
@@ -39,7 +38,6 @@ const TypingRunSummaryChart = ({}: TypingRunSummaryChartProps) => {
 
 
    const rawWpm = useAtomValue(rawWpmAtom);
-   const success = useAtomValue(typingRunSuccessAtom);
    const consistency = useAtomValue(consistencyScoreAtom);
    const typingTimeToday = useAtomValue(typingTimeTodayAtom);
    const userPb = useAtomValue(userPbAtom)

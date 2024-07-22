@@ -176,7 +176,7 @@ export let xprisma = prisma.$extends({
             const top = await xprisma.$queryRaw<TypingRun[]>`
                 SELECT *
                 FROM "TypingRun"
-                WHERE "createdAt" >= NOW() - INTERVAL '1 day'
+                WHERE "createdAt" >= NOW() - INTERVAL '1 day' AND metadata->>'wpm' IS NOT NULL
                 ORDER BY metadata->>'wpm' DESC
                     LIMIT 1;
             `;
@@ -187,7 +187,7 @@ export let xprisma = prisma.$extends({
             const top = await xprisma.$queryRaw<TypingRun[]>`
                 SELECT *
                 FROM "TypingRun"
-                WHERE mode = 'TIME'
+                WHERE mode = 'TIME' AND metadata->>'wpm' IS NOT NULL
                 ORDER BY metadata ->>'wpm' DESC
                     LIMIT 1;
             `;

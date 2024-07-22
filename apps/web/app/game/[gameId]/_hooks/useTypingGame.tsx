@@ -13,6 +13,7 @@ import { useCountdown } from "./useCountdown";
 import { usePushGameUpdates } from "./usePushGameUpdates";
 import { useChannel } from "@hooks/websocket";
 import { CHANEL_NAME } from "@providers";
+import { clientIdAtom } from "@providers/WebSocketProvider";
 
 export enum EventType {
    GameStarted = `game-started`,
@@ -36,14 +37,17 @@ export type ChallengeDetails = UsersChallenge & {
    userTwo: User;
 };
 
-export function useTypingGame(gameId: string) {
+export function useTypingGame(gameId: string, challengeState: string) {
    const [, setChallengeDetails] = useAtom(challengeDetailsAtom);
    const session = useSession();
    const typingState = useAtomValue(typingRunStateAtom);
 
    const [gameState, setGameState] = useState<string>(
-      UsersChallengeState.Pending
+      challengeState === `Playing` || challengeState === `Pending`
+         ? UsersChallengeState.CountingDown
+         : UsersChallengeState.Pending,
    );
+
    const [challengeStoppedByUserId, setChallengeStoppedByUserId] =
       useState<string>(null!);
    const { start: startPush, end: endPush } = usePushGameUpdates(gameId, 2000);
@@ -58,10 +62,13 @@ export function useTypingGame(gameId: string) {
    }, [typingState]);
 
    useEffect(() => {
-      if (gameState === `CountingDown`) start();
+      console.log({ gameState });
+      if (gameState === `CountingDown`) {
+         start();
+      }
    }, [gameState]);
 
-   const { } = useChannel(CHANEL_NAME, async (message) => {
+   const {} = useChannel(CHANEL_NAME, async (message) => {
       if (message.data.type === EventType.ChallengeStopped) {
          setGameState(UsersChallengeState.Stopped);
          setChallengeStoppedByUserId(message.data.stoppedByUserId);
@@ -90,9 +97,10 @@ export function useTypingGame(gameId: string) {
       },
    });
 
+   const clientId = useAtomValue(clientIdAtom)
    useEffect(() => {
       if (session.status === `authenticated`) {
-         execute({ gameId });
+         execute({ gameId, clientId });
       }
    }, [session.status]);
 

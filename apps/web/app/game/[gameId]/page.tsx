@@ -8,6 +8,7 @@ import HydrateAtoms from "./_components/HydrateAtoms";
 import UsersTypingChallengeSection from "./_components/UsersTypingChallengeSection";
 import WithInitialState from "./_components/WithInitialState";
 import { getChallengeInfo, getChallengeWinner, getGameUsers } from "./_queries";
+import { notFound } from "next/navigation";
 
 export interface PageProps {
    params: { gameId?: string };
@@ -16,6 +17,7 @@ export interface PageProps {
 const Page = async ({ params: { gameId } }: PageProps) => {
    const session = await auth();
    const challenge = await getChallengeInfo(gameId!);
+   if(!challenge) return notFound()
 
    return match(challenge)
       .when(c => !c, _ => (
@@ -101,15 +103,18 @@ const Page = async ({ params: { gameId } }: PageProps) => {
       })
       .otherwise(async challenge => {
          const { userOne, userTwo } = await getGameUsers(
-            [challenge.userOneId, challenge.userTwoId],
+            [challenge!.userOneId, challenge!.userTwoId],
             session?.user!.id,
          );
+         console.log({ runOne: userOne?.typingRuns?.at(0), runTwo: userTwo?.typingRuns?.at(0) });
+         console.log({ challenge });
+
          return (
             <section
                className={`mx-auto my-24 flex w-2/3 flex-col items-center gap-4`}
             >
-               <HydrateAtoms challenge={challenge} />
-               <h2>Game {challenge.id}:</h2>
+               <HydrateAtoms challenge={challenge!} />
+               <h2>Game {challenge!.id}:</h2>
                <div className={`flex w-full items-center justify-center gap-4`}>
                   <div className={`flex items-center gap-2`}>
                      <UserAvatar imageSrc={userOne.image!} />
@@ -122,7 +127,8 @@ const Page = async ({ params: { gameId } }: PageProps) => {
                   </div>
                </div>
                <UsersTypingChallengeSection
-                  gameId={challenge.id}
+                  gameId={challenge!.id}
+                  challengeState={challenge!.state}
                   userOne={userOne}
                   userTwo={userTwo}
                />
