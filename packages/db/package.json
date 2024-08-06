@@ -18,6 +18,13 @@
     "@prisma/client": "^5.16.1",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
+    "core-js": "^3.38.0",
+    "graphql": "^16.9.0",
+    "graphql-fields": "^2.0.3",
+    "graphql-scalars": "^1.23.0",
+    "reflect-metadata": "^0.2.2",
+    "type-graphql": "2.0.0-rc.2",
+    "tslib": "^2.6.3",
     "lodash": "^4.17.21",
     "prisma-json-types-generator": "^3.0.4",
     "zod": "^3.23.8"
@@ -27,6 +34,7 @@
     "@types/bcryptjs": "^2.4.6",
     "@types/lodash": "^4.17.5",
     "prisma": "^5.16.1",
-    "tsup": "^8.1.0"
+    "tsup": "^8.1.0",
+    "typegraphql-prisma": "^0.27.2"
   }
 }

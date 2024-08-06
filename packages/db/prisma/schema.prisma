@@ -11,6 +11,13 @@ generator json {
   // (./ -> relative to schema, or an importable path to require() it)
 }
 
+generator typegraphql {
+  provider            = "typegraphql-prisma"
+  emitTranspiledCode  = true
+  formatGeneratedCode = true
+  // output = ""
+}
+
 datasource db {
   provider   = "postgresql"
   url        = env("DATABASE_URL")
