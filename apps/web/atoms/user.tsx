@@ -12,6 +12,12 @@ userDataLoadingAtom.debugLabel = `userDataLoadingAtom`;
 export const userPbAtom = atom(0)
 userPbAtom.debugLabel = `userPbAtom`;
 
+export const userPbTodayAtom = atom(0)
+userPbTodayAtom.debugLabel = `userPbTodayAtom`;
+
+export const userLastRunWpmAtom = atom(0)
+userLastRunWpmAtom.debugLabel = `userLastRunWpmAtom`;
+
 export const typingTimeTodayAtom = atom(0)
 typingTimeTodayAtom.debugLabel = `typingTimeTodayAtom`;
 
@@ -206,11 +212,11 @@ fontSizeAtom.debugLabel = `fontSizeAtom`;
 export const themeAtom = atom(
    (get) => {
       const config = get(userConfigAtom);
-      const ls_value = window?.localStorage?.getItem(`theme`);
+      // const ls_value = window?.localStorage?.getItem(`theme`);
 
-      if (config && config?.theme !== ls_value)
-         window?.localStorage?.setItem(`theme`, config?.theme ?? `dark`);
-      return config?.theme ?? ls_value;
+      // if (config && config?.theme !== ls_value)
+      //    window?.localStorage?.setItem(`theme`, config?.theme ?? `dark`);
+      return config?.theme ?? ``;
    },
    (get, set, theme: string) => {
       set(userConfigAtom, { ...get(userConfigAtom), theme });

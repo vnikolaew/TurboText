@@ -10,6 +10,7 @@ import {
    SelectValue,
 } from "@repo/ui";
 import { useSetAtom } from "jotai/index";
+import { Timer } from "lucide-react";
 
 export interface UserGameTimeSelectProps {}
 
@@ -18,7 +19,10 @@ export const UserGameTimeSelect = ({}: UserGameTimeSelectProps) => {
 
    return (
       <div className={`flex flex-col items-start gap-2`}>
-         <Label>Time (seconds):</Label>
+         <Label className={`inline-flex items-center gap-2`}>
+            <Timer className={`text-accent`} size={14} />
+            Time (seconds):
+         </Label>
          <Select onValueChange={(t) => setUserTime(Number(t))}>
             <SelectTrigger className="w-[300px] !bg-secondary-bg !text-main">
                <SelectValue placeholder={TIMES[10].toFixed(0)} />

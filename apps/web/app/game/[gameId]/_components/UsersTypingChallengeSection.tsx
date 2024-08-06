@@ -1,7 +1,7 @@
 "use client";
 import LoadingButton from "@components/common/LoadingButton";
 import { LoadingSpinner } from "@components/common/LoadingSpinner";
-import { User } from "@repo/db";
+import { $Enums, User } from "@repo/db";
 import { UserAvatar } from "@repo/ui";
 import { useAtomValue } from "jotai";
 import { useSession } from "next-auth/react";
@@ -12,11 +12,14 @@ import GameTypingEditor from "./GameTypingEditor";
 import { stopChallenge } from "@app/lobby/actions";
 import { useTypingGame } from "../_hooks/useTypingGame";
 import { useChannel } from "@hooks/websocket";
+import { useEffect } from "react";
+import { useTimer } from "@components/editor/hooks/useTimer";
 
 export interface UsersTypingChallengeSectionProps {
-   userOne: User;
-   userTwo: User;
-   gameId: string;
+   userOne: User,
+   userTwo: User,
+   gameId: string,
+   challengeState: $Enums.UsersChallengeState;
 }
 
 const UsersChallengeState = {
@@ -25,12 +28,13 @@ const UsersChallengeState = {
    Playing: "Playing",
    Finished: "Finished",
    Stopped: "Stopped",
-};
+} as const;
 
 const UsersTypingChallengeSection = ({
                                         userTwo,
                                         userOne,
                                         gameId,
+                                        challengeState,
                                      }: UsersTypingChallengeSectionProps) => {
    const session = useSession();
 
@@ -41,9 +45,10 @@ const UsersTypingChallengeSection = ({
       setGameState,
       isExecuting,
       challengeStoppedByUserId,
-   } = useTypingGame(gameId);
-   const challengeDetails = useAtomValue(challengeDetailsAtom);
-   const challengeWinnerDetails = useAtomValue(challengeWinnerDetailsAtom);
+   } = useTypingGame(gameId, challengeState);
+   const { start } = useTimer();
+
+   const [challengeDetails, challengeWinnerDetails] = [useAtomValue(challengeDetailsAtom), useAtomValue(challengeWinnerDetailsAtom)];
    const { clientId } = useChannel(`global`);
 
    const { execute: stop, isExecuting: stopping } = useAction(stopChallenge, {
@@ -54,6 +59,13 @@ const UsersTypingChallengeSection = ({
          }
       },
    });
+
+   // useEffect(() => {
+   //    if (gameState === UsersChallengeState.Playing) start();
+   // }, [gameState]);
+
+   const user = [userOne, userTwo].find((u) => u.id === session.data?.user?.id);
+   console.log({ userOne, userTwo, user });
 
    return (
       <div className={`flex w-full flex-col items-center gap-2`}>
@@ -122,15 +134,10 @@ const UsersTypingChallengeSection = ({
             </LoadingButton>
          )}
          <div className={`w-full`}>
-            {(gameState === UsersChallengeState.Playing ||
-               gameState === UsersChallengeState.Finished) && (
-               <GameTypingEditor
-                  gameId={gameId}
-                  user={[userOne, userTwo].find(
-                     (u) => u.id === session.data?.user?.id,
-                  )}
-               />
-            )}
+            {(gameState === UsersChallengeState.Playing || gameState === UsersChallengeState.Finished)
+               && (
+                  <GameTypingEditor gameId={gameId} />
+               )}
          </div>
       </div>
    );

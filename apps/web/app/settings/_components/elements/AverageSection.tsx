@@ -27,7 +27,7 @@ const AVERAGE = [
       name: "Both",
       value: "BOTH",
    },
-];
+] as const;
 
 const AverageSection = ({}: AverageSectionProps) => {
    const [average, setAverage] = useAtom(averageAtom);

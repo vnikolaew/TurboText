@@ -9,7 +9,6 @@ import { groupBy, range, sum } from "lodash";
 export async function getRunStats(
    typedLetters: TypedLetterInfo[],
    totalTimeMilliseconds: number,
-   completedWords: number,
    wordCompleteness: (boolean | null)[],
    wordRanges: WordRange[],
    userId: string
@@ -140,7 +139,6 @@ export async function createTypingRun(
       await getRunStats(
          typedLetters,
          totalRunTime,
-         mode === `TIME` ? completedWords! : wordCounts!,
          wordCorrectness,
          wordRanges,
          userId!

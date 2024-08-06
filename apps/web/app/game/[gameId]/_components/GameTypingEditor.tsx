@@ -16,7 +16,6 @@ import ToggleWords from "@components/editor/ToggleWords";
 import TypeRunState from "@components/editor/TypeRunState";
 import { TYPING_RUN_LS_KEY } from "@components/editor/TypingEditor";
 import TypingInput from "@components/editor/TypingInput";
-import TypingRunInfo from "@components/editor/TypingRunInfo";
 import TypingRunSummary from "@components/editor/summary/TypingRunSummary";
 import { saveTypingRun } from "@components/editor/actions";
 import CopyToClipboardButton from "@components/editor/buttons/CopyToClipboardButton";
@@ -32,25 +31,27 @@ import { useAtomValue, useSetAtom } from "jotai/index";
 import { signIn } from "next-auth/react";
 import { useAction } from "next-safe-action/hooks";
 import { Fragment, useEffect, useMemo } from "react";
-import { match } from "ts-pattern";
+import { match, P } from "ts-pattern";
 import GameEndConfetti from "./GameEndConfetti";
 import { finishChallenge } from "@app/game/[gameId]/actions";
+import { clientIdAtom } from "@providers/WebSocketProvider";
 
 export interface GameTypingEditorProps {
-   user: User;
    gameId: string;
 }
 
-const GameTypingEditor = ({ user, gameId }: GameTypingEditorProps) => {
+const GameTypingEditor = ({ gameId }: GameTypingEditorProps) => {
    const totalRunTime = useAtomValue(totalRunTimeAtom);
    const totalPauseTime = useAtomValue(totalPauseTimeAtom);
    const typingRun = useAtomValue(typingRunAtom);
    const autoSave = useAtomValue(autoSaveModeAtom) as boolean;
+
    const setUserXp = useSetAtom(updateUserXpAtom);
    const setEnd = useSetAtom(endTimeAtom);
 
    useTypingRunSuccess();
 
+   const clientId = useAtomValue(clientIdAtom)
    const { isExecuting, execute, result } = useAction(saveTypingRun, {
       onSuccess: (res) => {
          if (res.data?.success) {
@@ -66,8 +67,8 @@ const GameTypingEditor = ({ user, gameId }: GameTypingEditorProps) => {
             if (res.data?.notification) {
                toast(
                   TOASTS.SAVE_TYPING_RUN_SUCCESS_NOTIFICATION(
-                     res.data?.notification!.message
-                  )
+                     res.data?.notification!.message,
+                  ),
                );
             } else {
                toast(TOASTS.SAVE_TYPING_RUN_SUCCESS);
@@ -85,14 +86,14 @@ const GameTypingEditor = ({ user, gameId }: GameTypingEditorProps) => {
                console.log(res.data);
             }
          },
-      }
+      },
    );
 
    const { timerState } = useTimer(() => {
       setEnd(performance.now());
       LocalStorage.setItem(TYPING_RUN_LS_KEY, typingRun);
 
-      finish({ gameId, ...typingRun });
+      finish({ gameId, clientId, ...typingRun });
       console.log(`Run ended. Saving to database ...`);
    });
 
@@ -105,7 +106,7 @@ const GameTypingEditor = ({ user, gameId }: GameTypingEditorProps) => {
 
    const showSavePrompt = useMemo(
       () => timerState === TypingRunState.FINISHED,
-      [timerState, result, autoSave]
+      [timerState, result, autoSave],
    );
 
    function handleSaveTypingRun(): void {
@@ -123,10 +124,13 @@ const GameTypingEditor = ({ user, gameId }: GameTypingEditorProps) => {
                      <TypingInput />
                   </Fragment>
                ))
-               .with(TypingRunState.RUNNING, () => (
-                  <TypingRunInfo runs={user?.typingRuns} />
+               .with(P.when(state => state === TypingRunState.RUNNING || state === TypingRunState.PAUSED), () => (
+                  <Fragment>
+                     <TypeRunState />
+                     <TypingInput />
+                  </Fragment>
                ))
-               .otherwise((_) => null!)}
+               .otherwise((_) => <span>{timerState}</span>)}
          </div>
          <DevOnly>
             <div className={`flex w-full items-center justify-center gap-2`}>

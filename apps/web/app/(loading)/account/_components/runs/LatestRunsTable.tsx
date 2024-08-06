@@ -166,10 +166,7 @@ const LatestRunsTable = ({ runs, tagsById }: LatestRunsTableProps) => {
          <div className={`flex w-full items-center justify-center`}>
             {runs.length > pagingCursor && (
                <Button
-                  onClick={(_) =>
-                     setPagingCursor((p) => Math.min(p + 10, runs.length))
-                  }
-               >
+                  onClick={(_) => setPagingCursor((p) => Math.min(p + 10, runs.length))}>
                   Load more
                </Button>
             )}

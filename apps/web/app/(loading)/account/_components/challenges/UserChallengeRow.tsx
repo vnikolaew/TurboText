@@ -48,9 +48,15 @@ const UserChallengeRow = ({ challenge, userId }: UserChallengeRowProps) => {
             </span>
          </TableCell>
          <TableCell className="!w-fit text-wrap text-center text-lg font-medium">
-            {myCompletedWords ?? `?`}
-            {` vs `}
-            {opponentCompletedWords ?? `?`}
+           <span className={`text-accent`}>
+               {myCompletedWords ?? `?`}
+           </span>
+            <span className={``}>
+               {` vs `}
+            </span>
+            <span className={`text-secondary`}>
+               {opponentCompletedWords ?? `?`}
+            </span>
          </TableCell>
          <TableCell className="font-medium">
             <Link
@@ -61,7 +67,7 @@ const UserChallengeRow = ({ challenge, userId }: UserChallengeRowProps) => {
                <span>{opponent?.name}</span>
             </Link>
          </TableCell>
-         <TableCell className="flex items-center gap-1 text-center font-medium">
+         <TableCell className="flex items-center gap-1 text-center font-medium h-full mt-2">
             <Globe className={`text-secondary`} size={18} />
             {challenge.metadata?.language}
          </TableCell>

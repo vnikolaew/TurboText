@@ -11,6 +11,7 @@ import {
 } from "@repo/ui";
 import { useSetAtom } from "jotai/index";
 import Image from "next/image";
+import { Languages } from "lucide-react";
 
 export interface UserGameLanguageSelectProps {}
 
@@ -19,7 +20,10 @@ export const UserGameLanguageSelect = ({}: UserGameLanguageSelectProps) => {
 
    return (
       <div className={`flex flex-col items-start gap-2`}>
-         <Label>Language:</Label>
+         <Label className={`inline-flex items-center gap-2`}>
+            <Languages className={`text-accent`} size={14} />
+            Language:
+         </Label>
          <Select onValueChange={(l) => setUserLanguage(l)}>
             <SelectTrigger className="w-[300px] !bg-secondary-bg !text-main">
                <SelectValue

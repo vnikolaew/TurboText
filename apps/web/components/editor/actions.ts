@@ -90,6 +90,8 @@ export const saveTypingRun = authorizedAction
          const topWpmToday = (await xprisma.typingRun.getTopWpmToday())
             ?.metadata?.wpm;
 
+         console.log({ topWpmToday, topWpmAllTime });
+
          let notification: INotification = null!;
 
          if (run!.wpm > topWpmAllTime) {
