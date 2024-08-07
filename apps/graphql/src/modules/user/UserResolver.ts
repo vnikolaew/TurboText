@@ -1,5 +1,5 @@
 import { Models, RelationsResolvers } from "@repo/db";
-import { Arg, Ctx, Field, InputType, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, Ctx, Field, InputType, Int, Mutation, ObjectType, Query, Resolver } from "type-graphql";
 import { MyContext } from "@types";
 import crypto from "crypto";
 
@@ -17,6 +17,19 @@ export class UserSignUpInput implements Partial<Models.User> {
 
 @InputType()
 export class UserSignInInput extends UserSignUpInput {
+}
+
+@ObjectType()
+export class UserSearchResponse extends Models.User {
+}
+
+@InputType()
+export class UsersSearchInput {
+   @Field(() => String)
+   public search: string = ``;
+
+   @Field(() => Int)
+   public limit: number = 10;
 }
 
 const HTTP = {
@@ -63,6 +76,25 @@ export class UserResolver extends RelationsResolvers.UserRelationsResolver {
    @Query(() => Models.User)
    public async findById(@Arg("id", () => String) id: string, @Ctx() { prisma }: MyContext): Promise<Models.User> {
       return await prisma.user.findUnique({ where: { id } });
+   }
+
+   @Query(() => [UserSearchResponse])
+   public async search(@Arg("search", () => UsersSearchInput, { defaultValue: { search: ``, limit: 10 } }) {
+      search,
+      limit,
+   }: UsersSearchInput, @Ctx() { prisma }: MyContext): Promise<UserSearchResponse[]> {
+      let users = await prisma.user.findMany({
+         where: {
+            name: {
+               contains: search,
+               mode: `insensitive`,
+            },
+         },
+         include: { experience: true },
+         take: limit,
+      });
+
+      return users;
    }
 
    @Mutation(() => Models.User)
