@@ -88,6 +88,9 @@ importers:
       graphql-scalars:
         specifier: ^1.23.0
         version: 1.23.0(graphql@16.9.0)
+      moment:
+        specifier: ^2.30.1
+        version: 2.30.1
       reflect-metadata:
         specifier: ^0.2.2
         version: 0.2.2

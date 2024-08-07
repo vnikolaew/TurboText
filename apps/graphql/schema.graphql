@@ -21,10 +21,233 @@ type Account {
   userId: String!
 }
 
+type AccountAvgAggregate {
+  expires_at: Float
+}
+
+input AccountAvgOrderByAggregateInput {
+  expires_at: SortOrder
+}
+
+type AccountCountAggregate {
+  _all: Int!
+  access_token: Int!
+  createdAt: Int!
+  expires_at: Int!
+  id_token: Int!
+  metadata: Int!
+  provider: Int!
+  providerAccountId: Int!
+  refresh_token: Int!
+  scope: Int!
+  session_state: Int!
+  token_type: Int!
+  type: Int!
+  updatedAt: Int!
+  userConfigurationId: Int!
+  userId: Int!
+}
+
+input AccountCountOrderByAggregateInput {
+  access_token: SortOrder
+  createdAt: SortOrder
+  expires_at: SortOrder
+  id_token: SortOrder
+  metadata: SortOrder
+  provider: SortOrder
+  providerAccountId: SortOrder
+  refresh_token: SortOrder
+  scope: SortOrder
+  session_state: SortOrder
+  token_type: SortOrder
+  type: SortOrder
+  updatedAt: SortOrder
+  userConfigurationId: SortOrder
+  userId: SortOrder
+}
+
+input AccountCreateInput {
+  access_token: String
+  createdAt: DateTimeISO
+  expires_at: Int
+  id_token: String
+  metadata: JSON
+  provider: String!
+  providerAccountId: String!
+  refresh_token: String
+  scope: String
+  session_state: String
+  token_type: String
+  type: String!
+  updatedAt: DateTimeISO
+  user: UserCreateNestedOneWithoutAccountsInput!
+  userConfigurationId: String
+}
+
+input AccountCreateManyInput {
+  access_token: String
+  createdAt: DateTimeISO
+  expires_at: Int
+  id_token: String
+  metadata: JSON
+  provider: String!
+  providerAccountId: String!
+  refresh_token: String
+  scope: String
+  session_state: String
+  token_type: String
+  type: String!
+  updatedAt: DateTimeISO
+  userConfigurationId: String
+  userId: String!
+}
+
+input AccountCreateManyUserInput {
+  access_token: String
+  createdAt: DateTimeISO
+  expires_at: Int
+  id_token: String
+  metadata: JSON
+  provider: String!
+  providerAccountId: String!
+  refresh_token: String
+  scope: String
+  session_state: String
+  token_type: String
+  type: String!
+  updatedAt: DateTimeISO
+  userConfigurationId: String
+}
+
+input AccountCreateManyUserInputEnvelope {
+  data: [AccountCreateManyUserInput!]!
+  skipDuplicates: Boolean
+}
+
+input AccountCreateNestedManyWithoutUserInput {
+  connect: [AccountWhereUniqueInput!]
+  connectOrCreate: [AccountCreateOrConnectWithoutUserInput!]
+  create: [AccountCreateWithoutUserInput!]
+  createMany: AccountCreateManyUserInputEnvelope
+}
+
+input AccountCreateOrConnectWithoutUserInput {
+  create: AccountCreateWithoutUserInput!
+  where: AccountWhereUniqueInput!
+}
+
+input AccountCreateWithoutUserInput {
+  access_token: String
+  createdAt: DateTimeISO
+  expires_at: Int
+  id_token: String
+  metadata: JSON
+  provider: String!
+  providerAccountId: String!
+  refresh_token: String
+  scope: String
+  session_state: String
+  token_type: String
+  type: String!
+  updatedAt: DateTimeISO
+  userConfigurationId: String
+}
+
+type AccountGroupBy {
+  _avg: AccountAvgAggregate
+  _count: AccountCountAggregate
+  _max: AccountMaxAggregate
+  _min: AccountMinAggregate
+  _sum: AccountSumAggregate
+  access_token: String
+  createdAt: DateTimeISO!
+  expires_at: Int
+  id_token: String
+  metadata: JSON
+  provider: String!
+  providerAccountId: String!
+  refresh_token: String
+  scope: String
+  session_state: String
+  token_type: String
+  type: String!
+  updatedAt: DateTimeISO!
+  userConfigurationId: String
+  userId: String!
+}
+
 input AccountListRelationFilter {
   every: AccountWhereInput
   none: AccountWhereInput
   some: AccountWhereInput
+}
+
+type AccountMaxAggregate {
+  access_token: String
+  createdAt: DateTimeISO
+  expires_at: Int
+  id_token: String
+  provider: String
+  providerAccountId: String
+  refresh_token: String
+  scope: String
+  session_state: String
+  token_type: String
+  type: String
+  updatedAt: DateTimeISO
+  userConfigurationId: String
+  userId: String
+}
+
+input AccountMaxOrderByAggregateInput {
+  access_token: SortOrder
+  createdAt: SortOrder
+  expires_at: SortOrder
+  id_token: SortOrder
+  provider: SortOrder
+  providerAccountId: SortOrder
+  refresh_token: SortOrder
+  scope: SortOrder
+  session_state: SortOrder
+  token_type: SortOrder
+  type: SortOrder
+  updatedAt: SortOrder
+  userConfigurationId: SortOrder
+  userId: SortOrder
+}
+
+type AccountMinAggregate {
+  access_token: String
+  createdAt: DateTimeISO
+  expires_at: Int
+  id_token: String
+  provider: String
+  providerAccountId: String
+  refresh_token: String
+  scope: String
+  session_state: String
+  token_type: String
+  type: String
+  updatedAt: DateTimeISO
+  userConfigurationId: String
+  userId: String
+}
+
+input AccountMinOrderByAggregateInput {
+  access_token: SortOrder
+  createdAt: SortOrder
+  expires_at: SortOrder
+  id_token: SortOrder
+  provider: SortOrder
+  providerAccountId: SortOrder
+  refresh_token: SortOrder
+  scope: SortOrder
+  session_state: SortOrder
+  token_type: SortOrder
+  type: SortOrder
+  updatedAt: SortOrder
+  userConfigurationId: SortOrder
+  userId: SortOrder
 }
 
 input AccountOrderByRelationAggregateInput {
@@ -49,6 +272,29 @@ input AccountOrderByRelevanceInput {
   fields: [AccountOrderByRelevanceFieldEnum!]!
   search: String!
   sort: SortOrder!
+}
+
+input AccountOrderByWithAggregationInput {
+  _avg: AccountAvgOrderByAggregateInput
+  _count: AccountCountOrderByAggregateInput
+  _max: AccountMaxOrderByAggregateInput
+  _min: AccountMinOrderByAggregateInput
+  _sum: AccountSumOrderByAggregateInput
+  access_token: SortOrderInput
+  createdAt: SortOrder
+  expires_at: SortOrderInput
+  id_token: SortOrderInput
+  metadata: SortOrderInput
+  provider: SortOrder
+  providerAccountId: SortOrder
+  refresh_token: SortOrderInput
+  scope: SortOrderInput
+  session_state: SortOrderInput
+  token_type: SortOrderInput
+  type: SortOrder
+  updatedAt: SortOrder
+  userConfigurationId: SortOrderInput
+  userId: SortOrder
 }
 
 input AccountOrderByWithRelationInput {
@@ -92,6 +338,138 @@ enum AccountScalarFieldEnum {
   updatedAt
   userConfigurationId
   userId
+}
+
+input AccountScalarWhereInput {
+  AND: [AccountScalarWhereInput!]
+  NOT: [AccountScalarWhereInput!]
+  OR: [AccountScalarWhereInput!]
+  access_token: StringNullableFilter
+  createdAt: DateTimeFilter
+  expires_at: IntNullableFilter
+  id_token: StringNullableFilter
+  metadata: JsonNullableFilter
+  provider: StringFilter
+  providerAccountId: StringFilter
+  refresh_token: StringNullableFilter
+  scope: StringNullableFilter
+  session_state: StringNullableFilter
+  token_type: StringNullableFilter
+  type: StringFilter
+  updatedAt: DateTimeFilter
+  userConfigurationId: StringNullableFilter
+  userId: StringFilter
+}
+
+input AccountScalarWhereWithAggregatesInput {
+  AND: [AccountScalarWhereWithAggregatesInput!]
+  NOT: [AccountScalarWhereWithAggregatesInput!]
+  OR: [AccountScalarWhereWithAggregatesInput!]
+  access_token: StringNullableWithAggregatesFilter
+  createdAt: DateTimeWithAggregatesFilter
+  expires_at: IntNullableWithAggregatesFilter
+  id_token: StringNullableWithAggregatesFilter
+  metadata: JsonNullableWithAggregatesFilter
+  provider: StringWithAggregatesFilter
+  providerAccountId: StringWithAggregatesFilter
+  refresh_token: StringNullableWithAggregatesFilter
+  scope: StringNullableWithAggregatesFilter
+  session_state: StringNullableWithAggregatesFilter
+  token_type: StringNullableWithAggregatesFilter
+  type: StringWithAggregatesFilter
+  updatedAt: DateTimeWithAggregatesFilter
+  userConfigurationId: StringNullableWithAggregatesFilter
+  userId: StringWithAggregatesFilter
+}
+
+type AccountSumAggregate {
+  expires_at: Int
+}
+
+input AccountSumOrderByAggregateInput {
+  expires_at: SortOrder
+}
+
+input AccountUpdateInput {
+  access_token: NullableStringFieldUpdateOperationsInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  expires_at: NullableIntFieldUpdateOperationsInput
+  id_token: NullableStringFieldUpdateOperationsInput
+  metadata: JSON
+  provider: StringFieldUpdateOperationsInput
+  providerAccountId: StringFieldUpdateOperationsInput
+  refresh_token: NullableStringFieldUpdateOperationsInput
+  scope: NullableStringFieldUpdateOperationsInput
+  session_state: NullableStringFieldUpdateOperationsInput
+  token_type: NullableStringFieldUpdateOperationsInput
+  type: StringFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+  user: UserUpdateOneRequiredWithoutAccountsNestedInput
+  userConfigurationId: NullableStringFieldUpdateOperationsInput
+}
+
+input AccountUpdateManyMutationInput {
+  access_token: NullableStringFieldUpdateOperationsInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  expires_at: NullableIntFieldUpdateOperationsInput
+  id_token: NullableStringFieldUpdateOperationsInput
+  metadata: JSON
+  provider: StringFieldUpdateOperationsInput
+  providerAccountId: StringFieldUpdateOperationsInput
+  refresh_token: NullableStringFieldUpdateOperationsInput
+  scope: NullableStringFieldUpdateOperationsInput
+  session_state: NullableStringFieldUpdateOperationsInput
+  token_type: NullableStringFieldUpdateOperationsInput
+  type: StringFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+  userConfigurationId: NullableStringFieldUpdateOperationsInput
+}
+
+input AccountUpdateManyWithWhereWithoutUserInput {
+  data: AccountUpdateManyMutationInput!
+  where: AccountScalarWhereInput!
+}
+
+input AccountUpdateManyWithoutUserNestedInput {
+  connect: [AccountWhereUniqueInput!]
+  connectOrCreate: [AccountCreateOrConnectWithoutUserInput!]
+  create: [AccountCreateWithoutUserInput!]
+  createMany: AccountCreateManyUserInputEnvelope
+  delete: [AccountWhereUniqueInput!]
+  deleteMany: [AccountScalarWhereInput!]
+  disconnect: [AccountWhereUniqueInput!]
+  set: [AccountWhereUniqueInput!]
+  update: [AccountUpdateWithWhereUniqueWithoutUserInput!]
+  updateMany: [AccountUpdateManyWithWhereWithoutUserInput!]
+  upsert: [AccountUpsertWithWhereUniqueWithoutUserInput!]
+}
+
+input AccountUpdateWithWhereUniqueWithoutUserInput {
+  data: AccountUpdateWithoutUserInput!
+  where: AccountWhereUniqueInput!
+}
+
+input AccountUpdateWithoutUserInput {
+  access_token: NullableStringFieldUpdateOperationsInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  expires_at: NullableIntFieldUpdateOperationsInput
+  id_token: NullableStringFieldUpdateOperationsInput
+  metadata: JSON
+  provider: StringFieldUpdateOperationsInput
+  providerAccountId: StringFieldUpdateOperationsInput
+  refresh_token: NullableStringFieldUpdateOperationsInput
+  scope: NullableStringFieldUpdateOperationsInput
+  session_state: NullableStringFieldUpdateOperationsInput
+  token_type: NullableStringFieldUpdateOperationsInput
+  type: StringFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+  userConfigurationId: NullableStringFieldUpdateOperationsInput
+}
+
+input AccountUpsertWithWhereUniqueWithoutUserInput {
+  create: AccountCreateWithoutUserInput!
+  update: AccountUpdateWithoutUserInput!
+  where: AccountWhereUniqueInput!
 }
 
 input AccountWhereInput {
@@ -139,9 +517,99 @@ input AccountWhereUniqueInput {
   userId: StringFilter
 }
 
+type AffectedRowsOutput {
+  count: Int!
+}
+
+type AggregateAccount {
+  _avg: AccountAvgAggregate
+  _count: AccountCountAggregate
+  _max: AccountMaxAggregate
+  _min: AccountMinAggregate
+  _sum: AccountSumAggregate
+}
+
+type AggregateSession {
+  _count: SessionCountAggregate
+  _max: SessionMaxAggregate
+  _min: SessionMinAggregate
+}
+
+type AggregateTag {
+  _count: TagCountAggregate
+  _max: TagMaxAggregate
+  _min: TagMinAggregate
+}
+
+type AggregateTypingRun {
+  _avg: TypingRunAvgAggregate
+  _count: TypingRunCountAggregate
+  _max: TypingRunMaxAggregate
+  _min: TypingRunMinAggregate
+  _sum: TypingRunSumAggregate
+}
+
+type AggregateUser {
+  _count: UserCountAggregate
+  _max: UserMaxAggregate
+  _min: UserMinAggregate
+}
+
+type AggregateUserConfiguration {
+  _avg: UserConfigurationAvgAggregate
+  _count: UserConfigurationCountAggregate
+  _max: UserConfigurationMaxAggregate
+  _min: UserConfigurationMinAggregate
+  _sum: UserConfigurationSumAggregate
+}
+
+type AggregateUserExperience {
+  _avg: UserExperienceAvgAggregate
+  _count: UserExperienceCountAggregate
+  _max: UserExperienceMaxAggregate
+  _min: UserExperienceMinAggregate
+  _sum: UserExperienceSumAggregate
+}
+
+type AggregateUserNotification {
+  _count: UserNotificationCountAggregate
+  _max: UserNotificationMaxAggregate
+  _min: UserNotificationMinAggregate
+}
+
+type AggregateUsersChallenge {
+  _count: UsersChallengeCountAggregate
+  _max: UsersChallengeMaxAggregate
+  _min: UsersChallengeMinAggregate
+}
+
+type AggregateUsersChallengeMatch {
+  _count: UsersChallengeMatchCountAggregate
+  _max: UsersChallengeMatchMaxAggregate
+  _min: UsersChallengeMatchMinAggregate
+}
+
+type AggregateVerificationToken {
+  _count: VerificationTokenCountAggregate
+  _max: VerificationTokenMaxAggregate
+  _min: VerificationTokenMinAggregate
+}
+
+input BoolFieldUpdateOperationsInput {
+  set: Boolean
+}
+
 input BoolFilter {
   equals: Boolean
   not: NestedBoolFilter
+}
+
+input BoolWithAggregatesFilter {
+  _count: NestedIntFilter
+  _max: NestedBoolFilter
+  _min: NestedBoolFilter
+  equals: Boolean
+  not: NestedBoolWithAggregatesFilter
 }
 
 enum CaretSmoothness {
@@ -163,6 +631,10 @@ enum ConfidenceMode {
   MAX
   OFF
   ON
+}
+
+input DateTimeFieldUpdateOperationsInput {
+  set: DateTimeISO
 }
 
 input DateTimeFilter {
@@ -192,11 +664,57 @@ input DateTimeNullableFilter {
   notIn: [DateTimeISO!]
 }
 
+input DateTimeNullableWithAggregatesFilter {
+  _count: NestedIntNullableFilter
+  _max: NestedDateTimeNullableFilter
+  _min: NestedDateTimeNullableFilter
+  equals: DateTimeISO
+  gt: DateTimeISO
+  gte: DateTimeISO
+  in: [DateTimeISO!]
+  lt: DateTimeISO
+  lte: DateTimeISO
+  not: NestedDateTimeNullableWithAggregatesFilter
+  notIn: [DateTimeISO!]
+}
+
+input DateTimeWithAggregatesFilter {
+  _count: NestedIntFilter
+  _max: NestedDateTimeFilter
+  _min: NestedDateTimeFilter
+  equals: DateTimeISO
+  gt: DateTimeISO
+  gte: DateTimeISO
+  in: [DateTimeISO!]
+  lt: DateTimeISO
+  lte: DateTimeISO
+  not: NestedDateTimeWithAggregatesFilter
+  notIn: [DateTimeISO!]
+}
+
+input EnumCaretSmoothnessFieldUpdateOperationsInput {
+  set: CaretSmoothness
+}
+
 input EnumCaretSmoothnessFilter {
   equals: CaretSmoothness
   in: [CaretSmoothness!]
   not: NestedEnumCaretSmoothnessFilter
   notIn: [CaretSmoothness!]
+}
+
+input EnumCaretSmoothnessWithAggregatesFilter {
+  _count: NestedIntFilter
+  _max: NestedEnumCaretSmoothnessFilter
+  _min: NestedEnumCaretSmoothnessFilter
+  equals: CaretSmoothness
+  in: [CaretSmoothness!]
+  not: NestedEnumCaretSmoothnessWithAggregatesFilter
+  notIn: [CaretSmoothness!]
+}
+
+input EnumCaretStyleFieldUpdateOperationsInput {
+  set: CaretStyle
 }
 
 input EnumCaretStyleFilter {
@@ -206,11 +724,39 @@ input EnumCaretStyleFilter {
   notIn: [CaretStyle!]
 }
 
+input EnumCaretStyleWithAggregatesFilter {
+  _count: NestedIntFilter
+  _max: NestedEnumCaretStyleFilter
+  _min: NestedEnumCaretStyleFilter
+  equals: CaretStyle
+  in: [CaretStyle!]
+  not: NestedEnumCaretStyleWithAggregatesFilter
+  notIn: [CaretStyle!]
+}
+
+input EnumConfidenceModeFieldUpdateOperationsInput {
+  set: ConfidenceMode
+}
+
 input EnumConfidenceModeFilter {
   equals: ConfidenceMode
   in: [ConfidenceMode!]
   not: NestedEnumConfidenceModeFilter
   notIn: [ConfidenceMode!]
+}
+
+input EnumConfidenceModeWithAggregatesFilter {
+  _count: NestedIntFilter
+  _max: NestedEnumConfidenceModeFilter
+  _min: NestedEnumConfidenceModeFilter
+  equals: ConfidenceMode
+  in: [ConfidenceMode!]
+  not: NestedEnumConfidenceModeWithAggregatesFilter
+  notIn: [ConfidenceMode!]
+}
+
+input EnumIndicateTyposFieldUpdateOperationsInput {
+  set: IndicateTypos
 }
 
 input EnumIndicateTyposFilter {
@@ -220,11 +766,39 @@ input EnumIndicateTyposFilter {
   notIn: [IndicateTypos!]
 }
 
+input EnumIndicateTyposWithAggregatesFilter {
+  _count: NestedIntFilter
+  _max: NestedEnumIndicateTyposFilter
+  _min: NestedEnumIndicateTyposFilter
+  equals: IndicateTypos
+  in: [IndicateTypos!]
+  not: NestedEnumIndicateTyposWithAggregatesFilter
+  notIn: [IndicateTypos!]
+}
+
+input EnumPaceCaretSpeedFieldUpdateOperationsInput {
+  set: PaceCaretSpeed
+}
+
 input EnumPaceCaretSpeedFilter {
   equals: PaceCaretSpeed
   in: [PaceCaretSpeed!]
   not: NestedEnumPaceCaretSpeedFilter
   notIn: [PaceCaretSpeed!]
+}
+
+input EnumPaceCaretSpeedWithAggregatesFilter {
+  _count: NestedIntFilter
+  _max: NestedEnumPaceCaretSpeedFilter
+  _min: NestedEnumPaceCaretSpeedFilter
+  equals: PaceCaretSpeed
+  in: [PaceCaretSpeed!]
+  not: NestedEnumPaceCaretSpeedWithAggregatesFilter
+  notIn: [PaceCaretSpeed!]
+}
+
+input EnumRunDifficultyFieldUpdateOperationsInput {
+  set: RunDifficulty
 }
 
 input EnumRunDifficultyFilter {
@@ -234,11 +808,39 @@ input EnumRunDifficultyFilter {
   notIn: [RunDifficulty!]
 }
 
+input EnumRunDifficultyWithAggregatesFilter {
+  _count: NestedIntFilter
+  _max: NestedEnumRunDifficultyFilter
+  _min: NestedEnumRunDifficultyFilter
+  equals: RunDifficulty
+  in: [RunDifficulty!]
+  not: NestedEnumRunDifficultyWithAggregatesFilter
+  notIn: [RunDifficulty!]
+}
+
+input EnumShowAverageFieldUpdateOperationsInput {
+  set: ShowAverage
+}
+
 input EnumShowAverageFilter {
   equals: ShowAverage
   in: [ShowAverage!]
   not: NestedEnumShowAverageFilter
   notIn: [ShowAverage!]
+}
+
+input EnumShowAverageWithAggregatesFilter {
+  _count: NestedIntFilter
+  _max: NestedEnumShowAverageFilter
+  _min: NestedEnumShowAverageFilter
+  equals: ShowAverage
+  in: [ShowAverage!]
+  not: NestedEnumShowAverageWithAggregatesFilter
+  notIn: [ShowAverage!]
+}
+
+input EnumTypingRunModeFieldUpdateOperationsInput {
+  set: TypingRunMode
 }
 
 input EnumTypingRunModeFilter {
@@ -248,11 +850,39 @@ input EnumTypingRunModeFilter {
   notIn: [TypingRunMode!]
 }
 
+input EnumTypingRunModeWithAggregatesFilter {
+  _count: NestedIntFilter
+  _max: NestedEnumTypingRunModeFilter
+  _min: NestedEnumTypingRunModeFilter
+  equals: TypingRunMode
+  in: [TypingRunMode!]
+  not: NestedEnumTypingRunModeWithAggregatesFilter
+  notIn: [TypingRunMode!]
+}
+
+input EnumUsersChallengeMatchStateFieldUpdateOperationsInput {
+  set: UsersChallengeMatchState
+}
+
 input EnumUsersChallengeMatchStateFilter {
   equals: UsersChallengeMatchState
   in: [UsersChallengeMatchState!]
   not: NestedEnumUsersChallengeMatchStateFilter
   notIn: [UsersChallengeMatchState!]
+}
+
+input EnumUsersChallengeMatchStateWithAggregatesFilter {
+  _count: NestedIntFilter
+  _max: NestedEnumUsersChallengeMatchStateFilter
+  _min: NestedEnumUsersChallengeMatchStateFilter
+  equals: UsersChallengeMatchState
+  in: [UsersChallengeMatchState!]
+  not: NestedEnumUsersChallengeMatchStateWithAggregatesFilter
+  notIn: [UsersChallengeMatchState!]
+}
+
+input EnumUsersChallengeStateFieldUpdateOperationsInput {
+  set: UsersChallengeState
 }
 
 input EnumUsersChallengeStateFilter {
@@ -262,10 +892,28 @@ input EnumUsersChallengeStateFilter {
   notIn: [UsersChallengeState!]
 }
 
+input EnumUsersChallengeStateWithAggregatesFilter {
+  _count: NestedIntFilter
+  _max: NestedEnumUsersChallengeStateFilter
+  _min: NestedEnumUsersChallengeStateFilter
+  equals: UsersChallengeState
+  in: [UsersChallengeState!]
+  not: NestedEnumUsersChallengeStateWithAggregatesFilter
+  notIn: [UsersChallengeState!]
+}
+
 enum IndicateTypos {
   BELOW
   OFF
   REPLACE
+}
+
+input IntFieldUpdateOperationsInput {
+  decrement: Int
+  divide: Int
+  increment: Int
+  multiply: Int
+  set: Int
 }
 
 input IntFilter {
@@ -287,6 +935,38 @@ input IntNullableFilter {
   lt: Int
   lte: Int
   not: NestedIntNullableFilter
+  notIn: [Int!]
+}
+
+input IntNullableWithAggregatesFilter {
+  _avg: NestedFloatNullableFilter
+  _count: NestedIntNullableFilter
+  _max: NestedIntNullableFilter
+  _min: NestedIntNullableFilter
+  _sum: NestedIntNullableFilter
+  equals: Int
+  gt: Int
+  gte: Int
+  in: [Int!]
+  lt: Int
+  lte: Int
+  not: NestedIntNullableWithAggregatesFilter
+  notIn: [Int!]
+}
+
+input IntWithAggregatesFilter {
+  _avg: NestedFloatFilter
+  _count: NestedIntFilter
+  _max: NestedIntFilter
+  _min: NestedIntFilter
+  _sum: NestedIntFilter
+  equals: Int
+  gt: Int
+  gte: Int
+  in: [Int!]
+  lt: Int
+  lte: Int
+  not: NestedIntWithAggregatesFilter
   notIn: [Int!]
 }
 
@@ -327,9 +1007,137 @@ input JsonNullableFilter {
   string_starts_with: String
 }
 
+input JsonNullableWithAggregatesFilter {
+  _count: NestedIntNullableFilter
+  _max: NestedJsonNullableFilter
+  _min: NestedJsonNullableFilter
+  array_contains: JSON
+  array_ends_with: JSON
+  array_starts_with: JSON
+  equals: JSON
+  gt: JSON
+  gte: JSON
+  lt: JSON
+  lte: JSON
+  not: JSON
+  path: [String!]
+  string_contains: String
+  string_ends_with: String
+  string_starts_with: String
+}
+
+input JsonWithAggregatesFilter {
+  _count: NestedIntFilter
+  _max: NestedJsonFilter
+  _min: NestedJsonFilter
+  array_contains: JSON
+  array_ends_with: JSON
+  array_starts_with: JSON
+  equals: JSON
+  gt: JSON
+  gte: JSON
+  lt: JSON
+  lte: JSON
+  not: JSON
+  path: [String!]
+  string_contains: String
+  string_ends_with: String
+  string_starts_with: String
+}
+
+type Mutation {
+  createManyAccount(data: [AccountCreateManyInput!]!, skipDuplicates: Boolean): AffectedRowsOutput!
+  createManySession(data: [SessionCreateManyInput!]!, skipDuplicates: Boolean): AffectedRowsOutput!
+  createManyTag(data: [TagCreateManyInput!]!, skipDuplicates: Boolean): AffectedRowsOutput!
+  createManyTypingRun(data: [TypingRunCreateManyInput!]!, skipDuplicates: Boolean): AffectedRowsOutput!
+  createManyUser(data: [UserCreateManyInput!]!, skipDuplicates: Boolean): AffectedRowsOutput!
+  createManyUserConfiguration(data: [UserConfigurationCreateManyInput!]!, skipDuplicates: Boolean): AffectedRowsOutput!
+  createManyUserExperience(data: [UserExperienceCreateManyInput!]!, skipDuplicates: Boolean): AffectedRowsOutput!
+  createManyUserNotification(data: [UserNotificationCreateManyInput!]!, skipDuplicates: Boolean): AffectedRowsOutput!
+  createManyUsersChallenge(data: [UsersChallengeCreateManyInput!]!, skipDuplicates: Boolean): AffectedRowsOutput!
+  createManyUsersChallengeMatch(data: [UsersChallengeMatchCreateManyInput!]!, skipDuplicates: Boolean): AffectedRowsOutput!
+  createManyVerificationToken(data: [VerificationTokenCreateManyInput!]!, skipDuplicates: Boolean): AffectedRowsOutput!
+  createOneAccount(data: AccountCreateInput!, relationLoadStrategy: RelationLoadStrategy): Account!
+  createOneSession(data: SessionCreateInput!, relationLoadStrategy: RelationLoadStrategy): Session!
+  createOneTag(data: TagCreateInput!, relationLoadStrategy: RelationLoadStrategy): Tag!
+  createOneTypingRun(data: TypingRunCreateInput!, relationLoadStrategy: RelationLoadStrategy): TypingRun!
+  createOneUser(data: UserCreateInput!, relationLoadStrategy: RelationLoadStrategy): User!
+  createOneUserConfiguration(data: UserConfigurationCreateInput!, relationLoadStrategy: RelationLoadStrategy): UserConfiguration!
+  createOneUserExperience(data: UserExperienceCreateInput!, relationLoadStrategy: RelationLoadStrategy): UserExperience!
+  createOneUserNotification(data: UserNotificationCreateInput!, relationLoadStrategy: RelationLoadStrategy): UserNotification!
+  createOneUsersChallenge(data: UsersChallengeCreateInput!, relationLoadStrategy: RelationLoadStrategy): UsersChallenge!
+  createOneUsersChallengeMatch(data: UsersChallengeMatchCreateInput!, relationLoadStrategy: RelationLoadStrategy): UsersChallengeMatch!
+  createOneVerificationToken(data: VerificationTokenCreateInput!, relationLoadStrategy: RelationLoadStrategy): VerificationToken!
+  deleteManyAccount(where: AccountWhereInput): AffectedRowsOutput!
+  deleteManySession(where: SessionWhereInput): AffectedRowsOutput!
+  deleteManyTag(where: TagWhereInput): AffectedRowsOutput!
+  deleteManyTypingRun(where: TypingRunWhereInput): AffectedRowsOutput!
+  deleteManyUser(where: UserWhereInput): AffectedRowsOutput!
+  deleteManyUserConfiguration(where: UserConfigurationWhereInput): AffectedRowsOutput!
+  deleteManyUserExperience(where: UserExperienceWhereInput): AffectedRowsOutput!
+  deleteManyUserNotification(where: UserNotificationWhereInput): AffectedRowsOutput!
+  deleteManyUsersChallenge(where: UsersChallengeWhereInput): AffectedRowsOutput!
+  deleteManyUsersChallengeMatch(where: UsersChallengeMatchWhereInput): AffectedRowsOutput!
+  deleteManyVerificationToken(where: VerificationTokenWhereInput): AffectedRowsOutput!
+  deleteOneAccount(relationLoadStrategy: RelationLoadStrategy, where: AccountWhereUniqueInput!): Account
+  deleteOneSession(relationLoadStrategy: RelationLoadStrategy, where: SessionWhereUniqueInput!): Session
+  deleteOneTag(relationLoadStrategy: RelationLoadStrategy, where: TagWhereUniqueInput!): Tag
+  deleteOneTypingRun(relationLoadStrategy: RelationLoadStrategy, where: TypingRunWhereUniqueInput!): TypingRun
+  deleteOneUser(relationLoadStrategy: RelationLoadStrategy, where: UserWhereUniqueInput!): User
+  deleteOneUserConfiguration(relationLoadStrategy: RelationLoadStrategy, where: UserConfigurationWhereUniqueInput!): UserConfiguration
+  deleteOneUserExperience(relationLoadStrategy: RelationLoadStrategy, where: UserExperienceWhereUniqueInput!): UserExperience
+  deleteOneUserNotification(relationLoadStrategy: RelationLoadStrategy, where: UserNotificationWhereUniqueInput!): UserNotification
+  deleteOneUsersChallenge(relationLoadStrategy: RelationLoadStrategy, where: UsersChallengeWhereUniqueInput!): UsersChallenge
+  deleteOneUsersChallengeMatch(relationLoadStrategy: RelationLoadStrategy, where: UsersChallengeMatchWhereUniqueInput!): UsersChallengeMatch
+  deleteOneVerificationToken(relationLoadStrategy: RelationLoadStrategy, where: VerificationTokenWhereUniqueInput!): VerificationToken
+  signIn(signInModel: UserSignInInput!): User
+  signUp(signUpModel: UserSignUpInput!): User!
+  updateManyAccount(data: AccountUpdateManyMutationInput!, where: AccountWhereInput): AffectedRowsOutput!
+  updateManySession(data: SessionUpdateManyMutationInput!, where: SessionWhereInput): AffectedRowsOutput!
+  updateManyTag(data: TagUpdateManyMutationInput!, where: TagWhereInput): AffectedRowsOutput!
+  updateManyTypingRun(data: TypingRunUpdateManyMutationInput!, where: TypingRunWhereInput): AffectedRowsOutput!
+  updateManyUser(data: UserUpdateManyMutationInput!, where: UserWhereInput): AffectedRowsOutput!
+  updateManyUserConfiguration(data: UserConfigurationUpdateManyMutationInput!, where: UserConfigurationWhereInput): AffectedRowsOutput!
+  updateManyUserExperience(data: UserExperienceUpdateManyMutationInput!, where: UserExperienceWhereInput): AffectedRowsOutput!
+  updateManyUserNotification(data: UserNotificationUpdateManyMutationInput!, where: UserNotificationWhereInput): AffectedRowsOutput!
+  updateManyUsersChallenge(data: UsersChallengeUpdateManyMutationInput!, where: UsersChallengeWhereInput): AffectedRowsOutput!
+  updateManyUsersChallengeMatch(data: UsersChallengeMatchUpdateManyMutationInput!, where: UsersChallengeMatchWhereInput): AffectedRowsOutput!
+  updateManyVerificationToken(data: VerificationTokenUpdateManyMutationInput!, where: VerificationTokenWhereInput): AffectedRowsOutput!
+  updateOneAccount(data: AccountUpdateInput!, relationLoadStrategy: RelationLoadStrategy, where: AccountWhereUniqueInput!): Account
+  updateOneSession(data: SessionUpdateInput!, relationLoadStrategy: RelationLoadStrategy, where: SessionWhereUniqueInput!): Session
+  updateOneTag(data: TagUpdateInput!, relationLoadStrategy: RelationLoadStrategy, where: TagWhereUniqueInput!): Tag
+  updateOneTypingRun(data: TypingRunUpdateInput!, relationLoadStrategy: RelationLoadStrategy, where: TypingRunWhereUniqueInput!): TypingRun
+  updateOneUser(data: UserUpdateInput!, relationLoadStrategy: RelationLoadStrategy, where: UserWhereUniqueInput!): User
+  updateOneUserConfiguration(data: UserConfigurationUpdateInput!, relationLoadStrategy: RelationLoadStrategy, where: UserConfigurationWhereUniqueInput!): UserConfiguration
+  updateOneUserExperience(data: UserExperienceUpdateInput!, relationLoadStrategy: RelationLoadStrategy, where: UserExperienceWhereUniqueInput!): UserExperience
+  updateOneUserNotification(data: UserNotificationUpdateInput!, relationLoadStrategy: RelationLoadStrategy, where: UserNotificationWhereUniqueInput!): UserNotification
+  updateOneUsersChallenge(data: UsersChallengeUpdateInput!, relationLoadStrategy: RelationLoadStrategy, where: UsersChallengeWhereUniqueInput!): UsersChallenge
+  updateOneUsersChallengeMatch(data: UsersChallengeMatchUpdateInput!, relationLoadStrategy: RelationLoadStrategy, where: UsersChallengeMatchWhereUniqueInput!): UsersChallengeMatch
+  updateOneVerificationToken(data: VerificationTokenUpdateInput!, relationLoadStrategy: RelationLoadStrategy, where: VerificationTokenWhereUniqueInput!): VerificationToken
+  upsertOneAccount(create: AccountCreateInput!, relationLoadStrategy: RelationLoadStrategy, update: AccountUpdateInput!, where: AccountWhereUniqueInput!): Account!
+  upsertOneSession(create: SessionCreateInput!, relationLoadStrategy: RelationLoadStrategy, update: SessionUpdateInput!, where: SessionWhereUniqueInput!): Session!
+  upsertOneTag(create: TagCreateInput!, relationLoadStrategy: RelationLoadStrategy, update: TagUpdateInput!, where: TagWhereUniqueInput!): Tag!
+  upsertOneTypingRun(create: TypingRunCreateInput!, relationLoadStrategy: RelationLoadStrategy, update: TypingRunUpdateInput!, where: TypingRunWhereUniqueInput!): TypingRun!
+  upsertOneUser(create: UserCreateInput!, relationLoadStrategy: RelationLoadStrategy, update: UserUpdateInput!, where: UserWhereUniqueInput!): User!
+  upsertOneUserConfiguration(create: UserConfigurationCreateInput!, relationLoadStrategy: RelationLoadStrategy, update: UserConfigurationUpdateInput!, where: UserConfigurationWhereUniqueInput!): UserConfiguration!
+  upsertOneUserExperience(create: UserExperienceCreateInput!, relationLoadStrategy: RelationLoadStrategy, update: UserExperienceUpdateInput!, where: UserExperienceWhereUniqueInput!): UserExperience!
+  upsertOneUserNotification(create: UserNotificationCreateInput!, relationLoadStrategy: RelationLoadStrategy, update: UserNotificationUpdateInput!, where: UserNotificationWhereUniqueInput!): UserNotification!
+  upsertOneUsersChallenge(create: UsersChallengeCreateInput!, relationLoadStrategy: RelationLoadStrategy, update: UsersChallengeUpdateInput!, where: UsersChallengeWhereUniqueInput!): UsersChallenge!
+  upsertOneUsersChallengeMatch(create: UsersChallengeMatchCreateInput!, relationLoadStrategy: RelationLoadStrategy, update: UsersChallengeMatchUpdateInput!, where: UsersChallengeMatchWhereUniqueInput!): UsersChallengeMatch!
+  upsertOneVerificationToken(create: VerificationTokenCreateInput!, relationLoadStrategy: RelationLoadStrategy, update: VerificationTokenUpdateInput!, where: VerificationTokenWhereUniqueInput!): VerificationToken!
+}
+
 input NestedBoolFilter {
   equals: Boolean
   not: NestedBoolFilter
+}
+
+input NestedBoolWithAggregatesFilter {
+  _count: NestedIntFilter
+  _max: NestedBoolFilter
+  _min: NestedBoolFilter
+  equals: Boolean
+  not: NestedBoolWithAggregatesFilter
 }
 
 input NestedDateTimeFilter {
@@ -354,10 +1162,48 @@ input NestedDateTimeNullableFilter {
   notIn: [DateTimeISO!]
 }
 
+input NestedDateTimeNullableWithAggregatesFilter {
+  _count: NestedIntNullableFilter
+  _max: NestedDateTimeNullableFilter
+  _min: NestedDateTimeNullableFilter
+  equals: DateTimeISO
+  gt: DateTimeISO
+  gte: DateTimeISO
+  in: [DateTimeISO!]
+  lt: DateTimeISO
+  lte: DateTimeISO
+  not: NestedDateTimeNullableWithAggregatesFilter
+  notIn: [DateTimeISO!]
+}
+
+input NestedDateTimeWithAggregatesFilter {
+  _count: NestedIntFilter
+  _max: NestedDateTimeFilter
+  _min: NestedDateTimeFilter
+  equals: DateTimeISO
+  gt: DateTimeISO
+  gte: DateTimeISO
+  in: [DateTimeISO!]
+  lt: DateTimeISO
+  lte: DateTimeISO
+  not: NestedDateTimeWithAggregatesFilter
+  notIn: [DateTimeISO!]
+}
+
 input NestedEnumCaretSmoothnessFilter {
   equals: CaretSmoothness
   in: [CaretSmoothness!]
   not: NestedEnumCaretSmoothnessFilter
+  notIn: [CaretSmoothness!]
+}
+
+input NestedEnumCaretSmoothnessWithAggregatesFilter {
+  _count: NestedIntFilter
+  _max: NestedEnumCaretSmoothnessFilter
+  _min: NestedEnumCaretSmoothnessFilter
+  equals: CaretSmoothness
+  in: [CaretSmoothness!]
+  not: NestedEnumCaretSmoothnessWithAggregatesFilter
   notIn: [CaretSmoothness!]
 }
 
@@ -368,10 +1214,30 @@ input NestedEnumCaretStyleFilter {
   notIn: [CaretStyle!]
 }
 
+input NestedEnumCaretStyleWithAggregatesFilter {
+  _count: NestedIntFilter
+  _max: NestedEnumCaretStyleFilter
+  _min: NestedEnumCaretStyleFilter
+  equals: CaretStyle
+  in: [CaretStyle!]
+  not: NestedEnumCaretStyleWithAggregatesFilter
+  notIn: [CaretStyle!]
+}
+
 input NestedEnumConfidenceModeFilter {
   equals: ConfidenceMode
   in: [ConfidenceMode!]
   not: NestedEnumConfidenceModeFilter
+  notIn: [ConfidenceMode!]
+}
+
+input NestedEnumConfidenceModeWithAggregatesFilter {
+  _count: NestedIntFilter
+  _max: NestedEnumConfidenceModeFilter
+  _min: NestedEnumConfidenceModeFilter
+  equals: ConfidenceMode
+  in: [ConfidenceMode!]
+  not: NestedEnumConfidenceModeWithAggregatesFilter
   notIn: [ConfidenceMode!]
 }
 
@@ -382,10 +1248,30 @@ input NestedEnumIndicateTyposFilter {
   notIn: [IndicateTypos!]
 }
 
+input NestedEnumIndicateTyposWithAggregatesFilter {
+  _count: NestedIntFilter
+  _max: NestedEnumIndicateTyposFilter
+  _min: NestedEnumIndicateTyposFilter
+  equals: IndicateTypos
+  in: [IndicateTypos!]
+  not: NestedEnumIndicateTyposWithAggregatesFilter
+  notIn: [IndicateTypos!]
+}
+
 input NestedEnumPaceCaretSpeedFilter {
   equals: PaceCaretSpeed
   in: [PaceCaretSpeed!]
   not: NestedEnumPaceCaretSpeedFilter
+  notIn: [PaceCaretSpeed!]
+}
+
+input NestedEnumPaceCaretSpeedWithAggregatesFilter {
+  _count: NestedIntFilter
+  _max: NestedEnumPaceCaretSpeedFilter
+  _min: NestedEnumPaceCaretSpeedFilter
+  equals: PaceCaretSpeed
+  in: [PaceCaretSpeed!]
+  not: NestedEnumPaceCaretSpeedWithAggregatesFilter
   notIn: [PaceCaretSpeed!]
 }
 
@@ -396,10 +1282,30 @@ input NestedEnumRunDifficultyFilter {
   notIn: [RunDifficulty!]
 }
 
+input NestedEnumRunDifficultyWithAggregatesFilter {
+  _count: NestedIntFilter
+  _max: NestedEnumRunDifficultyFilter
+  _min: NestedEnumRunDifficultyFilter
+  equals: RunDifficulty
+  in: [RunDifficulty!]
+  not: NestedEnumRunDifficultyWithAggregatesFilter
+  notIn: [RunDifficulty!]
+}
+
 input NestedEnumShowAverageFilter {
   equals: ShowAverage
   in: [ShowAverage!]
   not: NestedEnumShowAverageFilter
+  notIn: [ShowAverage!]
+}
+
+input NestedEnumShowAverageWithAggregatesFilter {
+  _count: NestedIntFilter
+  _max: NestedEnumShowAverageFilter
+  _min: NestedEnumShowAverageFilter
+  equals: ShowAverage
+  in: [ShowAverage!]
+  not: NestedEnumShowAverageWithAggregatesFilter
   notIn: [ShowAverage!]
 }
 
@@ -410,10 +1316,30 @@ input NestedEnumTypingRunModeFilter {
   notIn: [TypingRunMode!]
 }
 
+input NestedEnumTypingRunModeWithAggregatesFilter {
+  _count: NestedIntFilter
+  _max: NestedEnumTypingRunModeFilter
+  _min: NestedEnumTypingRunModeFilter
+  equals: TypingRunMode
+  in: [TypingRunMode!]
+  not: NestedEnumTypingRunModeWithAggregatesFilter
+  notIn: [TypingRunMode!]
+}
+
 input NestedEnumUsersChallengeMatchStateFilter {
   equals: UsersChallengeMatchState
   in: [UsersChallengeMatchState!]
   not: NestedEnumUsersChallengeMatchStateFilter
+  notIn: [UsersChallengeMatchState!]
+}
+
+input NestedEnumUsersChallengeMatchStateWithAggregatesFilter {
+  _count: NestedIntFilter
+  _max: NestedEnumUsersChallengeMatchStateFilter
+  _min: NestedEnumUsersChallengeMatchStateFilter
+  equals: UsersChallengeMatchState
+  in: [UsersChallengeMatchState!]
+  not: NestedEnumUsersChallengeMatchStateWithAggregatesFilter
   notIn: [UsersChallengeMatchState!]
 }
 
@@ -422,6 +1348,38 @@ input NestedEnumUsersChallengeStateFilter {
   in: [UsersChallengeState!]
   not: NestedEnumUsersChallengeStateFilter
   notIn: [UsersChallengeState!]
+}
+
+input NestedEnumUsersChallengeStateWithAggregatesFilter {
+  _count: NestedIntFilter
+  _max: NestedEnumUsersChallengeStateFilter
+  _min: NestedEnumUsersChallengeStateFilter
+  equals: UsersChallengeState
+  in: [UsersChallengeState!]
+  not: NestedEnumUsersChallengeStateWithAggregatesFilter
+  notIn: [UsersChallengeState!]
+}
+
+input NestedFloatFilter {
+  equals: Float
+  gt: Float
+  gte: Float
+  in: [Float!]
+  lt: Float
+  lte: Float
+  not: NestedFloatFilter
+  notIn: [Float!]
+}
+
+input NestedFloatNullableFilter {
+  equals: Float
+  gt: Float
+  gte: Float
+  in: [Float!]
+  lt: Float
+  lte: Float
+  not: NestedFloatNullableFilter
+  notIn: [Float!]
 }
 
 input NestedIntFilter {
@@ -444,6 +1402,70 @@ input NestedIntNullableFilter {
   lte: Int
   not: NestedIntNullableFilter
   notIn: [Int!]
+}
+
+input NestedIntNullableWithAggregatesFilter {
+  _avg: NestedFloatNullableFilter
+  _count: NestedIntNullableFilter
+  _max: NestedIntNullableFilter
+  _min: NestedIntNullableFilter
+  _sum: NestedIntNullableFilter
+  equals: Int
+  gt: Int
+  gte: Int
+  in: [Int!]
+  lt: Int
+  lte: Int
+  not: NestedIntNullableWithAggregatesFilter
+  notIn: [Int!]
+}
+
+input NestedIntWithAggregatesFilter {
+  _avg: NestedFloatFilter
+  _count: NestedIntFilter
+  _max: NestedIntFilter
+  _min: NestedIntFilter
+  _sum: NestedIntFilter
+  equals: Int
+  gt: Int
+  gte: Int
+  in: [Int!]
+  lt: Int
+  lte: Int
+  not: NestedIntWithAggregatesFilter
+  notIn: [Int!]
+}
+
+input NestedJsonFilter {
+  array_contains: JSON
+  array_ends_with: JSON
+  array_starts_with: JSON
+  equals: JSON
+  gt: JSON
+  gte: JSON
+  lt: JSON
+  lte: JSON
+  not: JSON
+  path: [String!]
+  string_contains: String
+  string_ends_with: String
+  string_starts_with: String
+}
+
+input NestedJsonNullableFilter {
+  array_contains: JSON
+  array_ends_with: JSON
+  array_starts_with: JSON
+  equals: JSON
+  gt: JSON
+  gte: JSON
+  lt: JSON
+  lte: JSON
+  not: JSON
+  path: [String!]
+  string_contains: String
+  string_ends_with: String
+  string_starts_with: String
 }
 
 input NestedStringFilter {
@@ -476,6 +1498,42 @@ input NestedStringNullableFilter {
   startsWith: String
 }
 
+input NestedStringNullableWithAggregatesFilter {
+  _count: NestedIntNullableFilter
+  _max: NestedStringNullableFilter
+  _min: NestedStringNullableFilter
+  contains: String
+  endsWith: String
+  equals: String
+  gt: String
+  gte: String
+  in: [String!]
+  lt: String
+  lte: String
+  not: NestedStringNullableWithAggregatesFilter
+  notIn: [String!]
+  search: String
+  startsWith: String
+}
+
+input NestedStringWithAggregatesFilter {
+  _count: NestedIntFilter
+  _max: NestedStringFilter
+  _min: NestedStringFilter
+  contains: String
+  endsWith: String
+  equals: String
+  gt: String
+  gte: String
+  in: [String!]
+  lt: String
+  lte: String
+  not: NestedStringWithAggregatesFilter
+  notIn: [String!]
+  search: String
+  startsWith: String
+}
+
 input NestedUuidFilter {
   equals: String
   gt: String
@@ -500,6 +1558,52 @@ input NestedUuidNullableFilter {
   search: String
 }
 
+input NestedUuidNullableWithAggregatesFilter {
+  _count: NestedIntNullableFilter
+  _max: NestedStringNullableFilter
+  _min: NestedStringNullableFilter
+  equals: String
+  gt: String
+  gte: String
+  in: [String!]
+  lt: String
+  lte: String
+  not: NestedUuidNullableWithAggregatesFilter
+  notIn: [String!]
+  search: String
+}
+
+input NestedUuidWithAggregatesFilter {
+  _count: NestedIntFilter
+  _max: NestedStringFilter
+  _min: NestedStringFilter
+  equals: String
+  gt: String
+  gte: String
+  in: [String!]
+  lt: String
+  lte: String
+  not: NestedUuidWithAggregatesFilter
+  notIn: [String!]
+  search: String
+}
+
+input NullableDateTimeFieldUpdateOperationsInput {
+  set: DateTimeISO
+}
+
+input NullableIntFieldUpdateOperationsInput {
+  decrement: Int
+  divide: Int
+  increment: Int
+  multiply: Int
+  set: Int
+}
+
+input NullableStringFieldUpdateOperationsInput {
+  set: String
+}
+
 enum NullsOrder {
   first
   last
@@ -515,12 +1619,94 @@ enum PaceCaretSpeed {
 }
 
 type Query {
+  account(relationLoadStrategy: RelationLoadStrategy, where: AccountWhereUniqueInput!): Account
+  accounts(cursor: AccountWhereUniqueInput, distinct: [AccountScalarFieldEnum!], orderBy: [AccountOrderByWithRelationInput!], relationLoadStrategy: RelationLoadStrategy, skip: Int, take: Int, where: AccountWhereInput): [Account!]!
+  aggregateAccount(cursor: AccountWhereUniqueInput, orderBy: [AccountOrderByWithRelationInput!], skip: Int, take: Int, where: AccountWhereInput): AggregateAccount!
+  aggregateSession(cursor: SessionWhereUniqueInput, orderBy: [SessionOrderByWithRelationInput!], skip: Int, take: Int, where: SessionWhereInput): AggregateSession!
+  aggregateTag(cursor: TagWhereUniqueInput, orderBy: [TagOrderByWithRelationInput!], skip: Int, take: Int, where: TagWhereInput): AggregateTag!
+  aggregateTypingRun(cursor: TypingRunWhereUniqueInput, orderBy: [TypingRunOrderByWithRelationInput!], skip: Int, take: Int, where: TypingRunWhereInput): AggregateTypingRun!
+  aggregateUser(cursor: UserWhereUniqueInput, orderBy: [UserOrderByWithRelationInput!], skip: Int, take: Int, where: UserWhereInput): AggregateUser!
+  aggregateUserConfiguration(cursor: UserConfigurationWhereUniqueInput, orderBy: [UserConfigurationOrderByWithRelationInput!], skip: Int, take: Int, where: UserConfigurationWhereInput): AggregateUserConfiguration!
+  aggregateUserExperience(cursor: UserExperienceWhereUniqueInput, orderBy: [UserExperienceOrderByWithRelationInput!], skip: Int, take: Int, where: UserExperienceWhereInput): AggregateUserExperience!
+  aggregateUserNotification(cursor: UserNotificationWhereUniqueInput, orderBy: [UserNotificationOrderByWithRelationInput!], skip: Int, take: Int, where: UserNotificationWhereInput): AggregateUserNotification!
+  aggregateUsersChallenge(cursor: UsersChallengeWhereUniqueInput, orderBy: [UsersChallengeOrderByWithRelationInput!], skip: Int, take: Int, where: UsersChallengeWhereInput): AggregateUsersChallenge!
+  aggregateUsersChallengeMatch(cursor: UsersChallengeMatchWhereUniqueInput, orderBy: [UsersChallengeMatchOrderByWithRelationInput!], skip: Int, take: Int, where: UsersChallengeMatchWhereInput): AggregateUsersChallengeMatch!
+  aggregateVerificationToken(cursor: VerificationTokenWhereUniqueInput, orderBy: [VerificationTokenOrderByWithRelationInput!], skip: Int, take: Int, where: VerificationTokenWhereInput): AggregateVerificationToken!
   findById(id: String!): User!
+  findFirstAccount(cursor: AccountWhereUniqueInput, distinct: [AccountScalarFieldEnum!], orderBy: [AccountOrderByWithRelationInput!], relationLoadStrategy: RelationLoadStrategy, skip: Int, take: Int, where: AccountWhereInput): Account
+  findFirstAccountOrThrow(cursor: AccountWhereUniqueInput, distinct: [AccountScalarFieldEnum!], orderBy: [AccountOrderByWithRelationInput!], relationLoadStrategy: RelationLoadStrategy, skip: Int, take: Int, where: AccountWhereInput): Account
+  findFirstSession(cursor: SessionWhereUniqueInput, distinct: [SessionScalarFieldEnum!], orderBy: [SessionOrderByWithRelationInput!], relationLoadStrategy: RelationLoadStrategy, skip: Int, take: Int, where: SessionWhereInput): Session
+  findFirstSessionOrThrow(cursor: SessionWhereUniqueInput, distinct: [SessionScalarFieldEnum!], orderBy: [SessionOrderByWithRelationInput!], relationLoadStrategy: RelationLoadStrategy, skip: Int, take: Int, where: SessionWhereInput): Session
+  findFirstTag(cursor: TagWhereUniqueInput, distinct: [TagScalarFieldEnum!], orderBy: [TagOrderByWithRelationInput!], relationLoadStrategy: RelationLoadStrategy, skip: Int, take: Int, where: TagWhereInput): Tag
+  findFirstTagOrThrow(cursor: TagWhereUniqueInput, distinct: [TagScalarFieldEnum!], orderBy: [TagOrderByWithRelationInput!], relationLoadStrategy: RelationLoadStrategy, skip: Int, take: Int, where: TagWhereInput): Tag
+  findFirstTypingRun(cursor: TypingRunWhereUniqueInput, distinct: [TypingRunScalarFieldEnum!], orderBy: [TypingRunOrderByWithRelationInput!], relationLoadStrategy: RelationLoadStrategy, skip: Int, take: Int, where: TypingRunWhereInput): TypingRun
+  findFirstTypingRunOrThrow(cursor: TypingRunWhereUniqueInput, distinct: [TypingRunScalarFieldEnum!], orderBy: [TypingRunOrderByWithRelationInput!], relationLoadStrategy: RelationLoadStrategy, skip: Int, take: Int, where: TypingRunWhereInput): TypingRun
+  findFirstUser(cursor: UserWhereUniqueInput, distinct: [UserScalarFieldEnum!], orderBy: [UserOrderByWithRelationInput!], relationLoadStrategy: RelationLoadStrategy, skip: Int, take: Int, where: UserWhereInput): User
+  findFirstUserConfiguration(cursor: UserConfigurationWhereUniqueInput, distinct: [UserConfigurationScalarFieldEnum!], orderBy: [UserConfigurationOrderByWithRelationInput!], relationLoadStrategy: RelationLoadStrategy, skip: Int, take: Int, where: UserConfigurationWhereInput): UserConfiguration
+  findFirstUserConfigurationOrThrow(cursor: UserConfigurationWhereUniqueInput, distinct: [UserConfigurationScalarFieldEnum!], orderBy: [UserConfigurationOrderByWithRelationInput!], relationLoadStrategy: RelationLoadStrategy, skip: Int, take: Int, where: UserConfigurationWhereInput): UserConfiguration
+  findFirstUserExperience(cursor: UserExperienceWhereUniqueInput, distinct: [UserExperienceScalarFieldEnum!], orderBy: [UserExperienceOrderByWithRelationInput!], relationLoadStrategy: RelationLoadStrategy, skip: Int, take: Int, where: UserExperienceWhereInput): UserExperience
+  findFirstUserExperienceOrThrow(cursor: UserExperienceWhereUniqueInput, distinct: [UserExperienceScalarFieldEnum!], orderBy: [UserExperienceOrderByWithRelationInput!], relationLoadStrategy: RelationLoadStrategy, skip: Int, take: Int, where: UserExperienceWhereInput): UserExperience
+  findFirstUserNotification(cursor: UserNotificationWhereUniqueInput, distinct: [UserNotificationScalarFieldEnum!], orderBy: [UserNotificationOrderByWithRelationInput!], relationLoadStrategy: RelationLoadStrategy, skip: Int, take: Int, where: UserNotificationWhereInput): UserNotification
+  findFirstUserNotificationOrThrow(cursor: UserNotificationWhereUniqueInput, distinct: [UserNotificationScalarFieldEnum!], orderBy: [UserNotificationOrderByWithRelationInput!], relationLoadStrategy: RelationLoadStrategy, skip: Int, take: Int, where: UserNotificationWhereInput): UserNotification
+  findFirstUserOrThrow(cursor: UserWhereUniqueInput, distinct: [UserScalarFieldEnum!], orderBy: [UserOrderByWithRelationInput!], relationLoadStrategy: RelationLoadStrategy, skip: Int, take: Int, where: UserWhereInput): User
+  findFirstUsersChallenge(cursor: UsersChallengeWhereUniqueInput, distinct: [UsersChallengeScalarFieldEnum!], orderBy: [UsersChallengeOrderByWithRelationInput!], relationLoadStrategy: RelationLoadStrategy, skip: Int, take: Int, where: UsersChallengeWhereInput): UsersChallenge
+  findFirstUsersChallengeMatch(cursor: UsersChallengeMatchWhereUniqueInput, distinct: [UsersChallengeMatchScalarFieldEnum!], orderBy: [UsersChallengeMatchOrderByWithRelationInput!], relationLoadStrategy: RelationLoadStrategy, skip: Int, take: Int, where: UsersChallengeMatchWhereInput): UsersChallengeMatch
+  findFirstUsersChallengeMatchOrThrow(cursor: UsersChallengeMatchWhereUniqueInput, distinct: [UsersChallengeMatchScalarFieldEnum!], orderBy: [UsersChallengeMatchOrderByWithRelationInput!], relationLoadStrategy: RelationLoadStrategy, skip: Int, take: Int, where: UsersChallengeMatchWhereInput): UsersChallengeMatch
+  findFirstUsersChallengeOrThrow(cursor: UsersChallengeWhereUniqueInput, distinct: [UsersChallengeScalarFieldEnum!], orderBy: [UsersChallengeOrderByWithRelationInput!], relationLoadStrategy: RelationLoadStrategy, skip: Int, take: Int, where: UsersChallengeWhereInput): UsersChallenge
+  findFirstVerificationToken(cursor: VerificationTokenWhereUniqueInput, distinct: [VerificationTokenScalarFieldEnum!], orderBy: [VerificationTokenOrderByWithRelationInput!], relationLoadStrategy: RelationLoadStrategy, skip: Int, take: Int, where: VerificationTokenWhereInput): VerificationToken
+  findFirstVerificationTokenOrThrow(cursor: VerificationTokenWhereUniqueInput, distinct: [VerificationTokenScalarFieldEnum!], orderBy: [VerificationTokenOrderByWithRelationInput!], relationLoadStrategy: RelationLoadStrategy, skip: Int, take: Int, where: VerificationTokenWhereInput): VerificationToken
+  getAccount(relationLoadStrategy: RelationLoadStrategy, where: AccountWhereUniqueInput!): Account
+  getSession(relationLoadStrategy: RelationLoadStrategy, where: SessionWhereUniqueInput!): Session
+  getTag(relationLoadStrategy: RelationLoadStrategy, where: TagWhereUniqueInput!): Tag
+  getTypingRun(relationLoadStrategy: RelationLoadStrategy, where: TypingRunWhereUniqueInput!): TypingRun
+  getUser(relationLoadStrategy: RelationLoadStrategy, where: UserWhereUniqueInput!): User
+  getUserConfiguration(relationLoadStrategy: RelationLoadStrategy, where: UserConfigurationWhereUniqueInput!): UserConfiguration
+  getUserExperience(relationLoadStrategy: RelationLoadStrategy, where: UserExperienceWhereUniqueInput!): UserExperience
+  getUserNotification(relationLoadStrategy: RelationLoadStrategy, where: UserNotificationWhereUniqueInput!): UserNotification
+  getUsersChallenge(relationLoadStrategy: RelationLoadStrategy, where: UsersChallengeWhereUniqueInput!): UsersChallenge
+  getUsersChallengeMatch(relationLoadStrategy: RelationLoadStrategy, where: UsersChallengeMatchWhereUniqueInput!): UsersChallengeMatch
+  getVerificationToken(relationLoadStrategy: RelationLoadStrategy, where: VerificationTokenWhereUniqueInput!): VerificationToken
+  groupByAccount(by: [AccountScalarFieldEnum!]!, having: AccountScalarWhereWithAggregatesInput, orderBy: [AccountOrderByWithAggregationInput!], skip: Int, take: Int, where: AccountWhereInput): [AccountGroupBy!]!
+  groupBySession(by: [SessionScalarFieldEnum!]!, having: SessionScalarWhereWithAggregatesInput, orderBy: [SessionOrderByWithAggregationInput!], skip: Int, take: Int, where: SessionWhereInput): [SessionGroupBy!]!
+  groupByTag(by: [TagScalarFieldEnum!]!, having: TagScalarWhereWithAggregatesInput, orderBy: [TagOrderByWithAggregationInput!], skip: Int, take: Int, where: TagWhereInput): [TagGroupBy!]!
+  groupByTypingRun(by: [TypingRunScalarFieldEnum!]!, having: TypingRunScalarWhereWithAggregatesInput, orderBy: [TypingRunOrderByWithAggregationInput!], skip: Int, take: Int, where: TypingRunWhereInput): [TypingRunGroupBy!]!
+  groupByUser(by: [UserScalarFieldEnum!]!, having: UserScalarWhereWithAggregatesInput, orderBy: [UserOrderByWithAggregationInput!], skip: Int, take: Int, where: UserWhereInput): [UserGroupBy!]!
+  groupByUserConfiguration(by: [UserConfigurationScalarFieldEnum!]!, having: UserConfigurationScalarWhereWithAggregatesInput, orderBy: [UserConfigurationOrderByWithAggregationInput!], skip: Int, take: Int, where: UserConfigurationWhereInput): [UserConfigurationGroupBy!]!
+  groupByUserExperience(by: [UserExperienceScalarFieldEnum!]!, having: UserExperienceScalarWhereWithAggregatesInput, orderBy: [UserExperienceOrderByWithAggregationInput!], skip: Int, take: Int, where: UserExperienceWhereInput): [UserExperienceGroupBy!]!
+  groupByUserNotification(by: [UserNotificationScalarFieldEnum!]!, having: UserNotificationScalarWhereWithAggregatesInput, orderBy: [UserNotificationOrderByWithAggregationInput!], skip: Int, take: Int, where: UserNotificationWhereInput): [UserNotificationGroupBy!]!
+  groupByUsersChallenge(by: [UsersChallengeScalarFieldEnum!]!, having: UsersChallengeScalarWhereWithAggregatesInput, orderBy: [UsersChallengeOrderByWithAggregationInput!], skip: Int, take: Int, where: UsersChallengeWhereInput): [UsersChallengeGroupBy!]!
+  groupByUsersChallengeMatch(by: [UsersChallengeMatchScalarFieldEnum!]!, having: UsersChallengeMatchScalarWhereWithAggregatesInput, orderBy: [UsersChallengeMatchOrderByWithAggregationInput!], skip: Int, take: Int, where: UsersChallengeMatchWhereInput): [UsersChallengeMatchGroupBy!]!
+  groupByVerificationToken(by: [VerificationTokenScalarFieldEnum!]!, having: VerificationTokenScalarWhereWithAggregatesInput, orderBy: [VerificationTokenOrderByWithAggregationInput!], skip: Int, take: Int, where: VerificationTokenWhereInput): [VerificationTokenGroupBy!]!
+  session(relationLoadStrategy: RelationLoadStrategy, where: SessionWhereUniqueInput!): Session
+  sessions(cursor: SessionWhereUniqueInput, distinct: [SessionScalarFieldEnum!], orderBy: [SessionOrderByWithRelationInput!], relationLoadStrategy: RelationLoadStrategy, skip: Int, take: Int, where: SessionWhereInput): [Session!]!
+  tag(relationLoadStrategy: RelationLoadStrategy, where: TagWhereUniqueInput!): Tag
+  tags(cursor: TagWhereUniqueInput, distinct: [TagScalarFieldEnum!], orderBy: [TagOrderByWithRelationInput!], relationLoadStrategy: RelationLoadStrategy, skip: Int, take: Int, where: TagWhereInput): [Tag!]!
+  typingRun(relationLoadStrategy: RelationLoadStrategy, where: TypingRunWhereUniqueInput!): TypingRun
+  typingRuns(cursor: TypingRunWhereUniqueInput, distinct: [TypingRunScalarFieldEnum!], orderBy: [TypingRunOrderByWithRelationInput!], relationLoadStrategy: RelationLoadStrategy, skip: Int, take: Int, where: TypingRunWhereInput): [TypingRun!]!
+  user(relationLoadStrategy: RelationLoadStrategy, where: UserWhereUniqueInput!): User
+  userConfiguration(relationLoadStrategy: RelationLoadStrategy, where: UserConfigurationWhereUniqueInput!): UserConfiguration
+  userConfigurations(cursor: UserConfigurationWhereUniqueInput, distinct: [UserConfigurationScalarFieldEnum!], orderBy: [UserConfigurationOrderByWithRelationInput!], relationLoadStrategy: RelationLoadStrategy, skip: Int, take: Int, where: UserConfigurationWhereInput): [UserConfiguration!]!
+  userExperience(relationLoadStrategy: RelationLoadStrategy, where: UserExperienceWhereUniqueInput!): UserExperience
+  userExperiences(cursor: UserExperienceWhereUniqueInput, distinct: [UserExperienceScalarFieldEnum!], orderBy: [UserExperienceOrderByWithRelationInput!], relationLoadStrategy: RelationLoadStrategy, skip: Int, take: Int, where: UserExperienceWhereInput): [UserExperience!]!
+  userNotification(relationLoadStrategy: RelationLoadStrategy, where: UserNotificationWhereUniqueInput!): UserNotification
+  userNotifications(cursor: UserNotificationWhereUniqueInput, distinct: [UserNotificationScalarFieldEnum!], orderBy: [UserNotificationOrderByWithRelationInput!], relationLoadStrategy: RelationLoadStrategy, skip: Int, take: Int, where: UserNotificationWhereInput): [UserNotification!]!
+  users(cursor: UserWhereUniqueInput, distinct: [UserScalarFieldEnum!], orderBy: [UserOrderByWithRelationInput!], relationLoadStrategy: RelationLoadStrategy, skip: Int, take: Int, where: UserWhereInput): [User!]!
+  usersChallenge(relationLoadStrategy: RelationLoadStrategy, where: UsersChallengeWhereUniqueInput!): UsersChallenge
+  usersChallengeMatch(relationLoadStrategy: RelationLoadStrategy, where: UsersChallengeMatchWhereUniqueInput!): UsersChallengeMatch
+  usersChallengeMatches(cursor: UsersChallengeMatchWhereUniqueInput, distinct: [UsersChallengeMatchScalarFieldEnum!], orderBy: [UsersChallengeMatchOrderByWithRelationInput!], relationLoadStrategy: RelationLoadStrategy, skip: Int, take: Int, where: UsersChallengeMatchWhereInput): [UsersChallengeMatch!]!
+  usersChallenges(cursor: UsersChallengeWhereUniqueInput, distinct: [UsersChallengeScalarFieldEnum!], orderBy: [UsersChallengeOrderByWithRelationInput!], relationLoadStrategy: RelationLoadStrategy, skip: Int, take: Int, where: UsersChallengeWhereInput): [UsersChallenge!]!
+  verificationToken(relationLoadStrategy: RelationLoadStrategy, where: VerificationTokenWhereUniqueInput!): VerificationToken
+  verificationTokens(cursor: VerificationTokenWhereUniqueInput, distinct: [VerificationTokenScalarFieldEnum!], orderBy: [VerificationTokenOrderByWithRelationInput!], relationLoadStrategy: RelationLoadStrategy, skip: Int, take: Int, where: VerificationTokenWhereInput): [VerificationToken!]!
 }
 
 enum QueryMode {
   default
   insensitive
+}
+
+enum RelationLoadStrategy {
+  join
+  query
 }
 
 enum RunDifficulty {
@@ -538,10 +1724,128 @@ type Session {
   userId: String!
 }
 
+type SessionCountAggregate {
+  _all: Int!
+  createdAt: Int!
+  expires: Int!
+  sessionToken: Int!
+  updatedAt: Int!
+  userConfigurationId: Int!
+  userId: Int!
+}
+
+input SessionCountOrderByAggregateInput {
+  createdAt: SortOrder
+  expires: SortOrder
+  sessionToken: SortOrder
+  updatedAt: SortOrder
+  userConfigurationId: SortOrder
+  userId: SortOrder
+}
+
+input SessionCreateInput {
+  createdAt: DateTimeISO
+  expires: DateTimeISO!
+  sessionToken: String!
+  updatedAt: DateTimeISO
+  user: UserCreateNestedOneWithoutSessionsInput!
+  userConfigurationId: String
+}
+
+input SessionCreateManyInput {
+  createdAt: DateTimeISO
+  expires: DateTimeISO!
+  sessionToken: String!
+  updatedAt: DateTimeISO
+  userConfigurationId: String
+  userId: String!
+}
+
+input SessionCreateManyUserInput {
+  createdAt: DateTimeISO
+  expires: DateTimeISO!
+  sessionToken: String!
+  updatedAt: DateTimeISO
+  userConfigurationId: String
+}
+
+input SessionCreateManyUserInputEnvelope {
+  data: [SessionCreateManyUserInput!]!
+  skipDuplicates: Boolean
+}
+
+input SessionCreateNestedManyWithoutUserInput {
+  connect: [SessionWhereUniqueInput!]
+  connectOrCreate: [SessionCreateOrConnectWithoutUserInput!]
+  create: [SessionCreateWithoutUserInput!]
+  createMany: SessionCreateManyUserInputEnvelope
+}
+
+input SessionCreateOrConnectWithoutUserInput {
+  create: SessionCreateWithoutUserInput!
+  where: SessionWhereUniqueInput!
+}
+
+input SessionCreateWithoutUserInput {
+  createdAt: DateTimeISO
+  expires: DateTimeISO!
+  sessionToken: String!
+  updatedAt: DateTimeISO
+  userConfigurationId: String
+}
+
+type SessionGroupBy {
+  _count: SessionCountAggregate
+  _max: SessionMaxAggregate
+  _min: SessionMinAggregate
+  createdAt: DateTimeISO!
+  expires: DateTimeISO!
+  sessionToken: String!
+  updatedAt: DateTimeISO!
+  userConfigurationId: String
+  userId: String!
+}
+
 input SessionListRelationFilter {
   every: SessionWhereInput
   none: SessionWhereInput
   some: SessionWhereInput
+}
+
+type SessionMaxAggregate {
+  createdAt: DateTimeISO
+  expires: DateTimeISO
+  sessionToken: String
+  updatedAt: DateTimeISO
+  userConfigurationId: String
+  userId: String
+}
+
+input SessionMaxOrderByAggregateInput {
+  createdAt: SortOrder
+  expires: SortOrder
+  sessionToken: SortOrder
+  updatedAt: SortOrder
+  userConfigurationId: SortOrder
+  userId: SortOrder
+}
+
+type SessionMinAggregate {
+  createdAt: DateTimeISO
+  expires: DateTimeISO
+  sessionToken: String
+  updatedAt: DateTimeISO
+  userConfigurationId: String
+  userId: String
+}
+
+input SessionMinOrderByAggregateInput {
+  createdAt: SortOrder
+  expires: SortOrder
+  sessionToken: SortOrder
+  updatedAt: SortOrder
+  userConfigurationId: SortOrder
+  userId: SortOrder
 }
 
 input SessionOrderByRelationAggregateInput {
@@ -558,6 +1862,18 @@ input SessionOrderByRelevanceInput {
   fields: [SessionOrderByRelevanceFieldEnum!]!
   search: String!
   sort: SortOrder!
+}
+
+input SessionOrderByWithAggregationInput {
+  _count: SessionCountOrderByAggregateInput
+  _max: SessionMaxOrderByAggregateInput
+  _min: SessionMinOrderByAggregateInput
+  createdAt: SortOrder
+  expires: SortOrder
+  sessionToken: SortOrder
+  updatedAt: SortOrder
+  userConfigurationId: SortOrderInput
+  userId: SortOrder
 }
 
 input SessionOrderByWithRelationInput {
@@ -578,6 +1894,85 @@ enum SessionScalarFieldEnum {
   updatedAt
   userConfigurationId
   userId
+}
+
+input SessionScalarWhereInput {
+  AND: [SessionScalarWhereInput!]
+  NOT: [SessionScalarWhereInput!]
+  OR: [SessionScalarWhereInput!]
+  createdAt: DateTimeFilter
+  expires: DateTimeFilter
+  sessionToken: StringFilter
+  updatedAt: DateTimeFilter
+  userConfigurationId: StringNullableFilter
+  userId: StringFilter
+}
+
+input SessionScalarWhereWithAggregatesInput {
+  AND: [SessionScalarWhereWithAggregatesInput!]
+  NOT: [SessionScalarWhereWithAggregatesInput!]
+  OR: [SessionScalarWhereWithAggregatesInput!]
+  createdAt: DateTimeWithAggregatesFilter
+  expires: DateTimeWithAggregatesFilter
+  sessionToken: StringWithAggregatesFilter
+  updatedAt: DateTimeWithAggregatesFilter
+  userConfigurationId: StringNullableWithAggregatesFilter
+  userId: StringWithAggregatesFilter
+}
+
+input SessionUpdateInput {
+  createdAt: DateTimeFieldUpdateOperationsInput
+  expires: DateTimeFieldUpdateOperationsInput
+  sessionToken: StringFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+  user: UserUpdateOneRequiredWithoutSessionsNestedInput
+  userConfigurationId: NullableStringFieldUpdateOperationsInput
+}
+
+input SessionUpdateManyMutationInput {
+  createdAt: DateTimeFieldUpdateOperationsInput
+  expires: DateTimeFieldUpdateOperationsInput
+  sessionToken: StringFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+  userConfigurationId: NullableStringFieldUpdateOperationsInput
+}
+
+input SessionUpdateManyWithWhereWithoutUserInput {
+  data: SessionUpdateManyMutationInput!
+  where: SessionScalarWhereInput!
+}
+
+input SessionUpdateManyWithoutUserNestedInput {
+  connect: [SessionWhereUniqueInput!]
+  connectOrCreate: [SessionCreateOrConnectWithoutUserInput!]
+  create: [SessionCreateWithoutUserInput!]
+  createMany: SessionCreateManyUserInputEnvelope
+  delete: [SessionWhereUniqueInput!]
+  deleteMany: [SessionScalarWhereInput!]
+  disconnect: [SessionWhereUniqueInput!]
+  set: [SessionWhereUniqueInput!]
+  update: [SessionUpdateWithWhereUniqueWithoutUserInput!]
+  updateMany: [SessionUpdateManyWithWhereWithoutUserInput!]
+  upsert: [SessionUpsertWithWhereUniqueWithoutUserInput!]
+}
+
+input SessionUpdateWithWhereUniqueWithoutUserInput {
+  data: SessionUpdateWithoutUserInput!
+  where: SessionWhereUniqueInput!
+}
+
+input SessionUpdateWithoutUserInput {
+  createdAt: DateTimeFieldUpdateOperationsInput
+  expires: DateTimeFieldUpdateOperationsInput
+  sessionToken: StringFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+  userConfigurationId: NullableStringFieldUpdateOperationsInput
+}
+
+input SessionUpsertWithWhereUniqueWithoutUserInput {
+  create: SessionCreateWithoutUserInput!
+  update: SessionUpdateWithoutUserInput!
+  where: SessionWhereUniqueInput!
 }
 
 input SessionWhereInput {
@@ -623,6 +2018,10 @@ input SortOrderInput {
   sort: SortOrder!
 }
 
+input StringFieldUpdateOperationsInput {
+  set: String
+}
+
 input StringFilter {
   contains: String
   endsWith: String
@@ -655,6 +2054,44 @@ input StringNullableFilter {
   startsWith: String
 }
 
+input StringNullableWithAggregatesFilter {
+  _count: NestedIntNullableFilter
+  _max: NestedStringNullableFilter
+  _min: NestedStringNullableFilter
+  contains: String
+  endsWith: String
+  equals: String
+  gt: String
+  gte: String
+  in: [String!]
+  lt: String
+  lte: String
+  mode: QueryMode
+  not: NestedStringNullableWithAggregatesFilter
+  notIn: [String!]
+  search: String
+  startsWith: String
+}
+
+input StringWithAggregatesFilter {
+  _count: NestedIntFilter
+  _max: NestedStringFilter
+  _min: NestedStringFilter
+  contains: String
+  endsWith: String
+  equals: String
+  gt: String
+  gte: String
+  in: [String!]
+  lt: String
+  lte: String
+  mode: QueryMode
+  not: NestedStringWithAggregatesFilter
+  notIn: [String!]
+  search: String
+  startsWith: String
+}
+
 type Tag {
   createdAt: DateTimeISO!
   id: String!
@@ -667,10 +2104,135 @@ type Tag {
   userId: String!
 }
 
+type TagCountAggregate {
+  _all: Int!
+  createdAt: Int!
+  id: Int!
+  metadata: Int!
+  name: Int!
+  updatedAt: Int!
+  userConfigurationId: Int!
+  userId: Int!
+}
+
+input TagCountOrderByAggregateInput {
+  createdAt: SortOrder
+  id: SortOrder
+  metadata: SortOrder
+  name: SortOrder
+  updatedAt: SortOrder
+  userConfigurationId: SortOrder
+  userId: SortOrder
+}
+
+input TagCreateInput {
+  createdAt: DateTimeISO
+  id: String
+  metadata: JSON
+  name: String!
+  updatedAt: DateTimeISO
+  user: UserCreateNestedOneWithoutTagsInput!
+  userConfigurationId: String
+}
+
+input TagCreateManyInput {
+  createdAt: DateTimeISO
+  id: String
+  metadata: JSON
+  name: String!
+  updatedAt: DateTimeISO
+  userConfigurationId: String
+  userId: String!
+}
+
+input TagCreateManyUserInput {
+  createdAt: DateTimeISO
+  id: String
+  metadata: JSON
+  name: String!
+  updatedAt: DateTimeISO
+  userConfigurationId: String
+}
+
+input TagCreateManyUserInputEnvelope {
+  data: [TagCreateManyUserInput!]!
+  skipDuplicates: Boolean
+}
+
+input TagCreateNestedManyWithoutUserInput {
+  connect: [TagWhereUniqueInput!]
+  connectOrCreate: [TagCreateOrConnectWithoutUserInput!]
+  create: [TagCreateWithoutUserInput!]
+  createMany: TagCreateManyUserInputEnvelope
+}
+
+input TagCreateOrConnectWithoutUserInput {
+  create: TagCreateWithoutUserInput!
+  where: TagWhereUniqueInput!
+}
+
+input TagCreateWithoutUserInput {
+  createdAt: DateTimeISO
+  id: String
+  metadata: JSON
+  name: String!
+  updatedAt: DateTimeISO
+  userConfigurationId: String
+}
+
+type TagGroupBy {
+  _count: TagCountAggregate
+  _max: TagMaxAggregate
+  _min: TagMinAggregate
+  createdAt: DateTimeISO!
+  id: String!
+  metadata: JSON
+  name: String!
+  updatedAt: DateTimeISO!
+  userConfigurationId: String
+  userId: String!
+}
+
 input TagListRelationFilter {
   every: TagWhereInput
   none: TagWhereInput
   some: TagWhereInput
+}
+
+type TagMaxAggregate {
+  createdAt: DateTimeISO
+  id: String
+  name: String
+  updatedAt: DateTimeISO
+  userConfigurationId: String
+  userId: String
+}
+
+input TagMaxOrderByAggregateInput {
+  createdAt: SortOrder
+  id: SortOrder
+  name: SortOrder
+  updatedAt: SortOrder
+  userConfigurationId: SortOrder
+  userId: SortOrder
+}
+
+type TagMinAggregate {
+  createdAt: DateTimeISO
+  id: String
+  name: String
+  updatedAt: DateTimeISO
+  userConfigurationId: String
+  userId: String
+}
+
+input TagMinOrderByAggregateInput {
+  createdAt: SortOrder
+  id: SortOrder
+  name: SortOrder
+  updatedAt: SortOrder
+  userConfigurationId: SortOrder
+  userId: SortOrder
 }
 
 input TagOrderByRelationAggregateInput {
@@ -688,6 +2250,19 @@ input TagOrderByRelevanceInput {
   fields: [TagOrderByRelevanceFieldEnum!]!
   search: String!
   sort: SortOrder!
+}
+
+input TagOrderByWithAggregationInput {
+  _count: TagCountOrderByAggregateInput
+  _max: TagMaxOrderByAggregateInput
+  _min: TagMinOrderByAggregateInput
+  createdAt: SortOrder
+  id: SortOrder
+  metadata: SortOrderInput
+  name: SortOrder
+  updatedAt: SortOrder
+  userConfigurationId: SortOrderInput
+  userId: SortOrder
 }
 
 input TagOrderByWithRelationInput {
@@ -710,6 +2285,90 @@ enum TagScalarFieldEnum {
   updatedAt
   userConfigurationId
   userId
+}
+
+input TagScalarWhereInput {
+  AND: [TagScalarWhereInput!]
+  NOT: [TagScalarWhereInput!]
+  OR: [TagScalarWhereInput!]
+  createdAt: DateTimeFilter
+  id: UuidFilter
+  metadata: JsonNullableFilter
+  name: StringFilter
+  updatedAt: DateTimeFilter
+  userConfigurationId: StringNullableFilter
+  userId: StringFilter
+}
+
+input TagScalarWhereWithAggregatesInput {
+  AND: [TagScalarWhereWithAggregatesInput!]
+  NOT: [TagScalarWhereWithAggregatesInput!]
+  OR: [TagScalarWhereWithAggregatesInput!]
+  createdAt: DateTimeWithAggregatesFilter
+  id: UuidWithAggregatesFilter
+  metadata: JsonNullableWithAggregatesFilter
+  name: StringWithAggregatesFilter
+  updatedAt: DateTimeWithAggregatesFilter
+  userConfigurationId: StringNullableWithAggregatesFilter
+  userId: StringWithAggregatesFilter
+}
+
+input TagUpdateInput {
+  createdAt: DateTimeFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  metadata: JSON
+  name: StringFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+  user: UserUpdateOneRequiredWithoutTagsNestedInput
+  userConfigurationId: NullableStringFieldUpdateOperationsInput
+}
+
+input TagUpdateManyMutationInput {
+  createdAt: DateTimeFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  metadata: JSON
+  name: StringFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+  userConfigurationId: NullableStringFieldUpdateOperationsInput
+}
+
+input TagUpdateManyWithWhereWithoutUserInput {
+  data: TagUpdateManyMutationInput!
+  where: TagScalarWhereInput!
+}
+
+input TagUpdateManyWithoutUserNestedInput {
+  connect: [TagWhereUniqueInput!]
+  connectOrCreate: [TagCreateOrConnectWithoutUserInput!]
+  create: [TagCreateWithoutUserInput!]
+  createMany: TagCreateManyUserInputEnvelope
+  delete: [TagWhereUniqueInput!]
+  deleteMany: [TagScalarWhereInput!]
+  disconnect: [TagWhereUniqueInput!]
+  set: [TagWhereUniqueInput!]
+  update: [TagUpdateWithWhereUniqueWithoutUserInput!]
+  updateMany: [TagUpdateManyWithWhereWithoutUserInput!]
+  upsert: [TagUpsertWithWhereUniqueWithoutUserInput!]
+}
+
+input TagUpdateWithWhereUniqueWithoutUserInput {
+  data: TagUpdateWithoutUserInput!
+  where: TagWhereUniqueInput!
+}
+
+input TagUpdateWithoutUserInput {
+  createdAt: DateTimeFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  metadata: JSON
+  name: StringFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+  userConfigurationId: NullableStringFieldUpdateOperationsInput
+}
+
+input TagUpsertWithWhereUniqueWithoutUserInput {
+  create: TagCreateWithoutUserInput!
+  update: TagUpdateWithoutUserInput!
+  where: TagWhereUniqueInput!
 }
 
 input TagWhereInput {
@@ -759,15 +2418,252 @@ type TypingRun {
   wordCount: Int
 }
 
+type TypingRunAvgAggregate {
+  flags: Float
+  time: Float
+  totalTimeMilliseconds: Float
+  wordCount: Float
+}
+
+input TypingRunAvgOrderByAggregateInput {
+  flags: SortOrder
+  time: SortOrder
+  totalTimeMilliseconds: SortOrder
+  wordCount: SortOrder
+}
+
 type TypingRunCount {
   challanges_one(where: UsersChallengeWhereInput): Int!
   challenges_two(where: UsersChallengeWhereInput): Int!
+}
+
+type TypingRunCountAggregate {
+  _all: Int!
+  createdAt: Int!
+  flags: Int!
+  id: Int!
+  metadata: Int!
+  mode: Int!
+  time: Int!
+  totalTimeMilliseconds: Int!
+  typedLetters: Int!
+  updatedAt: Int!
+  userId: Int!
+  wordCount: Int!
+}
+
+input TypingRunCountOrderByAggregateInput {
+  createdAt: SortOrder
+  flags: SortOrder
+  id: SortOrder
+  metadata: SortOrder
+  mode: SortOrder
+  time: SortOrder
+  totalTimeMilliseconds: SortOrder
+  typedLetters: SortOrder
+  updatedAt: SortOrder
+  userId: SortOrder
+  wordCount: SortOrder
+}
+
+input TypingRunCreateInput {
+  challanges_one: UsersChallengeCreateNestedManyWithoutUserOneRunInput
+  challenges_two: UsersChallengeCreateNestedManyWithoutUserTwoRunInput
+  createdAt: DateTimeISO
+  flags: Int!
+  id: String
+  metadata: JSON
+  mode: TypingRunMode!
+  time: Int
+  totalTimeMilliseconds: Int!
+  typedLetters: JSON!
+  updatedAt: DateTimeISO
+  user: UserCreateNestedOneWithoutTypingRunsInput!
+  wordCount: Int
+}
+
+input TypingRunCreateManyInput {
+  createdAt: DateTimeISO
+  flags: Int!
+  id: String
+  metadata: JSON
+  mode: TypingRunMode!
+  time: Int
+  totalTimeMilliseconds: Int!
+  typedLetters: JSON!
+  updatedAt: DateTimeISO
+  userId: String!
+  wordCount: Int
+}
+
+input TypingRunCreateManyUserInput {
+  createdAt: DateTimeISO
+  flags: Int!
+  id: String
+  metadata: JSON
+  mode: TypingRunMode!
+  time: Int
+  totalTimeMilliseconds: Int!
+  typedLetters: JSON!
+  updatedAt: DateTimeISO
+  wordCount: Int
+}
+
+input TypingRunCreateManyUserInputEnvelope {
+  data: [TypingRunCreateManyUserInput!]!
+  skipDuplicates: Boolean
+}
+
+input TypingRunCreateNestedManyWithoutUserInput {
+  connect: [TypingRunWhereUniqueInput!]
+  connectOrCreate: [TypingRunCreateOrConnectWithoutUserInput!]
+  create: [TypingRunCreateWithoutUserInput!]
+  createMany: TypingRunCreateManyUserInputEnvelope
+}
+
+input TypingRunCreateNestedOneWithoutChallanges_oneInput {
+  connect: TypingRunWhereUniqueInput
+  connectOrCreate: TypingRunCreateOrConnectWithoutChallanges_oneInput
+  create: TypingRunCreateWithoutChallanges_oneInput
+}
+
+input TypingRunCreateNestedOneWithoutChallenges_twoInput {
+  connect: TypingRunWhereUniqueInput
+  connectOrCreate: TypingRunCreateOrConnectWithoutChallenges_twoInput
+  create: TypingRunCreateWithoutChallenges_twoInput
+}
+
+input TypingRunCreateOrConnectWithoutChallanges_oneInput {
+  create: TypingRunCreateWithoutChallanges_oneInput!
+  where: TypingRunWhereUniqueInput!
+}
+
+input TypingRunCreateOrConnectWithoutChallenges_twoInput {
+  create: TypingRunCreateWithoutChallenges_twoInput!
+  where: TypingRunWhereUniqueInput!
+}
+
+input TypingRunCreateOrConnectWithoutUserInput {
+  create: TypingRunCreateWithoutUserInput!
+  where: TypingRunWhereUniqueInput!
+}
+
+input TypingRunCreateWithoutChallanges_oneInput {
+  challenges_two: UsersChallengeCreateNestedManyWithoutUserTwoRunInput
+  createdAt: DateTimeISO
+  flags: Int!
+  id: String
+  metadata: JSON
+  mode: TypingRunMode!
+  time: Int
+  totalTimeMilliseconds: Int!
+  typedLetters: JSON!
+  updatedAt: DateTimeISO
+  user: UserCreateNestedOneWithoutTypingRunsInput!
+  wordCount: Int
+}
+
+input TypingRunCreateWithoutChallenges_twoInput {
+  challanges_one: UsersChallengeCreateNestedManyWithoutUserOneRunInput
+  createdAt: DateTimeISO
+  flags: Int!
+  id: String
+  metadata: JSON
+  mode: TypingRunMode!
+  time: Int
+  totalTimeMilliseconds: Int!
+  typedLetters: JSON!
+  updatedAt: DateTimeISO
+  user: UserCreateNestedOneWithoutTypingRunsInput!
+  wordCount: Int
+}
+
+input TypingRunCreateWithoutUserInput {
+  challanges_one: UsersChallengeCreateNestedManyWithoutUserOneRunInput
+  challenges_two: UsersChallengeCreateNestedManyWithoutUserTwoRunInput
+  createdAt: DateTimeISO
+  flags: Int!
+  id: String
+  metadata: JSON
+  mode: TypingRunMode!
+  time: Int
+  totalTimeMilliseconds: Int!
+  typedLetters: JSON!
+  updatedAt: DateTimeISO
+  wordCount: Int
+}
+
+type TypingRunGroupBy {
+  _avg: TypingRunAvgAggregate
+  _count: TypingRunCountAggregate
+  _max: TypingRunMaxAggregate
+  _min: TypingRunMinAggregate
+  _sum: TypingRunSumAggregate
+  createdAt: DateTimeISO!
+  flags: Int!
+  id: String!
+  metadata: JSON
+  mode: TypingRunMode!
+  time: Int
+  totalTimeMilliseconds: Int!
+  typedLetters: JSON!
+  updatedAt: DateTimeISO!
+  userId: String!
+  wordCount: Int
 }
 
 input TypingRunListRelationFilter {
   every: TypingRunWhereInput
   none: TypingRunWhereInput
   some: TypingRunWhereInput
+}
+
+type TypingRunMaxAggregate {
+  createdAt: DateTimeISO
+  flags: Int
+  id: String
+  mode: TypingRunMode
+  time: Int
+  totalTimeMilliseconds: Int
+  updatedAt: DateTimeISO
+  userId: String
+  wordCount: Int
+}
+
+input TypingRunMaxOrderByAggregateInput {
+  createdAt: SortOrder
+  flags: SortOrder
+  id: SortOrder
+  mode: SortOrder
+  time: SortOrder
+  totalTimeMilliseconds: SortOrder
+  updatedAt: SortOrder
+  userId: SortOrder
+  wordCount: SortOrder
+}
+
+type TypingRunMinAggregate {
+  createdAt: DateTimeISO
+  flags: Int
+  id: String
+  mode: TypingRunMode
+  time: Int
+  totalTimeMilliseconds: Int
+  updatedAt: DateTimeISO
+  userId: String
+  wordCount: Int
+}
+
+input TypingRunMinOrderByAggregateInput {
+  createdAt: SortOrder
+  flags: SortOrder
+  id: SortOrder
+  mode: SortOrder
+  time: SortOrder
+  totalTimeMilliseconds: SortOrder
+  updatedAt: SortOrder
+  userId: SortOrder
+  wordCount: SortOrder
 }
 
 enum TypingRunMode {
@@ -793,6 +2689,25 @@ input TypingRunOrderByRelevanceInput {
   fields: [TypingRunOrderByRelevanceFieldEnum!]!
   search: String!
   sort: SortOrder!
+}
+
+input TypingRunOrderByWithAggregationInput {
+  _avg: TypingRunAvgOrderByAggregateInput
+  _count: TypingRunCountOrderByAggregateInput
+  _max: TypingRunMaxOrderByAggregateInput
+  _min: TypingRunMinOrderByAggregateInput
+  _sum: TypingRunSumOrderByAggregateInput
+  createdAt: SortOrder
+  flags: SortOrder
+  id: SortOrder
+  metadata: SortOrderInput
+  mode: SortOrder
+  time: SortOrderInput
+  totalTimeMilliseconds: SortOrder
+  typedLetters: SortOrder
+  updatedAt: SortOrder
+  userId: SortOrder
+  wordCount: SortOrderInput
 }
 
 input TypingRunOrderByWithRelationInput {
@@ -825,6 +2740,200 @@ enum TypingRunScalarFieldEnum {
   updatedAt
   userId
   wordCount
+}
+
+input TypingRunScalarWhereInput {
+  AND: [TypingRunScalarWhereInput!]
+  NOT: [TypingRunScalarWhereInput!]
+  OR: [TypingRunScalarWhereInput!]
+  createdAt: DateTimeFilter
+  flags: IntFilter
+  id: UuidFilter
+  metadata: JsonNullableFilter
+  mode: EnumTypingRunModeFilter
+  time: IntNullableFilter
+  totalTimeMilliseconds: IntFilter
+  typedLetters: JsonFilter
+  updatedAt: DateTimeFilter
+  userId: StringFilter
+  wordCount: IntNullableFilter
+}
+
+input TypingRunScalarWhereWithAggregatesInput {
+  AND: [TypingRunScalarWhereWithAggregatesInput!]
+  NOT: [TypingRunScalarWhereWithAggregatesInput!]
+  OR: [TypingRunScalarWhereWithAggregatesInput!]
+  createdAt: DateTimeWithAggregatesFilter
+  flags: IntWithAggregatesFilter
+  id: UuidWithAggregatesFilter
+  metadata: JsonNullableWithAggregatesFilter
+  mode: EnumTypingRunModeWithAggregatesFilter
+  time: IntNullableWithAggregatesFilter
+  totalTimeMilliseconds: IntWithAggregatesFilter
+  typedLetters: JsonWithAggregatesFilter
+  updatedAt: DateTimeWithAggregatesFilter
+  userId: StringWithAggregatesFilter
+  wordCount: IntNullableWithAggregatesFilter
+}
+
+type TypingRunSumAggregate {
+  flags: Int
+  time: Int
+  totalTimeMilliseconds: Int
+  wordCount: Int
+}
+
+input TypingRunSumOrderByAggregateInput {
+  flags: SortOrder
+  time: SortOrder
+  totalTimeMilliseconds: SortOrder
+  wordCount: SortOrder
+}
+
+input TypingRunUpdateInput {
+  challanges_one: UsersChallengeUpdateManyWithoutUserOneRunNestedInput
+  challenges_two: UsersChallengeUpdateManyWithoutUserTwoRunNestedInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  flags: IntFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  metadata: JSON
+  mode: EnumTypingRunModeFieldUpdateOperationsInput
+  time: NullableIntFieldUpdateOperationsInput
+  totalTimeMilliseconds: IntFieldUpdateOperationsInput
+  typedLetters: JSON
+  updatedAt: DateTimeFieldUpdateOperationsInput
+  user: UserUpdateOneRequiredWithoutTypingRunsNestedInput
+  wordCount: NullableIntFieldUpdateOperationsInput
+}
+
+input TypingRunUpdateManyMutationInput {
+  createdAt: DateTimeFieldUpdateOperationsInput
+  flags: IntFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  metadata: JSON
+  mode: EnumTypingRunModeFieldUpdateOperationsInput
+  time: NullableIntFieldUpdateOperationsInput
+  totalTimeMilliseconds: IntFieldUpdateOperationsInput
+  typedLetters: JSON
+  updatedAt: DateTimeFieldUpdateOperationsInput
+  wordCount: NullableIntFieldUpdateOperationsInput
+}
+
+input TypingRunUpdateManyWithWhereWithoutUserInput {
+  data: TypingRunUpdateManyMutationInput!
+  where: TypingRunScalarWhereInput!
+}
+
+input TypingRunUpdateManyWithoutUserNestedInput {
+  connect: [TypingRunWhereUniqueInput!]
+  connectOrCreate: [TypingRunCreateOrConnectWithoutUserInput!]
+  create: [TypingRunCreateWithoutUserInput!]
+  createMany: TypingRunCreateManyUserInputEnvelope
+  delete: [TypingRunWhereUniqueInput!]
+  deleteMany: [TypingRunScalarWhereInput!]
+  disconnect: [TypingRunWhereUniqueInput!]
+  set: [TypingRunWhereUniqueInput!]
+  update: [TypingRunUpdateWithWhereUniqueWithoutUserInput!]
+  updateMany: [TypingRunUpdateManyWithWhereWithoutUserInput!]
+  upsert: [TypingRunUpsertWithWhereUniqueWithoutUserInput!]
+}
+
+input TypingRunUpdateOneWithoutChallanges_oneNestedInput {
+  connect: TypingRunWhereUniqueInput
+  connectOrCreate: TypingRunCreateOrConnectWithoutChallanges_oneInput
+  create: TypingRunCreateWithoutChallanges_oneInput
+  delete: TypingRunWhereInput
+  disconnect: TypingRunWhereInput
+  update: TypingRunUpdateToOneWithWhereWithoutChallanges_oneInput
+  upsert: TypingRunUpsertWithoutChallanges_oneInput
+}
+
+input TypingRunUpdateOneWithoutChallenges_twoNestedInput {
+  connect: TypingRunWhereUniqueInput
+  connectOrCreate: TypingRunCreateOrConnectWithoutChallenges_twoInput
+  create: TypingRunCreateWithoutChallenges_twoInput
+  delete: TypingRunWhereInput
+  disconnect: TypingRunWhereInput
+  update: TypingRunUpdateToOneWithWhereWithoutChallenges_twoInput
+  upsert: TypingRunUpsertWithoutChallenges_twoInput
+}
+
+input TypingRunUpdateToOneWithWhereWithoutChallanges_oneInput {
+  data: TypingRunUpdateWithoutChallanges_oneInput!
+  where: TypingRunWhereInput
+}
+
+input TypingRunUpdateToOneWithWhereWithoutChallenges_twoInput {
+  data: TypingRunUpdateWithoutChallenges_twoInput!
+  where: TypingRunWhereInput
+}
+
+input TypingRunUpdateWithWhereUniqueWithoutUserInput {
+  data: TypingRunUpdateWithoutUserInput!
+  where: TypingRunWhereUniqueInput!
+}
+
+input TypingRunUpdateWithoutChallanges_oneInput {
+  challenges_two: UsersChallengeUpdateManyWithoutUserTwoRunNestedInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  flags: IntFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  metadata: JSON
+  mode: EnumTypingRunModeFieldUpdateOperationsInput
+  time: NullableIntFieldUpdateOperationsInput
+  totalTimeMilliseconds: IntFieldUpdateOperationsInput
+  typedLetters: JSON
+  updatedAt: DateTimeFieldUpdateOperationsInput
+  user: UserUpdateOneRequiredWithoutTypingRunsNestedInput
+  wordCount: NullableIntFieldUpdateOperationsInput
+}
+
+input TypingRunUpdateWithoutChallenges_twoInput {
+  challanges_one: UsersChallengeUpdateManyWithoutUserOneRunNestedInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  flags: IntFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  metadata: JSON
+  mode: EnumTypingRunModeFieldUpdateOperationsInput
+  time: NullableIntFieldUpdateOperationsInput
+  totalTimeMilliseconds: IntFieldUpdateOperationsInput
+  typedLetters: JSON
+  updatedAt: DateTimeFieldUpdateOperationsInput
+  user: UserUpdateOneRequiredWithoutTypingRunsNestedInput
+  wordCount: NullableIntFieldUpdateOperationsInput
+}
+
+input TypingRunUpdateWithoutUserInput {
+  challanges_one: UsersChallengeUpdateManyWithoutUserOneRunNestedInput
+  challenges_two: UsersChallengeUpdateManyWithoutUserTwoRunNestedInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  flags: IntFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  metadata: JSON
+  mode: EnumTypingRunModeFieldUpdateOperationsInput
+  time: NullableIntFieldUpdateOperationsInput
+  totalTimeMilliseconds: IntFieldUpdateOperationsInput
+  typedLetters: JSON
+  updatedAt: DateTimeFieldUpdateOperationsInput
+  wordCount: NullableIntFieldUpdateOperationsInput
+}
+
+input TypingRunUpsertWithWhereUniqueWithoutUserInput {
+  create: TypingRunCreateWithoutUserInput!
+  update: TypingRunUpdateWithoutUserInput!
+  where: TypingRunWhereUniqueInput!
+}
+
+input TypingRunUpsertWithoutChallanges_oneInput {
+  create: TypingRunCreateWithoutChallanges_oneInput!
+  update: TypingRunUpdateWithoutChallanges_oneInput!
+  where: TypingRunWhereInput
+}
+
+input TypingRunUpsertWithoutChallenges_twoInput {
+  create: TypingRunCreateWithoutChallenges_twoInput!
+  update: TypingRunUpdateWithoutChallenges_twoInput!
+  where: TypingRunWhereInput
 }
 
 input TypingRunWhereInput {
@@ -926,6 +3035,326 @@ type UserConfiguration {
   userId: String!
 }
 
+type UserConfigurationAvgAggregate {
+  font_size: Float
+}
+
+input UserConfigurationAvgOrderByAggregateInput {
+  font_size: SortOrder
+}
+
+type UserConfigurationCountAggregate {
+  _all: Int!
+  auto_save_mode: Int!
+  blind_mode: Int!
+  caret_smoothness: Int!
+  caret_style: Int!
+  createdAt: Int!
+  elements_show_average: Int!
+  elements_show_caps_lock_warning: Int!
+  elements_show_key_tips: Int!
+  elements_show_oof_warning: Int!
+  font_family: Int!
+  font_size: Int!
+  id: Int!
+  input_confidence_mode: Int!
+  input_freedom_mode: Int!
+  input_indicate_typos: Int!
+  language: Int!
+  metadata: Int!
+  pace_caret_speed: Int!
+  pace_caret_style: Int!
+  sound_click_sound: Int!
+  sound_error_sound: Int!
+  test_difficulty: Int!
+  theme: Int!
+  theme_colorful_mode: Int!
+  theme_flip_colors: Int!
+  updatedAt: Int!
+  userId: Int!
+}
+
+input UserConfigurationCountOrderByAggregateInput {
+  auto_save_mode: SortOrder
+  blind_mode: SortOrder
+  caret_smoothness: SortOrder
+  caret_style: SortOrder
+  createdAt: SortOrder
+  elements_show_average: SortOrder
+  elements_show_caps_lock_warning: SortOrder
+  elements_show_key_tips: SortOrder
+  elements_show_oof_warning: SortOrder
+  font_family: SortOrder
+  font_size: SortOrder
+  id: SortOrder
+  input_confidence_mode: SortOrder
+  input_freedom_mode: SortOrder
+  input_indicate_typos: SortOrder
+  language: SortOrder
+  metadata: SortOrder
+  pace_caret_speed: SortOrder
+  pace_caret_style: SortOrder
+  sound_click_sound: SortOrder
+  sound_error_sound: SortOrder
+  test_difficulty: SortOrder
+  theme: SortOrder
+  theme_colorful_mode: SortOrder
+  theme_flip_colors: SortOrder
+  updatedAt: SortOrder
+  userId: SortOrder
+}
+
+input UserConfigurationCreateInput {
+  auto_save_mode: Boolean
+  blind_mode: Boolean
+  caret_smoothness: CaretSmoothness
+  caret_style: CaretStyle
+  createdAt: DateTimeISO
+  elements_show_average: ShowAverage
+  elements_show_caps_lock_warning: Boolean
+  elements_show_key_tips: Boolean
+  elements_show_oof_warning: Boolean
+  font_family: String
+  font_size: Int
+  id: String
+  input_confidence_mode: ConfidenceMode
+  input_freedom_mode: Boolean
+  input_indicate_typos: IndicateTypos
+  language: String
+  metadata: JSON
+  pace_caret_speed: PaceCaretSpeed
+  pace_caret_style: CaretStyle
+  sound_click_sound: String
+  sound_error_sound: String
+  test_difficulty: RunDifficulty
+  theme: String
+  theme_colorful_mode: Boolean
+  theme_flip_colors: Boolean
+  updatedAt: DateTimeISO
+  user: UserCreateNestedOneWithoutConfigurationInput!
+}
+
+input UserConfigurationCreateManyInput {
+  auto_save_mode: Boolean
+  blind_mode: Boolean
+  caret_smoothness: CaretSmoothness
+  caret_style: CaretStyle
+  createdAt: DateTimeISO
+  elements_show_average: ShowAverage
+  elements_show_caps_lock_warning: Boolean
+  elements_show_key_tips: Boolean
+  elements_show_oof_warning: Boolean
+  font_family: String
+  font_size: Int
+  id: String
+  input_confidence_mode: ConfidenceMode
+  input_freedom_mode: Boolean
+  input_indicate_typos: IndicateTypos
+  language: String
+  metadata: JSON
+  pace_caret_speed: PaceCaretSpeed
+  pace_caret_style: CaretStyle
+  sound_click_sound: String
+  sound_error_sound: String
+  test_difficulty: RunDifficulty
+  theme: String
+  theme_colorful_mode: Boolean
+  theme_flip_colors: Boolean
+  updatedAt: DateTimeISO
+  userId: String!
+}
+
+input UserConfigurationCreateNestedOneWithoutUserInput {
+  connect: UserConfigurationWhereUniqueInput
+  connectOrCreate: UserConfigurationCreateOrConnectWithoutUserInput
+  create: UserConfigurationCreateWithoutUserInput
+}
+
+input UserConfigurationCreateOrConnectWithoutUserInput {
+  create: UserConfigurationCreateWithoutUserInput!
+  where: UserConfigurationWhereUniqueInput!
+}
+
+input UserConfigurationCreateWithoutUserInput {
+  auto_save_mode: Boolean
+  blind_mode: Boolean
+  caret_smoothness: CaretSmoothness
+  caret_style: CaretStyle
+  createdAt: DateTimeISO
+  elements_show_average: ShowAverage
+  elements_show_caps_lock_warning: Boolean
+  elements_show_key_tips: Boolean
+  elements_show_oof_warning: Boolean
+  font_family: String
+  font_size: Int
+  id: String
+  input_confidence_mode: ConfidenceMode
+  input_freedom_mode: Boolean
+  input_indicate_typos: IndicateTypos
+  language: String
+  metadata: JSON
+  pace_caret_speed: PaceCaretSpeed
+  pace_caret_style: CaretStyle
+  sound_click_sound: String
+  sound_error_sound: String
+  test_difficulty: RunDifficulty
+  theme: String
+  theme_colorful_mode: Boolean
+  theme_flip_colors: Boolean
+  updatedAt: DateTimeISO
+}
+
+type UserConfigurationGroupBy {
+  _avg: UserConfigurationAvgAggregate
+  _count: UserConfigurationCountAggregate
+  _max: UserConfigurationMaxAggregate
+  _min: UserConfigurationMinAggregate
+  _sum: UserConfigurationSumAggregate
+  auto_save_mode: Boolean!
+  blind_mode: Boolean!
+  caret_smoothness: CaretSmoothness!
+  caret_style: CaretStyle!
+  createdAt: DateTimeISO!
+  elements_show_average: ShowAverage!
+  elements_show_caps_lock_warning: Boolean!
+  elements_show_key_tips: Boolean!
+  elements_show_oof_warning: Boolean!
+  font_family: String!
+  font_size: Int!
+  id: String!
+  input_confidence_mode: ConfidenceMode!
+  input_freedom_mode: Boolean!
+  input_indicate_typos: IndicateTypos!
+  language: String!
+  metadata: JSON
+  pace_caret_speed: PaceCaretSpeed!
+  pace_caret_style: CaretStyle!
+  sound_click_sound: String
+  sound_error_sound: String
+  test_difficulty: RunDifficulty!
+  theme: String!
+  theme_colorful_mode: Boolean!
+  theme_flip_colors: Boolean!
+  updatedAt: DateTimeISO!
+  userId: String!
+}
+
+type UserConfigurationMaxAggregate {
+  auto_save_mode: Boolean
+  blind_mode: Boolean
+  caret_smoothness: CaretSmoothness
+  caret_style: CaretStyle
+  createdAt: DateTimeISO
+  elements_show_average: ShowAverage
+  elements_show_caps_lock_warning: Boolean
+  elements_show_key_tips: Boolean
+  elements_show_oof_warning: Boolean
+  font_family: String
+  font_size: Int
+  id: String
+  input_confidence_mode: ConfidenceMode
+  input_freedom_mode: Boolean
+  input_indicate_typos: IndicateTypos
+  language: String
+  pace_caret_speed: PaceCaretSpeed
+  pace_caret_style: CaretStyle
+  sound_click_sound: String
+  sound_error_sound: String
+  test_difficulty: RunDifficulty
+  theme: String
+  theme_colorful_mode: Boolean
+  theme_flip_colors: Boolean
+  updatedAt: DateTimeISO
+  userId: String
+}
+
+input UserConfigurationMaxOrderByAggregateInput {
+  auto_save_mode: SortOrder
+  blind_mode: SortOrder
+  caret_smoothness: SortOrder
+  caret_style: SortOrder
+  createdAt: SortOrder
+  elements_show_average: SortOrder
+  elements_show_caps_lock_warning: SortOrder
+  elements_show_key_tips: SortOrder
+  elements_show_oof_warning: SortOrder
+  font_family: SortOrder
+  font_size: SortOrder
+  id: SortOrder
+  input_confidence_mode: SortOrder
+  input_freedom_mode: SortOrder
+  input_indicate_typos: SortOrder
+  language: SortOrder
+  pace_caret_speed: SortOrder
+  pace_caret_style: SortOrder
+  sound_click_sound: SortOrder
+  sound_error_sound: SortOrder
+  test_difficulty: SortOrder
+  theme: SortOrder
+  theme_colorful_mode: SortOrder
+  theme_flip_colors: SortOrder
+  updatedAt: SortOrder
+  userId: SortOrder
+}
+
+type UserConfigurationMinAggregate {
+  auto_save_mode: Boolean
+  blind_mode: Boolean
+  caret_smoothness: CaretSmoothness
+  caret_style: CaretStyle
+  createdAt: DateTimeISO
+  elements_show_average: ShowAverage
+  elements_show_caps_lock_warning: Boolean
+  elements_show_key_tips: Boolean
+  elements_show_oof_warning: Boolean
+  font_family: String
+  font_size: Int
+  id: String
+  input_confidence_mode: ConfidenceMode
+  input_freedom_mode: Boolean
+  input_indicate_typos: IndicateTypos
+  language: String
+  pace_caret_speed: PaceCaretSpeed
+  pace_caret_style: CaretStyle
+  sound_click_sound: String
+  sound_error_sound: String
+  test_difficulty: RunDifficulty
+  theme: String
+  theme_colorful_mode: Boolean
+  theme_flip_colors: Boolean
+  updatedAt: DateTimeISO
+  userId: String
+}
+
+input UserConfigurationMinOrderByAggregateInput {
+  auto_save_mode: SortOrder
+  blind_mode: SortOrder
+  caret_smoothness: SortOrder
+  caret_style: SortOrder
+  createdAt: SortOrder
+  elements_show_average: SortOrder
+  elements_show_caps_lock_warning: SortOrder
+  elements_show_key_tips: SortOrder
+  elements_show_oof_warning: SortOrder
+  font_family: SortOrder
+  font_size: SortOrder
+  id: SortOrder
+  input_confidence_mode: SortOrder
+  input_freedom_mode: SortOrder
+  input_indicate_typos: SortOrder
+  language: SortOrder
+  pace_caret_speed: SortOrder
+  pace_caret_style: SortOrder
+  sound_click_sound: SortOrder
+  sound_error_sound: SortOrder
+  test_difficulty: SortOrder
+  theme: SortOrder
+  theme_colorful_mode: SortOrder
+  theme_flip_colors: SortOrder
+  updatedAt: SortOrder
+  userId: SortOrder
+}
+
 input UserConfigurationNullableRelationFilter {
   is: UserConfigurationWhereInput
   isNot: UserConfigurationWhereInput
@@ -945,6 +3374,41 @@ input UserConfigurationOrderByRelevanceInput {
   fields: [UserConfigurationOrderByRelevanceFieldEnum!]!
   search: String!
   sort: SortOrder!
+}
+
+input UserConfigurationOrderByWithAggregationInput {
+  _avg: UserConfigurationAvgOrderByAggregateInput
+  _count: UserConfigurationCountOrderByAggregateInput
+  _max: UserConfigurationMaxOrderByAggregateInput
+  _min: UserConfigurationMinOrderByAggregateInput
+  _sum: UserConfigurationSumOrderByAggregateInput
+  auto_save_mode: SortOrder
+  blind_mode: SortOrder
+  caret_smoothness: SortOrder
+  caret_style: SortOrder
+  createdAt: SortOrder
+  elements_show_average: SortOrder
+  elements_show_caps_lock_warning: SortOrder
+  elements_show_key_tips: SortOrder
+  elements_show_oof_warning: SortOrder
+  font_family: SortOrder
+  font_size: SortOrder
+  id: SortOrder
+  input_confidence_mode: SortOrder
+  input_freedom_mode: SortOrder
+  input_indicate_typos: SortOrder
+  language: SortOrder
+  metadata: SortOrderInput
+  pace_caret_speed: SortOrder
+  pace_caret_style: SortOrder
+  sound_click_sound: SortOrderInput
+  sound_error_sound: SortOrderInput
+  test_difficulty: SortOrder
+  theme: SortOrder
+  theme_colorful_mode: SortOrder
+  theme_flip_colors: SortOrder
+  updatedAt: SortOrder
+  userId: SortOrder
 }
 
 input UserConfigurationOrderByWithRelationInput {
@@ -977,6 +3441,186 @@ input UserConfigurationOrderByWithRelationInput {
   updatedAt: SortOrder
   user: UserOrderByWithRelationInput
   userId: SortOrder
+}
+
+enum UserConfigurationScalarFieldEnum {
+  auto_save_mode
+  blind_mode
+  caret_smoothness
+  caret_style
+  createdAt
+  elements_show_average
+  elements_show_caps_lock_warning
+  elements_show_key_tips
+  elements_show_oof_warning
+  font_family
+  font_size
+  id
+  input_confidence_mode
+  input_freedom_mode
+  input_indicate_typos
+  language
+  metadata
+  pace_caret_speed
+  pace_caret_style
+  sound_click_sound
+  sound_error_sound
+  test_difficulty
+  theme
+  theme_colorful_mode
+  theme_flip_colors
+  updatedAt
+  userId
+}
+
+input UserConfigurationScalarWhereWithAggregatesInput {
+  AND: [UserConfigurationScalarWhereWithAggregatesInput!]
+  NOT: [UserConfigurationScalarWhereWithAggregatesInput!]
+  OR: [UserConfigurationScalarWhereWithAggregatesInput!]
+  auto_save_mode: BoolWithAggregatesFilter
+  blind_mode: BoolWithAggregatesFilter
+  caret_smoothness: EnumCaretSmoothnessWithAggregatesFilter
+  caret_style: EnumCaretStyleWithAggregatesFilter
+  createdAt: DateTimeWithAggregatesFilter
+  elements_show_average: EnumShowAverageWithAggregatesFilter
+  elements_show_caps_lock_warning: BoolWithAggregatesFilter
+  elements_show_key_tips: BoolWithAggregatesFilter
+  elements_show_oof_warning: BoolWithAggregatesFilter
+  font_family: StringWithAggregatesFilter
+  font_size: IntWithAggregatesFilter
+  id: StringWithAggregatesFilter
+  input_confidence_mode: EnumConfidenceModeWithAggregatesFilter
+  input_freedom_mode: BoolWithAggregatesFilter
+  input_indicate_typos: EnumIndicateTyposWithAggregatesFilter
+  language: StringWithAggregatesFilter
+  metadata: JsonNullableWithAggregatesFilter
+  pace_caret_speed: EnumPaceCaretSpeedWithAggregatesFilter
+  pace_caret_style: EnumCaretStyleWithAggregatesFilter
+  sound_click_sound: StringNullableWithAggregatesFilter
+  sound_error_sound: StringNullableWithAggregatesFilter
+  test_difficulty: EnumRunDifficultyWithAggregatesFilter
+  theme: StringWithAggregatesFilter
+  theme_colorful_mode: BoolWithAggregatesFilter
+  theme_flip_colors: BoolWithAggregatesFilter
+  updatedAt: DateTimeWithAggregatesFilter
+  userId: StringWithAggregatesFilter
+}
+
+type UserConfigurationSumAggregate {
+  font_size: Int
+}
+
+input UserConfigurationSumOrderByAggregateInput {
+  font_size: SortOrder
+}
+
+input UserConfigurationUpdateInput {
+  auto_save_mode: BoolFieldUpdateOperationsInput
+  blind_mode: BoolFieldUpdateOperationsInput
+  caret_smoothness: EnumCaretSmoothnessFieldUpdateOperationsInput
+  caret_style: EnumCaretStyleFieldUpdateOperationsInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  elements_show_average: EnumShowAverageFieldUpdateOperationsInput
+  elements_show_caps_lock_warning: BoolFieldUpdateOperationsInput
+  elements_show_key_tips: BoolFieldUpdateOperationsInput
+  elements_show_oof_warning: BoolFieldUpdateOperationsInput
+  font_family: StringFieldUpdateOperationsInput
+  font_size: IntFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  input_confidence_mode: EnumConfidenceModeFieldUpdateOperationsInput
+  input_freedom_mode: BoolFieldUpdateOperationsInput
+  input_indicate_typos: EnumIndicateTyposFieldUpdateOperationsInput
+  language: StringFieldUpdateOperationsInput
+  metadata: JSON
+  pace_caret_speed: EnumPaceCaretSpeedFieldUpdateOperationsInput
+  pace_caret_style: EnumCaretStyleFieldUpdateOperationsInput
+  sound_click_sound: NullableStringFieldUpdateOperationsInput
+  sound_error_sound: NullableStringFieldUpdateOperationsInput
+  test_difficulty: EnumRunDifficultyFieldUpdateOperationsInput
+  theme: StringFieldUpdateOperationsInput
+  theme_colorful_mode: BoolFieldUpdateOperationsInput
+  theme_flip_colors: BoolFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+  user: UserUpdateOneRequiredWithoutConfigurationNestedInput
+}
+
+input UserConfigurationUpdateManyMutationInput {
+  auto_save_mode: BoolFieldUpdateOperationsInput
+  blind_mode: BoolFieldUpdateOperationsInput
+  caret_smoothness: EnumCaretSmoothnessFieldUpdateOperationsInput
+  caret_style: EnumCaretStyleFieldUpdateOperationsInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  elements_show_average: EnumShowAverageFieldUpdateOperationsInput
+  elements_show_caps_lock_warning: BoolFieldUpdateOperationsInput
+  elements_show_key_tips: BoolFieldUpdateOperationsInput
+  elements_show_oof_warning: BoolFieldUpdateOperationsInput
+  font_family: StringFieldUpdateOperationsInput
+  font_size: IntFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  input_confidence_mode: EnumConfidenceModeFieldUpdateOperationsInput
+  input_freedom_mode: BoolFieldUpdateOperationsInput
+  input_indicate_typos: EnumIndicateTyposFieldUpdateOperationsInput
+  language: StringFieldUpdateOperationsInput
+  metadata: JSON
+  pace_caret_speed: EnumPaceCaretSpeedFieldUpdateOperationsInput
+  pace_caret_style: EnumCaretStyleFieldUpdateOperationsInput
+  sound_click_sound: NullableStringFieldUpdateOperationsInput
+  sound_error_sound: NullableStringFieldUpdateOperationsInput
+  test_difficulty: EnumRunDifficultyFieldUpdateOperationsInput
+  theme: StringFieldUpdateOperationsInput
+  theme_colorful_mode: BoolFieldUpdateOperationsInput
+  theme_flip_colors: BoolFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+}
+
+input UserConfigurationUpdateOneWithoutUserNestedInput {
+  connect: UserConfigurationWhereUniqueInput
+  connectOrCreate: UserConfigurationCreateOrConnectWithoutUserInput
+  create: UserConfigurationCreateWithoutUserInput
+  delete: UserConfigurationWhereInput
+  disconnect: UserConfigurationWhereInput
+  update: UserConfigurationUpdateToOneWithWhereWithoutUserInput
+  upsert: UserConfigurationUpsertWithoutUserInput
+}
+
+input UserConfigurationUpdateToOneWithWhereWithoutUserInput {
+  data: UserConfigurationUpdateWithoutUserInput!
+  where: UserConfigurationWhereInput
+}
+
+input UserConfigurationUpdateWithoutUserInput {
+  auto_save_mode: BoolFieldUpdateOperationsInput
+  blind_mode: BoolFieldUpdateOperationsInput
+  caret_smoothness: EnumCaretSmoothnessFieldUpdateOperationsInput
+  caret_style: EnumCaretStyleFieldUpdateOperationsInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  elements_show_average: EnumShowAverageFieldUpdateOperationsInput
+  elements_show_caps_lock_warning: BoolFieldUpdateOperationsInput
+  elements_show_key_tips: BoolFieldUpdateOperationsInput
+  elements_show_oof_warning: BoolFieldUpdateOperationsInput
+  font_family: StringFieldUpdateOperationsInput
+  font_size: IntFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  input_confidence_mode: EnumConfidenceModeFieldUpdateOperationsInput
+  input_freedom_mode: BoolFieldUpdateOperationsInput
+  input_indicate_typos: EnumIndicateTyposFieldUpdateOperationsInput
+  language: StringFieldUpdateOperationsInput
+  metadata: JSON
+  pace_caret_speed: EnumPaceCaretSpeedFieldUpdateOperationsInput
+  pace_caret_style: EnumCaretStyleFieldUpdateOperationsInput
+  sound_click_sound: NullableStringFieldUpdateOperationsInput
+  sound_error_sound: NullableStringFieldUpdateOperationsInput
+  test_difficulty: EnumRunDifficultyFieldUpdateOperationsInput
+  theme: StringFieldUpdateOperationsInput
+  theme_colorful_mode: BoolFieldUpdateOperationsInput
+  theme_flip_colors: BoolFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+}
+
+input UserConfigurationUpsertWithoutUserInput {
+  create: UserConfigurationCreateWithoutUserInput!
+  update: UserConfigurationUpdateWithoutUserInput!
+  where: UserConfigurationWhereInput
 }
 
 input UserConfigurationWhereInput {
@@ -1013,6 +3657,40 @@ input UserConfigurationWhereInput {
   userId: StringFilter
 }
 
+input UserConfigurationWhereUniqueInput {
+  AND: [UserConfigurationWhereInput!]
+  NOT: [UserConfigurationWhereInput!]
+  OR: [UserConfigurationWhereInput!]
+  auto_save_mode: BoolFilter
+  blind_mode: BoolFilter
+  caret_smoothness: EnumCaretSmoothnessFilter
+  caret_style: EnumCaretStyleFilter
+  createdAt: DateTimeFilter
+  elements_show_average: EnumShowAverageFilter
+  elements_show_caps_lock_warning: BoolFilter
+  elements_show_key_tips: BoolFilter
+  elements_show_oof_warning: BoolFilter
+  font_family: StringFilter
+  font_size: IntFilter
+  id: String
+  input_confidence_mode: EnumConfidenceModeFilter
+  input_freedom_mode: BoolFilter
+  input_indicate_typos: EnumIndicateTyposFilter
+  language: StringFilter
+  metadata: JsonNullableFilter
+  pace_caret_speed: EnumPaceCaretSpeedFilter
+  pace_caret_style: EnumCaretStyleFilter
+  sound_click_sound: StringNullableFilter
+  sound_error_sound: StringNullableFilter
+  test_difficulty: EnumRunDifficultyFilter
+  theme: StringFilter
+  theme_colorful_mode: BoolFilter
+  theme_flip_colors: BoolFilter
+  updatedAt: DateTimeFilter
+  user: UserRelationFilter
+  userId: String
+}
+
 type UserCount {
   accounts(where: AccountWhereInput): Int!
   challenge_matches_one(where: UsersChallengeMatchWhereInput): Int!
@@ -1025,6 +3703,429 @@ type UserCount {
   typingRuns(where: TypingRunWhereInput): Int!
 }
 
+type UserCountAggregate {
+  _all: Int!
+  createdAt: Int!
+  email: Int!
+  emailVerified: Int!
+  id: Int!
+  image: Int!
+  metadata: Int!
+  name: Int!
+  password: Int!
+  updatedAt: Int!
+}
+
+input UserCountOrderByAggregateInput {
+  createdAt: SortOrder
+  email: SortOrder
+  emailVerified: SortOrder
+  id: SortOrder
+  image: SortOrder
+  metadata: SortOrder
+  name: SortOrder
+  password: SortOrder
+  updatedAt: SortOrder
+}
+
+input UserCreateInput {
+  accounts: AccountCreateNestedManyWithoutUserInput
+  challenge_matches_one: UsersChallengeMatchCreateNestedManyWithoutUserOneInput
+  challenge_matches_two: UsersChallengeMatchCreateNestedManyWithoutUserTwoInput
+  challenges_one: UsersChallengeCreateNestedManyWithoutUserOneInput
+  challenges_two: UsersChallengeCreateNestedManyWithoutUserTwoInput
+  configuration: UserConfigurationCreateNestedOneWithoutUserInput
+  createdAt: DateTimeISO
+  email: String!
+  emailVerified: DateTimeISO
+  experience: UserExperienceCreateNestedOneWithoutUserInput
+  id: String
+  image: String
+  metadata: JSON
+  name: String
+  notifications: UserNotificationCreateNestedManyWithoutUserInput
+  password: String
+  sessions: SessionCreateNestedManyWithoutUserInput
+  tags: TagCreateNestedManyWithoutUserInput
+  typingRuns: TypingRunCreateNestedManyWithoutUserInput
+  updatedAt: DateTimeISO
+}
+
+input UserCreateManyInput {
+  createdAt: DateTimeISO
+  email: String!
+  emailVerified: DateTimeISO
+  id: String
+  image: String
+  metadata: JSON
+  name: String
+  password: String
+  updatedAt: DateTimeISO
+}
+
+input UserCreateNestedOneWithoutAccountsInput {
+  connect: UserWhereUniqueInput
+  connectOrCreate: UserCreateOrConnectWithoutAccountsInput
+  create: UserCreateWithoutAccountsInput
+}
+
+input UserCreateNestedOneWithoutChallenge_matches_oneInput {
+  connect: UserWhereUniqueInput
+  connectOrCreate: UserCreateOrConnectWithoutChallenge_matches_oneInput
+  create: UserCreateWithoutChallenge_matches_oneInput
+}
+
+input UserCreateNestedOneWithoutChallenge_matches_twoInput {
+  connect: UserWhereUniqueInput
+  connectOrCreate: UserCreateOrConnectWithoutChallenge_matches_twoInput
+  create: UserCreateWithoutChallenge_matches_twoInput
+}
+
+input UserCreateNestedOneWithoutChallenges_oneInput {
+  connect: UserWhereUniqueInput
+  connectOrCreate: UserCreateOrConnectWithoutChallenges_oneInput
+  create: UserCreateWithoutChallenges_oneInput
+}
+
+input UserCreateNestedOneWithoutChallenges_twoInput {
+  connect: UserWhereUniqueInput
+  connectOrCreate: UserCreateOrConnectWithoutChallenges_twoInput
+  create: UserCreateWithoutChallenges_twoInput
+}
+
+input UserCreateNestedOneWithoutConfigurationInput {
+  connect: UserWhereUniqueInput
+  connectOrCreate: UserCreateOrConnectWithoutConfigurationInput
+  create: UserCreateWithoutConfigurationInput
+}
+
+input UserCreateNestedOneWithoutExperienceInput {
+  connect: UserWhereUniqueInput
+  connectOrCreate: UserCreateOrConnectWithoutExperienceInput
+  create: UserCreateWithoutExperienceInput
+}
+
+input UserCreateNestedOneWithoutNotificationsInput {
+  connect: UserWhereUniqueInput
+  connectOrCreate: UserCreateOrConnectWithoutNotificationsInput
+  create: UserCreateWithoutNotificationsInput
+}
+
+input UserCreateNestedOneWithoutSessionsInput {
+  connect: UserWhereUniqueInput
+  connectOrCreate: UserCreateOrConnectWithoutSessionsInput
+  create: UserCreateWithoutSessionsInput
+}
+
+input UserCreateNestedOneWithoutTagsInput {
+  connect: UserWhereUniqueInput
+  connectOrCreate: UserCreateOrConnectWithoutTagsInput
+  create: UserCreateWithoutTagsInput
+}
+
+input UserCreateNestedOneWithoutTypingRunsInput {
+  connect: UserWhereUniqueInput
+  connectOrCreate: UserCreateOrConnectWithoutTypingRunsInput
+  create: UserCreateWithoutTypingRunsInput
+}
+
+input UserCreateOrConnectWithoutAccountsInput {
+  create: UserCreateWithoutAccountsInput!
+  where: UserWhereUniqueInput!
+}
+
+input UserCreateOrConnectWithoutChallenge_matches_oneInput {
+  create: UserCreateWithoutChallenge_matches_oneInput!
+  where: UserWhereUniqueInput!
+}
+
+input UserCreateOrConnectWithoutChallenge_matches_twoInput {
+  create: UserCreateWithoutChallenge_matches_twoInput!
+  where: UserWhereUniqueInput!
+}
+
+input UserCreateOrConnectWithoutChallenges_oneInput {
+  create: UserCreateWithoutChallenges_oneInput!
+  where: UserWhereUniqueInput!
+}
+
+input UserCreateOrConnectWithoutChallenges_twoInput {
+  create: UserCreateWithoutChallenges_twoInput!
+  where: UserWhereUniqueInput!
+}
+
+input UserCreateOrConnectWithoutConfigurationInput {
+  create: UserCreateWithoutConfigurationInput!
+  where: UserWhereUniqueInput!
+}
+
+input UserCreateOrConnectWithoutExperienceInput {
+  create: UserCreateWithoutExperienceInput!
+  where: UserWhereUniqueInput!
+}
+
+input UserCreateOrConnectWithoutNotificationsInput {
+  create: UserCreateWithoutNotificationsInput!
+  where: UserWhereUniqueInput!
+}
+
+input UserCreateOrConnectWithoutSessionsInput {
+  create: UserCreateWithoutSessionsInput!
+  where: UserWhereUniqueInput!
+}
+
+input UserCreateOrConnectWithoutTagsInput {
+  create: UserCreateWithoutTagsInput!
+  where: UserWhereUniqueInput!
+}
+
+input UserCreateOrConnectWithoutTypingRunsInput {
+  create: UserCreateWithoutTypingRunsInput!
+  where: UserWhereUniqueInput!
+}
+
+input UserCreateWithoutAccountsInput {
+  challenge_matches_one: UsersChallengeMatchCreateNestedManyWithoutUserOneInput
+  challenge_matches_two: UsersChallengeMatchCreateNestedManyWithoutUserTwoInput
+  challenges_one: UsersChallengeCreateNestedManyWithoutUserOneInput
+  challenges_two: UsersChallengeCreateNestedManyWithoutUserTwoInput
+  configuration: UserConfigurationCreateNestedOneWithoutUserInput
+  createdAt: DateTimeISO
+  email: String!
+  emailVerified: DateTimeISO
+  experience: UserExperienceCreateNestedOneWithoutUserInput
+  id: String
+  image: String
+  metadata: JSON
+  name: String
+  notifications: UserNotificationCreateNestedManyWithoutUserInput
+  password: String
+  sessions: SessionCreateNestedManyWithoutUserInput
+  tags: TagCreateNestedManyWithoutUserInput
+  typingRuns: TypingRunCreateNestedManyWithoutUserInput
+  updatedAt: DateTimeISO
+}
+
+input UserCreateWithoutChallenge_matches_oneInput {
+  accounts: AccountCreateNestedManyWithoutUserInput
+  challenge_matches_two: UsersChallengeMatchCreateNestedManyWithoutUserTwoInput
+  challenges_one: UsersChallengeCreateNestedManyWithoutUserOneInput
+  challenges_two: UsersChallengeCreateNestedManyWithoutUserTwoInput
+  configuration: UserConfigurationCreateNestedOneWithoutUserInput
+  createdAt: DateTimeISO
+  email: String!
+  emailVerified: DateTimeISO
+  experience: UserExperienceCreateNestedOneWithoutUserInput
+  id: String
+  image: String
+  metadata: JSON
+  name: String
+  notifications: UserNotificationCreateNestedManyWithoutUserInput
+  password: String
+  sessions: SessionCreateNestedManyWithoutUserInput
+  tags: TagCreateNestedManyWithoutUserInput
+  typingRuns: TypingRunCreateNestedManyWithoutUserInput
+  updatedAt: DateTimeISO
+}
+
+input UserCreateWithoutChallenge_matches_twoInput {
+  accounts: AccountCreateNestedManyWithoutUserInput
+  challenge_matches_one: UsersChallengeMatchCreateNestedManyWithoutUserOneInput
+  challenges_one: UsersChallengeCreateNestedManyWithoutUserOneInput
+  challenges_two: UsersChallengeCreateNestedManyWithoutUserTwoInput
+  configuration: UserConfigurationCreateNestedOneWithoutUserInput
+  createdAt: DateTimeISO
+  email: String!
+  emailVerified: DateTimeISO
+  experience: UserExperienceCreateNestedOneWithoutUserInput
+  id: String
+  image: String
+  metadata: JSON
+  name: String
+  notifications: UserNotificationCreateNestedManyWithoutUserInput
+  password: String
+  sessions: SessionCreateNestedManyWithoutUserInput
+  tags: TagCreateNestedManyWithoutUserInput
+  typingRuns: TypingRunCreateNestedManyWithoutUserInput
+  updatedAt: DateTimeISO
+}
+
+input UserCreateWithoutChallenges_oneInput {
+  accounts: AccountCreateNestedManyWithoutUserInput
+  challenge_matches_one: UsersChallengeMatchCreateNestedManyWithoutUserOneInput
+  challenge_matches_two: UsersChallengeMatchCreateNestedManyWithoutUserTwoInput
+  challenges_two: UsersChallengeCreateNestedManyWithoutUserTwoInput
+  configuration: UserConfigurationCreateNestedOneWithoutUserInput
+  createdAt: DateTimeISO
+  email: String!
+  emailVerified: DateTimeISO
+  experience: UserExperienceCreateNestedOneWithoutUserInput
+  id: String
+  image: String
+  metadata: JSON
+  name: String
+  notifications: UserNotificationCreateNestedManyWithoutUserInput
+  password: String
+  sessions: SessionCreateNestedManyWithoutUserInput
+  tags: TagCreateNestedManyWithoutUserInput
+  typingRuns: TypingRunCreateNestedManyWithoutUserInput
+  updatedAt: DateTimeISO
+}
+
+input UserCreateWithoutChallenges_twoInput {
+  accounts: AccountCreateNestedManyWithoutUserInput
+  challenge_matches_one: UsersChallengeMatchCreateNestedManyWithoutUserOneInput
+  challenge_matches_two: UsersChallengeMatchCreateNestedManyWithoutUserTwoInput
+  challenges_one: UsersChallengeCreateNestedManyWithoutUserOneInput
+  configuration: UserConfigurationCreateNestedOneWithoutUserInput
+  createdAt: DateTimeISO
+  email: String!
+  emailVerified: DateTimeISO
+  experience: UserExperienceCreateNestedOneWithoutUserInput
+  id: String
+  image: String
+  metadata: JSON
+  name: String
+  notifications: UserNotificationCreateNestedManyWithoutUserInput
+  password: String
+  sessions: SessionCreateNestedManyWithoutUserInput
+  tags: TagCreateNestedManyWithoutUserInput
+  typingRuns: TypingRunCreateNestedManyWithoutUserInput
+  updatedAt: DateTimeISO
+}
+
+input UserCreateWithoutConfigurationInput {
+  accounts: AccountCreateNestedManyWithoutUserInput
+  challenge_matches_one: UsersChallengeMatchCreateNestedManyWithoutUserOneInput
+  challenge_matches_two: UsersChallengeMatchCreateNestedManyWithoutUserTwoInput
+  challenges_one: UsersChallengeCreateNestedManyWithoutUserOneInput
+  challenges_two: UsersChallengeCreateNestedManyWithoutUserTwoInput
+  createdAt: DateTimeISO
+  email: String!
+  emailVerified: DateTimeISO
+  experience: UserExperienceCreateNestedOneWithoutUserInput
+  id: String
+  image: String
+  metadata: JSON
+  name: String
+  notifications: UserNotificationCreateNestedManyWithoutUserInput
+  password: String
+  sessions: SessionCreateNestedManyWithoutUserInput
+  tags: TagCreateNestedManyWithoutUserInput
+  typingRuns: TypingRunCreateNestedManyWithoutUserInput
+  updatedAt: DateTimeISO
+}
+
+input UserCreateWithoutExperienceInput {
+  accounts: AccountCreateNestedManyWithoutUserInput
+  challenge_matches_one: UsersChallengeMatchCreateNestedManyWithoutUserOneInput
+  challenge_matches_two: UsersChallengeMatchCreateNestedManyWithoutUserTwoInput
+  challenges_one: UsersChallengeCreateNestedManyWithoutUserOneInput
+  challenges_two: UsersChallengeCreateNestedManyWithoutUserTwoInput
+  configuration: UserConfigurationCreateNestedOneWithoutUserInput
+  createdAt: DateTimeISO
+  email: String!
+  emailVerified: DateTimeISO
+  id: String
+  image: String
+  metadata: JSON
+  name: String
+  notifications: UserNotificationCreateNestedManyWithoutUserInput
+  password: String
+  sessions: SessionCreateNestedManyWithoutUserInput
+  tags: TagCreateNestedManyWithoutUserInput
+  typingRuns: TypingRunCreateNestedManyWithoutUserInput
+  updatedAt: DateTimeISO
+}
+
+input UserCreateWithoutNotificationsInput {
+  accounts: AccountCreateNestedManyWithoutUserInput
+  challenge_matches_one: UsersChallengeMatchCreateNestedManyWithoutUserOneInput
+  challenge_matches_two: UsersChallengeMatchCreateNestedManyWithoutUserTwoInput
+  challenges_one: UsersChallengeCreateNestedManyWithoutUserOneInput
+  challenges_two: UsersChallengeCreateNestedManyWithoutUserTwoInput
+  configuration: UserConfigurationCreateNestedOneWithoutUserInput
+  createdAt: DateTimeISO
+  email: String!
+  emailVerified: DateTimeISO
+  experience: UserExperienceCreateNestedOneWithoutUserInput
+  id: String
+  image: String
+  metadata: JSON
+  name: String
+  password: String
+  sessions: SessionCreateNestedManyWithoutUserInput
+  tags: TagCreateNestedManyWithoutUserInput
+  typingRuns: TypingRunCreateNestedManyWithoutUserInput
+  updatedAt: DateTimeISO
+}
+
+input UserCreateWithoutSessionsInput {
+  accounts: AccountCreateNestedManyWithoutUserInput
+  challenge_matches_one: UsersChallengeMatchCreateNestedManyWithoutUserOneInput
+  challenge_matches_two: UsersChallengeMatchCreateNestedManyWithoutUserTwoInput
+  challenges_one: UsersChallengeCreateNestedManyWithoutUserOneInput
+  challenges_two: UsersChallengeCreateNestedManyWithoutUserTwoInput
+  configuration: UserConfigurationCreateNestedOneWithoutUserInput
+  createdAt: DateTimeISO
+  email: String!
+  emailVerified: DateTimeISO
+  experience: UserExperienceCreateNestedOneWithoutUserInput
+  id: String
+  image: String
+  metadata: JSON
+  name: String
+  notifications: UserNotificationCreateNestedManyWithoutUserInput
+  password: String
+  tags: TagCreateNestedManyWithoutUserInput
+  typingRuns: TypingRunCreateNestedManyWithoutUserInput
+  updatedAt: DateTimeISO
+}
+
+input UserCreateWithoutTagsInput {
+  accounts: AccountCreateNestedManyWithoutUserInput
+  challenge_matches_one: UsersChallengeMatchCreateNestedManyWithoutUserOneInput
+  challenge_matches_two: UsersChallengeMatchCreateNestedManyWithoutUserTwoInput
+  challenges_one: UsersChallengeCreateNestedManyWithoutUserOneInput
+  challenges_two: UsersChallengeCreateNestedManyWithoutUserTwoInput
+  configuration: UserConfigurationCreateNestedOneWithoutUserInput
+  createdAt: DateTimeISO
+  email: String!
+  emailVerified: DateTimeISO
+  experience: UserExperienceCreateNestedOneWithoutUserInput
+  id: String
+  image: String
+  metadata: JSON
+  name: String
+  notifications: UserNotificationCreateNestedManyWithoutUserInput
+  password: String
+  sessions: SessionCreateNestedManyWithoutUserInput
+  typingRuns: TypingRunCreateNestedManyWithoutUserInput
+  updatedAt: DateTimeISO
+}
+
+input UserCreateWithoutTypingRunsInput {
+  accounts: AccountCreateNestedManyWithoutUserInput
+  challenge_matches_one: UsersChallengeMatchCreateNestedManyWithoutUserOneInput
+  challenge_matches_two: UsersChallengeMatchCreateNestedManyWithoutUserTwoInput
+  challenges_one: UsersChallengeCreateNestedManyWithoutUserOneInput
+  challenges_two: UsersChallengeCreateNestedManyWithoutUserTwoInput
+  configuration: UserConfigurationCreateNestedOneWithoutUserInput
+  createdAt: DateTimeISO
+  email: String!
+  emailVerified: DateTimeISO
+  experience: UserExperienceCreateNestedOneWithoutUserInput
+  id: String
+  image: String
+  metadata: JSON
+  name: String
+  notifications: UserNotificationCreateNestedManyWithoutUserInput
+  password: String
+  sessions: SessionCreateNestedManyWithoutUserInput
+  tags: TagCreateNestedManyWithoutUserInput
+  updatedAt: DateTimeISO
+}
+
 type UserExperience {
   createdAt: DateTimeISO!
   id: String!
@@ -1033,6 +4134,128 @@ type UserExperience {
   points: Int!
   updatedAt: DateTimeISO!
   userId: String!
+}
+
+type UserExperienceAvgAggregate {
+  level: Float
+  points: Float
+}
+
+input UserExperienceAvgOrderByAggregateInput {
+  level: SortOrder
+  points: SortOrder
+}
+
+type UserExperienceCountAggregate {
+  _all: Int!
+  createdAt: Int!
+  id: Int!
+  level: Int!
+  metadata: Int!
+  points: Int!
+  updatedAt: Int!
+  userId: Int!
+}
+
+input UserExperienceCountOrderByAggregateInput {
+  createdAt: SortOrder
+  id: SortOrder
+  level: SortOrder
+  metadata: SortOrder
+  points: SortOrder
+  updatedAt: SortOrder
+  userId: SortOrder
+}
+
+input UserExperienceCreateInput {
+  createdAt: DateTimeISO
+  id: String
+  level: Int
+  metadata: JSON
+  points: Int
+  updatedAt: DateTimeISO
+  user: UserCreateNestedOneWithoutExperienceInput!
+}
+
+input UserExperienceCreateManyInput {
+  createdAt: DateTimeISO
+  id: String
+  level: Int
+  metadata: JSON
+  points: Int
+  updatedAt: DateTimeISO
+  userId: String!
+}
+
+input UserExperienceCreateNestedOneWithoutUserInput {
+  connect: UserExperienceWhereUniqueInput
+  connectOrCreate: UserExperienceCreateOrConnectWithoutUserInput
+  create: UserExperienceCreateWithoutUserInput
+}
+
+input UserExperienceCreateOrConnectWithoutUserInput {
+  create: UserExperienceCreateWithoutUserInput!
+  where: UserExperienceWhereUniqueInput!
+}
+
+input UserExperienceCreateWithoutUserInput {
+  createdAt: DateTimeISO
+  id: String
+  level: Int
+  metadata: JSON
+  points: Int
+  updatedAt: DateTimeISO
+}
+
+type UserExperienceGroupBy {
+  _avg: UserExperienceAvgAggregate
+  _count: UserExperienceCountAggregate
+  _max: UserExperienceMaxAggregate
+  _min: UserExperienceMinAggregate
+  _sum: UserExperienceSumAggregate
+  createdAt: DateTimeISO!
+  id: String!
+  level: Int!
+  metadata: JSON
+  points: Int!
+  updatedAt: DateTimeISO!
+  userId: String!
+}
+
+type UserExperienceMaxAggregate {
+  createdAt: DateTimeISO
+  id: String
+  level: Int
+  points: Int
+  updatedAt: DateTimeISO
+  userId: String
+}
+
+input UserExperienceMaxOrderByAggregateInput {
+  createdAt: SortOrder
+  id: SortOrder
+  level: SortOrder
+  points: SortOrder
+  updatedAt: SortOrder
+  userId: SortOrder
+}
+
+type UserExperienceMinAggregate {
+  createdAt: DateTimeISO
+  id: String
+  level: Int
+  points: Int
+  updatedAt: DateTimeISO
+  userId: String
+}
+
+input UserExperienceMinOrderByAggregateInput {
+  createdAt: SortOrder
+  id: SortOrder
+  level: SortOrder
+  points: SortOrder
+  updatedAt: SortOrder
+  userId: SortOrder
 }
 
 input UserExperienceNullableRelationFilter {
@@ -1051,6 +4274,21 @@ input UserExperienceOrderByRelevanceInput {
   sort: SortOrder!
 }
 
+input UserExperienceOrderByWithAggregationInput {
+  _avg: UserExperienceAvgOrderByAggregateInput
+  _count: UserExperienceCountOrderByAggregateInput
+  _max: UserExperienceMaxOrderByAggregateInput
+  _min: UserExperienceMinOrderByAggregateInput
+  _sum: UserExperienceSumOrderByAggregateInput
+  createdAt: SortOrder
+  id: SortOrder
+  level: SortOrder
+  metadata: SortOrderInput
+  points: SortOrder
+  updatedAt: SortOrder
+  userId: SortOrder
+}
+
 input UserExperienceOrderByWithRelationInput {
   _relevance: UserExperienceOrderByRelevanceInput
   createdAt: SortOrder
@@ -1061,6 +4299,88 @@ input UserExperienceOrderByWithRelationInput {
   updatedAt: SortOrder
   user: UserOrderByWithRelationInput
   userId: SortOrder
+}
+
+enum UserExperienceScalarFieldEnum {
+  createdAt
+  id
+  level
+  metadata
+  points
+  updatedAt
+  userId
+}
+
+input UserExperienceScalarWhereWithAggregatesInput {
+  AND: [UserExperienceScalarWhereWithAggregatesInput!]
+  NOT: [UserExperienceScalarWhereWithAggregatesInput!]
+  OR: [UserExperienceScalarWhereWithAggregatesInput!]
+  createdAt: DateTimeWithAggregatesFilter
+  id: StringWithAggregatesFilter
+  level: IntWithAggregatesFilter
+  metadata: JsonNullableWithAggregatesFilter
+  points: IntWithAggregatesFilter
+  updatedAt: DateTimeWithAggregatesFilter
+  userId: StringWithAggregatesFilter
+}
+
+type UserExperienceSumAggregate {
+  level: Int
+  points: Int
+}
+
+input UserExperienceSumOrderByAggregateInput {
+  level: SortOrder
+  points: SortOrder
+}
+
+input UserExperienceUpdateInput {
+  createdAt: DateTimeFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  level: IntFieldUpdateOperationsInput
+  metadata: JSON
+  points: IntFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+  user: UserUpdateOneRequiredWithoutExperienceNestedInput
+}
+
+input UserExperienceUpdateManyMutationInput {
+  createdAt: DateTimeFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  level: IntFieldUpdateOperationsInput
+  metadata: JSON
+  points: IntFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+}
+
+input UserExperienceUpdateOneWithoutUserNestedInput {
+  connect: UserExperienceWhereUniqueInput
+  connectOrCreate: UserExperienceCreateOrConnectWithoutUserInput
+  create: UserExperienceCreateWithoutUserInput
+  delete: UserExperienceWhereInput
+  disconnect: UserExperienceWhereInput
+  update: UserExperienceUpdateToOneWithWhereWithoutUserInput
+  upsert: UserExperienceUpsertWithoutUserInput
+}
+
+input UserExperienceUpdateToOneWithWhereWithoutUserInput {
+  data: UserExperienceUpdateWithoutUserInput!
+  where: UserExperienceWhereInput
+}
+
+input UserExperienceUpdateWithoutUserInput {
+  createdAt: DateTimeFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  level: IntFieldUpdateOperationsInput
+  metadata: JSON
+  points: IntFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+}
+
+input UserExperienceUpsertWithoutUserInput {
+  create: UserExperienceCreateWithoutUserInput!
+  update: UserExperienceUpdateWithoutUserInput!
+  where: UserExperienceWhereInput
 }
 
 input UserExperienceWhereInput {
@@ -1077,6 +4397,79 @@ input UserExperienceWhereInput {
   userId: StringFilter
 }
 
+input UserExperienceWhereUniqueInput {
+  AND: [UserExperienceWhereInput!]
+  NOT: [UserExperienceWhereInput!]
+  OR: [UserExperienceWhereInput!]
+  createdAt: DateTimeFilter
+  id: String
+  level: IntFilter
+  metadata: JsonNullableFilter
+  points: IntFilter
+  updatedAt: DateTimeFilter
+  user: UserRelationFilter
+  userId: String
+}
+
+type UserGroupBy {
+  _count: UserCountAggregate
+  _max: UserMaxAggregate
+  _min: UserMinAggregate
+  createdAt: DateTimeISO!
+  email: String!
+  emailVerified: DateTimeISO
+  id: String!
+  image: String
+  metadata: JSON
+  name: String
+  password: String
+  updatedAt: DateTimeISO!
+}
+
+type UserMaxAggregate {
+  createdAt: DateTimeISO
+  email: String
+  emailVerified: DateTimeISO
+  id: String
+  image: String
+  name: String
+  password: String
+  updatedAt: DateTimeISO
+}
+
+input UserMaxOrderByAggregateInput {
+  createdAt: SortOrder
+  email: SortOrder
+  emailVerified: SortOrder
+  id: SortOrder
+  image: SortOrder
+  name: SortOrder
+  password: SortOrder
+  updatedAt: SortOrder
+}
+
+type UserMinAggregate {
+  createdAt: DateTimeISO
+  email: String
+  emailVerified: DateTimeISO
+  id: String
+  image: String
+  name: String
+  password: String
+  updatedAt: DateTimeISO
+}
+
+input UserMinOrderByAggregateInput {
+  createdAt: SortOrder
+  email: SortOrder
+  emailVerified: SortOrder
+  id: SortOrder
+  image: SortOrder
+  name: SortOrder
+  password: SortOrder
+  updatedAt: SortOrder
+}
+
 type UserNotification {
   createdAt: DateTimeISO!
   id: String!
@@ -1089,10 +4482,131 @@ type UserNotification {
   userId: String!
 }
 
+type UserNotificationCountAggregate {
+  _all: Int!
+  createdAt: Int!
+  id: Int!
+  metadata: Int!
+  payload: Int!
+  read: Int!
+  updatedAt: Int!
+  userId: Int!
+}
+
+input UserNotificationCountOrderByAggregateInput {
+  createdAt: SortOrder
+  id: SortOrder
+  metadata: SortOrder
+  payload: SortOrder
+  read: SortOrder
+  updatedAt: SortOrder
+  userId: SortOrder
+}
+
+input UserNotificationCreateInput {
+  createdAt: DateTimeISO
+  id: String
+  metadata: JSON
+  payload: JSON
+  read: Boolean
+  updatedAt: DateTimeISO
+  user: UserCreateNestedOneWithoutNotificationsInput!
+}
+
+input UserNotificationCreateManyInput {
+  createdAt: DateTimeISO
+  id: String
+  metadata: JSON
+  payload: JSON
+  read: Boolean
+  updatedAt: DateTimeISO
+  userId: String!
+}
+
+input UserNotificationCreateManyUserInput {
+  createdAt: DateTimeISO
+  id: String
+  metadata: JSON
+  payload: JSON
+  read: Boolean
+  updatedAt: DateTimeISO
+}
+
+input UserNotificationCreateManyUserInputEnvelope {
+  data: [UserNotificationCreateManyUserInput!]!
+  skipDuplicates: Boolean
+}
+
+input UserNotificationCreateNestedManyWithoutUserInput {
+  connect: [UserNotificationWhereUniqueInput!]
+  connectOrCreate: [UserNotificationCreateOrConnectWithoutUserInput!]
+  create: [UserNotificationCreateWithoutUserInput!]
+  createMany: UserNotificationCreateManyUserInputEnvelope
+}
+
+input UserNotificationCreateOrConnectWithoutUserInput {
+  create: UserNotificationCreateWithoutUserInput!
+  where: UserNotificationWhereUniqueInput!
+}
+
+input UserNotificationCreateWithoutUserInput {
+  createdAt: DateTimeISO
+  id: String
+  metadata: JSON
+  payload: JSON
+  read: Boolean
+  updatedAt: DateTimeISO
+}
+
+type UserNotificationGroupBy {
+  _count: UserNotificationCountAggregate
+  _max: UserNotificationMaxAggregate
+  _min: UserNotificationMinAggregate
+  createdAt: DateTimeISO!
+  id: String!
+  metadata: JSON
+  payload: JSON
+  read: Boolean!
+  updatedAt: DateTimeISO!
+  userId: String!
+}
+
 input UserNotificationListRelationFilter {
   every: UserNotificationWhereInput
   none: UserNotificationWhereInput
   some: UserNotificationWhereInput
+}
+
+type UserNotificationMaxAggregate {
+  createdAt: DateTimeISO
+  id: String
+  read: Boolean
+  updatedAt: DateTimeISO
+  userId: String
+}
+
+input UserNotificationMaxOrderByAggregateInput {
+  createdAt: SortOrder
+  id: SortOrder
+  read: SortOrder
+  updatedAt: SortOrder
+  userId: SortOrder
+}
+
+type UserNotificationMinAggregate {
+  createdAt: DateTimeISO
+  id: String
+  read: Boolean
+  updatedAt: DateTimeISO
+  userId: String
+}
+
+input UserNotificationMinOrderByAggregateInput {
+  createdAt: SortOrder
+  id: SortOrder
+  read: SortOrder
+  updatedAt: SortOrder
+  userId: SortOrder
 }
 
 input UserNotificationOrderByRelationAggregateInput {
@@ -1108,6 +4622,19 @@ input UserNotificationOrderByRelevanceInput {
   fields: [UserNotificationOrderByRelevanceFieldEnum!]!
   search: String!
   sort: SortOrder!
+}
+
+input UserNotificationOrderByWithAggregationInput {
+  _count: UserNotificationCountOrderByAggregateInput
+  _max: UserNotificationMaxOrderByAggregateInput
+  _min: UserNotificationMinOrderByAggregateInput
+  createdAt: SortOrder
+  id: SortOrder
+  metadata: SortOrderInput
+  payload: SortOrderInput
+  read: SortOrder
+  updatedAt: SortOrder
+  userId: SortOrder
 }
 
 input UserNotificationOrderByWithRelationInput {
@@ -1130,6 +4657,90 @@ enum UserNotificationScalarFieldEnum {
   read
   updatedAt
   userId
+}
+
+input UserNotificationScalarWhereInput {
+  AND: [UserNotificationScalarWhereInput!]
+  NOT: [UserNotificationScalarWhereInput!]
+  OR: [UserNotificationScalarWhereInput!]
+  createdAt: DateTimeFilter
+  id: StringFilter
+  metadata: JsonNullableFilter
+  payload: JsonNullableFilter
+  read: BoolFilter
+  updatedAt: DateTimeFilter
+  userId: StringFilter
+}
+
+input UserNotificationScalarWhereWithAggregatesInput {
+  AND: [UserNotificationScalarWhereWithAggregatesInput!]
+  NOT: [UserNotificationScalarWhereWithAggregatesInput!]
+  OR: [UserNotificationScalarWhereWithAggregatesInput!]
+  createdAt: DateTimeWithAggregatesFilter
+  id: StringWithAggregatesFilter
+  metadata: JsonNullableWithAggregatesFilter
+  payload: JsonNullableWithAggregatesFilter
+  read: BoolWithAggregatesFilter
+  updatedAt: DateTimeWithAggregatesFilter
+  userId: StringWithAggregatesFilter
+}
+
+input UserNotificationUpdateInput {
+  createdAt: DateTimeFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  metadata: JSON
+  payload: JSON
+  read: BoolFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+  user: UserUpdateOneRequiredWithoutNotificationsNestedInput
+}
+
+input UserNotificationUpdateManyMutationInput {
+  createdAt: DateTimeFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  metadata: JSON
+  payload: JSON
+  read: BoolFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+}
+
+input UserNotificationUpdateManyWithWhereWithoutUserInput {
+  data: UserNotificationUpdateManyMutationInput!
+  where: UserNotificationScalarWhereInput!
+}
+
+input UserNotificationUpdateManyWithoutUserNestedInput {
+  connect: [UserNotificationWhereUniqueInput!]
+  connectOrCreate: [UserNotificationCreateOrConnectWithoutUserInput!]
+  create: [UserNotificationCreateWithoutUserInput!]
+  createMany: UserNotificationCreateManyUserInputEnvelope
+  delete: [UserNotificationWhereUniqueInput!]
+  deleteMany: [UserNotificationScalarWhereInput!]
+  disconnect: [UserNotificationWhereUniqueInput!]
+  set: [UserNotificationWhereUniqueInput!]
+  update: [UserNotificationUpdateWithWhereUniqueWithoutUserInput!]
+  updateMany: [UserNotificationUpdateManyWithWhereWithoutUserInput!]
+  upsert: [UserNotificationUpsertWithWhereUniqueWithoutUserInput!]
+}
+
+input UserNotificationUpdateWithWhereUniqueWithoutUserInput {
+  data: UserNotificationUpdateWithoutUserInput!
+  where: UserNotificationWhereUniqueInput!
+}
+
+input UserNotificationUpdateWithoutUserInput {
+  createdAt: DateTimeFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  metadata: JSON
+  payload: JSON
+  read: BoolFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+}
+
+input UserNotificationUpsertWithWhereUniqueWithoutUserInput {
+  create: UserNotificationCreateWithoutUserInput!
+  update: UserNotificationUpdateWithoutUserInput!
+  where: UserNotificationWhereUniqueInput!
 }
 
 input UserNotificationWhereInput {
@@ -1174,6 +4785,21 @@ input UserOrderByRelevanceInput {
   sort: SortOrder!
 }
 
+input UserOrderByWithAggregationInput {
+  _count: UserCountOrderByAggregateInput
+  _max: UserMaxOrderByAggregateInput
+  _min: UserMinOrderByAggregateInput
+  createdAt: SortOrder
+  email: SortOrder
+  emailVerified: SortOrderInput
+  id: SortOrder
+  image: SortOrderInput
+  metadata: SortOrderInput
+  name: SortOrderInput
+  password: SortOrderInput
+  updatedAt: SortOrder
+}
+
 input UserOrderByWithRelationInput {
   _relevance: UserOrderByRelevanceInput
   accounts: AccountOrderByRelationAggregateInput
@@ -1203,6 +4829,531 @@ input UserRelationFilter {
   isNot: UserWhereInput
 }
 
+enum UserScalarFieldEnum {
+  createdAt
+  email
+  emailVerified
+  id
+  image
+  metadata
+  name
+  password
+  updatedAt
+}
+
+input UserScalarWhereWithAggregatesInput {
+  AND: [UserScalarWhereWithAggregatesInput!]
+  NOT: [UserScalarWhereWithAggregatesInput!]
+  OR: [UserScalarWhereWithAggregatesInput!]
+  createdAt: DateTimeWithAggregatesFilter
+  email: StringWithAggregatesFilter
+  emailVerified: DateTimeNullableWithAggregatesFilter
+  id: StringWithAggregatesFilter
+  image: StringNullableWithAggregatesFilter
+  metadata: JsonNullableWithAggregatesFilter
+  name: StringNullableWithAggregatesFilter
+  password: StringNullableWithAggregatesFilter
+  updatedAt: DateTimeWithAggregatesFilter
+}
+
+input UserSignInInput {
+  email: String! = ""
+  password: String! = ""
+  username: String! = ""
+}
+
+input UserSignUpInput {
+  email: String! = ""
+  password: String! = ""
+  username: String! = ""
+}
+
+input UserUpdateInput {
+  accounts: AccountUpdateManyWithoutUserNestedInput
+  challenge_matches_one: UsersChallengeMatchUpdateManyWithoutUserOneNestedInput
+  challenge_matches_two: UsersChallengeMatchUpdateManyWithoutUserTwoNestedInput
+  challenges_one: UsersChallengeUpdateManyWithoutUserOneNestedInput
+  challenges_two: UsersChallengeUpdateManyWithoutUserTwoNestedInput
+  configuration: UserConfigurationUpdateOneWithoutUserNestedInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  email: StringFieldUpdateOperationsInput
+  emailVerified: NullableDateTimeFieldUpdateOperationsInput
+  experience: UserExperienceUpdateOneWithoutUserNestedInput
+  id: StringFieldUpdateOperationsInput
+  image: NullableStringFieldUpdateOperationsInput
+  metadata: JSON
+  name: NullableStringFieldUpdateOperationsInput
+  notifications: UserNotificationUpdateManyWithoutUserNestedInput
+  password: NullableStringFieldUpdateOperationsInput
+  sessions: SessionUpdateManyWithoutUserNestedInput
+  tags: TagUpdateManyWithoutUserNestedInput
+  typingRuns: TypingRunUpdateManyWithoutUserNestedInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+}
+
+input UserUpdateManyMutationInput {
+  createdAt: DateTimeFieldUpdateOperationsInput
+  email: StringFieldUpdateOperationsInput
+  emailVerified: NullableDateTimeFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  image: NullableStringFieldUpdateOperationsInput
+  metadata: JSON
+  name: NullableStringFieldUpdateOperationsInput
+  password: NullableStringFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+}
+
+input UserUpdateOneRequiredWithoutAccountsNestedInput {
+  connect: UserWhereUniqueInput
+  connectOrCreate: UserCreateOrConnectWithoutAccountsInput
+  create: UserCreateWithoutAccountsInput
+  update: UserUpdateToOneWithWhereWithoutAccountsInput
+  upsert: UserUpsertWithoutAccountsInput
+}
+
+input UserUpdateOneRequiredWithoutChallenge_matches_oneNestedInput {
+  connect: UserWhereUniqueInput
+  connectOrCreate: UserCreateOrConnectWithoutChallenge_matches_oneInput
+  create: UserCreateWithoutChallenge_matches_oneInput
+  update: UserUpdateToOneWithWhereWithoutChallenge_matches_oneInput
+  upsert: UserUpsertWithoutChallenge_matches_oneInput
+}
+
+input UserUpdateOneRequiredWithoutChallenge_matches_twoNestedInput {
+  connect: UserWhereUniqueInput
+  connectOrCreate: UserCreateOrConnectWithoutChallenge_matches_twoInput
+  create: UserCreateWithoutChallenge_matches_twoInput
+  update: UserUpdateToOneWithWhereWithoutChallenge_matches_twoInput
+  upsert: UserUpsertWithoutChallenge_matches_twoInput
+}
+
+input UserUpdateOneRequiredWithoutChallenges_oneNestedInput {
+  connect: UserWhereUniqueInput
+  connectOrCreate: UserCreateOrConnectWithoutChallenges_oneInput
+  create: UserCreateWithoutChallenges_oneInput
+  update: UserUpdateToOneWithWhereWithoutChallenges_oneInput
+  upsert: UserUpsertWithoutChallenges_oneInput
+}
+
+input UserUpdateOneRequiredWithoutChallenges_twoNestedInput {
+  connect: UserWhereUniqueInput
+  connectOrCreate: UserCreateOrConnectWithoutChallenges_twoInput
+  create: UserCreateWithoutChallenges_twoInput
+  update: UserUpdateToOneWithWhereWithoutChallenges_twoInput
+  upsert: UserUpsertWithoutChallenges_twoInput
+}
+
+input UserUpdateOneRequiredWithoutConfigurationNestedInput {
+  connect: UserWhereUniqueInput
+  connectOrCreate: UserCreateOrConnectWithoutConfigurationInput
+  create: UserCreateWithoutConfigurationInput
+  update: UserUpdateToOneWithWhereWithoutConfigurationInput
+  upsert: UserUpsertWithoutConfigurationInput
+}
+
+input UserUpdateOneRequiredWithoutExperienceNestedInput {
+  connect: UserWhereUniqueInput
+  connectOrCreate: UserCreateOrConnectWithoutExperienceInput
+  create: UserCreateWithoutExperienceInput
+  update: UserUpdateToOneWithWhereWithoutExperienceInput
+  upsert: UserUpsertWithoutExperienceInput
+}
+
+input UserUpdateOneRequiredWithoutNotificationsNestedInput {
+  connect: UserWhereUniqueInput
+  connectOrCreate: UserCreateOrConnectWithoutNotificationsInput
+  create: UserCreateWithoutNotificationsInput
+  update: UserUpdateToOneWithWhereWithoutNotificationsInput
+  upsert: UserUpsertWithoutNotificationsInput
+}
+
+input UserUpdateOneRequiredWithoutSessionsNestedInput {
+  connect: UserWhereUniqueInput
+  connectOrCreate: UserCreateOrConnectWithoutSessionsInput
+  create: UserCreateWithoutSessionsInput
+  update: UserUpdateToOneWithWhereWithoutSessionsInput
+  upsert: UserUpsertWithoutSessionsInput
+}
+
+input UserUpdateOneRequiredWithoutTagsNestedInput {
+  connect: UserWhereUniqueInput
+  connectOrCreate: UserCreateOrConnectWithoutTagsInput
+  create: UserCreateWithoutTagsInput
+  update: UserUpdateToOneWithWhereWithoutTagsInput
+  upsert: UserUpsertWithoutTagsInput
+}
+
+input UserUpdateOneRequiredWithoutTypingRunsNestedInput {
+  connect: UserWhereUniqueInput
+  connectOrCreate: UserCreateOrConnectWithoutTypingRunsInput
+  create: UserCreateWithoutTypingRunsInput
+  update: UserUpdateToOneWithWhereWithoutTypingRunsInput
+  upsert: UserUpsertWithoutTypingRunsInput
+}
+
+input UserUpdateToOneWithWhereWithoutAccountsInput {
+  data: UserUpdateWithoutAccountsInput!
+  where: UserWhereInput
+}
+
+input UserUpdateToOneWithWhereWithoutChallenge_matches_oneInput {
+  data: UserUpdateWithoutChallenge_matches_oneInput!
+  where: UserWhereInput
+}
+
+input UserUpdateToOneWithWhereWithoutChallenge_matches_twoInput {
+  data: UserUpdateWithoutChallenge_matches_twoInput!
+  where: UserWhereInput
+}
+
+input UserUpdateToOneWithWhereWithoutChallenges_oneInput {
+  data: UserUpdateWithoutChallenges_oneInput!
+  where: UserWhereInput
+}
+
+input UserUpdateToOneWithWhereWithoutChallenges_twoInput {
+  data: UserUpdateWithoutChallenges_twoInput!
+  where: UserWhereInput
+}
+
+input UserUpdateToOneWithWhereWithoutConfigurationInput {
+  data: UserUpdateWithoutConfigurationInput!
+  where: UserWhereInput
+}
+
+input UserUpdateToOneWithWhereWithoutExperienceInput {
+  data: UserUpdateWithoutExperienceInput!
+  where: UserWhereInput
+}
+
+input UserUpdateToOneWithWhereWithoutNotificationsInput {
+  data: UserUpdateWithoutNotificationsInput!
+  where: UserWhereInput
+}
+
+input UserUpdateToOneWithWhereWithoutSessionsInput {
+  data: UserUpdateWithoutSessionsInput!
+  where: UserWhereInput
+}
+
+input UserUpdateToOneWithWhereWithoutTagsInput {
+  data: UserUpdateWithoutTagsInput!
+  where: UserWhereInput
+}
+
+input UserUpdateToOneWithWhereWithoutTypingRunsInput {
+  data: UserUpdateWithoutTypingRunsInput!
+  where: UserWhereInput
+}
+
+input UserUpdateWithoutAccountsInput {
+  challenge_matches_one: UsersChallengeMatchUpdateManyWithoutUserOneNestedInput
+  challenge_matches_two: UsersChallengeMatchUpdateManyWithoutUserTwoNestedInput
+  challenges_one: UsersChallengeUpdateManyWithoutUserOneNestedInput
+  challenges_two: UsersChallengeUpdateManyWithoutUserTwoNestedInput
+  configuration: UserConfigurationUpdateOneWithoutUserNestedInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  email: StringFieldUpdateOperationsInput
+  emailVerified: NullableDateTimeFieldUpdateOperationsInput
+  experience: UserExperienceUpdateOneWithoutUserNestedInput
+  id: StringFieldUpdateOperationsInput
+  image: NullableStringFieldUpdateOperationsInput
+  metadata: JSON
+  name: NullableStringFieldUpdateOperationsInput
+  notifications: UserNotificationUpdateManyWithoutUserNestedInput
+  password: NullableStringFieldUpdateOperationsInput
+  sessions: SessionUpdateManyWithoutUserNestedInput
+  tags: TagUpdateManyWithoutUserNestedInput
+  typingRuns: TypingRunUpdateManyWithoutUserNestedInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+}
+
+input UserUpdateWithoutChallenge_matches_oneInput {
+  accounts: AccountUpdateManyWithoutUserNestedInput
+  challenge_matches_two: UsersChallengeMatchUpdateManyWithoutUserTwoNestedInput
+  challenges_one: UsersChallengeUpdateManyWithoutUserOneNestedInput
+  challenges_two: UsersChallengeUpdateManyWithoutUserTwoNestedInput
+  configuration: UserConfigurationUpdateOneWithoutUserNestedInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  email: StringFieldUpdateOperationsInput
+  emailVerified: NullableDateTimeFieldUpdateOperationsInput
+  experience: UserExperienceUpdateOneWithoutUserNestedInput
+  id: StringFieldUpdateOperationsInput
+  image: NullableStringFieldUpdateOperationsInput
+  metadata: JSON
+  name: NullableStringFieldUpdateOperationsInput
+  notifications: UserNotificationUpdateManyWithoutUserNestedInput
+  password: NullableStringFieldUpdateOperationsInput
+  sessions: SessionUpdateManyWithoutUserNestedInput
+  tags: TagUpdateManyWithoutUserNestedInput
+  typingRuns: TypingRunUpdateManyWithoutUserNestedInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+}
+
+input UserUpdateWithoutChallenge_matches_twoInput {
+  accounts: AccountUpdateManyWithoutUserNestedInput
+  challenge_matches_one: UsersChallengeMatchUpdateManyWithoutUserOneNestedInput
+  challenges_one: UsersChallengeUpdateManyWithoutUserOneNestedInput
+  challenges_two: UsersChallengeUpdateManyWithoutUserTwoNestedInput
+  configuration: UserConfigurationUpdateOneWithoutUserNestedInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  email: StringFieldUpdateOperationsInput
+  emailVerified: NullableDateTimeFieldUpdateOperationsInput
+  experience: UserExperienceUpdateOneWithoutUserNestedInput
+  id: StringFieldUpdateOperationsInput
+  image: NullableStringFieldUpdateOperationsInput
+  metadata: JSON
+  name: NullableStringFieldUpdateOperationsInput
+  notifications: UserNotificationUpdateManyWithoutUserNestedInput
+  password: NullableStringFieldUpdateOperationsInput
+  sessions: SessionUpdateManyWithoutUserNestedInput
+  tags: TagUpdateManyWithoutUserNestedInput
+  typingRuns: TypingRunUpdateManyWithoutUserNestedInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+}
+
+input UserUpdateWithoutChallenges_oneInput {
+  accounts: AccountUpdateManyWithoutUserNestedInput
+  challenge_matches_one: UsersChallengeMatchUpdateManyWithoutUserOneNestedInput
+  challenge_matches_two: UsersChallengeMatchUpdateManyWithoutUserTwoNestedInput
+  challenges_two: UsersChallengeUpdateManyWithoutUserTwoNestedInput
+  configuration: UserConfigurationUpdateOneWithoutUserNestedInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  email: StringFieldUpdateOperationsInput
+  emailVerified: NullableDateTimeFieldUpdateOperationsInput
+  experience: UserExperienceUpdateOneWithoutUserNestedInput
+  id: StringFieldUpdateOperationsInput
+  image: NullableStringFieldUpdateOperationsInput
+  metadata: JSON
+  name: NullableStringFieldUpdateOperationsInput
+  notifications: UserNotificationUpdateManyWithoutUserNestedInput
+  password: NullableStringFieldUpdateOperationsInput
+  sessions: SessionUpdateManyWithoutUserNestedInput
+  tags: TagUpdateManyWithoutUserNestedInput
+  typingRuns: TypingRunUpdateManyWithoutUserNestedInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+}
+
+input UserUpdateWithoutChallenges_twoInput {
+  accounts: AccountUpdateManyWithoutUserNestedInput
+  challenge_matches_one: UsersChallengeMatchUpdateManyWithoutUserOneNestedInput
+  challenge_matches_two: UsersChallengeMatchUpdateManyWithoutUserTwoNestedInput
+  challenges_one: UsersChallengeUpdateManyWithoutUserOneNestedInput
+  configuration: UserConfigurationUpdateOneWithoutUserNestedInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  email: StringFieldUpdateOperationsInput
+  emailVerified: NullableDateTimeFieldUpdateOperationsInput
+  experience: UserExperienceUpdateOneWithoutUserNestedInput
+  id: StringFieldUpdateOperationsInput
+  image: NullableStringFieldUpdateOperationsInput
+  metadata: JSON
+  name: NullableStringFieldUpdateOperationsInput
+  notifications: UserNotificationUpdateManyWithoutUserNestedInput
+  password: NullableStringFieldUpdateOperationsInput
+  sessions: SessionUpdateManyWithoutUserNestedInput
+  tags: TagUpdateManyWithoutUserNestedInput
+  typingRuns: TypingRunUpdateManyWithoutUserNestedInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+}
+
+input UserUpdateWithoutConfigurationInput {
+  accounts: AccountUpdateManyWithoutUserNestedInput
+  challenge_matches_one: UsersChallengeMatchUpdateManyWithoutUserOneNestedInput
+  challenge_matches_two: UsersChallengeMatchUpdateManyWithoutUserTwoNestedInput
+  challenges_one: UsersChallengeUpdateManyWithoutUserOneNestedInput
+  challenges_two: UsersChallengeUpdateManyWithoutUserTwoNestedInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  email: StringFieldUpdateOperationsInput
+  emailVerified: NullableDateTimeFieldUpdateOperationsInput
+  experience: UserExperienceUpdateOneWithoutUserNestedInput
+  id: StringFieldUpdateOperationsInput
+  image: NullableStringFieldUpdateOperationsInput
+  metadata: JSON
+  name: NullableStringFieldUpdateOperationsInput
+  notifications: UserNotificationUpdateManyWithoutUserNestedInput
+  password: NullableStringFieldUpdateOperationsInput
+  sessions: SessionUpdateManyWithoutUserNestedInput
+  tags: TagUpdateManyWithoutUserNestedInput
+  typingRuns: TypingRunUpdateManyWithoutUserNestedInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+}
+
+input UserUpdateWithoutExperienceInput {
+  accounts: AccountUpdateManyWithoutUserNestedInput
+  challenge_matches_one: UsersChallengeMatchUpdateManyWithoutUserOneNestedInput
+  challenge_matches_two: UsersChallengeMatchUpdateManyWithoutUserTwoNestedInput
+  challenges_one: UsersChallengeUpdateManyWithoutUserOneNestedInput
+  challenges_two: UsersChallengeUpdateManyWithoutUserTwoNestedInput
+  configuration: UserConfigurationUpdateOneWithoutUserNestedInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  email: StringFieldUpdateOperationsInput
+  emailVerified: NullableDateTimeFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  image: NullableStringFieldUpdateOperationsInput
+  metadata: JSON
+  name: NullableStringFieldUpdateOperationsInput
+  notifications: UserNotificationUpdateManyWithoutUserNestedInput
+  password: NullableStringFieldUpdateOperationsInput
+  sessions: SessionUpdateManyWithoutUserNestedInput
+  tags: TagUpdateManyWithoutUserNestedInput
+  typingRuns: TypingRunUpdateManyWithoutUserNestedInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+}
+
+input UserUpdateWithoutNotificationsInput {
+  accounts: AccountUpdateManyWithoutUserNestedInput
+  challenge_matches_one: UsersChallengeMatchUpdateManyWithoutUserOneNestedInput
+  challenge_matches_two: UsersChallengeMatchUpdateManyWithoutUserTwoNestedInput
+  challenges_one: UsersChallengeUpdateManyWithoutUserOneNestedInput
+  challenges_two: UsersChallengeUpdateManyWithoutUserTwoNestedInput
+  configuration: UserConfigurationUpdateOneWithoutUserNestedInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  email: StringFieldUpdateOperationsInput
+  emailVerified: NullableDateTimeFieldUpdateOperationsInput
+  experience: UserExperienceUpdateOneWithoutUserNestedInput
+  id: StringFieldUpdateOperationsInput
+  image: NullableStringFieldUpdateOperationsInput
+  metadata: JSON
+  name: NullableStringFieldUpdateOperationsInput
+  password: NullableStringFieldUpdateOperationsInput
+  sessions: SessionUpdateManyWithoutUserNestedInput
+  tags: TagUpdateManyWithoutUserNestedInput
+  typingRuns: TypingRunUpdateManyWithoutUserNestedInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+}
+
+input UserUpdateWithoutSessionsInput {
+  accounts: AccountUpdateManyWithoutUserNestedInput
+  challenge_matches_one: UsersChallengeMatchUpdateManyWithoutUserOneNestedInput
+  challenge_matches_two: UsersChallengeMatchUpdateManyWithoutUserTwoNestedInput
+  challenges_one: UsersChallengeUpdateManyWithoutUserOneNestedInput
+  challenges_two: UsersChallengeUpdateManyWithoutUserTwoNestedInput
+  configuration: UserConfigurationUpdateOneWithoutUserNestedInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  email: StringFieldUpdateOperationsInput
+  emailVerified: NullableDateTimeFieldUpdateOperationsInput
+  experience: UserExperienceUpdateOneWithoutUserNestedInput
+  id: StringFieldUpdateOperationsInput
+  image: NullableStringFieldUpdateOperationsInput
+  metadata: JSON
+  name: NullableStringFieldUpdateOperationsInput
+  notifications: UserNotificationUpdateManyWithoutUserNestedInput
+  password: NullableStringFieldUpdateOperationsInput
+  tags: TagUpdateManyWithoutUserNestedInput
+  typingRuns: TypingRunUpdateManyWithoutUserNestedInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+}
+
+input UserUpdateWithoutTagsInput {
+  accounts: AccountUpdateManyWithoutUserNestedInput
+  challenge_matches_one: UsersChallengeMatchUpdateManyWithoutUserOneNestedInput
+  challenge_matches_two: UsersChallengeMatchUpdateManyWithoutUserTwoNestedInput
+  challenges_one: UsersChallengeUpdateManyWithoutUserOneNestedInput
+  challenges_two: UsersChallengeUpdateManyWithoutUserTwoNestedInput
+  configuration: UserConfigurationUpdateOneWithoutUserNestedInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  email: StringFieldUpdateOperationsInput
+  emailVerified: NullableDateTimeFieldUpdateOperationsInput
+  experience: UserExperienceUpdateOneWithoutUserNestedInput
+  id: StringFieldUpdateOperationsInput
+  image: NullableStringFieldUpdateOperationsInput
+  metadata: JSON
+  name: NullableStringFieldUpdateOperationsInput
+  notifications: UserNotificationUpdateManyWithoutUserNestedInput
+  password: NullableStringFieldUpdateOperationsInput
+  sessions: SessionUpdateManyWithoutUserNestedInput
+  typingRuns: TypingRunUpdateManyWithoutUserNestedInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+}
+
+input UserUpdateWithoutTypingRunsInput {
+  accounts: AccountUpdateManyWithoutUserNestedInput
+  challenge_matches_one: UsersChallengeMatchUpdateManyWithoutUserOneNestedInput
+  challenge_matches_two: UsersChallengeMatchUpdateManyWithoutUserTwoNestedInput
+  challenges_one: UsersChallengeUpdateManyWithoutUserOneNestedInput
+  challenges_two: UsersChallengeUpdateManyWithoutUserTwoNestedInput
+  configuration: UserConfigurationUpdateOneWithoutUserNestedInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  email: StringFieldUpdateOperationsInput
+  emailVerified: NullableDateTimeFieldUpdateOperationsInput
+  experience: UserExperienceUpdateOneWithoutUserNestedInput
+  id: StringFieldUpdateOperationsInput
+  image: NullableStringFieldUpdateOperationsInput
+  metadata: JSON
+  name: NullableStringFieldUpdateOperationsInput
+  notifications: UserNotificationUpdateManyWithoutUserNestedInput
+  password: NullableStringFieldUpdateOperationsInput
+  sessions: SessionUpdateManyWithoutUserNestedInput
+  tags: TagUpdateManyWithoutUserNestedInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+}
+
+input UserUpsertWithoutAccountsInput {
+  create: UserCreateWithoutAccountsInput!
+  update: UserUpdateWithoutAccountsInput!
+  where: UserWhereInput
+}
+
+input UserUpsertWithoutChallenge_matches_oneInput {
+  create: UserCreateWithoutChallenge_matches_oneInput!
+  update: UserUpdateWithoutChallenge_matches_oneInput!
+  where: UserWhereInput
+}
+
+input UserUpsertWithoutChallenge_matches_twoInput {
+  create: UserCreateWithoutChallenge_matches_twoInput!
+  update: UserUpdateWithoutChallenge_matches_twoInput!
+  where: UserWhereInput
+}
+
+input UserUpsertWithoutChallenges_oneInput {
+  create: UserCreateWithoutChallenges_oneInput!
+  update: UserUpdateWithoutChallenges_oneInput!
+  where: UserWhereInput
+}
+
+input UserUpsertWithoutChallenges_twoInput {
+  create: UserCreateWithoutChallenges_twoInput!
+  update: UserUpdateWithoutChallenges_twoInput!
+  where: UserWhereInput
+}
+
+input UserUpsertWithoutConfigurationInput {
+  create: UserCreateWithoutConfigurationInput!
+  update: UserUpdateWithoutConfigurationInput!
+  where: UserWhereInput
+}
+
+input UserUpsertWithoutExperienceInput {
+  create: UserCreateWithoutExperienceInput!
+  update: UserUpdateWithoutExperienceInput!
+  where: UserWhereInput
+}
+
+input UserUpsertWithoutNotificationsInput {
+  create: UserCreateWithoutNotificationsInput!
+  update: UserUpdateWithoutNotificationsInput!
+  where: UserWhereInput
+}
+
+input UserUpsertWithoutSessionsInput {
+  create: UserCreateWithoutSessionsInput!
+  update: UserUpdateWithoutSessionsInput!
+  where: UserWhereInput
+}
+
+input UserUpsertWithoutTagsInput {
+  create: UserCreateWithoutTagsInput!
+  update: UserUpdateWithoutTagsInput!
+  where: UserWhereInput
+}
+
+input UserUpsertWithoutTypingRunsInput {
+  create: UserCreateWithoutTypingRunsInput!
+  update: UserUpdateWithoutTypingRunsInput!
+  where: UserWhereInput
+}
+
 input UserWhereInput {
   AND: [UserWhereInput!]
   NOT: [UserWhereInput!]
@@ -1229,12 +5380,312 @@ input UserWhereInput {
   updatedAt: DateTimeFilter
 }
 
+input UserWhereUniqueInput {
+  AND: [UserWhereInput!]
+  NOT: [UserWhereInput!]
+  OR: [UserWhereInput!]
+  accounts: AccountListRelationFilter
+  challenge_matches_one: UsersChallengeMatchListRelationFilter
+  challenge_matches_two: UsersChallengeMatchListRelationFilter
+  challenges_one: UsersChallengeListRelationFilter
+  challenges_two: UsersChallengeListRelationFilter
+  configuration: UserConfigurationNullableRelationFilter
+  createdAt: DateTimeFilter
+  email: String
+  emailVerified: DateTimeNullableFilter
+  experience: UserExperienceNullableRelationFilter
+  id: String
+  image: StringNullableFilter
+  metadata: JsonNullableFilter
+  name: StringNullableFilter
+  notifications: UserNotificationListRelationFilter
+  password: StringNullableFilter
+  sessions: SessionListRelationFilter
+  tags: TagListRelationFilter
+  typingRuns: TypingRunListRelationFilter
+  updatedAt: DateTimeFilter
+}
+
 type UsersChallenge {
   createdAt: DateTimeISO!
   id: String!
   matchId: String!
 
   """[UsersChallengeMetadata]"""
+  metadata: JSON
+  state: UsersChallengeState!
+  updatedAt: DateTimeISO!
+  userOneId: String!
+  userOneRunId: String
+  userTwoId: String!
+  userTwoRunId: String
+}
+
+type UsersChallengeCountAggregate {
+  _all: Int!
+  createdAt: Int!
+  id: Int!
+  matchId: Int!
+  metadata: Int!
+  state: Int!
+  updatedAt: Int!
+  userOneId: Int!
+  userOneRunId: Int!
+  userTwoId: Int!
+  userTwoRunId: Int!
+}
+
+input UsersChallengeCountOrderByAggregateInput {
+  createdAt: SortOrder
+  id: SortOrder
+  matchId: SortOrder
+  metadata: SortOrder
+  state: SortOrder
+  updatedAt: SortOrder
+  userOneId: SortOrder
+  userOneRunId: SortOrder
+  userTwoId: SortOrder
+  userTwoRunId: SortOrder
+}
+
+input UsersChallengeCreateInput {
+  createdAt: DateTimeISO
+  id: String
+  match: UsersChallengeMatchCreateNestedOneWithoutChallengesInput!
+  metadata: JSON
+  state: UsersChallengeState
+  updatedAt: DateTimeISO
+  userOne: UserCreateNestedOneWithoutChallenges_oneInput!
+  userOneRun: TypingRunCreateNestedOneWithoutChallanges_oneInput
+  userTwo: UserCreateNestedOneWithoutChallenges_twoInput!
+  userTwoRun: TypingRunCreateNestedOneWithoutChallenges_twoInput
+}
+
+input UsersChallengeCreateManyInput {
+  createdAt: DateTimeISO
+  id: String
+  matchId: String!
+  metadata: JSON
+  state: UsersChallengeState
+  updatedAt: DateTimeISO
+  userOneId: String!
+  userOneRunId: String
+  userTwoId: String!
+  userTwoRunId: String
+}
+
+input UsersChallengeCreateManyMatchInput {
+  createdAt: DateTimeISO
+  id: String
+  metadata: JSON
+  state: UsersChallengeState
+  updatedAt: DateTimeISO
+  userOneId: String!
+  userOneRunId: String
+  userTwoId: String!
+  userTwoRunId: String
+}
+
+input UsersChallengeCreateManyMatchInputEnvelope {
+  data: [UsersChallengeCreateManyMatchInput!]!
+  skipDuplicates: Boolean
+}
+
+input UsersChallengeCreateManyUserOneInput {
+  createdAt: DateTimeISO
+  id: String
+  matchId: String!
+  metadata: JSON
+  state: UsersChallengeState
+  updatedAt: DateTimeISO
+  userOneRunId: String
+  userTwoId: String!
+  userTwoRunId: String
+}
+
+input UsersChallengeCreateManyUserOneInputEnvelope {
+  data: [UsersChallengeCreateManyUserOneInput!]!
+  skipDuplicates: Boolean
+}
+
+input UsersChallengeCreateManyUserOneRunInput {
+  createdAt: DateTimeISO
+  id: String
+  matchId: String!
+  metadata: JSON
+  state: UsersChallengeState
+  updatedAt: DateTimeISO
+  userOneId: String!
+  userTwoId: String!
+  userTwoRunId: String
+}
+
+input UsersChallengeCreateManyUserOneRunInputEnvelope {
+  data: [UsersChallengeCreateManyUserOneRunInput!]!
+  skipDuplicates: Boolean
+}
+
+input UsersChallengeCreateManyUserTwoInput {
+  createdAt: DateTimeISO
+  id: String
+  matchId: String!
+  metadata: JSON
+  state: UsersChallengeState
+  updatedAt: DateTimeISO
+  userOneId: String!
+  userOneRunId: String
+  userTwoRunId: String
+}
+
+input UsersChallengeCreateManyUserTwoInputEnvelope {
+  data: [UsersChallengeCreateManyUserTwoInput!]!
+  skipDuplicates: Boolean
+}
+
+input UsersChallengeCreateManyUserTwoRunInput {
+  createdAt: DateTimeISO
+  id: String
+  matchId: String!
+  metadata: JSON
+  state: UsersChallengeState
+  updatedAt: DateTimeISO
+  userOneId: String!
+  userOneRunId: String
+  userTwoId: String!
+}
+
+input UsersChallengeCreateManyUserTwoRunInputEnvelope {
+  data: [UsersChallengeCreateManyUserTwoRunInput!]!
+  skipDuplicates: Boolean
+}
+
+input UsersChallengeCreateNestedManyWithoutMatchInput {
+  connect: [UsersChallengeWhereUniqueInput!]
+  connectOrCreate: [UsersChallengeCreateOrConnectWithoutMatchInput!]
+  create: [UsersChallengeCreateWithoutMatchInput!]
+  createMany: UsersChallengeCreateManyMatchInputEnvelope
+}
+
+input UsersChallengeCreateNestedManyWithoutUserOneInput {
+  connect: [UsersChallengeWhereUniqueInput!]
+  connectOrCreate: [UsersChallengeCreateOrConnectWithoutUserOneInput!]
+  create: [UsersChallengeCreateWithoutUserOneInput!]
+  createMany: UsersChallengeCreateManyUserOneInputEnvelope
+}
+
+input UsersChallengeCreateNestedManyWithoutUserOneRunInput {
+  connect: [UsersChallengeWhereUniqueInput!]
+  connectOrCreate: [UsersChallengeCreateOrConnectWithoutUserOneRunInput!]
+  create: [UsersChallengeCreateWithoutUserOneRunInput!]
+  createMany: UsersChallengeCreateManyUserOneRunInputEnvelope
+}
+
+input UsersChallengeCreateNestedManyWithoutUserTwoInput {
+  connect: [UsersChallengeWhereUniqueInput!]
+  connectOrCreate: [UsersChallengeCreateOrConnectWithoutUserTwoInput!]
+  create: [UsersChallengeCreateWithoutUserTwoInput!]
+  createMany: UsersChallengeCreateManyUserTwoInputEnvelope
+}
+
+input UsersChallengeCreateNestedManyWithoutUserTwoRunInput {
+  connect: [UsersChallengeWhereUniqueInput!]
+  connectOrCreate: [UsersChallengeCreateOrConnectWithoutUserTwoRunInput!]
+  create: [UsersChallengeCreateWithoutUserTwoRunInput!]
+  createMany: UsersChallengeCreateManyUserTwoRunInputEnvelope
+}
+
+input UsersChallengeCreateOrConnectWithoutMatchInput {
+  create: UsersChallengeCreateWithoutMatchInput!
+  where: UsersChallengeWhereUniqueInput!
+}
+
+input UsersChallengeCreateOrConnectWithoutUserOneInput {
+  create: UsersChallengeCreateWithoutUserOneInput!
+  where: UsersChallengeWhereUniqueInput!
+}
+
+input UsersChallengeCreateOrConnectWithoutUserOneRunInput {
+  create: UsersChallengeCreateWithoutUserOneRunInput!
+  where: UsersChallengeWhereUniqueInput!
+}
+
+input UsersChallengeCreateOrConnectWithoutUserTwoInput {
+  create: UsersChallengeCreateWithoutUserTwoInput!
+  where: UsersChallengeWhereUniqueInput!
+}
+
+input UsersChallengeCreateOrConnectWithoutUserTwoRunInput {
+  create: UsersChallengeCreateWithoutUserTwoRunInput!
+  where: UsersChallengeWhereUniqueInput!
+}
+
+input UsersChallengeCreateWithoutMatchInput {
+  createdAt: DateTimeISO
+  id: String
+  metadata: JSON
+  state: UsersChallengeState
+  updatedAt: DateTimeISO
+  userOne: UserCreateNestedOneWithoutChallenges_oneInput!
+  userOneRun: TypingRunCreateNestedOneWithoutChallanges_oneInput
+  userTwo: UserCreateNestedOneWithoutChallenges_twoInput!
+  userTwoRun: TypingRunCreateNestedOneWithoutChallenges_twoInput
+}
+
+input UsersChallengeCreateWithoutUserOneInput {
+  createdAt: DateTimeISO
+  id: String
+  match: UsersChallengeMatchCreateNestedOneWithoutChallengesInput!
+  metadata: JSON
+  state: UsersChallengeState
+  updatedAt: DateTimeISO
+  userOneRun: TypingRunCreateNestedOneWithoutChallanges_oneInput
+  userTwo: UserCreateNestedOneWithoutChallenges_twoInput!
+  userTwoRun: TypingRunCreateNestedOneWithoutChallenges_twoInput
+}
+
+input UsersChallengeCreateWithoutUserOneRunInput {
+  createdAt: DateTimeISO
+  id: String
+  match: UsersChallengeMatchCreateNestedOneWithoutChallengesInput!
+  metadata: JSON
+  state: UsersChallengeState
+  updatedAt: DateTimeISO
+  userOne: UserCreateNestedOneWithoutChallenges_oneInput!
+  userTwo: UserCreateNestedOneWithoutChallenges_twoInput!
+  userTwoRun: TypingRunCreateNestedOneWithoutChallenges_twoInput
+}
+
+input UsersChallengeCreateWithoutUserTwoInput {
+  createdAt: DateTimeISO
+  id: String
+  match: UsersChallengeMatchCreateNestedOneWithoutChallengesInput!
+  metadata: JSON
+  state: UsersChallengeState
+  updatedAt: DateTimeISO
+  userOne: UserCreateNestedOneWithoutChallenges_oneInput!
+  userOneRun: TypingRunCreateNestedOneWithoutChallanges_oneInput
+  userTwoRun: TypingRunCreateNestedOneWithoutChallenges_twoInput
+}
+
+input UsersChallengeCreateWithoutUserTwoRunInput {
+  createdAt: DateTimeISO
+  id: String
+  match: UsersChallengeMatchCreateNestedOneWithoutChallengesInput!
+  metadata: JSON
+  state: UsersChallengeState
+  updatedAt: DateTimeISO
+  userOne: UserCreateNestedOneWithoutChallenges_oneInput!
+  userOneRun: TypingRunCreateNestedOneWithoutChallanges_oneInput
+  userTwo: UserCreateNestedOneWithoutChallenges_twoInput!
+}
+
+type UsersChallengeGroupBy {
+  _count: UsersChallengeCountAggregate
+  _max: UsersChallengeMaxAggregate
+  _min: UsersChallengeMinAggregate
+  createdAt: DateTimeISO!
+  id: String!
+  matchId: String!
   metadata: JSON
   state: UsersChallengeState!
   updatedAt: DateTimeISO!
@@ -1267,10 +5718,194 @@ type UsersChallengeMatchCount {
   challenges(where: UsersChallengeWhereInput): Int!
 }
 
+type UsersChallengeMatchCountAggregate {
+  _all: Int!
+  createdAt: Int!
+  id: Int!
+  metadata: Int!
+  state: Int!
+  updatedAt: Int!
+  userOneId: Int!
+  userTwoId: Int!
+}
+
+input UsersChallengeMatchCountOrderByAggregateInput {
+  createdAt: SortOrder
+  id: SortOrder
+  metadata: SortOrder
+  state: SortOrder
+  updatedAt: SortOrder
+  userOneId: SortOrder
+  userTwoId: SortOrder
+}
+
+input UsersChallengeMatchCreateInput {
+  challenges: UsersChallengeCreateNestedManyWithoutMatchInput
+  createdAt: DateTimeISO
+  id: String
+  metadata: JSON
+  state: UsersChallengeMatchState
+  updatedAt: DateTimeISO
+  userOne: UserCreateNestedOneWithoutChallenge_matches_oneInput!
+  userTwo: UserCreateNestedOneWithoutChallenge_matches_twoInput!
+}
+
+input UsersChallengeMatchCreateManyInput {
+  createdAt: DateTimeISO
+  id: String
+  metadata: JSON
+  state: UsersChallengeMatchState
+  updatedAt: DateTimeISO
+  userOneId: String!
+  userTwoId: String!
+}
+
+input UsersChallengeMatchCreateManyUserOneInput {
+  createdAt: DateTimeISO
+  id: String
+  metadata: JSON
+  state: UsersChallengeMatchState
+  updatedAt: DateTimeISO
+  userTwoId: String!
+}
+
+input UsersChallengeMatchCreateManyUserOneInputEnvelope {
+  data: [UsersChallengeMatchCreateManyUserOneInput!]!
+  skipDuplicates: Boolean
+}
+
+input UsersChallengeMatchCreateManyUserTwoInput {
+  createdAt: DateTimeISO
+  id: String
+  metadata: JSON
+  state: UsersChallengeMatchState
+  updatedAt: DateTimeISO
+  userOneId: String!
+}
+
+input UsersChallengeMatchCreateManyUserTwoInputEnvelope {
+  data: [UsersChallengeMatchCreateManyUserTwoInput!]!
+  skipDuplicates: Boolean
+}
+
+input UsersChallengeMatchCreateNestedManyWithoutUserOneInput {
+  connect: [UsersChallengeMatchWhereUniqueInput!]
+  connectOrCreate: [UsersChallengeMatchCreateOrConnectWithoutUserOneInput!]
+  create: [UsersChallengeMatchCreateWithoutUserOneInput!]
+  createMany: UsersChallengeMatchCreateManyUserOneInputEnvelope
+}
+
+input UsersChallengeMatchCreateNestedManyWithoutUserTwoInput {
+  connect: [UsersChallengeMatchWhereUniqueInput!]
+  connectOrCreate: [UsersChallengeMatchCreateOrConnectWithoutUserTwoInput!]
+  create: [UsersChallengeMatchCreateWithoutUserTwoInput!]
+  createMany: UsersChallengeMatchCreateManyUserTwoInputEnvelope
+}
+
+input UsersChallengeMatchCreateNestedOneWithoutChallengesInput {
+  connect: UsersChallengeMatchWhereUniqueInput
+  connectOrCreate: UsersChallengeMatchCreateOrConnectWithoutChallengesInput
+  create: UsersChallengeMatchCreateWithoutChallengesInput
+}
+
+input UsersChallengeMatchCreateOrConnectWithoutChallengesInput {
+  create: UsersChallengeMatchCreateWithoutChallengesInput!
+  where: UsersChallengeMatchWhereUniqueInput!
+}
+
+input UsersChallengeMatchCreateOrConnectWithoutUserOneInput {
+  create: UsersChallengeMatchCreateWithoutUserOneInput!
+  where: UsersChallengeMatchWhereUniqueInput!
+}
+
+input UsersChallengeMatchCreateOrConnectWithoutUserTwoInput {
+  create: UsersChallengeMatchCreateWithoutUserTwoInput!
+  where: UsersChallengeMatchWhereUniqueInput!
+}
+
+input UsersChallengeMatchCreateWithoutChallengesInput {
+  createdAt: DateTimeISO
+  id: String
+  metadata: JSON
+  state: UsersChallengeMatchState
+  updatedAt: DateTimeISO
+  userOne: UserCreateNestedOneWithoutChallenge_matches_oneInput!
+  userTwo: UserCreateNestedOneWithoutChallenge_matches_twoInput!
+}
+
+input UsersChallengeMatchCreateWithoutUserOneInput {
+  challenges: UsersChallengeCreateNestedManyWithoutMatchInput
+  createdAt: DateTimeISO
+  id: String
+  metadata: JSON
+  state: UsersChallengeMatchState
+  updatedAt: DateTimeISO
+  userTwo: UserCreateNestedOneWithoutChallenge_matches_twoInput!
+}
+
+input UsersChallengeMatchCreateWithoutUserTwoInput {
+  challenges: UsersChallengeCreateNestedManyWithoutMatchInput
+  createdAt: DateTimeISO
+  id: String
+  metadata: JSON
+  state: UsersChallengeMatchState
+  updatedAt: DateTimeISO
+  userOne: UserCreateNestedOneWithoutChallenge_matches_oneInput!
+}
+
+type UsersChallengeMatchGroupBy {
+  _count: UsersChallengeMatchCountAggregate
+  _max: UsersChallengeMatchMaxAggregate
+  _min: UsersChallengeMatchMinAggregate
+  createdAt: DateTimeISO!
+  id: String!
+  metadata: JSON
+  state: UsersChallengeMatchState!
+  updatedAt: DateTimeISO!
+  userOneId: String!
+  userTwoId: String!
+}
+
 input UsersChallengeMatchListRelationFilter {
   every: UsersChallengeMatchWhereInput
   none: UsersChallengeMatchWhereInput
   some: UsersChallengeMatchWhereInput
+}
+
+type UsersChallengeMatchMaxAggregate {
+  createdAt: DateTimeISO
+  id: String
+  state: UsersChallengeMatchState
+  updatedAt: DateTimeISO
+  userOneId: String
+  userTwoId: String
+}
+
+input UsersChallengeMatchMaxOrderByAggregateInput {
+  createdAt: SortOrder
+  id: SortOrder
+  state: SortOrder
+  updatedAt: SortOrder
+  userOneId: SortOrder
+  userTwoId: SortOrder
+}
+
+type UsersChallengeMatchMinAggregate {
+  createdAt: DateTimeISO
+  id: String
+  state: UsersChallengeMatchState
+  updatedAt: DateTimeISO
+  userOneId: String
+  userTwoId: String
+}
+
+input UsersChallengeMatchMinOrderByAggregateInput {
+  createdAt: SortOrder
+  id: SortOrder
+  state: SortOrder
+  updatedAt: SortOrder
+  userOneId: SortOrder
+  userTwoId: SortOrder
 }
 
 input UsersChallengeMatchOrderByRelationAggregateInput {
@@ -1287,6 +5922,19 @@ input UsersChallengeMatchOrderByRelevanceInput {
   fields: [UsersChallengeMatchOrderByRelevanceFieldEnum!]!
   search: String!
   sort: SortOrder!
+}
+
+input UsersChallengeMatchOrderByWithAggregationInput {
+  _count: UsersChallengeMatchCountOrderByAggregateInput
+  _max: UsersChallengeMatchMaxOrderByAggregateInput
+  _min: UsersChallengeMatchMinOrderByAggregateInput
+  createdAt: SortOrder
+  id: SortOrder
+  metadata: SortOrderInput
+  state: SortOrder
+  updatedAt: SortOrder
+  userOneId: SortOrder
+  userTwoId: SortOrder
 }
 
 input UsersChallengeMatchOrderByWithRelationInput {
@@ -1318,12 +5966,166 @@ enum UsersChallengeMatchScalarFieldEnum {
   userTwoId
 }
 
+input UsersChallengeMatchScalarWhereInput {
+  AND: [UsersChallengeMatchScalarWhereInput!]
+  NOT: [UsersChallengeMatchScalarWhereInput!]
+  OR: [UsersChallengeMatchScalarWhereInput!]
+  createdAt: DateTimeFilter
+  id: UuidFilter
+  metadata: JsonNullableFilter
+  state: EnumUsersChallengeMatchStateFilter
+  updatedAt: DateTimeFilter
+  userOneId: StringFilter
+  userTwoId: StringFilter
+}
+
+input UsersChallengeMatchScalarWhereWithAggregatesInput {
+  AND: [UsersChallengeMatchScalarWhereWithAggregatesInput!]
+  NOT: [UsersChallengeMatchScalarWhereWithAggregatesInput!]
+  OR: [UsersChallengeMatchScalarWhereWithAggregatesInput!]
+  createdAt: DateTimeWithAggregatesFilter
+  id: UuidWithAggregatesFilter
+  metadata: JsonNullableWithAggregatesFilter
+  state: EnumUsersChallengeMatchStateWithAggregatesFilter
+  updatedAt: DateTimeWithAggregatesFilter
+  userOneId: StringWithAggregatesFilter
+  userTwoId: StringWithAggregatesFilter
+}
+
 enum UsersChallengeMatchState {
   Accepted
   HalfAccepted
   Pending
   Rejected
   Started
+}
+
+input UsersChallengeMatchUpdateInput {
+  challenges: UsersChallengeUpdateManyWithoutMatchNestedInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  metadata: JSON
+  state: EnumUsersChallengeMatchStateFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+  userOne: UserUpdateOneRequiredWithoutChallenge_matches_oneNestedInput
+  userTwo: UserUpdateOneRequiredWithoutChallenge_matches_twoNestedInput
+}
+
+input UsersChallengeMatchUpdateManyMutationInput {
+  createdAt: DateTimeFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  metadata: JSON
+  state: EnumUsersChallengeMatchStateFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+}
+
+input UsersChallengeMatchUpdateManyWithWhereWithoutUserOneInput {
+  data: UsersChallengeMatchUpdateManyMutationInput!
+  where: UsersChallengeMatchScalarWhereInput!
+}
+
+input UsersChallengeMatchUpdateManyWithWhereWithoutUserTwoInput {
+  data: UsersChallengeMatchUpdateManyMutationInput!
+  where: UsersChallengeMatchScalarWhereInput!
+}
+
+input UsersChallengeMatchUpdateManyWithoutUserOneNestedInput {
+  connect: [UsersChallengeMatchWhereUniqueInput!]
+  connectOrCreate: [UsersChallengeMatchCreateOrConnectWithoutUserOneInput!]
+  create: [UsersChallengeMatchCreateWithoutUserOneInput!]
+  createMany: UsersChallengeMatchCreateManyUserOneInputEnvelope
+  delete: [UsersChallengeMatchWhereUniqueInput!]
+  deleteMany: [UsersChallengeMatchScalarWhereInput!]
+  disconnect: [UsersChallengeMatchWhereUniqueInput!]
+  set: [UsersChallengeMatchWhereUniqueInput!]
+  update: [UsersChallengeMatchUpdateWithWhereUniqueWithoutUserOneInput!]
+  updateMany: [UsersChallengeMatchUpdateManyWithWhereWithoutUserOneInput!]
+  upsert: [UsersChallengeMatchUpsertWithWhereUniqueWithoutUserOneInput!]
+}
+
+input UsersChallengeMatchUpdateManyWithoutUserTwoNestedInput {
+  connect: [UsersChallengeMatchWhereUniqueInput!]
+  connectOrCreate: [UsersChallengeMatchCreateOrConnectWithoutUserTwoInput!]
+  create: [UsersChallengeMatchCreateWithoutUserTwoInput!]
+  createMany: UsersChallengeMatchCreateManyUserTwoInputEnvelope
+  delete: [UsersChallengeMatchWhereUniqueInput!]
+  deleteMany: [UsersChallengeMatchScalarWhereInput!]
+  disconnect: [UsersChallengeMatchWhereUniqueInput!]
+  set: [UsersChallengeMatchWhereUniqueInput!]
+  update: [UsersChallengeMatchUpdateWithWhereUniqueWithoutUserTwoInput!]
+  updateMany: [UsersChallengeMatchUpdateManyWithWhereWithoutUserTwoInput!]
+  upsert: [UsersChallengeMatchUpsertWithWhereUniqueWithoutUserTwoInput!]
+}
+
+input UsersChallengeMatchUpdateOneRequiredWithoutChallengesNestedInput {
+  connect: UsersChallengeMatchWhereUniqueInput
+  connectOrCreate: UsersChallengeMatchCreateOrConnectWithoutChallengesInput
+  create: UsersChallengeMatchCreateWithoutChallengesInput
+  update: UsersChallengeMatchUpdateToOneWithWhereWithoutChallengesInput
+  upsert: UsersChallengeMatchUpsertWithoutChallengesInput
+}
+
+input UsersChallengeMatchUpdateToOneWithWhereWithoutChallengesInput {
+  data: UsersChallengeMatchUpdateWithoutChallengesInput!
+  where: UsersChallengeMatchWhereInput
+}
+
+input UsersChallengeMatchUpdateWithWhereUniqueWithoutUserOneInput {
+  data: UsersChallengeMatchUpdateWithoutUserOneInput!
+  where: UsersChallengeMatchWhereUniqueInput!
+}
+
+input UsersChallengeMatchUpdateWithWhereUniqueWithoutUserTwoInput {
+  data: UsersChallengeMatchUpdateWithoutUserTwoInput!
+  where: UsersChallengeMatchWhereUniqueInput!
+}
+
+input UsersChallengeMatchUpdateWithoutChallengesInput {
+  createdAt: DateTimeFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  metadata: JSON
+  state: EnumUsersChallengeMatchStateFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+  userOne: UserUpdateOneRequiredWithoutChallenge_matches_oneNestedInput
+  userTwo: UserUpdateOneRequiredWithoutChallenge_matches_twoNestedInput
+}
+
+input UsersChallengeMatchUpdateWithoutUserOneInput {
+  challenges: UsersChallengeUpdateManyWithoutMatchNestedInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  metadata: JSON
+  state: EnumUsersChallengeMatchStateFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+  userTwo: UserUpdateOneRequiredWithoutChallenge_matches_twoNestedInput
+}
+
+input UsersChallengeMatchUpdateWithoutUserTwoInput {
+  challenges: UsersChallengeUpdateManyWithoutMatchNestedInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  metadata: JSON
+  state: EnumUsersChallengeMatchStateFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+  userOne: UserUpdateOneRequiredWithoutChallenge_matches_oneNestedInput
+}
+
+input UsersChallengeMatchUpsertWithWhereUniqueWithoutUserOneInput {
+  create: UsersChallengeMatchCreateWithoutUserOneInput!
+  update: UsersChallengeMatchUpdateWithoutUserOneInput!
+  where: UsersChallengeMatchWhereUniqueInput!
+}
+
+input UsersChallengeMatchUpsertWithWhereUniqueWithoutUserTwoInput {
+  create: UsersChallengeMatchCreateWithoutUserTwoInput!
+  update: UsersChallengeMatchUpdateWithoutUserTwoInput!
+  where: UsersChallengeMatchWhereUniqueInput!
+}
+
+input UsersChallengeMatchUpsertWithoutChallengesInput {
+  create: UsersChallengeMatchCreateWithoutChallengesInput!
+  update: UsersChallengeMatchUpdateWithoutChallengesInput!
+  where: UsersChallengeMatchWhereInput
 }
 
 input UsersChallengeMatchWhereInput {
@@ -1358,6 +6160,54 @@ input UsersChallengeMatchWhereUniqueInput {
   userTwoId: StringFilter
 }
 
+type UsersChallengeMaxAggregate {
+  createdAt: DateTimeISO
+  id: String
+  matchId: String
+  state: UsersChallengeState
+  updatedAt: DateTimeISO
+  userOneId: String
+  userOneRunId: String
+  userTwoId: String
+  userTwoRunId: String
+}
+
+input UsersChallengeMaxOrderByAggregateInput {
+  createdAt: SortOrder
+  id: SortOrder
+  matchId: SortOrder
+  state: SortOrder
+  updatedAt: SortOrder
+  userOneId: SortOrder
+  userOneRunId: SortOrder
+  userTwoId: SortOrder
+  userTwoRunId: SortOrder
+}
+
+type UsersChallengeMinAggregate {
+  createdAt: DateTimeISO
+  id: String
+  matchId: String
+  state: UsersChallengeState
+  updatedAt: DateTimeISO
+  userOneId: String
+  userOneRunId: String
+  userTwoId: String
+  userTwoRunId: String
+}
+
+input UsersChallengeMinOrderByAggregateInput {
+  createdAt: SortOrder
+  id: SortOrder
+  matchId: SortOrder
+  state: SortOrder
+  updatedAt: SortOrder
+  userOneId: SortOrder
+  userOneRunId: SortOrder
+  userTwoId: SortOrder
+  userTwoRunId: SortOrder
+}
+
 input UsersChallengeOrderByRelationAggregateInput {
   _count: SortOrder
 }
@@ -1375,6 +6225,22 @@ input UsersChallengeOrderByRelevanceInput {
   fields: [UsersChallengeOrderByRelevanceFieldEnum!]!
   search: String!
   sort: SortOrder!
+}
+
+input UsersChallengeOrderByWithAggregationInput {
+  _count: UsersChallengeCountOrderByAggregateInput
+  _max: UsersChallengeMaxOrderByAggregateInput
+  _min: UsersChallengeMinOrderByAggregateInput
+  createdAt: SortOrder
+  id: SortOrder
+  matchId: SortOrder
+  metadata: SortOrderInput
+  state: SortOrder
+  updatedAt: SortOrder
+  userOneId: SortOrder
+  userOneRunId: SortOrderInput
+  userTwoId: SortOrder
+  userTwoRunId: SortOrderInput
 }
 
 input UsersChallengeOrderByWithRelationInput {
@@ -1409,11 +6275,274 @@ enum UsersChallengeScalarFieldEnum {
   userTwoRunId
 }
 
+input UsersChallengeScalarWhereInput {
+  AND: [UsersChallengeScalarWhereInput!]
+  NOT: [UsersChallengeScalarWhereInput!]
+  OR: [UsersChallengeScalarWhereInput!]
+  createdAt: DateTimeFilter
+  id: UuidFilter
+  matchId: UuidFilter
+  metadata: JsonNullableFilter
+  state: EnumUsersChallengeStateFilter
+  updatedAt: DateTimeFilter
+  userOneId: StringFilter
+  userOneRunId: UuidNullableFilter
+  userTwoId: StringFilter
+  userTwoRunId: UuidNullableFilter
+}
+
+input UsersChallengeScalarWhereWithAggregatesInput {
+  AND: [UsersChallengeScalarWhereWithAggregatesInput!]
+  NOT: [UsersChallengeScalarWhereWithAggregatesInput!]
+  OR: [UsersChallengeScalarWhereWithAggregatesInput!]
+  createdAt: DateTimeWithAggregatesFilter
+  id: UuidWithAggregatesFilter
+  matchId: UuidWithAggregatesFilter
+  metadata: JsonNullableWithAggregatesFilter
+  state: EnumUsersChallengeStateWithAggregatesFilter
+  updatedAt: DateTimeWithAggregatesFilter
+  userOneId: StringWithAggregatesFilter
+  userOneRunId: UuidNullableWithAggregatesFilter
+  userTwoId: StringWithAggregatesFilter
+  userTwoRunId: UuidNullableWithAggregatesFilter
+}
+
 enum UsersChallengeState {
   Finished
   Pending
   Playing
   Stopped
+}
+
+input UsersChallengeUpdateInput {
+  createdAt: DateTimeFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  match: UsersChallengeMatchUpdateOneRequiredWithoutChallengesNestedInput
+  metadata: JSON
+  state: EnumUsersChallengeStateFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+  userOne: UserUpdateOneRequiredWithoutChallenges_oneNestedInput
+  userOneRun: TypingRunUpdateOneWithoutChallanges_oneNestedInput
+  userTwo: UserUpdateOneRequiredWithoutChallenges_twoNestedInput
+  userTwoRun: TypingRunUpdateOneWithoutChallenges_twoNestedInput
+}
+
+input UsersChallengeUpdateManyMutationInput {
+  createdAt: DateTimeFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  metadata: JSON
+  state: EnumUsersChallengeStateFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+}
+
+input UsersChallengeUpdateManyWithWhereWithoutMatchInput {
+  data: UsersChallengeUpdateManyMutationInput!
+  where: UsersChallengeScalarWhereInput!
+}
+
+input UsersChallengeUpdateManyWithWhereWithoutUserOneInput {
+  data: UsersChallengeUpdateManyMutationInput!
+  where: UsersChallengeScalarWhereInput!
+}
+
+input UsersChallengeUpdateManyWithWhereWithoutUserOneRunInput {
+  data: UsersChallengeUpdateManyMutationInput!
+  where: UsersChallengeScalarWhereInput!
+}
+
+input UsersChallengeUpdateManyWithWhereWithoutUserTwoInput {
+  data: UsersChallengeUpdateManyMutationInput!
+  where: UsersChallengeScalarWhereInput!
+}
+
+input UsersChallengeUpdateManyWithWhereWithoutUserTwoRunInput {
+  data: UsersChallengeUpdateManyMutationInput!
+  where: UsersChallengeScalarWhereInput!
+}
+
+input UsersChallengeUpdateManyWithoutMatchNestedInput {
+  connect: [UsersChallengeWhereUniqueInput!]
+  connectOrCreate: [UsersChallengeCreateOrConnectWithoutMatchInput!]
+  create: [UsersChallengeCreateWithoutMatchInput!]
+  createMany: UsersChallengeCreateManyMatchInputEnvelope
+  delete: [UsersChallengeWhereUniqueInput!]
+  deleteMany: [UsersChallengeScalarWhereInput!]
+  disconnect: [UsersChallengeWhereUniqueInput!]
+  set: [UsersChallengeWhereUniqueInput!]
+  update: [UsersChallengeUpdateWithWhereUniqueWithoutMatchInput!]
+  updateMany: [UsersChallengeUpdateManyWithWhereWithoutMatchInput!]
+  upsert: [UsersChallengeUpsertWithWhereUniqueWithoutMatchInput!]
+}
+
+input UsersChallengeUpdateManyWithoutUserOneNestedInput {
+  connect: [UsersChallengeWhereUniqueInput!]
+  connectOrCreate: [UsersChallengeCreateOrConnectWithoutUserOneInput!]
+  create: [UsersChallengeCreateWithoutUserOneInput!]
+  createMany: UsersChallengeCreateManyUserOneInputEnvelope
+  delete: [UsersChallengeWhereUniqueInput!]
+  deleteMany: [UsersChallengeScalarWhereInput!]
+  disconnect: [UsersChallengeWhereUniqueInput!]
+  set: [UsersChallengeWhereUniqueInput!]
+  update: [UsersChallengeUpdateWithWhereUniqueWithoutUserOneInput!]
+  updateMany: [UsersChallengeUpdateManyWithWhereWithoutUserOneInput!]
+  upsert: [UsersChallengeUpsertWithWhereUniqueWithoutUserOneInput!]
+}
+
+input UsersChallengeUpdateManyWithoutUserOneRunNestedInput {
+  connect: [UsersChallengeWhereUniqueInput!]
+  connectOrCreate: [UsersChallengeCreateOrConnectWithoutUserOneRunInput!]
+  create: [UsersChallengeCreateWithoutUserOneRunInput!]
+  createMany: UsersChallengeCreateManyUserOneRunInputEnvelope
+  delete: [UsersChallengeWhereUniqueInput!]
+  deleteMany: [UsersChallengeScalarWhereInput!]
+  disconnect: [UsersChallengeWhereUniqueInput!]
+  set: [UsersChallengeWhereUniqueInput!]
+  update: [UsersChallengeUpdateWithWhereUniqueWithoutUserOneRunInput!]
+  updateMany: [UsersChallengeUpdateManyWithWhereWithoutUserOneRunInput!]
+  upsert: [UsersChallengeUpsertWithWhereUniqueWithoutUserOneRunInput!]
+}
+
+input UsersChallengeUpdateManyWithoutUserTwoNestedInput {
+  connect: [UsersChallengeWhereUniqueInput!]
+  connectOrCreate: [UsersChallengeCreateOrConnectWithoutUserTwoInput!]
+  create: [UsersChallengeCreateWithoutUserTwoInput!]
+  createMany: UsersChallengeCreateManyUserTwoInputEnvelope
+  delete: [UsersChallengeWhereUniqueInput!]
+  deleteMany: [UsersChallengeScalarWhereInput!]
+  disconnect: [UsersChallengeWhereUniqueInput!]
+  set: [UsersChallengeWhereUniqueInput!]
+  update: [UsersChallengeUpdateWithWhereUniqueWithoutUserTwoInput!]
+  updateMany: [UsersChallengeUpdateManyWithWhereWithoutUserTwoInput!]
+  upsert: [UsersChallengeUpsertWithWhereUniqueWithoutUserTwoInput!]
+}
+
+input UsersChallengeUpdateManyWithoutUserTwoRunNestedInput {
+  connect: [UsersChallengeWhereUniqueInput!]
+  connectOrCreate: [UsersChallengeCreateOrConnectWithoutUserTwoRunInput!]
+  create: [UsersChallengeCreateWithoutUserTwoRunInput!]
+  createMany: UsersChallengeCreateManyUserTwoRunInputEnvelope
+  delete: [UsersChallengeWhereUniqueInput!]
+  deleteMany: [UsersChallengeScalarWhereInput!]
+  disconnect: [UsersChallengeWhereUniqueInput!]
+  set: [UsersChallengeWhereUniqueInput!]
+  update: [UsersChallengeUpdateWithWhereUniqueWithoutUserTwoRunInput!]
+  updateMany: [UsersChallengeUpdateManyWithWhereWithoutUserTwoRunInput!]
+  upsert: [UsersChallengeUpsertWithWhereUniqueWithoutUserTwoRunInput!]
+}
+
+input UsersChallengeUpdateWithWhereUniqueWithoutMatchInput {
+  data: UsersChallengeUpdateWithoutMatchInput!
+  where: UsersChallengeWhereUniqueInput!
+}
+
+input UsersChallengeUpdateWithWhereUniqueWithoutUserOneInput {
+  data: UsersChallengeUpdateWithoutUserOneInput!
+  where: UsersChallengeWhereUniqueInput!
+}
+
+input UsersChallengeUpdateWithWhereUniqueWithoutUserOneRunInput {
+  data: UsersChallengeUpdateWithoutUserOneRunInput!
+  where: UsersChallengeWhereUniqueInput!
+}
+
+input UsersChallengeUpdateWithWhereUniqueWithoutUserTwoInput {
+  data: UsersChallengeUpdateWithoutUserTwoInput!
+  where: UsersChallengeWhereUniqueInput!
+}
+
+input UsersChallengeUpdateWithWhereUniqueWithoutUserTwoRunInput {
+  data: UsersChallengeUpdateWithoutUserTwoRunInput!
+  where: UsersChallengeWhereUniqueInput!
+}
+
+input UsersChallengeUpdateWithoutMatchInput {
+  createdAt: DateTimeFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  metadata: JSON
+  state: EnumUsersChallengeStateFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+  userOne: UserUpdateOneRequiredWithoutChallenges_oneNestedInput
+  userOneRun: TypingRunUpdateOneWithoutChallanges_oneNestedInput
+  userTwo: UserUpdateOneRequiredWithoutChallenges_twoNestedInput
+  userTwoRun: TypingRunUpdateOneWithoutChallenges_twoNestedInput
+}
+
+input UsersChallengeUpdateWithoutUserOneInput {
+  createdAt: DateTimeFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  match: UsersChallengeMatchUpdateOneRequiredWithoutChallengesNestedInput
+  metadata: JSON
+  state: EnumUsersChallengeStateFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+  userOneRun: TypingRunUpdateOneWithoutChallanges_oneNestedInput
+  userTwo: UserUpdateOneRequiredWithoutChallenges_twoNestedInput
+  userTwoRun: TypingRunUpdateOneWithoutChallenges_twoNestedInput
+}
+
+input UsersChallengeUpdateWithoutUserOneRunInput {
+  createdAt: DateTimeFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  match: UsersChallengeMatchUpdateOneRequiredWithoutChallengesNestedInput
+  metadata: JSON
+  state: EnumUsersChallengeStateFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+  userOne: UserUpdateOneRequiredWithoutChallenges_oneNestedInput
+  userTwo: UserUpdateOneRequiredWithoutChallenges_twoNestedInput
+  userTwoRun: TypingRunUpdateOneWithoutChallenges_twoNestedInput
+}
+
+input UsersChallengeUpdateWithoutUserTwoInput {
+  createdAt: DateTimeFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  match: UsersChallengeMatchUpdateOneRequiredWithoutChallengesNestedInput
+  metadata: JSON
+  state: EnumUsersChallengeStateFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+  userOne: UserUpdateOneRequiredWithoutChallenges_oneNestedInput
+  userOneRun: TypingRunUpdateOneWithoutChallanges_oneNestedInput
+  userTwoRun: TypingRunUpdateOneWithoutChallenges_twoNestedInput
+}
+
+input UsersChallengeUpdateWithoutUserTwoRunInput {
+  createdAt: DateTimeFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  match: UsersChallengeMatchUpdateOneRequiredWithoutChallengesNestedInput
+  metadata: JSON
+  state: EnumUsersChallengeStateFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+  userOne: UserUpdateOneRequiredWithoutChallenges_oneNestedInput
+  userOneRun: TypingRunUpdateOneWithoutChallanges_oneNestedInput
+  userTwo: UserUpdateOneRequiredWithoutChallenges_twoNestedInput
+}
+
+input UsersChallengeUpsertWithWhereUniqueWithoutMatchInput {
+  create: UsersChallengeCreateWithoutMatchInput!
+  update: UsersChallengeUpdateWithoutMatchInput!
+  where: UsersChallengeWhereUniqueInput!
+}
+
+input UsersChallengeUpsertWithWhereUniqueWithoutUserOneInput {
+  create: UsersChallengeCreateWithoutUserOneInput!
+  update: UsersChallengeUpdateWithoutUserOneInput!
+  where: UsersChallengeWhereUniqueInput!
+}
+
+input UsersChallengeUpsertWithWhereUniqueWithoutUserOneRunInput {
+  create: UsersChallengeCreateWithoutUserOneRunInput!
+  update: UsersChallengeUpdateWithoutUserOneRunInput!
+  where: UsersChallengeWhereUniqueInput!
+}
+
+input UsersChallengeUpsertWithWhereUniqueWithoutUserTwoInput {
+  create: UsersChallengeCreateWithoutUserTwoInput!
+  update: UsersChallengeUpdateWithoutUserTwoInput!
+  where: UsersChallengeWhereUniqueInput!
+}
+
+input UsersChallengeUpsertWithWhereUniqueWithoutUserTwoRunInput {
+  create: UsersChallengeCreateWithoutUserTwoRunInput!
+  update: UsersChallengeUpdateWithoutUserTwoRunInput!
+  where: UsersChallengeWhereUniqueInput!
 }
 
 input UsersChallengeWhereInput {
@@ -1482,4 +6611,178 @@ input UuidNullableFilter {
   not: NestedUuidNullableFilter
   notIn: [String!]
   search: String
+}
+
+input UuidNullableWithAggregatesFilter {
+  _count: NestedIntNullableFilter
+  _max: NestedStringNullableFilter
+  _min: NestedStringNullableFilter
+  equals: String
+  gt: String
+  gte: String
+  in: [String!]
+  lt: String
+  lte: String
+  mode: QueryMode
+  not: NestedUuidNullableWithAggregatesFilter
+  notIn: [String!]
+  search: String
+}
+
+input UuidWithAggregatesFilter {
+  _count: NestedIntFilter
+  _max: NestedStringFilter
+  _min: NestedStringFilter
+  equals: String
+  gt: String
+  gte: String
+  in: [String!]
+  lt: String
+  lte: String
+  mode: QueryMode
+  not: NestedUuidWithAggregatesFilter
+  notIn: [String!]
+  search: String
+}
+
+type VerificationToken {
+  expires: DateTimeISO!
+  identifier: String!
+  token: String!
+}
+
+type VerificationTokenCountAggregate {
+  _all: Int!
+  expires: Int!
+  identifier: Int!
+  token: Int!
+}
+
+input VerificationTokenCountOrderByAggregateInput {
+  expires: SortOrder
+  identifier: SortOrder
+  token: SortOrder
+}
+
+input VerificationTokenCreateInput {
+  expires: DateTimeISO!
+  identifier: String!
+  token: String!
+}
+
+input VerificationTokenCreateManyInput {
+  expires: DateTimeISO!
+  identifier: String!
+  token: String!
+}
+
+type VerificationTokenGroupBy {
+  _count: VerificationTokenCountAggregate
+  _max: VerificationTokenMaxAggregate
+  _min: VerificationTokenMinAggregate
+  expires: DateTimeISO!
+  identifier: String!
+  token: String!
+}
+
+input VerificationTokenIdentifierTokenCompoundUniqueInput {
+  identifier: String!
+  token: String!
+}
+
+type VerificationTokenMaxAggregate {
+  expires: DateTimeISO
+  identifier: String
+  token: String
+}
+
+input VerificationTokenMaxOrderByAggregateInput {
+  expires: SortOrder
+  identifier: SortOrder
+  token: SortOrder
+}
+
+type VerificationTokenMinAggregate {
+  expires: DateTimeISO
+  identifier: String
+  token: String
+}
+
+input VerificationTokenMinOrderByAggregateInput {
+  expires: SortOrder
+  identifier: SortOrder
+  token: SortOrder
+}
+
+enum VerificationTokenOrderByRelevanceFieldEnum {
+  identifier
+  token
+}
+
+input VerificationTokenOrderByRelevanceInput {
+  fields: [VerificationTokenOrderByRelevanceFieldEnum!]!
+  search: String!
+  sort: SortOrder!
+}
+
+input VerificationTokenOrderByWithAggregationInput {
+  _count: VerificationTokenCountOrderByAggregateInput
+  _max: VerificationTokenMaxOrderByAggregateInput
+  _min: VerificationTokenMinOrderByAggregateInput
+  expires: SortOrder
+  identifier: SortOrder
+  token: SortOrder
+}
+
+input VerificationTokenOrderByWithRelationInput {
+  _relevance: VerificationTokenOrderByRelevanceInput
+  expires: SortOrder
+  identifier: SortOrder
+  token: SortOrder
+}
+
+enum VerificationTokenScalarFieldEnum {
+  expires
+  identifier
+  token
+}
+
+input VerificationTokenScalarWhereWithAggregatesInput {
+  AND: [VerificationTokenScalarWhereWithAggregatesInput!]
+  NOT: [VerificationTokenScalarWhereWithAggregatesInput!]
+  OR: [VerificationTokenScalarWhereWithAggregatesInput!]
+  expires: DateTimeWithAggregatesFilter
+  identifier: StringWithAggregatesFilter
+  token: StringWithAggregatesFilter
+}
+
+input VerificationTokenUpdateInput {
+  expires: DateTimeFieldUpdateOperationsInput
+  identifier: StringFieldUpdateOperationsInput
+  token: StringFieldUpdateOperationsInput
+}
+
+input VerificationTokenUpdateManyMutationInput {
+  expires: DateTimeFieldUpdateOperationsInput
+  identifier: StringFieldUpdateOperationsInput
+  token: StringFieldUpdateOperationsInput
+}
+
+input VerificationTokenWhereInput {
+  AND: [VerificationTokenWhereInput!]
+  NOT: [VerificationTokenWhereInput!]
+  OR: [VerificationTokenWhereInput!]
+  expires: DateTimeFilter
+  identifier: StringFilter
+  token: StringFilter
+}
+
+input VerificationTokenWhereUniqueInput {
+  AND: [VerificationTokenWhereInput!]
+  NOT: [VerificationTokenWhereInput!]
+  OR: [VerificationTokenWhereInput!]
+  expires: DateTimeFilter
+  identifier: StringFilter
+  identifier_token: VerificationTokenIdentifierTokenCompoundUniqueInput
+  token: StringFilter
 }
