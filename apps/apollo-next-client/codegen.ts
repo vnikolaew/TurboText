@@ -2,7 +2,7 @@ import { CodegenConfig } from "@graphql-codegen/cli";
 
 const config: CodegenConfig = {
    schema: "http://api.apollo-next.com:4000",
-   documents: ["src/**/*.{tsx,ts,graphql}"],
+   documents: ["**/*.{tsx,ts,graphql}"],
    generates: {
       "./__generated__/": {
          preset: "client-preset",
@@ -12,7 +12,6 @@ const config: CodegenConfig = {
          plugins: [
             "typescript",
             "typescript-operations",
-            "typescript-graphql-files-modules",
             "fragment-matcher",
          ],
       },

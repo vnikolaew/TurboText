@@ -11,7 +11,14 @@ export class AuthMiddleware implements MiddlewareInterface<MyContext> {
       if (!sessionId?.length) throw new GraphQLError(`Not authenticated`, {
          extensions: { code: ApolloServerErrorCode.BAD_USER_INPUT },
       });
-      const { user, session } = await lucia.validateSession(sessionId);
+      try {
+         const { user, session } = await lucia.validateSession(sessionId);
+         if(user?.id) context.userId = user!.id;
+         console.log({ user,session});
+      } catch (err) {
+         console.error({ err });
+      }
 
+      return next()
    }
 }

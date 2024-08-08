@@ -15,7 +15,10 @@ async function main() {
    const { server, app, httpServer } = await getServer();
    await server.start();
 
-   app.use(`/`, hostMiddleware, cors<cors.CorsRequest>(), express.json(), expressMiddleware(server, {
+   app.use(`/`, hostMiddleware, cors<cors.CorsRequest>({
+      origin: [`http://apollo-next.com:3000`, `http://localhost:3000`, `https://apollo-next.com:3000`],
+      credentials: true
+   }), express.json(), expressMiddleware(server, {
       context: async ({ req, res }) => ({
          prisma: xprisma,
          headers: req.headers,

@@ -18,10 +18,13 @@ import * as http from "node:http";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
 import { LeaderboardResolver } from "@modules/leaderboard/LeaderboardResolver";
 import { ACExposeHeadersMiddleware } from "@middleware/ACExposeHeadersMiddleware";
+import { AuthMiddleware } from "@middleware/AuthMiddleware";
+import { githubLoginRouter } from "@modules/user/auth/github";
 
 
 export async function getServer() {
    const app = express();
+   app.use(`/login/github`, githubLoginRouter);
 
    const httpServer = http.createServer(app);
 
@@ -31,7 +34,7 @@ export async function getServer() {
       validate: true,
       authChecker: ({ context }, _) => !!(context as MyContext).userId,
       validateFn: ({ args, context, info, root }) => console.log({ info }),
-      globalMiddlewares: [LoggingMiddleware, ComplexityMiddleware, ACExposeHeadersMiddleware],
+      globalMiddlewares: [LoggingMiddleware, AuthMiddleware, ComplexityMiddleware, ACExposeHeadersMiddleware],
       emitSchemaFile: true,
    });
    const server = new ApolloServer<MyContext>({
