@@ -10,13 +10,14 @@ import {
 } from "@apollo/server";
 import express from "express";
 
-import { GraphQLJSON, GraphQLJSONObject } from "graphql-scalars";
+import { GraphQLJSONObject } from "graphql-scalars";
 import { ApolloServerPluginCacheControl } from "@apollo/server/plugin/cacheControl";
 import { MyContext } from "@types";
 import { ComplexityMiddleware } from "@middleware/ComplexityMiddleware";
 import * as http from "node:http";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
 import { LeaderboardResolver } from "@modules/leaderboard/LeaderboardResolver";
+import { ACExposeHeadersMiddleware } from "@middleware/ACExposeHeadersMiddleware";
 
 
 export async function getServer() {
@@ -30,7 +31,7 @@ export async function getServer() {
       validate: true,
       authChecker: ({ context }, _) => !!(context as MyContext).userId,
       validateFn: ({ args, context, info, root }) => console.log({ info }),
-      globalMiddlewares: [LoggingMiddleware, ComplexityMiddleware],
+      globalMiddlewares: [LoggingMiddleware, ComplexityMiddleware, ACExposeHeadersMiddleware],
       emitSchemaFile: true,
    });
    const server = new ApolloServer<MyContext>({

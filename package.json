@@ -5,10 +5,24 @@
     "build": "turbo build",
     "dev": "turbo dev",
     "lint": "turbo lint",
-    "postinstall": "npx turbo db:generate",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
+  "dependencies": {
+    "@graphql-tools/utils": "^10.3.4",
+    "graphql": "^16.9.0",
+    "graphql-tag": "^2.12.6",
+    "listr2": "4.0.5"
+  },
   "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.2",
+    "@graphql-codegen/client-preset": "4.3.3",
+    "@graphql-codegen/introspection": "4.0.3",
+    "@parcel/watcher": "^2.4.1",
+    "graphql-codegen-fragment-matcher": "0.18.2",
+    "graphql-codegen-typescript-client": "0.18.2",
+    "graphql-codegen-typescript-common": "0.18.2",
+    "graphql-codegen-typescript-graphql-files-modules": "0.18.2",
+    "graphql-codegen-typescript-react-apollo": "0.18.2",
     "prettier": "^3.2.5",
     "turbo": "latest",
     "typescript": "^5.4.5"

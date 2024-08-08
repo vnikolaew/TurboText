@@ -2,6 +2,8 @@ import { Models, RelationsResolvers } from "@repo/db";
 import { Arg, Ctx, Field, InputType, Int, Mutation, ObjectType, Query, Resolver } from "type-graphql";
 import { MyContext } from "@types";
 import crypto from "crypto";
+import { lucia } from "@lib/auth";
+import moment from "moment";
 
 @InputType()
 export class UserSignUpInput implements Partial<Models.User> {
@@ -98,7 +100,7 @@ export class UserResolver extends RelationsResolvers.UserRelationsResolver {
    }
 
    @Mutation(() => Models.User)
-   public async signUp(@Arg("signUpModel", () => UserSignUpInput) userInput: UserSignUpInput, @Ctx() { prisma }: MyContext): Promise<Models.User> {
+   public async signUp(@Arg("signUpModel", () => UserSignUpInput) userInput: UserSignUpInput, @Ctx() { prisma, res }: MyContext): Promise<Models.User> {
       const { email, password, username } = userInput;
 
       const existing = await prisma.user.findFirst({
@@ -120,6 +122,14 @@ export class UserResolver extends RelationsResolvers.UserRelationsResolver {
          { image: true },
       );
 
+      const session = await lucia.createSession(user.id,  { sessionToken: crypto.randomUUID() })
+      const cookie = lucia.createSessionCookie(session.id)
+      cookie.attributes.httpOnly = false
+
+      const serializedCookie = `${cookie.name}=${encodeURIComponent(cookie.value)}; Max-Age=${cookie.attributes.maxAge}; Domain=apollo-next.com; Expires=${moment().add(cookie.attributes.maxAge, `seconds`).format(`ddd, DD MMM YYYY HH:mm:ss [GMT]`)}; Path=${cookie.attributes.path!}; SameSite=${cookie.attributes.sameSite}; ${cookie.attributes.secure ? `Secure` : ``} ${cookie.attributes.httpOnly ? `;HttpOnly` : ``}`
+
+      res.appendHeader(`Set-Cookie`, serializedCookie)
+
       return user;
    }
 
@@ -128,7 +138,7 @@ export class UserResolver extends RelationsResolvers.UserRelationsResolver {
       password,
       username,
       email,
-   }: UserSignInInput, @Ctx() { prisma }: MyContext): Promise<Models.User | null> {
+   }: UserSignInInput, @Ctx() { prisma, res }: MyContext): Promise<Models.User | null> {
       const user = await prisma.user.findFirst({
          where: {
             OR: [
@@ -152,6 +162,9 @@ export class UserResolver extends RelationsResolvers.UserRelationsResolver {
       console.log({ user });
 
       if (user && user.verifyPassword?.(password as string ?? ``)) {
+         const session = await lucia.createSession(user.id,  { })
+         res.appendHeader(`Set-Cookie`, lucia.createSessionCookie(session.id).serialize())
+
          return user;
       }
 

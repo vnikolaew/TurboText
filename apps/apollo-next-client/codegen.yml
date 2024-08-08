@@ -1,0 +1,15 @@
+overwrite: true
+schema: "http://api.apollo-next.com:4000"
+documents: "**/*.{graphql,ts,tsx}"
+generates:
+  __generated__/graphql/:
+    preset: client
+    plugins:
+      - "typescript-common"
+      - "typescript-client"
+      - "typescript-react-apollo"
+      - "typescript-graphql-files-modules"
+      - "fragment-matcher"
+  ./graphql.schema.json:
+    plugins:
+      - "introspection"

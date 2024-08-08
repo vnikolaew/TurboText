@@ -5,7 +5,7 @@ import {
    getComplexity,
 } from "graphql-query-complexity";
 import { Kind } from "graphql/language";
-import { GraphQLError } from "graphql/error";
+import { GraphQLError } from "graphql";
 
 
 export class ComplexityMiddleware implements MiddlewareInterface<MyContext> {
