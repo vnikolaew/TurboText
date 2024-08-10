@@ -1057,8 +1057,8 @@ input JsonWithAggregatesFilter {
 
 type LeaderboardResponse {
   qualifiedUserIds: [String!]!
-  time15runs: [LeaderboardRow!]
-  time60runs: [LeaderboardRow!]
+  time15runs: [LeaderboardRow!]!
+  time60runs: [LeaderboardRow!]!
 }
 
 type LeaderboardRow {
@@ -1074,7 +1074,7 @@ type LeaderboardRow {
 
 type LeaderboardUserRow {
   id: String!
-  image: String!
+  image: String
   level: Int!
   name: String!
   og: Boolean!
@@ -1125,7 +1125,9 @@ type Mutation {
   deleteOneUsersChallenge(relationLoadStrategy: RelationLoadStrategy, where: UsersChallengeWhereUniqueInput!): UsersChallenge
   deleteOneUsersChallengeMatch(relationLoadStrategy: RelationLoadStrategy, where: UsersChallengeMatchWhereUniqueInput!): UsersChallengeMatch
   deleteOneVerificationToken(relationLoadStrategy: RelationLoadStrategy, where: VerificationTokenWhereUniqueInput!): VerificationToken
+  fileUpload(file: Upload!): Boolean!
   signIn(signInModel: UserSignInInput!): User
+  signOut: Boolean!
   signUp(signUpModel: UserSignUpInput!): User!
   updateManyAccount(data: AccountUpdateManyMutationInput!, where: AccountWhereInput): AffectedRowsOutput!
   updateManySession(data: SessionUpdateManyMutationInput!, where: SessionWhereInput): AffectedRowsOutput!
@@ -1713,6 +1715,7 @@ type Query {
   groupByUsersChallenge(by: [UsersChallengeScalarFieldEnum!]!, having: UsersChallengeScalarWhereWithAggregatesInput, orderBy: [UsersChallengeOrderByWithAggregationInput!], skip: Int, take: Int, where: UsersChallengeWhereInput): [UsersChallengeGroupBy!]!
   groupByUsersChallengeMatch(by: [UsersChallengeMatchScalarFieldEnum!]!, having: UsersChallengeMatchScalarWhereWithAggregatesInput, orderBy: [UsersChallengeMatchOrderByWithAggregationInput!], skip: Int, take: Int, where: UsersChallengeMatchWhereInput): [UsersChallengeMatchGroupBy!]!
   groupByVerificationToken(by: [VerificationTokenScalarFieldEnum!]!, having: VerificationTokenScalarWhereWithAggregatesInput, orderBy: [VerificationTokenOrderByWithAggregationInput!], skip: Int, take: Int, where: VerificationTokenWhereInput): [VerificationTokenGroupBy!]!
+  me: User
   search(search: UsersSearchInput! = {limit: 10, search: ""}): [UserSearchResponse!]!
   session(relationLoadStrategy: RelationLoadStrategy, where: SessionWhereUniqueInput!): Session
   sessions(cursor: SessionWhereUniqueInput, distinct: [SessionScalarFieldEnum!], orderBy: [SessionOrderByWithRelationInput!], relationLoadStrategy: RelationLoadStrategy, skip: Int, take: Int, where: SessionWhereInput): [Session!]!
@@ -3035,6 +3038,9 @@ input TypingRunWhereUniqueInput {
   userId: StringFilter
   wordCount: IntNullableFilter
 }
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
 
 """Always after the prisma-client-js generator"""
 type User {

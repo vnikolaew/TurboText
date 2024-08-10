@@ -31,3 +31,5 @@ export const LINKS = {
    email: `victorio.nikolaev25@gmail.com`,
    supportEmail: `victorio.nikolaev25@gmail.com`,
 } as const;
+
+export const __IS_DEV__ = process.env.NODE_ENV === `development`;

@@ -9,4 +9,7 @@ export interface MyContext {
    headers?: http.IncomingHttpHeaders;
    complexity?: number
    userId?: string | null
+   sessionId?: string | null
 }
+
+export type Nullable<T> = T | null

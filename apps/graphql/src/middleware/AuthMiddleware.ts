@@ -1,24 +1,39 @@
-import { MiddlewareInterface, NextFn, ResolverData } from "type-graphql";
+import { AuthChecker, MiddlewareInterface, NextFn, ResolverData } from "type-graphql";
 import { MyContext } from "@types";
-import { GraphQLError } from "graphql/error";
 import { lucia } from "@lib/auth";
-import { ApolloServerErrorCode } from "@apollo/server/errors";
 
 export class AuthMiddleware implements MiddlewareInterface<MyContext> {
-
-   async use({ context, info }: ResolverData<MyContext>, next: NextFn): Promise<any> {
+   async use({ context }: ResolverData<MyContext>, next: NextFn): Promise<any> {
       const sessionId = lucia.readSessionCookie(context.req.headers?.cookie ?? ``);
-      if (!sessionId?.length) throw new GraphQLError(`Not authenticated`, {
-         extensions: { code: ApolloServerErrorCode.BAD_USER_INPUT },
-      });
+      if (!sessionId) return next();
+
       try {
          const { user, session } = await lucia.validateSession(sessionId);
-         if(user?.id) context.userId = user!.id;
-         console.log({ user,session});
+         if (user?.id) {
+            context.userId = user!.id;
+            context.sessionId = session.id;
+         }
       } catch (err) {
          console.error({ err });
       }
 
-      return next()
+      return next();
    }
+
+   public static authChecker: AuthChecker<MyContext, any> = async ({ context }, roles) => {
+      let cookie = (context as MyContext).headers?.cookie;
+      const sessionId = lucia.readSessionCookie(cookie ?? ``);
+      if (!sessionId?.length) return false;
+
+      const { user, session } = await lucia.validateSession(sessionId);
+      if (user?.id) {
+         context.userId = user!.id;
+         context.sessionId = session.id;
+
+         return true;
+      }
+
+      return false;
+   };
+
 }

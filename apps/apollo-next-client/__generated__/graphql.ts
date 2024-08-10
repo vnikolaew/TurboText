@@ -1081,8 +1081,8 @@ export type JsonWithAggregatesFilter = {
 export type LeaderboardResponse = {
   __typename?: 'LeaderboardResponse';
   qualifiedUserIds: Array<Scalars['String']['output']>;
-  time15runs?: Maybe<Array<LeaderboardRow>>;
-  time60runs?: Maybe<Array<LeaderboardRow>>;
+  time15runs: Array<LeaderboardRow>;
+  time60runs: Array<LeaderboardRow>;
 };
 
 export type LeaderboardRow = {
@@ -1100,7 +1100,7 @@ export type LeaderboardRow = {
 export type LeaderboardUserRow = {
   __typename?: 'LeaderboardUserRow';
   id: Scalars['String']['output'];
-  image: Scalars['String']['output'];
+  image?: Maybe<Scalars['String']['output']>;
   level: Scalars['Int']['output'];
   name: Scalars['String']['output'];
   og: Scalars['Boolean']['output'];
@@ -1153,6 +1153,7 @@ export type Mutation = {
   deleteOneUsersChallengeMatch?: Maybe<UsersChallengeMatch>;
   deleteOneVerificationToken?: Maybe<VerificationToken>;
   signIn?: Maybe<User>;
+  signOut: Scalars['Boolean']['output'];
   signUp: User;
   updateManyAccount: AffectedRowsOutput;
   updateManySession: AffectedRowsOutput;
@@ -2235,6 +2236,7 @@ export type Query = {
   groupByUsersChallenge: Array<UsersChallengeGroupBy>;
   groupByUsersChallengeMatch: Array<UsersChallengeMatchGroupBy>;
   groupByVerificationToken: Array<VerificationTokenGroupBy>;
+  me?: Maybe<User>;
   search: Array<UserSearchResponse>;
   session?: Maybe<Session>;
   sessions: Array<Session>;
@@ -8462,6 +8464,8 @@ export type SignUpMutationVariables = Exact<{
 
 export type SignUpMutation = { __typename?: 'Mutation', signUp: { __typename?: 'User', id: string, image?: string | null, metadata?: any | null, name?: string | null } };
 
+export type UserFragmentFragment = { __typename?: 'User', id: string, image?: string | null, metadata?: any | null, name?: string | null, emailVerified?: any | null, email: string, tags: Array<{ __typename?: 'Tag', id: string, metadata?: any | null, name: string, createdAt: any }>, typingRuns: Array<{ __typename?: 'TypingRun', flags: number, createdAt: any, id: string, metadata?: any | null, mode: TypingRunMode, time?: number | null, typedLetters: any }>, experience?: { __typename?: 'UserExperience', points: number, metadata?: any | null, level: number, id: string } | null } & { ' $fragmentName'?: 'UserFragmentFragment' };
+
 export type UserQueryVariables = Exact<{
   where: UserWhereUniqueInput;
 }>;
@@ -8469,11 +8473,29 @@ export type UserQueryVariables = Exact<{
 
 export type UserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, image?: string | null, metadata?: any | null, name?: string | null, emailVerified?: any | null, email: string, tags: Array<{ __typename?: 'Tag', id: string, metadata?: any | null, name: string, createdAt: any }>, typingRuns: Array<{ __typename?: 'TypingRun', flags: number, createdAt: any, id: string, metadata?: any | null, mode: TypingRunMode, time?: number | null, typedLetters: any }>, experience?: { __typename?: 'UserExperience', points: number, metadata?: any | null, level: number, id: string } | null } | null };
 
+export type UsersQueryVariables = Exact<{ [key: string]: never; }>;
 
+
+export type UsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: string, image?: string | null, metadata?: any | null, name?: string | null, emailVerified?: any | null, email: string, tags: Array<{ __typename?: 'Tag', id: string, metadata?: any | null, name: string, createdAt: any }>, typingRuns: Array<{ __typename?: 'TypingRun', flags: number, createdAt: any, id: string, metadata?: any | null, mode: TypingRunMode, time?: number | null, typedLetters: any }>, experience?: { __typename?: 'UserExperience', points: number, metadata?: any | null, level: number, id: string } | null }> };
+
+export type SignOutMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type SignOutMutation = { __typename?: 'Mutation', signOut: boolean };
+
+export type MeQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, image?: string | null, metadata?: any | null, name?: string | null, emailVerified?: any | null, email: string, tags: Array<{ __typename?: 'Tag', id: string, metadata?: any | null, name: string, createdAt: any }>, typingRuns: Array<{ __typename?: 'TypingRun', flags: number, createdAt: any, id: string, metadata?: any | null, mode: TypingRunMode, time?: number | null, typedLetters: any }>, experience?: { __typename?: 'UserExperience', points: number, metadata?: any | null, level: number, id: string } | null } | null };
+
+export const UserFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"UserFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"User"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"image"}},{"kind":"Field","name":{"kind":"Name","value":"metadata"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"tags"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"metadata"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"typingRuns"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"flags"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"metadata"}},{"kind":"Field","name":{"kind":"Name","value":"mode"}},{"kind":"Field","name":{"kind":"Name","value":"time"}},{"kind":"Field","name":{"kind":"Name","value":"typedLetters"}}]}},{"kind":"Field","name":{"kind":"Name","value":"emailVerified"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"experience"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"points"}},{"kind":"Field","name":{"kind":"Name","value":"metadata"}},{"kind":"Field","name":{"kind":"Name","value":"level"}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<UserFragmentFragment, unknown>;
 export const SignInDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SignIn"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"signInModel"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UserSignInInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"signIn"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"signInModel"},"value":{"kind":"Variable","name":{"kind":"Name","value":"signInModel"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"image"}},{"kind":"Field","name":{"kind":"Name","value":"metadata"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<SignInMutation, SignInMutationVariables>;
 export const UserQueryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"UserQuery"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"where"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UserWhereUniqueInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"Variable","name":{"kind":"Name","value":"where"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"image"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"metadata"}}]}}]}}]} as unknown as DocumentNode<UserQueryQuery, UserQueryQueryVariables>;
 export const SignUpDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SignUp"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"signUpModel"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UserSignUpInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"signUp"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"signUpModel"},"value":{"kind":"Variable","name":{"kind":"Name","value":"signUpModel"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"image"}},{"kind":"Field","name":{"kind":"Name","value":"metadata"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<SignUpMutation, SignUpMutationVariables>;
 export const UserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"User"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"where"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UserWhereUniqueInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"Variable","name":{"kind":"Name","value":"where"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"image"}},{"kind":"Field","name":{"kind":"Name","value":"metadata"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"tags"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"metadata"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"typingRuns"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"flags"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"metadata"}},{"kind":"Field","name":{"kind":"Name","value":"mode"}},{"kind":"Field","name":{"kind":"Name","value":"time"}},{"kind":"Field","name":{"kind":"Name","value":"typedLetters"}}]}},{"kind":"Field","name":{"kind":"Name","value":"emailVerified"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"experience"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"points"}},{"kind":"Field","name":{"kind":"Name","value":"metadata"}},{"kind":"Field","name":{"kind":"Name","value":"level"}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<UserQuery, UserQueryVariables>;
+export const UsersDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Users"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"users"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"image"}},{"kind":"Field","name":{"kind":"Name","value":"metadata"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"tags"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"metadata"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"typingRuns"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"flags"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"metadata"}},{"kind":"Field","name":{"kind":"Name","value":"mode"}},{"kind":"Field","name":{"kind":"Name","value":"time"}},{"kind":"Field","name":{"kind":"Name","value":"typedLetters"}}]}},{"kind":"Field","name":{"kind":"Name","value":"emailVerified"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"experience"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"points"}},{"kind":"Field","name":{"kind":"Name","value":"metadata"}},{"kind":"Field","name":{"kind":"Name","value":"level"}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<UsersQuery, UsersQueryVariables>;
+export const SignOutDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SignOut"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"signOut"}}]}}]} as unknown as DocumentNode<SignOutMutation, SignOutMutationVariables>;
+export const MeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Me"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"me"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"image"}},{"kind":"Field","name":{"kind":"Name","value":"metadata"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"tags"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"metadata"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"typingRuns"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"flags"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"metadata"}},{"kind":"Field","name":{"kind":"Name","value":"mode"}},{"kind":"Field","name":{"kind":"Name","value":"time"}},{"kind":"Field","name":{"kind":"Name","value":"typedLetters"}}]}},{"kind":"Field","name":{"kind":"Name","value":"emailVerified"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"experience"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"points"}},{"kind":"Field","name":{"kind":"Name","value":"metadata"}},{"kind":"Field","name":{"kind":"Name","value":"level"}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<MeQuery, MeQueryVariables>;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: { input: string; output: string; }
@@ -9548,8 +9570,8 @@ export type JsonWithAggregatesFilter = {
 export type LeaderboardResponse = {
   __typename?: 'LeaderboardResponse';
   qualifiedUserIds: Array<Scalars['String']['output']>;
-  time15runs?: Maybe<Array<LeaderboardRow>>;
-  time60runs?: Maybe<Array<LeaderboardRow>>;
+  time15runs: Array<LeaderboardRow>;
+  time60runs: Array<LeaderboardRow>;
 };
 
 export type LeaderboardRow = {
@@ -9567,7 +9589,7 @@ export type LeaderboardRow = {
 export type LeaderboardUserRow = {
   __typename?: 'LeaderboardUserRow';
   id: Scalars['String']['output'];
-  image: Scalars['String']['output'];
+  image?: Maybe<Scalars['String']['output']>;
   level: Scalars['Int']['output'];
   name: Scalars['String']['output'];
   og: Scalars['Boolean']['output'];
@@ -9620,6 +9642,7 @@ export type Mutation = {
   deleteOneUsersChallengeMatch?: Maybe<UsersChallengeMatch>;
   deleteOneVerificationToken?: Maybe<VerificationToken>;
   signIn?: Maybe<User>;
+  signOut: Scalars['Boolean']['output'];
   signUp: User;
   updateManyAccount: AffectedRowsOutput;
   updateManySession: AffectedRowsOutput;
@@ -10702,6 +10725,7 @@ export type Query = {
   groupByUsersChallenge: Array<UsersChallengeGroupBy>;
   groupByUsersChallengeMatch: Array<UsersChallengeMatchGroupBy>;
   groupByVerificationToken: Array<VerificationTokenGroupBy>;
+  me?: Maybe<User>;
   search: Array<UserSearchResponse>;
   session?: Maybe<Session>;
   sessions: Array<Session>;
@@ -16929,12 +16953,29 @@ export type SignUpMutationVariables = Exact<{
 
 export type SignUpMutation = { __typename?: 'Mutation', signUp: { __typename?: 'User', id: string, image?: string | null, metadata?: any | null, name?: string | null } };
 
+export type UserFragmentFragment = { __typename?: 'User', id: string, image?: string | null, metadata?: any | null, name?: string | null, emailVerified?: any | null, email: string, tags: Array<{ __typename?: 'Tag', id: string, metadata?: any | null, name: string, createdAt: any }>, typingRuns: Array<{ __typename?: 'TypingRun', flags: number, createdAt: any, id: string, metadata?: any | null, mode: TypingRunMode, time?: number | null, typedLetters: any }>, experience?: { __typename?: 'UserExperience', points: number, metadata?: any | null, level: number, id: string } | null } & { ' $fragmentName'?: 'UserFragmentFragment' };
+
 export type UserQueryVariables = Exact<{
   where: UserWhereUniqueInput;
 }>;
 
 
 export type UserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, image?: string | null, metadata?: any | null, name?: string | null, emailVerified?: any | null, email: string, tags: Array<{ __typename?: 'Tag', id: string, metadata?: any | null, name: string, createdAt: any }>, typingRuns: Array<{ __typename?: 'TypingRun', flags: number, createdAt: any, id: string, metadata?: any | null, mode: TypingRunMode, time?: number | null, typedLetters: any }>, experience?: { __typename?: 'UserExperience', points: number, metadata?: any | null, level: number, id: string } | null } | null };
+
+export type UsersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type UsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: string, image?: string | null, metadata?: any | null, name?: string | null, emailVerified?: any | null, email: string, tags: Array<{ __typename?: 'Tag', id: string, metadata?: any | null, name: string, createdAt: any }>, typingRuns: Array<{ __typename?: 'TypingRun', flags: number, createdAt: any, id: string, metadata?: any | null, mode: TypingRunMode, time?: number | null, typedLetters: any }>, experience?: { __typename?: 'UserExperience', points: number, metadata?: any | null, level: number, id: string } | null }> };
+
+export type SignOutMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type SignOutMutation = { __typename?: 'Mutation', signOut: boolean };
+
+export type MeQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, image?: string | null, metadata?: any | null, name?: string | null, emailVerified?: any | null, email: string, tags: Array<{ __typename?: 'Tag', id: string, metadata?: any | null, name: string, createdAt: any }>, typingRuns: Array<{ __typename?: 'TypingRun', flags: number, createdAt: any, id: string, metadata?: any | null, mode: TypingRunMode, time?: number | null, typedLetters: any }>, experience?: { __typename?: 'UserExperience', points: number, metadata?: any | null, level: number, id: string } | null } | null };
 
 
       export interface IntrospectionResultData {

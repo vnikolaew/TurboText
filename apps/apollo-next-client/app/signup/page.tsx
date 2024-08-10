@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useMutation } from "@apollo/client";
 import { gql } from "@/__generated__";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export interface PageProps {
 }
@@ -27,9 +28,11 @@ type FormValues = {
 }
 
 const Page = ({}: PageProps) => {
+   const router = useRouter()
    const [signUp] = useMutation(SIGN_UP_MUTATION, {
       onCompleted: data => {
          console.log({ data });
+         router.push(`/user/${data?.signUp?.id}`);
       },
       onError: error => {
          console.error({ error });

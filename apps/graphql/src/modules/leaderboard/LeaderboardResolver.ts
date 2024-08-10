@@ -2,8 +2,7 @@ import { Arg, Ctx, Field, InputType, ObjectType, Query, Resolver, Int, Float, Gr
 import { MyContext } from "@types";
 import { TypingRun } from "@repo/db";
 import moment from "moment";
-import { GraphQLJSONObject, NegativeIntMock } from "graphql-scalars";
-import { query } from "express";
+import { GraphQLJSONObject } from "graphql-scalars";
 
 export enum TypingMode {
    TIME = `TIME`,
@@ -47,7 +46,7 @@ export class LeaderboardUserRow {
    @Field(() => String)
    public name: string = ``;
 
-   @Field(() => String)
+   @Field(() => String, {nullable: true})
    public image: string = ``;
 
    @Field(() => Int)
@@ -87,12 +86,12 @@ export class LeaderboardRow {
 
 @ObjectType()
 export class LeaderboardResponse {
-   @Field(() => [LeaderboardRow], {nullable: true})
-   public time15runs?: LeaderboardRow[] = [];
+   @Field(() => [LeaderboardRow])
+   public time15runs: LeaderboardRow[] = [];
 
 
-   @Field(() => [LeaderboardRow], {nullable: true})
-   public time60runs?: LeaderboardRow[] = [];
+   @Field(() => [LeaderboardRow])
+   public time60runs: LeaderboardRow[] = [];
 
    @Field(() => [String])
    public qualifiedUserIds: string[] = [];
@@ -102,7 +101,7 @@ export class LeaderboardResponse {
 export class LeaderboardResolver {
 
    @Query(() => LeaderboardResponse)
-   async getLeaderboard(@Arg(`input`, () => GetLeaderboardInput) { language, daily }: GetLeaderboardInput, @Ctx() { prisma, userId }: MyContext) {
+   async getLeaderboard(@Arg(`input`, () => GetLeaderboardInput) { language, daily }: GetLeaderboardInput, @Ctx() { prisma }: MyContext) {
       const qualifiedUserIds = await prisma.typingRun.groupBy({
          by: [`userId`],
          _sum: {
@@ -148,17 +147,17 @@ export class LeaderboardResolver {
          take: 100,
       });
 
-      const time15Runs: LeaderboardRow[] = runs
+      const time15runs: LeaderboardRow[] = runs
          .filter((r) => r.mode === TypingMode.TIME && r.time === 15)
          .sort((a, b) => b.wpm - a.wpm)
          .map(mapRow) ?? [];
 
-      const time60Runs: LeaderboardRow[] = runs
+      const time60runs: LeaderboardRow[] = runs
          .filter((r) => r.mode === TypingMode.TIME && r.time === 60)
          .sort((a, b) => b.wpm - a.wpm)
          .map(mapRow) ?? [];
-      console.log({qualifiedUserIds, time15Runs, time60Runs});
+      console.log({qualifiedUserIds, time15runs, time60runs});
 
-      return { time15Runs, time60Runs, qualifiedUserIds: qualifiedUserIds?.map(q => q.userId) ?? [] };
+      return { time15runs, time60runs, qualifiedUserIds: qualifiedUserIds?.map(q => q.userId) ?? [] };
    }
 }

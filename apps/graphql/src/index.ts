@@ -8,6 +8,7 @@ import cors from "cors";
 import express from "express";
 import { expressMiddleware } from "@apollo/server/express4";
 import { hostMiddleware } from "@middleware/HostMiddleware";
+import { graphqlUploadExpress } from "@scalars/Upload";
 
 async function main() {
    const PORT = isNaN(Number.parseInt(process.env.PORT ?? ``)) ? 4000 : +process.env.PORT!;
@@ -15,7 +16,7 @@ async function main() {
    const { server, app, httpServer } = await getServer();
    await server.start();
 
-   app.use(`/`, hostMiddleware, cors<cors.CorsRequest>({
+   app.use(`/`, hostMiddleware, graphqlUploadExpress(), cors<cors.CorsRequest>({
       origin: [`http://apollo-next.com:3000`, `http://localhost:3000`, `https://apollo-next.com:3000`],
       credentials: true
    }), express.json(), expressMiddleware(server, {
